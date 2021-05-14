@@ -14,13 +14,12 @@ namespace DUDS.Models
     public partial class TblPosicaoRentabilidade
     {
         [Key]
-        [Column("id")]
-        public int Id { get; set; }
         [Column("data_ref", TypeName = "date")]
         public DateTime DataRef { get; set; }
+        [Key]
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
-        [Required]
+        [Key]
         [Column("indexador")]
         [StringLength(20)]
         public string Indexador { get; set; }

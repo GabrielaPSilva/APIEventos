@@ -2,7 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs
+
+/DUDS/.vs/DUDS
+/DUDS/DUDS/bin
 /DUDS/DUDS/obj
-/DUDS/.vs/DUDS/v16
-/DUDS/DUDS/bin/Debug/net5.0

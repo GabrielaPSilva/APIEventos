@@ -13,14 +13,15 @@ namespace DUDS.Models
     [Index(nameof(DataRef), Name = "data_ref_tbl_posicao_adr")]
     public partial class TblPosicaoAdr
     {
-        [Key]
         [Column("id")]
         public int Id { get; set; }
+        [Key]
         [Column("data_ref", TypeName = "date")]
         public DateTime DataRef { get; set; }
+        [Key]
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
-        [Required]
+        [Key]
         [Column("ativo")]
         [StringLength(20)]
         public string Ativo { get; set; }

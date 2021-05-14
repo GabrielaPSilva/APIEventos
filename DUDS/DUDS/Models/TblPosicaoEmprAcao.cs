@@ -14,17 +14,16 @@ namespace DUDS.Models
     public partial class TblPosicaoEmprAcao
     {
         [Key]
-        [Column("id")]
-        public int Id { get; set; }
         [Column("data_ref", TypeName = "date")]
         public DateTime DataRef { get; set; }
+        [Key]
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
         [Required]
         [Column("tipo_operacao")]
         [StringLength(20)]
         public string TipoOperacao { get; set; }
-        [Required]
+        [Key]
         [Column("cod_operacao")]
         [StringLength(10)]
         public string CodOperacao { get; set; }

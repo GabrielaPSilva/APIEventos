@@ -14,10 +14,9 @@ namespace DUDS.Models
     public partial class TblPosicaoPatrimonio
     {
         [Key]
-        [Column("id")]
-        public int Id { get; set; }
         [Column("data_ref", TypeName = "date")]
         public DateTime DataRef { get; set; }
+        [Key]
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
         [Column("qtde_cotas", TypeName = "decimal(22, 10)")]

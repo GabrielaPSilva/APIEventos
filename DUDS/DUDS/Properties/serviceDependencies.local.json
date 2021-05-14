@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "type": "secrets.user"
+    },
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/srvdbdahlia02/databases/db_dahlia_dev",
+      "type": "mssql.azure",
+      "connectionId": "DahliaDatabaseContext",
+      "secretStore": "LocalSecretsFile"
+    }
+  }
+}

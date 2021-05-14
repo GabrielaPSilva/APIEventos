@@ -14,13 +14,12 @@ namespace DUDS.Models
     public partial class TblPosicaoOpcaoAcao
     {
         [Key]
-        [Column("id")]
-        public int Id { get; set; }
         [Column("data_ref", TypeName = "date")]
         public DateTime DataRef { get; set; }
+        [Key]
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
-        [Required]
+        [Key]
         [Column("ativo")]
         [StringLength(20)]
         public string Ativo { get; set; }
@@ -28,11 +27,11 @@ namespace DUDS.Models
         [Column("papel")]
         [StringLength(50)]
         public string Papel { get; set; }
-        [Required]
+        [Key]
         [Column("tipo")]
         [StringLength(5)]
         public string Tipo { get; set; }
-        [Required]
+        [Key]
         [Column("corretora")]
         [StringLength(30)]
         public string Corretora { get; set; }

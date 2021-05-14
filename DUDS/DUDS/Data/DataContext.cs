@@ -62,7 +62,6 @@ namespace DUDS.Data
         public virtual DbSet<TblXmlAnbimaTitprivado> TblXmlAnbimaTitprivado { get; set; }
         public virtual DbSet<TblXmlAnbimaTitpublico> TblXmlAnbimaTitpublico { get; set; }
 
-        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -71,7 +70,6 @@ namespace DUDS.Data
                 optionsBuilder.UseSqlServer("Server=tcp:srvdbdahlia02.database.windows.net;Database=db_dahlia_dev;User ID=sadb;Password=S@$NHujY&jkmjkl;");
             }
         }
-        */
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -296,6 +294,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoAcao>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
+                    .HasName("PK_tbl_posicao_acao_1");
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoAcao)
                     .HasForeignKey(d => d.CodFundo)
@@ -305,6 +306,11 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoAdr>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
+                    .HasName("PK_tbl_posicao_adr_1");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoAdr)
                     .HasForeignKey(d => d.CodFundo)
@@ -314,6 +320,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoBdr>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
+                    .HasName("PK_tbl_posicao_bdr_1");
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoBdr)
                     .HasForeignKey(d => d.CodFundo)
@@ -323,6 +332,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoCambio>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
+                    .HasName("PK_tbl_posicao_cambio_1");
+
                 entity.Property(e => e.MoedaComprada).IsFixedLength(true);
 
                 entity.Property(e => e.MoedaVendida).IsFixedLength(true);
@@ -361,6 +373,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoContacorrente>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Codigo })
+                    .HasName("PK_tbl_posicao_contacorrente_1");
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoContacorrente)
                     .HasForeignKey(d => d.CodFundo)
@@ -370,6 +385,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoCotaFundo>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.CodigoAtivo })
+                    .HasName("PK_tbl_posicao_cota_fundo_1");
+
                 entity.Property(e => e.Cnpj).IsFixedLength(true);
 
                 entity.HasOne(d => d.CodFundoNavigation)
@@ -390,6 +408,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoEmprAcao>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.CodOperacao })
+                    .HasName("PK_tbl_posicao_empr_acao_1");
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoEmprAcao)
                     .HasForeignKey(d => d.CodFundo)
@@ -399,6 +420,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoFuturo>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo, e.Vencimento, e.Corretora })
+                    .HasName("PK_tbl_posicao_futuro_1");
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoFuturo)
                     .HasForeignKey(d => d.CodFundo)
@@ -408,6 +432,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoOpcaoAcao>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo, e.Tipo, e.Corretora })
+                    .HasName("PK_tbl_posicao_opcao_acao_1");
+
                 entity.Property(e => e.Praca).IsFixedLength(true);
 
                 entity.HasOne(d => d.CodFundoNavigation)
@@ -419,6 +446,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoOpcaoFuturo>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo, e.Vencimento, e.Tipo, e.Corretora })
+                    .HasName("PK_tbl_posicao_opcao_futuro_1");
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoOpcaoFuturo)
                     .HasForeignKey(d => d.CodFundo)
@@ -428,6 +458,8 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoPatrimonio>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo });
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoPatrimonio)
                     .HasForeignKey(d => d.CodFundo)
@@ -437,6 +469,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoRendafixa>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Codigo })
+                    .HasName("PK_tbl_posicao_rendafixa_1");
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoRendafixa)
                     .HasForeignKey(d => d.CodFundo)
@@ -446,6 +481,8 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoRentabilidade>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Indexador });
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoRentabilidade)
                     .HasForeignKey(d => d.CodFundo)
@@ -455,6 +492,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPosicaoTesouraria>(entity =>
             {
+                entity.HasKey(e => new { e.DataRef, e.CodFundo })
+                    .HasName("PK_tbl_posicao_tesouraria_1");
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPosicaoTesouraria)
                     .HasForeignKey(d => d.CodFundo)

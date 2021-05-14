@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "restored": true,
+      "restoreTime": "2021-05-14T15:03:56.3457171Z"
+    },
+    "mssql1": {
+      "restored": true,
+      "restoreTime": "2021-05-14T15:04:00.1300126Z"
+    }
+  },
+  "parameters": {
+    "mssql1.subscriptionId": {
+      "Name": "mssql1.subscriptionId",
+      "Type": "subscription",
+      "Value": "001d6db7-095c-4772-8fde-29baebfdbf94"
+    },
+    "mssql1.resourceGroupName": {
+      "Name": "mssql1.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "BancoDados"
+    }
+  }
+}
