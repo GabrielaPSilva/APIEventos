@@ -8,10 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DUDS.Models
 {
-    [Keyless]
+    //[Keyless]
     [Table("tbl_depara_fundoproduto")]
     public partial class TblDeparaFundoproduto
     {
+        [Key]
         [Column("id")]
         public int Id { get; set; }
         [Column("cod_ativo")]
