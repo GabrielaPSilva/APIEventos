@@ -10,6 +10,7 @@ using DUDS.Models;
 
 namespace DUDS.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class PosicaoCotaFundoController : ControllerBase
@@ -43,6 +44,7 @@ namespace DUDS.Controllers
 
             return posicaoCotaFundo;
 
+            
         }
 
         // GET: api/PosicaoCotaFundo/5

@@ -15,5 +15,6 @@
     <WebStackScaffolding_DbContextTypeFullName>DUDS.Data.DataContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <NameOfLastUsedPublishProfile>dahliaunifieddataservice - Web Deploy</NameOfLastUsedPublishProfile>
+    <WebStackScaffolding_DbContextDialogWidth>650</WebStackScaffolding_DbContextDialogWidth>
   </PropertyGroup>
 </Project>
