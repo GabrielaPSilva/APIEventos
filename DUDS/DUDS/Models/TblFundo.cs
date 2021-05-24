@@ -19,6 +19,7 @@ namespace DUDS.Models
         public TblFundo()
         {
             InverseMaster = new HashSet<TblFundo>();
+            TblAcordoDistribuicao = new HashSet<TblAcordoDistribuicao>();
             TblContas = new HashSet<TblContas>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
             TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
@@ -174,6 +175,8 @@ namespace DUDS.Models
         public virtual TblFundo Master { get; set; }
         [InverseProperty(nameof(TblFundo.Master))]
         public virtual ICollection<TblFundo> InverseMaster { get; set; }
+        [InverseProperty("CodFundoNavigation")]
+        public virtual ICollection<TblAcordoDistribuicao> TblAcordoDistribuicao { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblContas> TblContas { get; set; }
         [InverseProperty("CodFundoNavigation")]

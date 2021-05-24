@@ -14,6 +14,7 @@ namespace DUDS.Models
     {
         public TblDistribuidor()
         {
+            TblAcordoDistribuicao = new HashSet<TblAcordoDistribuicao>();
             TblClienteCodDistribuidorNavigation = new HashSet<TblCliente>();
             TblClienteCodParceiroNavigation = new HashSet<TblCliente>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
@@ -49,6 +50,8 @@ namespace DUDS.Models
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
 
+        [InverseProperty("CodDistribuidorNavigation")]
+        public virtual ICollection<TblAcordoDistribuicao> TblAcordoDistribuicao { get; set; }
         [InverseProperty(nameof(TblCliente.CodDistribuidorNavigation))]
         public virtual ICollection<TblCliente> TblClienteCodDistribuidorNavigation { get; set; }
         [InverseProperty(nameof(TblCliente.CodParceiroNavigation))]

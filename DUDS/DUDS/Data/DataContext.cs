@@ -80,6 +80,18 @@ namespace DUDS.Data
                 entity.HasKey(e => new { e.CodCliente, e.CodFundo, e.CodDistribuidor });
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.CodDistribuidorNavigation)
+                    .WithMany(p => p.TblAcordoDistribuicao)
+                    .HasForeignKey(d => d.CodDistribuidor)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_acordo_distribuicao_tbl_distribuidor");
+
+                entity.HasOne(d => d.CodFundoNavigation)
+                    .WithMany(p => p.TblAcordoDistribuicao)
+                    .HasForeignKey(d => d.CodFundo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_acordo_distribuicao_tbl_fundo");
             });
 
             modelBuilder.Entity<TblAdministrador>(entity =>
@@ -263,15 +275,7 @@ namespace DUDS.Data
             {
                 entity.Property(e => e.NumOrdem).ValueGeneratedNever();
 
-                entity.Property(e => e.DsLiquidacao).IsFixedLength(true);
-
                 entity.Property(e => e.DsOperacao).IsFixedLength(true);
-
-                entity.Property(e => e.NmOperador).IsFixedLength(true);
-
-                entity.Property(e => e.Penalty).IsFixedLength(true);
-
-                entity.Property(e => e.SnBloqueio).IsFixedLength(true);
 
                 entity.HasOne(d => d.CdCotistaNavigation)
                     .WithMany(p => p.TblOrdemPassivo)

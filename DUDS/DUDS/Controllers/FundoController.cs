@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using System.ComponentModel.DataAnnotations;
+using DUDS.MOD;
+using Newtonsoft.Json;
+using System.Diagnostics;
+using DUDS.BLL.Interfaces;
 
 namespace DUDS.Controllers
 {
@@ -14,11 +19,14 @@ namespace DUDS.Controllers
     [ApiController]
     public class FundoController : ControllerBase
     {
+        private readonly ILogErrorBLL _logErrorBLL;
+
         private readonly DataContext _context;
 
-        public FundoController(DataContext context)
+        public FundoController(DataContext context, ILogErrorBLL logErrorBLL)
         {
             _context = context;
+            _logErrorBLL = logErrorBLL;
         }
 
         // GET: api/Fundo
@@ -32,14 +40,74 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblFundo>> GetTblFundo(int id)
         {
-            var tblFundo = await _context.TblFundo.FindAsync(id);
+            //try
+            //{
+            //    var tblFundo = await _context.TblFundo.FindAsync(id);
+            //    return tblFundo;
+            //}
+            //catch (ValidationException e)
+            //{
+                var logErro = new LogErrorMOD
+                {
+                    Sistema = "DUDS",
+                    //Mensagem = e.Message
+                };
 
-            if (tblFundo == null)
-            {
-                return NotFound();
-            }
+                //var outros = new
+                //{
+                //    CodigosDebitos = string.Join(",", proposta.CodigosDebitos)
+                //};
 
-            return tblFundo;
+                //logErro.Outros = JsonConvert.SerializeObject(outros);
+
+                StackTrace st = new StackTrace(true);
+
+                List<object> listaObjCaminhoParcialErro = new List<object>();
+                for (int i = 0; i < st.FrameCount; i++)
+                {
+                    StackFrame sf = st.GetFrame(i);
+
+                    var objCaminhoParcialErro = new //CaminhoErroMOD
+                    {
+                        Arquivo = sf.GetFileName(),
+                        Metodo = sf.GetMethod().ToString(),
+                        Linha = sf.GetFileLineNumber()
+                    };
+
+                    listaObjCaminhoParcialErro.Add(objCaminhoParcialErro);
+
+                    if (i == 0)
+                    {
+                        logErro.Arquivo = objCaminhoParcialErro.Arquivo;
+                        logErro.Metodo = objCaminhoParcialErro.Metodo;
+                        logErro.Linha = objCaminhoParcialErro.Linha;
+                    }
+                }
+
+                var descricao = new
+                {
+                    logErro.Sistema,
+                    logErro.Mensagem,
+                    //ListaCaminhoErro = listaObjCaminhoParcialErro
+                    //logErro.Outros
+                };
+
+                logErro.Descricao = JsonConvert.SerializeObject(descricao);
+
+                await _logErrorBLL.CadastrarLogErroAsync(logErro);
+                //return BadRequest(e.Message);
+            //}
+
+            return NoContent();
+
+            //var tblFundo = await _context.TblFundo.FindAsync(id);
+
+            //if (tblFundo == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return tblFundo;
         }
 
         // PUT: api/Fundo/5
@@ -58,16 +126,57 @@ namespace DUDS.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ValidationException e)
             {
-                if (!TblFundoExists(id))
+                var logErro = new LogErrorMOD
                 {
-                    return NotFound();
-                }
-                else
+                    Sistema = "DUDS",
+                    Mensagem = e.Message
+                };
+
+                //var outros = new
+                //{
+                //    CodigosDebitos = string.Join(",", proposta.CodigosDebitos)
+                //};
+
+                //logErro.Outros = JsonConvert.SerializeObject(outros);
+
+                StackTrace st = new StackTrace(true);
+
+                List<object> listaObjCaminhoParcialErro = new List<object>();
+                for (int i = 0; i < st.FrameCount; i++)
                 {
-                    throw;
+                    StackFrame sf = st.GetFrame(i);
+
+                    var objCaminhoParcialErro = new //CaminhoErroMOD
+                    {
+                        Arquivo = sf.GetFileName(),
+                        Metodo = sf.GetMethod().ToString(),
+                        Linha = sf.GetFileLineNumber()
+                    };
+
+                    listaObjCaminhoParcialErro.Add(objCaminhoParcialErro);
+
+                    if (i == 0)
+                    {
+                        logErro.Arquivo = objCaminhoParcialErro.Arquivo;
+                        logErro.Metodo = objCaminhoParcialErro.Metodo;
+                        logErro.Linha = objCaminhoParcialErro.Linha;
+                    }
                 }
+
+                var descricao = new
+                {
+                    logErro.Sistema,
+                    logErro.Mensagem,
+                    ListaCaminhoErro = listaObjCaminhoParcialErro
+                    //logErro.Outros
+                };
+
+                logErro.Descricao = JsonConvert.SerializeObject(descricao);
+
+                await _logErrorBLL.CadastrarLogErroAsync(logErro);
+                return BadRequest(e.Message);
             }
 
             return NoContent();
