@@ -23,25 +23,21 @@ namespace DUDS.DAL
             {
                 connection.Open();
                 string insert = @"
-                                INSERT INTO LogErro
-                                    (Sistema,
-                                    Arquivo,
-                                    Metodo,
-                                    Linha,
-                                    Mensagem,
-                                    Descricao,
-                                    Tabela,
-                                    CodigoTabela,
-                                    DataHoraCadastro)
+                                INSERT INTO tbl_log_erros
+                                    (sistema,
+                                    metodo,
+                                    linha,
+                                    mensagem,
+                                    descricao,
+                                    usuario_modificacao,
+                                    data_cadastro)
                                 VALUES
-                                    (@Sistema,
-                                    NULL,
-                                    NULL,
-                                    NULL,
-                                    @Mensagem,
-                                    @Descricao,
-                                    @Tabela,
-                                    NULL,
+                                    (@sistema,
+                                    @metodo,
+                                    @linha,
+                                    @mensagem,
+                                    @descricao,
+                                    1,
                                     GETDATE())";
 
                 try

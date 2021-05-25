@@ -6,16 +6,14 @@ namespace DUDS.MOD
 {
     public class LogErrorMOD
     {
-        public int Codigo { get; set; }
-        public string Sistema { get; set; }
-        public string Arquivo { get; set; }
-        public string Metodo { get; set; }
-        public int Linha { get; set; }
-        public string Mensagem { get; set; }
-        public string Descricao { get; set; }
-        public string Tabela { get; set; }
-        public int? CodigoTabela { get; set; }
-        public string Outros { get; set; }
-        public DateTime DataHoraCadastro { get; set; }
+        public int id { get; set; }
+        public string sistema { get; set; }
+        public string metodo { get; set; }
+        public string mensagem { get; set; }
+        public string descricao { get; set; }
+        public int linha { get; set; }
+        public string tabela { get; set; }
+        public int cod_usuario { get; set; }
+        public DateTime data_cadastro { get; set; }
     }
 }

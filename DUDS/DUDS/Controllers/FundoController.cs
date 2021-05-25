@@ -49,16 +49,9 @@ namespace DUDS.Controllers
             //{
                 var logErro = new LogErrorMOD
                 {
-                    Sistema = "DUDS",
-                    //Mensagem = e.Message
+                    sistema = "DahliaUnifiedDataService",
+                    //mensagem = e.Message
                 };
-
-                //var outros = new
-                //{
-                //    CodigosDebitos = string.Join(",", proposta.CodigosDebitos)
-                //};
-
-                //logErro.Outros = JsonConvert.SerializeObject(outros);
 
                 StackTrace st = new StackTrace(true);
 
@@ -69,115 +62,34 @@ namespace DUDS.Controllers
 
                     var objCaminhoParcialErro = new //CaminhoErroMOD
                     {
-                        Arquivo = sf.GetFileName(),
                         Metodo = sf.GetMethod().ToString(),
                         Linha = sf.GetFileLineNumber()
                     };
 
-                    listaObjCaminhoParcialErro.Add(objCaminhoParcialErro);
+                    //listaObjCaminhoParcialErro.Add(objCaminhoParcialErro);
 
                     if (i == 0)
                     {
-                        logErro.Arquivo = objCaminhoParcialErro.Arquivo;
-                        logErro.Metodo = objCaminhoParcialErro.Metodo;
-                        logErro.Linha = objCaminhoParcialErro.Linha;
+                        logErro.metodo = objCaminhoParcialErro.Metodo;
+                        logErro.linha = objCaminhoParcialErro.Linha;
                     }
                 }
 
                 var descricao = new
                 {
-                    logErro.Sistema,
-                    logErro.Mensagem,
+                    logErro.sistema,
+                    logErro.metodo,
+                    logErro.linha,
+                    logErro.tabela,
+                    logErro.mensagem
                     //ListaCaminhoErro = listaObjCaminhoParcialErro
-                    //logErro.Outros
                 };
 
-                logErro.Descricao = JsonConvert.SerializeObject(descricao);
+                logErro.descricao = JsonConvert.SerializeObject(descricao);
 
                 await _logErrorBLL.CadastrarLogErroAsync(logErro);
                 //return BadRequest(e.Message);
             //}
-
-            return NoContent();
-
-            //var tblFundo = await _context.TblFundo.FindAsync(id);
-
-            //if (tblFundo == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return tblFundo;
-        }
-
-        // PUT: api/Fundo/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblFundo(int id, TblFundo tblFundo)
-        {
-            if (id != tblFundo.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(tblFundo).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (ValidationException e)
-            {
-                var logErro = new LogErrorMOD
-                {
-                    Sistema = "DUDS",
-                    Mensagem = e.Message
-                };
-
-                //var outros = new
-                //{
-                //    CodigosDebitos = string.Join(",", proposta.CodigosDebitos)
-                //};
-
-                //logErro.Outros = JsonConvert.SerializeObject(outros);
-
-                StackTrace st = new StackTrace(true);
-
-                List<object> listaObjCaminhoParcialErro = new List<object>();
-                for (int i = 0; i < st.FrameCount; i++)
-                {
-                    StackFrame sf = st.GetFrame(i);
-
-                    var objCaminhoParcialErro = new //CaminhoErroMOD
-                    {
-                        Arquivo = sf.GetFileName(),
-                        Metodo = sf.GetMethod().ToString(),
-                        Linha = sf.GetFileLineNumber()
-                    };
-
-                    listaObjCaminhoParcialErro.Add(objCaminhoParcialErro);
-
-                    if (i == 0)
-                    {
-                        logErro.Arquivo = objCaminhoParcialErro.Arquivo;
-                        logErro.Metodo = objCaminhoParcialErro.Metodo;
-                        logErro.Linha = objCaminhoParcialErro.Linha;
-                    }
-                }
-
-                var descricao = new
-                {
-                    logErro.Sistema,
-                    logErro.Mensagem,
-                    ListaCaminhoErro = listaObjCaminhoParcialErro
-                    //logErro.Outros
-                };
-
-                logErro.Descricao = JsonConvert.SerializeObject(descricao);
-
-                await _logErrorBLL.CadastrarLogErroAsync(logErro);
-                return BadRequest(e.Message);
-            }
 
             return NoContent();
         }

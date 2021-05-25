@@ -12,11 +12,11 @@ namespace DUDS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AcordoDistribuicaosController : ControllerBase
+    public class AcordoDistribuicaoController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public AcordoDistribuicaosController(DataContext context)
+        public AcordoDistribuicaoController(DataContext context)
         {
             _context = context;
         }
