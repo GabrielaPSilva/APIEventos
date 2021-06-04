@@ -10,6 +10,7 @@ using DUDS.Models;
 
 namespace DUDS.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class FundoController : ControllerBase
@@ -23,86 +24,106 @@ namespace DUDS.Controllers
 
         // GET: api/Fundo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblFundo>>> GetTblFundo()
+        public async Task<ActionResult<IEnumerable<TblFundo>>> GetTblFundo([FromQuery] int[] CodFundo)
         {
-            return await _context.TblFundo.ToListAsync();
-        }
+            var Fundos = await _context.TblFundo.AsNoTracking().ToListAsync();
 
-        // GET: api/Fundo/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblFundo>> GetTblFundo(int id)
-        {
-            var tblFundo = await _context.TblFundo.FindAsync(id);
-
-            if (tblFundo == null)
+            if (Fundos == null)
             {
-                return NotFound();
+                NotFound();
             }
-
-            return tblFundo;
+            return Fundos;
         }
 
-        // PUT: api/Fundo/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblFundo(int id, TblFundo tblFundo)
-        {
-            if (id != tblFundo.Id)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(tblFundo).State = EntityState.Modified;
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<TblFundo>>> GetTblFundoBasic([FromQuery] int[] codFundo)
+        //{
+        //    var Fundos = await _context.TblFundo.AsNoTracking().ToListAsync();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblFundoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    if (Fundos == null)
+        //    {
+        //        NotFound();
+        //    }
+        //    return Fundos;
+        //}
 
-            return NoContent();
-        }
+        //    // GET: api/Fundo/5
+        //    [HttpGet("{id}")]
+        //    public async Task<ActionResult<TblFundo>> GetTblFundo(int id)
+        //    {
+        //        var tblFundo = await _context.TblFundo.FindAsync(id);
 
-        // POST: api/Fundo
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TblFundo>> PostTblFundo(TblFundo tblFundo)
-        {
-            _context.TblFundo.Add(tblFundo);
-            await _context.SaveChangesAsync();
+        //        if (tblFundo == null)
+        //        {
+        //            return NotFound();
+        //        }
 
-            return CreatedAtAction("GetTblFundo", new { id = tblFundo.Id }, tblFundo);
-        }
+        //        return tblFundo;
+        //    }
 
-        // DELETE: api/Fundo/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblFundo(int id)
-        {
-            var tblFundo = await _context.TblFundo.FindAsync(id);
-            if (tblFundo == null)
-            {
-                return NotFound();
-            }
+        //    // PUT: api/Fundo/5
+        //    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //    [HttpPut("{id}")]
+        //    public async Task<IActionResult> PutTblFundo(int id, TblFundo tblFundo)
+        //    {
+        //        if (id != tblFundo.Id)
+        //        {
+        //            return BadRequest();
+        //        }
 
-            _context.TblFundo.Remove(tblFundo);
-            await _context.SaveChangesAsync();
+        //        _context.Entry(tblFundo).State = EntityState.Modified;
 
-            return NoContent();
-        }
+        //        try
+        //        {
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!TblFundoExists(id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
 
-        private bool TblFundoExists(int id)
-        {
-            return _context.TblFundo.Any(e => e.Id == id);
-        }
+        //        return NoContent();
+        //    }
+
+        //    // POST: api/Fundo
+        //    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //    [HttpPost]
+        //    public async Task<ActionResult<TblFundo>> PostTblFundo(TblFundo tblFundo)
+        //    {
+        //        _context.TblFundo.Add(tblFundo);
+        //        await _context.SaveChangesAsync();
+
+        //        return CreatedAtAction("GetTblFundo", new { id = tblFundo.Id }, tblFundo);
+        //    }
+
+        //    // DELETE: api/Fundo/5
+        //    [HttpDelete("{id}")]
+        //    public async Task<IActionResult> DeleteTblFundo(int id)
+        //    {
+        //        var tblFundo = await _context.TblFundo.FindAsync(id);
+        //        if (tblFundo == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        _context.TblFundo.Remove(tblFundo);
+        //        await _context.SaveChangesAsync();
+
+        //        return NoContent();
+        //    }
+
+        //    private bool TblFundoExists(int id)
+        //    {
+        //        return _context.TblFundo.Any(e => e.Id == id);
+        //    }
+        //}
     }
 }
