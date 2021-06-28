@@ -1,3 +1,7 @@
+using DUDS.BLL;
+using DUDS.BLL.Interfaces;
+using DUDS.DAL;
+using DUDS.DAL.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,6 +45,9 @@ namespace DUDS
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dahlia Unified Data Service", Version = "v1" });
             });
+
+            services.AddTransient<ILogErrorBLL, LogErrorBLL>();
+            services.AddTransient<ILogErrorDAL, LogErrorDAL>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -13,7 +13,7 @@ namespace DUDS.Models
     {
         [Key]
         [Column("cod_cliente")]
-        public int CodCliente { get; set; }
+        public long CodCliente { get; set; }
         [Key]
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
@@ -36,5 +36,12 @@ namespace DUDS.Models
         public DateTime DataModificacao { get; set; }
         [Column("cadastro_excluido")]
         public bool CadastroExcluido { get; set; }
+
+        [ForeignKey(nameof(CodDistribuidor))]
+        [InverseProperty(nameof(TblDistribuidor.TblAcordoDistribuicao))]
+        public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
+        [ForeignKey(nameof(CodFundo))]
+        [InverseProperty(nameof(TblFundo.TblAcordoDistribuicao))]
+        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

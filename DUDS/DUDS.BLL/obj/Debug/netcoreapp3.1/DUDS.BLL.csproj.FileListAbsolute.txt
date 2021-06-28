@@ -1,0 +1,14 @@
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\netcoreapp3.1\DUDS.BLL.AssemblyInfoInputs.cache
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\netcoreapp3.1\DUDS.BLL.AssemblyInfo.cs
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\netcoreapp3.1\DUDS.BLL.csproj.CoreCompileInputs.cache
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\netcoreapp3.1\DUDS.BLL.csprojAssemblyReference.cache
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\netcoreapp3.1\DUDS.BLL.deps.json
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\netcoreapp3.1\DUDS.BLL.dll
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\netcoreapp3.1\DUDS.BLL.pdb
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\netcoreapp3.1\DUDS.DAL.dll
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\netcoreapp3.1\DUDS.MOD.dll
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\netcoreapp3.1\DUDS.DAL.pdb
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\netcoreapp3.1\DUDS.MOD.pdb
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\netcoreapp3.1\DUDS.BLL.csproj.CopyComplete
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\netcoreapp3.1\DUDS.BLL.dll
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\netcoreapp3.1\DUDS.BLL.pdb

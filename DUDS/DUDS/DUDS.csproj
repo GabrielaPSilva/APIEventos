@@ -15,10 +15,18 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="Unity" Version="5.11.10" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="App_Start\" />
     <Folder Include="Data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DUDS.BLL\DUDS.BLL.csproj" />
+    <ProjectReference Include="..\DUDS.MOD\DUDS.MOD.csproj" />
   </ItemGroup>
 
 </Project>
