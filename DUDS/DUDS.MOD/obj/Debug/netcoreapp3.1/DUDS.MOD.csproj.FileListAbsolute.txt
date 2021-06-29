@@ -1,9 +1,0 @@
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.MOD\obj\Debug\netcoreapp3.1\DUDS.MOD.AssemblyInfoInputs.cache
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.MOD\obj\Debug\netcoreapp3.1\DUDS.MOD.AssemblyInfo.cs
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.MOD\obj\Debug\netcoreapp3.1\DUDS.MOD.csproj.CoreCompileInputs.cache
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.MOD\bin\Debug\netcoreapp3.1\DUDS.MOD.deps.json
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.MOD\bin\Debug\netcoreapp3.1\DUDS.MOD.dll
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.MOD\bin\Debug\netcoreapp3.1\DUDS.MOD.pdb
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.MOD\obj\Debug\netcoreapp3.1\DUDS.MOD.dll
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.MOD\obj\Debug\netcoreapp3.1\DUDS.MOD.pdb
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.MOD\obj\Debug\netcoreapp3.1\DUDS.MOD.csprojAssemblyReference.cache
