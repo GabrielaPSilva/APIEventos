@@ -11,7 +11,6 @@ namespace DUDS.Models
     [Table("tbl_fundo")]
     [Index(nameof(CdFundoAdm), Name = "cd_fundo_and_tbl_fundo")]
     [Index(nameof(CdFundoAdm), Name = "cnpj_tbl_fundo")]
-    [Index(nameof(CodAtivoSma), Name = "cod_ativo_sma_tbl_fundo")]
     [Index(nameof(Mnemonico), Name = "mnemonico_tbl_fundo", IsUnique = true)]
     [Index(nameof(NomeReduzido), Name = "nome_reduzido_distr_tbl_fundo", IsUnique = true)]
     public partial class TblFundo
@@ -20,9 +19,12 @@ namespace DUDS.Models
         {
             InverseMaster = new HashSet<TblFundo>();
             TblAcordoDistribuicao = new HashSet<TblAcordoDistribuicao>();
+            TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
             TblContas = new HashSet<TblContas>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
             TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
+            TblPagamentoServico = new HashSet<TblPagamentoServico>();
+            TblPgtoAdmPfee = new HashSet<TblPgtoAdmPfee>();
             TblPosicaoAcao = new HashSet<TblPosicaoAcao>();
             TblPosicaoAdr = new HashSet<TblPosicaoAdr>();
             TblPosicaoBdr = new HashSet<TblPosicaoBdr>();
@@ -88,8 +90,6 @@ namespace DUDS.Models
         public string ClassificacaoCvm { get; set; }
         [Column("master_id")]
         public int? MasterId { get; set; }
-        [Column("data_abertura", TypeName = "date")]
-        public DateTime? DataAbertura { get; set; }
         [Column("data_encerramento", TypeName = "date")]
         public DateTime? DataEncerramento { get; set; }
         [Column("data_cota_inicial", TypeName = "date")]
@@ -125,12 +125,6 @@ namespace DUDS.Models
         public string MoedaFundo { get; set; }
         [Column("cd_fundo_adm")]
         public int? CdFundoAdm { get; set; }
-        [Column("nickname")]
-        [StringLength(5)]
-        public string Nickname { get; set; }
-        [Column("cod_ativo_sma")]
-        [StringLength(15)]
-        public string CodAtivoSma { get; set; }
         [Column("estrategia")]
         [StringLength(10)]
         public string Estrategia { get; set; }
@@ -178,11 +172,17 @@ namespace DUDS.Models
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblAcordoDistribuicao> TblAcordoDistribuicao { get; set; }
         [InverseProperty("CodFundoNavigation")]
+        public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
+        [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblContas> TblContas { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblOrdemPassivo> TblOrdemPassivo { get; set; }
+        [InverseProperty("CodFundoNavigation")]
+        public virtual ICollection<TblPagamentoServico> TblPagamentoServico { get; set; }
+        [InverseProperty("CodFundoNavigation")]
+        public virtual ICollection<TblPgtoAdmPfee> TblPgtoAdmPfee { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblPosicaoAcao> TblPosicaoAcao { get; set; }
         [InverseProperty("CodFundoNavigation")]

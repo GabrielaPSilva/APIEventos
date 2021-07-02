@@ -18,18 +18,28 @@ namespace DUDS.Data
         {
         }
 
+        public virtual DbSet<AuditEmployeeData> AuditEmployeeData { get; set; }
+        public virtual DbSet<Auditoria> Auditoria { get; set; }
+        public virtual DbSet<EmployeeData> EmployeeData { get; set; }
         public virtual DbSet<TblAcordoDistribuicao> TblAcordoDistribuicao { get; set; }
         public virtual DbSet<TblAdministrador> TblAdministrador { get; set; }
+        public virtual DbSet<TblBcbEntidadesSupervisionadas> TblBcbEntidadesSupervisionadas { get; set; }
+        public virtual DbSet<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         public virtual DbSet<TblCliente> TblCliente { get; set; }
         public virtual DbSet<TblContas> TblContas { get; set; }
         public virtual DbSet<TblCustodiante> TblCustodiante { get; set; }
         public virtual DbSet<TblDeparaFundoproduto> TblDeparaFundoproduto { get; set; }
         public virtual DbSet<TblDistribuidor> TblDistribuidor { get; set; }
+        public virtual DbSet<TblErrosPagamento> TblErrosPagamento { get; set; }
         public virtual DbSet<TblFeriadosAnbima> TblFeriadosAnbima { get; set; }
+        public virtual DbSet<TblFiCadCvm> TblFiCadCvm { get; set; }
         public virtual DbSet<TblFundo> TblFundo { get; set; }
         public virtual DbSet<TblGestor> TblGestor { get; set; }
+        public virtual DbSet<TblLogErros> TblLogErros { get; set; }
         public virtual DbSet<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
         public virtual DbSet<TblOrdemPassivo> TblOrdemPassivo { get; set; }
+        public virtual DbSet<TblPagamentoServico> TblPagamentoServico { get; set; }
+        public virtual DbSet<TblPgtoAdmPfee> TblPgtoAdmPfee { get; set; }
         public virtual DbSet<TblPosicaoAcao> TblPosicaoAcao { get; set; }
         public virtual DbSet<TblPosicaoAdr> TblPosicaoAdr { get; set; }
         public virtual DbSet<TblPosicaoBdr> TblPosicaoBdr { get; set; }
@@ -46,6 +56,7 @@ namespace DUDS.Data
         public virtual DbSet<TblPosicaoRendafixa> TblPosicaoRendafixa { get; set; }
         public virtual DbSet<TblPosicaoRentabilidade> TblPosicaoRentabilidade { get; set; }
         public virtual DbSet<TblPosicaoTesouraria> TblPosicaoTesouraria { get; set; }
+        public virtual DbSet<TblTeste> TblTeste { get; set; }
         public virtual DbSet<TblTipoConta> TblTipoConta { get; set; }
         public virtual DbSet<TblXmlAnbimaAcoes> TblXmlAnbimaAcoes { get; set; }
         public virtual DbSet<TblXmlAnbimaCaixa> TblXmlAnbimaCaixa { get; set; }
@@ -75,6 +86,77 @@ namespace DUDS.Data
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<AuditEmployeeData>(entity =>
+            {
+                entity.HasKey(e => e.AuditLogId)
+                    .HasName("PK__auditEmp__6031F9F888C749FC");
+
+                entity.Property(e => e.AuditLogId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.AuditChanged).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.AuditEmpBankAccountNumber)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.AuditEmpSsn)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.AuditLogType)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.AuditUser).HasDefaultValueSql("(suser_sname())");
+            });
+
+            modelBuilder.Entity<Auditoria>(entity =>
+            {
+                entity.Property(e => e.Acao)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.Campo).IsUnicode(false);
+
+                entity.Property(e => e.Conteudoanterior).IsUnicode(false);
+
+                entity.Property(e => e.Conteudoatual).IsUnicode(false);
+
+                entity.Property(e => e.Tabela).IsUnicode(false);
+
+                entity.Property(e => e.Usuario).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<EmployeeData>(entity =>
+            {
+                entity.HasKey(e => e.EmpId)
+                    .HasName("PK__employee__1299A8616EDE8CD0");
+
+                entity.Property(e => e.EmpId).ValueGeneratedNever();
+
+                entity.Property(e => e.EmpBankAccountNumber)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.EmpFname).IsFixedLength(true);
+
+                entity.Property(e => e.EmpFname2).IsFixedLength(true);
+
+                entity.Property(e => e.EmpFname3).IsFixedLength(true);
+
+                entity.Property(e => e.EmpFname4).IsFixedLength(true);
+
+                entity.Property(e => e.EmpFname5).IsFixedLength(true);
+
+                entity.Property(e => e.EmpFname6).IsFixedLength(true);
+
+                entity.Property(e => e.EmpLname).IsFixedLength(true);
+
+                entity.Property(e => e.EmpSsn)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+            });
+
             modelBuilder.Entity<TblAcordoDistribuicao>(entity =>
             {
                 entity.HasKey(e => new { e.CodCliente, e.CodFundo, e.CodDistribuidor });
@@ -103,11 +185,41 @@ namespace DUDS.Data
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
             });
 
+            modelBuilder.Entity<TblBcbEntidadesSupervisionadas>(entity =>
+            {
+                entity.Property(e => e.DataBase).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.NomeEntidadeInteresse).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TblCalculoPgtoAdmPfee>(entity =>
+            {
+                entity.HasKey(e => new { e.Competencia, e.CodCliente, e.CodFundo });
+
+                entity.Property(e => e.Competencia).IsFixedLength(true);
+
+                entity.HasOne(d => d.CodClienteNavigation)
+                    .WithMany(p => p.TblCalculoPgtoAdmPfee)
+                    .HasForeignKey(d => d.CodCliente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_calculo_pgto_adm_pfee_tbl_cliente");
+
+                entity.HasOne(d => d.CodFundoNavigation)
+                    .WithMany(p => p.TblCalculoPgtoAdmPfee)
+                    .HasForeignKey(d => d.CodFundo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_calculo_pgto_adm_pfee_tbl_fundo");
+            });
+
             modelBuilder.Entity<TblCliente>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
+                entity.Property(e => e.AdmAlocador).IsUnicode(false);
+
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.GestorAlocador).IsUnicode(false);
 
                 entity.HasOne(d => d.CodDistribuidorNavigation)
                     .WithMany(p => p.TblClienteCodDistribuidorNavigation)
@@ -177,6 +289,48 @@ namespace DUDS.Data
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
             });
 
+            modelBuilder.Entity<TblErrosPagamento>(entity =>
+            {
+                entity.Property(e => e.CnpjFundoInvestidor).IsUnicode(false);
+
+                entity.Property(e => e.Competencia).IsUnicode(false);
+
+                entity.Property(e => e.ContaFavorecida).IsUnicode(false);
+
+                entity.Property(e => e.CpfCnpjFavorecido).IsUnicode(false);
+
+                entity.Property(e => e.Favorecido).IsUnicode(false);
+
+                entity.Property(e => e.MensagemErro).IsUnicode(false);
+
+                entity.Property(e => e.Status).IsUnicode(false);
+
+                entity.Property(e => e.TipoDespesa).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TblFiCadCvm>(entity =>
+            {
+                entity.Property(e => e.Admin).IsUnicode(false);
+
+                entity.Property(e => e.CnpjAdmin).IsUnicode(false);
+
+                entity.Property(e => e.CnpjCustodiante).IsUnicode(false);
+
+                entity.Property(e => e.CnpjFundo).IsUnicode(false);
+
+                entity.Property(e => e.CpfCnpjGestor).IsUnicode(false);
+
+                entity.Property(e => e.Custodiante).IsUnicode(false);
+
+                entity.Property(e => e.DataBase).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.DenomSocial).IsUnicode(false);
+
+                entity.Property(e => e.Gestor).IsUnicode(false);
+
+                entity.Property(e => e.Sit).IsUnicode(false);
+            });
+
             modelBuilder.Entity<TblFundo>(entity =>
             {
                 entity.Property(e => e.ContagemDiasCotizacaoAplicacao).IsFixedLength(true);
@@ -227,6 +381,13 @@ namespace DUDS.Data
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TblLogErros>(entity =>
+            {
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Sistema).IsUnicode(false);
             });
 
             modelBuilder.Entity<TblMovimentacaoNota>(entity =>
@@ -294,6 +455,41 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodFundo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_ordem_passivo_tbl_fundo");
+            });
+
+            modelBuilder.Entity<TblPagamentoServico>(entity =>
+            {
+                entity.HasKey(e => new { e.Competencia, e.CodFundo });
+
+                entity.Property(e => e.Competencia)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.HasOne(d => d.CodFundoNavigation)
+                    .WithMany(p => p.TblPagamentoServico)
+                    .HasForeignKey(d => d.CodFundo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_pagamento_servico_tbl_fundo");
+            });
+
+            modelBuilder.Entity<TblPgtoAdmPfee>(entity =>
+            {
+                entity.HasKey(e => new { e.Competencia, e.CodCliente, e.CodFundo })
+                    .HasName("PK_tbl_pgto_adm_pfee_1");
+
+                entity.Property(e => e.Competencia).IsFixedLength(true);
+
+                entity.HasOne(d => d.CodClienteNavigation)
+                    .WithMany(p => p.TblPgtoAdmPfee)
+                    .HasForeignKey(d => d.CodCliente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_pgto_adm_pfee_tbl_cliente");
+
+                entity.HasOne(d => d.CodFundoNavigation)
+                    .WithMany(p => p.TblPgtoAdmPfee)
+                    .HasForeignKey(d => d.CodFundo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_pgto_adm_pfee_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoAcao>(entity =>
@@ -504,6 +700,11 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodFundo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_posicao_tesouraria_tbl_fundo");
+            });
+
+            modelBuilder.Entity<TblTeste>(entity =>
+            {
+                entity.Property(e => e.Observacao).IsUnicode(false);
             });
 
             modelBuilder.Entity<TblTipoConta>(entity =>

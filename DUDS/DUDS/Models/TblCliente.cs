@@ -15,8 +15,10 @@ namespace DUDS.Models
     {
         public TblCliente()
         {
+            TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
             TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
+            TblPgtoAdmPfee = new HashSet<TblPgtoAdmPfee>();
             TblPosicaoCliente = new HashSet<TblPosicaoCliente>();
         }
 
@@ -44,6 +46,12 @@ namespace DUDS.Models
         [Column("usuario_modificacao")]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
+        [Column("adm_alocador")]
+        [StringLength(150)]
+        public string AdmAlocador { get; set; }
+        [Column("gestor_alocador")]
+        [StringLength(150)]
+        public string GestorAlocador { get; set; }
 
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblClienteCodDistribuidorNavigation))]
@@ -51,10 +59,14 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodParceiro))]
         [InverseProperty(nameof(TblDistribuidor.TblClienteCodParceiroNavigation))]
         public virtual TblDistribuidor CodParceiroNavigation { get; set; }
+        [InverseProperty("CodClienteNavigation")]
+        public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         [InverseProperty("CdCotistaNavigation")]
         public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
         [InverseProperty("CdCotistaNavigation")]
         public virtual ICollection<TblOrdemPassivo> TblOrdemPassivo { get; set; }
+        [InverseProperty("CodClienteNavigation")]
+        public virtual ICollection<TblPgtoAdmPfee> TblPgtoAdmPfee { get; set; }
         [InverseProperty("CodClienteNavigation")]
         public virtual ICollection<TblPosicaoCliente> TblPosicaoCliente { get; set; }
     }

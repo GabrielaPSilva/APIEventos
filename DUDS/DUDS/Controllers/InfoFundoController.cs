@@ -33,7 +33,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                var fundos = await _context.TblFundo.AsNoTracking().ToListAsync();
+                var fundos = await _context.TblFundo.OrderBy(c => c.NomeFundo).AsNoTracking().ToListAsync();
 
                 if (fundos != null)
                 {
@@ -51,7 +51,7 @@ namespace DUDS.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FundosModel>> GetFundo(int id)
+        public async Task<ActionResult<TblFundo>> GetFundo(int id)
         {
             var tblFundo = await _context.TblFundo.FindAsync(id);
 
@@ -64,7 +64,7 @@ namespace DUDS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<FundosModel>> CadastroFundos(FundosModel tblFundoModel)
+        public async Task<ActionResult<TblFundo>> CadastrarFundos(TblFundo tblFundoModel)
         {
             var itensFundo = new TblFundo
             {
@@ -94,7 +94,6 @@ namespace DUDS.Controllers
                 ClassificacaoAnbima = tblFundoModel.ClassificacaoAnbima,
                 ClassificacaoCvm = tblFundoModel.ClassificacaoCvm,
                 DataCotaInicial = tblFundoModel.DataCotaInicial,
-                DataAbertura = tblFundoModel.DataAbertura,
                 ValorCotaInicial = tblFundoModel.ValorCotaInicial,
                 CodAnbima = tblFundoModel.CodAnbima,
                 CodCvm = tblFundoModel.CodCvm,
@@ -102,8 +101,7 @@ namespace DUDS.Controllers
                 Isin = tblFundoModel.Isin,
                 NumeroGiin = tblFundoModel.NumeroGiin,
                 CdFundoAdm = tblFundoModel.CdFundoAdm,
-                Nickname = tblFundoModel.Nickname,
-                CodAtivoSma = tblFundoModel.CodAtivoSma
+                DataEncerramento = tblFundoModel.DataEncerramento
             };
 
             _context.TblFundo.Add(itensFundo);
