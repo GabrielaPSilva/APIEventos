@@ -13,47 +13,47 @@ namespace DUDS.Controllers
     [Produces("application/json")]
     [Route("api/[Controller]/[action]")]
     [ApiController]
-    public class DistribuidorController : ControllerBase
+    public class CustodianteController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public DistribuidorController(DataContext context)
+        public CustodianteController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: api/Distribuidor
+        // GET: api/Custodiante
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblDistribuidor>>> Distribuidor()
+        public async Task<ActionResult<IEnumerable<TblCustodiante>>> Custodiante()
         {
-            return await _context.TblDistribuidor.ToListAsync();
+            return await _context.TblCustodiante.ToListAsync();
         }
 
-        // GET: api/Distribuidor/id
+        // GET: api/Custodiante/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblDistribuidor>> GetDistribuidor(int id)
+        public async Task<ActionResult<TblCustodiante>> GetCustodiante(int id)
         {
-            var tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
+            var tblCustodiante = await _context.TblCustodiante.FindAsync(id);
 
-            if (tblDistribuidor == null)
+            if (tblCustodiante == null)
             {
                 return NotFound();
             }
 
-            return tblDistribuidor;
+            return tblCustodiante;
         }
 
-        // PUT: api/Distribuidor/5
+        // PUT: api/Custodiante/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblDistribuidor(int id, TblDistribuidor tblDistribuidor)
+        //public async Task<IActionResult> PutTblCustodiante(int id, TblCustodiante tblCustodiante)
         //{
-        //    if (id != tblDistribuidor.Id)
+        //    if (id != tblCustodiante.Id)
         //    {
         //        return BadRequest();
         //    }
 
-        //    _context.Entry(tblDistribuidor).State = EntityState.Modified;
+        //    _context.Entry(tblCustodiante).State = EntityState.Modified;
 
         //    try
         //    {
@@ -61,7 +61,7 @@ namespace DUDS.Controllers
         //    }
         //    catch (DbUpdateConcurrencyException)
         //    {
-        //        if (!TblDistribuidorExists(id))
+        //        if (!TblCustodianteExists(id))
         //        {
         //            return NotFound();
         //        }
@@ -74,36 +74,36 @@ namespace DUDS.Controllers
         //    return NoContent();
         //}
 
-        //// POST: api/Distribuidor
+        //// POST: api/Custodiante
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPost]
-        //public async Task<ActionResult<TblDistribuidor>> PostTblDistribuidor(TblDistribuidor tblDistribuidor)
+        //public async Task<ActionResult<TblCustodiante>> PostTblCustodiante(TblCustodiante tblCustodiante)
         //{
-        //    _context.TblDistribuidor.Add(tblDistribuidor);
+        //    _context.TblCustodiante.Add(tblCustodiante);
         //    await _context.SaveChangesAsync();
 
-        //    return CreatedAtAction("GetTblDistribuidor", new { id = tblDistribuidor.Id }, tblDistribuidor);
+        //    return CreatedAtAction("GetTblCustodiante", new { id = tblCustodiante.Id }, tblCustodiante);
         //}
 
-        //// DELETE: api/Distribuidor/5
+        //// DELETE: api/Custodiante/5
         //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTblDistribuidor(int id)
+        //public async Task<IActionResult> DeleteTblCustodiante(int id)
         //{
-        //    var tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
-        //    if (tblDistribuidor == null)
+        //    var tblCustodiante = await _context.TblCustodiante.FindAsync(id);
+        //    if (tblCustodiante == null)
         //    {
         //        return NotFound();
         //    }
 
-        //    _context.TblDistribuidor.Remove(tblDistribuidor);
+        //    _context.TblCustodiante.Remove(tblCustodiante);
         //    await _context.SaveChangesAsync();
 
         //    return NoContent();
         //}
 
-        //private bool TblDistribuidorExists(int id)
+        //private bool TblCustodianteExists(int id)
         //{
-        //    return _context.TblDistribuidor.Any(e => e.Id == id);
+        //    return _context.TblCustodiante.Any(e => e.Id == id);
         //}
     }
 }

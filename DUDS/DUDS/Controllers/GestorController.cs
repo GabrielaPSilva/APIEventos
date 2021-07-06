@@ -10,7 +10,8 @@ using DUDS.Models;
 
 namespace DUDS.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Route("api/[Controller]/[action]")]
     [ApiController]
     public class GestorController : ControllerBase
     {
@@ -23,14 +24,14 @@ namespace DUDS.Controllers
 
         // GET: api/Gestor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblGestor>>> GetTblGestor()
+        public async Task<ActionResult<IEnumerable<TblGestor>>> Gestor()
         {
             return await _context.TblGestor.ToListAsync();
         }
 
-        // GET: api/Gestor/5
+        // GET: api/Gestor/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblGestor>> GetTblGestor(int id)
+        public async Task<ActionResult<TblGestor>> GetGestor(int id)
         {
             var tblGestor = await _context.TblGestor.FindAsync(id);
 
@@ -44,65 +45,65 @@ namespace DUDS.Controllers
 
         // PUT: api/Gestor/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblGestor(int id, TblGestor tblGestor)
-        {
-            if (id != tblGestor.Id)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutTblGestor(int id, TblGestor tblGestor)
+        //{
+        //    if (id != tblGestor.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(tblGestor).State = EntityState.Modified;
+        //    _context.Entry(tblGestor).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblGestorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!TblGestorExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        // POST: api/Gestor
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TblGestor>> PostTblGestor(TblGestor tblGestor)
-        {
-            _context.TblGestor.Add(tblGestor);
-            await _context.SaveChangesAsync();
+        //// POST: api/Gestor
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<TblGestor>> PostTblGestor(TblGestor tblGestor)
+        //{
+        //    _context.TblGestor.Add(tblGestor);
+        //    await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTblGestor", new { id = tblGestor.Id }, tblGestor);
-        }
+        //    return CreatedAtAction("GetTblGestor", new { id = tblGestor.Id }, tblGestor);
+        //}
 
-        // DELETE: api/Gestor/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblGestor(int id)
-        {
-            var tblGestor = await _context.TblGestor.FindAsync(id);
-            if (tblGestor == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/Gestor/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteTblGestor(int id)
+        //{
+        //    var tblGestor = await _context.TblGestor.FindAsync(id);
+        //    if (tblGestor == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.TblGestor.Remove(tblGestor);
-            await _context.SaveChangesAsync();
+        //    _context.TblGestor.Remove(tblGestor);
+        //    await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool TblGestorExists(int id)
-        {
-            return _context.TblGestor.Any(e => e.Id == id);
-        }
+        //private bool TblGestorExists(int id)
+        //{
+        //    return _context.TblGestor.Any(e => e.Id == id);
+        //}
     }
 }

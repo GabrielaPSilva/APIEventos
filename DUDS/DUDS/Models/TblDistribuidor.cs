@@ -47,7 +47,7 @@ namespace DUDS.Models
         public DateTime DataModificacao { get; set; }
         [Required]
         [Column("usuario_modificacao")]
-        [StringLength(50)]
+        [StringLength(50)] 
         public string UsuarioModificacao { get; set; }
 
         [InverseProperty("CodDistribuidorNavigation")]

@@ -28,6 +28,7 @@ namespace DUDS.Controllers
             return await _context.TblDeparaFundoproduto.ToListAsync();
         }
 
+        // GET: api/Fundo
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblFundo>>> Fundo()
         {
@@ -50,6 +51,7 @@ namespace DUDS.Controllers
             }
         }
 
+        // GET: api/Fundo/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblFundo>> GetFundo(int id)
         {
