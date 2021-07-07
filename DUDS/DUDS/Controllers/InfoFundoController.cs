@@ -17,6 +17,8 @@ namespace DUDS.Controllers
     public class InfoFundoController : Controller
     {
         private readonly DataContext _context;
+        private static readonly Dictionary<int, TblFundo> tblFundoStore = new Dictionary<int, TblFundo>();
+
         public InfoFundoController(DataContext context)
         {
             _context = context;
@@ -66,7 +68,7 @@ namespace DUDS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TblFundo>> CadastrarFundos(TblFundo tblFundoModel)
+        public async Task<ActionResult<FundoModel>> CadastrarFundo(FundoModel tblFundoModel)
         {
             var itensFundo = new TblFundo
             {
@@ -113,6 +115,23 @@ namespace DUDS.Controllers
                 nameof(GetFundo),
                 new { id = itensFundo.Id },
                 Ok(itensFundo));
+        }
+
+        // DELETE: api/Fundo/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFundo(int id)
+        {
+            var tblFundo = await _context.TblFundo.FindAsync(id);
+
+            if (tblFundo == null)
+            {
+                return NotFound();
+            }
+
+            _context.TblFundo.Remove(tblFundo);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }
