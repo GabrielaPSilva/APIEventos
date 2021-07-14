@@ -15,6 +15,7 @@ namespace DUDS.Models
     {
         public TblAdministrador()
         {
+            TblCliente = new HashSet<TblCliente>();
             TblFundo = new HashSet<TblFundo>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
         }
@@ -37,6 +38,8 @@ namespace DUDS.Models
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
 
+        [InverseProperty("CodAdministradorNavigation")]
+        public virtual ICollection<TblCliente> TblCliente { get; set; }
         [InverseProperty("CodAdministradorNavigation")]
         public virtual ICollection<TblFundo> TblFundo { get; set; }
         [InverseProperty("CodAdmNavigation")]

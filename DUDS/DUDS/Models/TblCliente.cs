@@ -15,6 +15,7 @@ namespace DUDS.Models
     {
         public TblCliente()
         {
+            TblAlocador = new HashSet<TblAlocador>();
             TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
             TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
@@ -25,14 +26,22 @@ namespace DUDS.Models
         [Key]
         [Column("id")]
         public long Id { get; set; }
+        [Column("cod_cliente_custodia")]
+        [StringLength(50)]
+        public string CodClienteCustodia { get; set; }
         [Required]
         [Column("nome_cliente")]
         [StringLength(100)]
         public string NomeCliente { get; set; }
+        [Column("cnpj")]
+        [StringLength(14)]
+        public string Cnpj { get; set; }
         [Column("cod_distribuidor")]
         public int CodDistribuidor { get; set; }
-        [Column("cod_parceiro")]
-        public int? CodParceiro { get; set; }
+        [Column("cod_administrador")]
+        public int? CodAdministrador { get; set; }
+        [Column("cod_gestor")]
+        public int? CodGestor { get; set; }
         [Required]
         [Column("cod_cliente_distribuidor")]
         [StringLength(14)]
@@ -46,19 +55,18 @@ namespace DUDS.Models
         [Column("usuario_modificacao")]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
-        [Column("adm_alocador")]
-        [StringLength(150)]
-        public string AdmAlocador { get; set; }
-        [Column("gestor_alocador")]
-        [StringLength(150)]
-        public string GestorAlocador { get; set; }
 
+        [ForeignKey(nameof(CodAdministrador))]
+        [InverseProperty(nameof(TblAdministrador.TblCliente))]
+        public virtual TblAdministrador CodAdministradorNavigation { get; set; }
         [ForeignKey(nameof(CodDistribuidor))]
-        [InverseProperty(nameof(TblDistribuidor.TblClienteCodDistribuidorNavigation))]
+        [InverseProperty(nameof(TblDistribuidor.TblCliente))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
-        [ForeignKey(nameof(CodParceiro))]
-        [InverseProperty(nameof(TblDistribuidor.TblClienteCodParceiroNavigation))]
-        public virtual TblDistribuidor CodParceiroNavigation { get; set; }
+        [ForeignKey(nameof(CodGestor))]
+        [InverseProperty(nameof(TblGestor.TblCliente))]
+        public virtual TblGestor CodGestorNavigation { get; set; }
+        [InverseProperty("CodClienteNavigation")]
+        public virtual ICollection<TblAlocador> TblAlocador { get; set; }
         [InverseProperty("CodClienteNavigation")]
         public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         [InverseProperty("CdCotistaNavigation")]

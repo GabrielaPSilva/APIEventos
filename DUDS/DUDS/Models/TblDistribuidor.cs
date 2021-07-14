@@ -15,11 +15,10 @@ namespace DUDS.Models
         public TblDistribuidor()
         {
             TblAcordoDistribuicao = new HashSet<TblAcordoDistribuicao>();
-            TblClienteCodDistribuidorNavigation = new HashSet<TblCliente>();
-            TblClienteCodParceiroNavigation = new HashSet<TblCliente>();
+            TblCliente = new HashSet<TblCliente>();
+            TblContrato = new HashSet<TblContrato>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
             TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
-            TblPosicaoCliente = new HashSet<TblPosicaoCliente>();
         }
 
         [Key]
@@ -47,20 +46,18 @@ namespace DUDS.Models
         public DateTime DataModificacao { get; set; }
         [Required]
         [Column("usuario_modificacao")]
-        [StringLength(50)] 
+        [StringLength(50)]
         public string UsuarioModificacao { get; set; }
 
         [InverseProperty("CodDistribuidorNavigation")]
         public virtual ICollection<TblAcordoDistribuicao> TblAcordoDistribuicao { get; set; }
-        [InverseProperty(nameof(TblCliente.CodDistribuidorNavigation))]
-        public virtual ICollection<TblCliente> TblClienteCodDistribuidorNavigation { get; set; }
-        [InverseProperty(nameof(TblCliente.CodParceiroNavigation))]
-        public virtual ICollection<TblCliente> TblClienteCodParceiroNavigation { get; set; }
+        [InverseProperty("CodDistribuidorNavigation")]
+        public virtual ICollection<TblCliente> TblCliente { get; set; }
+        [InverseProperty("CodDistribuidorNavigation")]
+        public virtual ICollection<TblContrato> TblContrato { get; set; }
         [InverseProperty("CodDistribuidorNavigation")]
         public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
         [InverseProperty("CodDistribuidorNavigation")]
         public virtual ICollection<TblOrdemPassivo> TblOrdemPassivo { get; set; }
-        [InverseProperty("CodDistribuidorNavigation")]
-        public virtual ICollection<TblPosicaoCliente> TblPosicaoCliente { get; set; }
     }
 }

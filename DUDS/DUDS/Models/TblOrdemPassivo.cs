@@ -21,7 +21,9 @@ namespace DUDS.Models
     {
         [Key]
         [Column("num_ordem")]
-        public int NumOrdem { get; set; }
+        [StringLength(15)]
+        public string NumOrdem { get; set; }
+        [Key]
         [Column("cd_cotista")]
         public long CdCotista { get; set; }
         [Column("cod_fundo")]
@@ -50,10 +52,15 @@ namespace DUDS.Models
         public int CodDistribuidor { get; set; }
         [Column("ordem_mae")]
         public int OrdemMae { get; set; }
+        [Column("cod_custodiante")]
+        public int? CodCustodiante { get; set; }
 
         [ForeignKey(nameof(CdCotista))]
         [InverseProperty(nameof(TblCliente.TblOrdemPassivo))]
         public virtual TblCliente CdCotistaNavigation { get; set; }
+        [ForeignKey(nameof(CodCustodiante))]
+        [InverseProperty(nameof(TblCustodiante.TblOrdemPassivo))]
+        public virtual TblCustodiante CodCustodianteNavigation { get; set; }
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblOrdemPassivo))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }

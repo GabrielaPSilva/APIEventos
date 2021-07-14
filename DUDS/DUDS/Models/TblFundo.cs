@@ -21,6 +21,7 @@ namespace DUDS.Models
             TblAcordoDistribuicao = new HashSet<TblAcordoDistribuicao>();
             TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
             TblContas = new HashSet<TblContas>();
+            TblContratoDistribuicao = new HashSet<TblContratoDistribuicao>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
             TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
             TblPagamentoServico = new HashSet<TblPagamentoServico>();
@@ -151,9 +152,9 @@ namespace DUDS.Models
         [Column("data_modificacao", TypeName = "smalldatetime")]
         public DateTime DataModificacao { get; set; }
         [Required]
-        [Column("usuaria_modificacao")]
+        [Column("usuario_modificacao")]
         [StringLength(50)]
-        public string UsuariaModificacao { get; set; }
+        public string UsuarioModificacao { get; set; }
 
         [ForeignKey(nameof(CodAdministrador))]
         [InverseProperty(nameof(TblAdministrador.TblFundo))]
@@ -175,6 +176,8 @@ namespace DUDS.Models
         public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblContas> TblContas { get; set; }
+        [InverseProperty("CodFundoNavigation")]
+        public virtual ICollection<TblContratoDistribuicao> TblContratoDistribuicao { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
         [InverseProperty("CodFundoNavigation")]

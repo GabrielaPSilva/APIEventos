@@ -21,9 +21,6 @@ namespace DUDS.Models
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
         [Key]
-        [Column("cod_distribuidor")]
-        public int CodDistribuidor { get; set; }
-        [Key]
         [Column("data_ref", TypeName = "date")]
         public DateTime DataRef { get; set; }
         [Column("qtde_cota", TypeName = "decimal(22, 10)")]
@@ -46,13 +43,15 @@ namespace DUDS.Models
         public decimal ValorLiqBloqueado { get; set; }
         [Column("valor_bruto_bloqueado", TypeName = "decimal(22, 10)")]
         public decimal ValorBrutoBloqueado { get; set; }
+        [Column("cod_custodiante")]
+        public int CodCustodiante { get; set; }
 
         [ForeignKey(nameof(CodCliente))]
         [InverseProperty(nameof(TblCliente.TblPosicaoCliente))]
         public virtual TblCliente CodClienteNavigation { get; set; }
-        [ForeignKey(nameof(CodDistribuidor))]
-        [InverseProperty(nameof(TblDistribuidor.TblPosicaoCliente))]
-        public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
+        [ForeignKey(nameof(CodCustodiante))]
+        [InverseProperty(nameof(TblCustodiante.TblPosicaoCliente))]
+        public virtual TblCustodiante CodCustodianteNavigation { get; set; }
         [ForeignKey(nameof(CodFundo))]
         [InverseProperty(nameof(TblFundo.TblPosicaoCliente))]
         public virtual TblFundo CodFundoNavigation { get; set; }

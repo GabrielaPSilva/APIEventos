@@ -44,79 +44,79 @@ namespace DUDS.Controllers
 
         // PUT: api/OrdemPassivo/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblOrdemPassivo(int id, TblOrdemPassivo tblOrdemPassivo)
-        {
-            if (id != tblOrdemPassivo.NumOrdem)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutTblOrdemPassivo(int id, TblOrdemPassivo tblOrdemPassivo)
+        //{
+        //    if (id != tblOrdemPassivo.NumOrdem)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(tblOrdemPassivo).State = EntityState.Modified;
+        //    _context.Entry(tblOrdemPassivo).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblOrdemPassivoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!TblOrdemPassivoExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        // POST: api/OrdemPassivo
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TblOrdemPassivo>> PostTblOrdemPassivo(TblOrdemPassivo tblOrdemPassivo)
-        {
-            _context.TblOrdemPassivo.Add(tblOrdemPassivo);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (TblOrdemPassivoExists(tblOrdemPassivo.NumOrdem))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //// POST: api/OrdemPassivo
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<TblOrdemPassivo>> PostTblOrdemPassivo(TblOrdemPassivo tblOrdemPassivo)
+        //{
+        //    _context.TblOrdemPassivo.Add(tblOrdemPassivo);
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateException)
+        //    {
+        //        if (TblOrdemPassivoExists(tblOrdemPassivo.NumOrdem))
+        //        {
+        //            return Conflict();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return CreatedAtAction("GetTblOrdemPassivo", new { id = tblOrdemPassivo.NumOrdem }, tblOrdemPassivo);
-        }
+        //    return CreatedAtAction("GetTblOrdemPassivo", new { id = tblOrdemPassivo.NumOrdem }, tblOrdemPassivo);
+        //}
 
-        // DELETE: api/OrdemPassivo/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblOrdemPassivo(int id)
-        {
-            var tblOrdemPassivo = await _context.TblOrdemPassivo.FindAsync(id);
-            if (tblOrdemPassivo == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/OrdemPassivo/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteTblOrdemPassivo(int id)
+        //{
+        //    var tblOrdemPassivo = await _context.TblOrdemPassivo.FindAsync(id);
+        //    if (tblOrdemPassivo == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.TblOrdemPassivo.Remove(tblOrdemPassivo);
-            await _context.SaveChangesAsync();
+        //    _context.TblOrdemPassivo.Remove(tblOrdemPassivo);
+        //    await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool TblOrdemPassivoExists(int id)
-        {
-            return _context.TblOrdemPassivo.Any(e => e.NumOrdem == id);
-        }
+        //private bool TblOrdemPassivoExists(int id)
+        //{
+        //    return _context.TblOrdemPassivo.Any(e => e.NumOrdem == id);
+        //}
     }
 }

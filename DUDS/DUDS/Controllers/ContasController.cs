@@ -22,6 +22,7 @@ namespace DUDS.Controllers
             _context = context;
         }
 
+        #region Conta
         // GET: api/Contas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblContas>>> Contas()
@@ -66,6 +67,9 @@ namespace DUDS.Controllers
                 Ok(itensConta));
         }
 
+        #endregion
+
+        #region Tipo Conta
         // GET: api/TipoContas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblTipoConta>>> TipoContas()
@@ -109,6 +113,8 @@ namespace DUDS.Controllers
                 },
                 Ok(itensTipoConta));
         }
+
+        #endregion
 
         // PUT: api/Contas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

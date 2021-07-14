@@ -15,6 +15,8 @@ namespace DUDS.Models
         public TblCustodiante()
         {
             TblFundo = new HashSet<TblFundo>();
+            TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
+            TblPosicaoCliente = new HashSet<TblPosicaoCliente>();
         }
 
         [Key]
@@ -37,5 +39,9 @@ namespace DUDS.Models
 
         [InverseProperty("CodCustodianteNavigation")]
         public virtual ICollection<TblFundo> TblFundo { get; set; }
+        [InverseProperty("CodCustodianteNavigation")]
+        public virtual ICollection<TblOrdemPassivo> TblOrdemPassivo { get; set; }
+        [InverseProperty("CodCustodianteNavigation")]
+        public virtual ICollection<TblPosicaoCliente> TblPosicaoCliente { get; set; }
     }
 }
