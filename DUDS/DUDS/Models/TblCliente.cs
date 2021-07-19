@@ -26,9 +26,6 @@ namespace DUDS.Models
         [Key]
         [Column("id")]
         public long Id { get; set; }
-        [Column("cod_cliente_custodia")]
-        [StringLength(50)]
-        public string CodClienteCustodia { get; set; }
         [Required]
         [Column("nome_cliente")]
         [StringLength(100)]

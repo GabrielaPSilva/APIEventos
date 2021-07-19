@@ -493,9 +493,11 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblLogErros>(entity =>
             {
-                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+                entity.Property(e => e.DataCadastro).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Sistema).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
             });
 
             modelBuilder.Entity<TblMovimentacaoNota>(entity =>

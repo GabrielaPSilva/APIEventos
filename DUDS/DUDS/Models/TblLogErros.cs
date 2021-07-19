@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DUDS.Models
 {
-    [Keyless]
     [Table("tbl_log_erros")]
     public partial class TblLogErros
     {
+        [Key]
         [Column("id")]
-        public Guid? Id { get; set; }
+        public int Id { get; set; }
         [Column("sistema")]
         [StringLength(50)]
         public string Sistema { get; set; }
@@ -26,7 +26,8 @@ namespace DUDS.Models
         [Column("descricao", TypeName = "text")]
         public string Descricao { get; set; }
         [Column("usuario_modificacao")]
-        public int? UsuarioModificacao { get; set; }
+        [StringLength(100)]
+        public string UsuarioModificacao { get; set; }
         [Column("data_cadastro", TypeName = "datetime")]
         public DateTime? DataCadastro { get; set; }
     }

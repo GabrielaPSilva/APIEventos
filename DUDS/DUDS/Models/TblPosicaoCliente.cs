@@ -23,6 +23,8 @@ namespace DUDS.Models
         [Key]
         [Column("data_ref", TypeName = "date")]
         public DateTime DataRef { get; set; }
+        [Column("cod_custodiante")]
+        public int CodCustodiante { get; set; }
         [Column("qtde_cota", TypeName = "decimal(22, 10)")]
         public decimal QtdeCota { get; set; }
         [Column("valor_cota", TypeName = "decimal(22, 10)")]
@@ -43,8 +45,6 @@ namespace DUDS.Models
         public decimal ValorLiqBloqueado { get; set; }
         [Column("valor_bruto_bloqueado", TypeName = "decimal(22, 10)")]
         public decimal ValorBrutoBloqueado { get; set; }
-        [Column("cod_custodiante")]
-        public int CodCustodiante { get; set; }
 
         [ForeignKey(nameof(CodCliente))]
         [InverseProperty(nameof(TblCliente.TblPosicaoCliente))]
