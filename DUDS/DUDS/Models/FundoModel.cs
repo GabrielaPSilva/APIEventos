@@ -10,11 +10,11 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(70)]
         public string NomeReduzido { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(150)]
         public string NomeFundo { get; set; }
         public string Mnemonico { get; set; }
@@ -22,7 +22,7 @@ namespace DUDS.Models
         public float? PerformanceFee { get; set; }
         public float? AdmFee { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(6)]
         public string TipoFundo { get; set; }
 
@@ -81,7 +81,7 @@ namespace DUDS.Models
         public string ContagemDiasLiquidacaoResgate { get; set; }
         public DateTime DataModificacao { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
         public bool? Ativo { get; set; }

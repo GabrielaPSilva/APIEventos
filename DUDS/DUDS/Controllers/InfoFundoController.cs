@@ -156,8 +156,8 @@ namespace DUDS.Controllers
         }
 
         //PUT: api/Fundo/id
-        [HttpPut("{Fundo}")]
-        public async Task<IActionResult> EditarFundo([FromBody] FundoModel fundo)
+        [HttpPut]
+        public async Task<IActionResult> EditarFundo(FundoModel fundo)
         {
             try
             {
@@ -165,41 +165,41 @@ namespace DUDS.Controllers
 
                 if (registroFundo != null)
                 {
-                    registroFundo.NomeFundo = fundo.NomeFundo;
-                    registroFundo.NomeReduzido = fundo.NomeReduzido;
-                    registroFundo.Cnpj = fundo.Cnpj;
-                    registroFundo.PerformanceFee = fundo.PerformanceFee;
-                    registroFundo.AdmFee = fundo.AdmFee;
-                    registroFundo.TipoFundo = fundo.TipoFundo;
-                    registroFundo.MasterId = fundo.MasterId;
-                    registroFundo.TipoCota = fundo.TipoCota;
-                    registroFundo.CodAdministrador = fundo.CodAdministrador;
-                    registroFundo.CodCustodiante = fundo.CodCustodiante;
-                    registroFundo.CodGestor = fundo.CodGestor;
-                    registroFundo.MoedaFundo = fundo.MoedaFundo;
-                    registroFundo.Estrategia = fundo.Estrategia;
-                    registroFundo.DiasCotizacaoAplicacao = fundo.DiasCotizacaoAplicacao;
-                    registroFundo.ContagemDiasCotizacaoAplicacao = fundo.ContagemDiasCotizacaoAplicacao;
-                    registroFundo.DiasCotizacaoResgate = fundo.DiasCotizacaoResgate;
-                    registroFundo.ContagemDiasCotizacaoResgate = fundo.ContagemDiasCotizacaoResgate;
-                    registroFundo.DiasLiquidacaoAplicacao = fundo.DiasLiquidacaoAplicacao;
-                    registroFundo.ContagemDiasLiquidacaoAplicacao = fundo.ContagemDiasLiquidacaoAplicacao;
-                    registroFundo.DiasLiquidacaoResgate = fundo.DiasLiquidacaoResgate;
-                    registroFundo.ContagemDiasLiquidacaoResgate = fundo.ContagemDiasLiquidacaoResgate;
-                    registroFundo.Mnemonico = fundo.Mnemonico;
-                    registroFundo.UsuarioModificacao = fundo.UsuarioModificacao;
-                    registroFundo.NomeReduzido = fundo.NomeReduzido;
-                    registroFundo.ClassificacaoAnbima = fundo.ClassificacaoAnbima;
-                    registroFundo.ClassificacaoCvm = fundo.ClassificacaoCvm;
-                    registroFundo.DataCotaInicial = fundo.DataCotaInicial;
-                    registroFundo.ValorCotaInicial = fundo.ValorCotaInicial;
-                    registroFundo.CodAnbima = fundo.CodAnbima;
-                    registroFundo.CodCvm = fundo.CodCvm;
-                    registroFundo.AtivoCetip = fundo.AtivoCetip;
-                    registroFundo.Isin = fundo.Isin;
-                    registroFundo.NumeroGiin = fundo.NumeroGiin;
-                    registroFundo.CdFundoAdm = fundo.CdFundoAdm;
-                    registroFundo.DataEncerramento = fundo.DataEncerramento;
+                    registroFundo.NomeFundo = fundo.NomeFundo == null ? registroFundo.NomeFundo : fundo.NomeFundo;
+                    registroFundo.NomeReduzido = fundo.NomeReduzido == null ? registroFundo.NomeReduzido : fundo.NomeReduzido;
+                    registroFundo.Cnpj = fundo.Cnpj == null ? registroFundo.Cnpj : fundo.Cnpj;
+                    registroFundo.PerformanceFee = (fundo.PerformanceFee == null || fundo.PerformanceFee == 0) ? registroFundo.PerformanceFee : fundo.PerformanceFee;
+                    registroFundo.AdmFee = (fundo.AdmFee == null || fundo.AdmFee == 0) ? registroFundo.AdmFee : fundo.AdmFee;
+                    registroFundo.TipoFundo = fundo.TipoFundo == null ? registroFundo.TipoFundo : fundo.TipoFundo;
+                    registroFundo.MasterId = (fundo.MasterId == null || fundo.MasterId == 0) ? registroFundo.MasterId : fundo.MasterId;
+                    registroFundo.TipoCota = fundo.TipoCota == null ? registroFundo.TipoCota : fundo.TipoCota;
+                    registroFundo.CodAdministrador = (fundo.CodAdministrador == 0 || fundo.CodAdministrador == null) ? registroFundo.CodAdministrador : fundo.CodAdministrador;
+                    registroFundo.CodCustodiante = (fundo.CodCustodiante == 0 || fundo.CodCustodiante == null) ? registroFundo.CodCustodiante : fundo.CodCustodiante;
+                    registroFundo.CodGestor = (fundo.CodGestor == 0 || fundo.CodGestor == null) ? registroFundo.CodGestor : fundo.CodGestor;
+                    registroFundo.MoedaFundo = fundo.MoedaFundo == null ? registroFundo.MoedaFundo : fundo.MoedaFundo;
+                    registroFundo.Estrategia = fundo.Estrategia == null ? registroFundo.Estrategia : fundo.Estrategia;
+                    registroFundo.DiasCotizacaoAplicacao = (fundo.DiasCotizacaoAplicacao == null || fundo.DiasCotizacaoAplicacao == 0) ? registroFundo.DiasCotizacaoAplicacao : fundo.DiasCotizacaoAplicacao;
+                    registroFundo.ContagemDiasCotizacaoAplicacao = fundo.ContagemDiasCotizacaoAplicacao == null ? registroFundo.ContagemDiasCotizacaoAplicacao : fundo.ContagemDiasCotizacaoAplicacao;
+                    registroFundo.DiasCotizacaoResgate = (fundo.DiasCotizacaoResgate == null || fundo.DiasCotizacaoResgate == 0) ? registroFundo.DiasCotizacaoResgate : fundo.DiasCotizacaoResgate;
+                    registroFundo.ContagemDiasCotizacaoResgate = fundo.ContagemDiasCotizacaoResgate == null ? registroFundo.ContagemDiasCotizacaoResgate : fundo.ContagemDiasCotizacaoResgate;
+                    registroFundo.DiasLiquidacaoAplicacao = (fundo.DiasLiquidacaoAplicacao == null || fundo.DiasLiquidacaoAplicacao == 0) ? registroFundo.DiasLiquidacaoAplicacao : fundo.DiasLiquidacaoAplicacao;
+                    registroFundo.ContagemDiasLiquidacaoAplicacao = fundo.ContagemDiasLiquidacaoAplicacao == null ? registroFundo.ContagemDiasLiquidacaoAplicacao : fundo.ContagemDiasLiquidacaoAplicacao;
+                    registroFundo.DiasLiquidacaoResgate = (fundo.DiasLiquidacaoResgate == null || fundo.DiasLiquidacaoResgate == 0) ? registroFundo.DiasLiquidacaoResgate : fundo.DiasLiquidacaoResgate;
+                    registroFundo.ContagemDiasLiquidacaoResgate = fundo.ContagemDiasLiquidacaoResgate == null ? registroFundo.ContagemDiasLiquidacaoResgate : fundo.ContagemDiasLiquidacaoResgate;
+                    registroFundo.Mnemonico = fundo.Mnemonico == null ? registroFundo.Mnemonico : fundo.Mnemonico;
+                    registroFundo.UsuarioModificacao = fundo.UsuarioModificacao == null ? registroFundo.UsuarioModificacao : fundo.UsuarioModificacao;
+                    registroFundo.NomeReduzido = fundo.NomeReduzido == null ? registroFundo.NomeReduzido : fundo.NomeReduzido;
+                    registroFundo.ClassificacaoAnbima = fundo.ClassificacaoAnbima == null ? registroFundo.ClassificacaoAnbima : fundo.ClassificacaoAnbima;
+                    registroFundo.ClassificacaoCvm = fundo.ClassificacaoCvm == null ? registroFundo.ClassificacaoCvm : fundo.ClassificacaoCvm;
+                    registroFundo.DataCotaInicial = fundo.DataCotaInicial == null ? registroFundo.DataCotaInicial : fundo.DataCotaInicial;
+                    registroFundo.ValorCotaInicial = (fundo.ValorCotaInicial == null || fundo.ValorCotaInicial == 0) ? registroFundo.ValorCotaInicial : fundo.ValorCotaInicial;
+                    registroFundo.CodAnbima = fundo.CodAnbima == null ? registroFundo.CodAnbima : fundo.CodAnbima;
+                    registroFundo.CodCvm = fundo.CodCvm == null ? registroFundo.CodCvm : fundo.CodCvm;
+                    registroFundo.AtivoCetip = fundo.AtivoCetip == null ? registroFundo.AtivoCetip : fundo.AtivoCetip;
+                    registroFundo.Isin = fundo.Isin == null ? registroFundo.Isin : fundo.Isin;
+                    registroFundo.NumeroGiin = fundo.NumeroGiin == null ? registroFundo.NumeroGiin : fundo.NumeroGiin;
+                    registroFundo.CdFundoAdm = (fundo.CdFundoAdm == null || fundo.CdFundoAdm == 0) ? registroFundo.CdFundoAdm : fundo.CdFundoAdm;
+                    registroFundo.DataEncerramento = fundo.DataEncerramento == null ? registroFundo.DataEncerramento : fundo.DataEncerramento;
 
                     await _context.SaveChangesAsync();
                 }
