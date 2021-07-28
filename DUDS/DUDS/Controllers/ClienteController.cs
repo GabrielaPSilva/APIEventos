@@ -29,94 +29,94 @@ namespace DUDS.Controllers
         }
 
         // GET: api/Clientes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblCliente>> GetTblCliente(long id)
-        {
-            var tblCliente = await _context.TblCliente.FindAsync(id);
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<TblCliente>> GetTblCliente(long id)
+        //{
+        //    var tblCliente = await _context.TblCliente.FindAsync(id);
 
-            if (tblCliente == null)
-            {
-                return NotFound();
-            }
+        //    if (tblCliente == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return tblCliente;
-        }
+        //    return tblCliente;
+        //}
 
-        // PUT: api/Clientes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblCliente(long id, TblCliente tblCliente)
-        {
-            if (id != tblCliente.Id)
-            {
-                return BadRequest();
-            }
+        //// PUT: api/Clientes/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutTblCliente(long id, TblCliente tblCliente)
+        //{
+        //    if (id != tblCliente.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(tblCliente).State = EntityState.Modified;
+        //    _context.Entry(tblCliente).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblClienteExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!TblClienteExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        // POST: api/Clientes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TblCliente>> PostTblCliente(TblCliente tblCliente)
-        {
-            _context.TblCliente.Add(tblCliente);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (TblClienteExists(tblCliente.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //// POST: api/Clientes
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<TblCliente>> PostTblCliente(TblCliente tblCliente)
+        //{
+        //    _context.TblCliente.Add(tblCliente);
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateException)
+        //    {
+        //        if (TblClienteExists(tblCliente.Id))
+        //        {
+        //            return Conflict();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return CreatedAtAction("GetTblCliente", new { id = tblCliente.Id }, tblCliente);
-        }
+        //    return CreatedAtAction("GetTblCliente", new { id = tblCliente.Id }, tblCliente);
+        //}
 
-        // DELETE: api/Clientes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblCliente(long id)
-        {
-            var tblCliente = await _context.TblCliente.FindAsync(id);
-            if (tblCliente == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/Clientes/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteTblCliente(long id)
+        //{
+        //    var tblCliente = await _context.TblCliente.FindAsync(id);
+        //    if (tblCliente == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.TblCliente.Remove(tblCliente);
-            await _context.SaveChangesAsync();
+        //    _context.TblCliente.Remove(tblCliente);
+        //    await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool TblClienteExists(long id)
-        {
-            return _context.TblCliente.Any(e => e.Id == id);
-        }
+        //private bool TblClienteExists(long id)
+        //{
+        //    return _context.TblCliente.Any(e => e.Id == id);
+        //}
     }
 }

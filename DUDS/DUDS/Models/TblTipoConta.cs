@@ -34,6 +34,8 @@ namespace DUDS.Models
         [Column("usuario_modificacao")]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
+        [Column("ativo")]
+        public bool? Ativo { get; set; }
 
         [InverseProperty("CodTipoContaNavigation")]
         public virtual ICollection<TblContas> TblContas { get; set; }

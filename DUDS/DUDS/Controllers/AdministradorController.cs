@@ -26,7 +26,7 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblAdministrador>>> Administrador()
         {
-            return await _context.TblAdministrador.ToListAsync();
+            return await _context.TblAdministrador.OrderBy(c => c.NomeAdministrador).AsNoTracking().ToListAsync();
         }
 
         // GET: api/Administrador/id
@@ -40,8 +40,30 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblAdministrador;
+            return Ok(tblAdministrador);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<AdministradorModel>> CadastrarAdministrador(AdministradorModel tblAdministrador)
+        {
+            var itensAdministrador = new TblAdministrador
+            {
+                NomeAdministrador = tblAdministrador.NomeAdministrador,
+                Cnpj = tblAdministrador.Cnpj,
+                DataModificacao = tblAdministrador.DataModificacao,
+                UsuarioModificacao = tblAdministrador.UsuarioModificacao,
+                Ativo = tblAdministrador.Ativo
+            };
+
+            _context.TblAdministrador.Add(itensAdministrador);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetAdministrador),
+                new { id = itensAdministrador.Id },
+                Ok(itensAdministrador));
+        }
+
 
         // PUT: api/Administrador/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -85,25 +107,46 @@ namespace DUDS.Controllers
         //    return CreatedAtAction("GetTblAdministrador", new { id = tblAdministrador.Id }, tblAdministrador);
         //}
 
-        //// DELETE: api/Administrador/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTblAdministrador(int id)
-        //{
-        //    var tblAdministrador = await _context.TblAdministrador.FindAsync(id);
-        //    if (tblAdministrador == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // DELETE: api/Fundo/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarAdministrador(int id)
+        {
+            var tblAdministrador = await _context.TblAdministrador.FindAsync(id);
 
-        //    _context.TblAdministrador.Remove(tblAdministrador);
-        //    await _context.SaveChangesAsync();
+            if (tblAdministrador == null)
+            {
+                return NotFound();
+            }
 
-        //    return NoContent();
-        //}
+            _context.TblAdministrador.Remove(tblAdministrador);
+            await _context.SaveChangesAsync();
 
-        //private bool TblAdministradorExists(int id)
-        //{
-        //    return _context.TblAdministrador.Any(e => e.Id == id);
-        //}
+            return Ok();
+        }
+
+        // DESATIVA: api/Fundo/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarAdministrador(int id)
+        {
+            var registroAdministrador = _context.TblAdministrador.Find(id);
+
+            if (registroAdministrador != null)
+            {
+                registroAdministrador.Ativo = false;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        private bool AdministradorExists(int id)
+        {
+            return _context.TblAdministrador.Any(e => e.Id == id);
+        }
     }
 }

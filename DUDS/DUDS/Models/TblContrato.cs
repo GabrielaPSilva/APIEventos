@@ -46,6 +46,13 @@ namespace DUDS.Models
         public DateTime? DataRetroatividade { get; set; }
         [Column("data_assinatura", TypeName = "date")]
         public DateTime? DataAssinatura { get; set; }
+        [Column("ativo")]
+        public bool? Ativo { get; set; }
+        [Column("usuario_modificacao")]
+        [StringLength(100)]
+        public string UsuarioModificacao { get; set; }
+        [Column("data_modificacao", TypeName = "datetime")]
+        public DateTime? DataModificacao { get; set; }
 
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblContrato))]

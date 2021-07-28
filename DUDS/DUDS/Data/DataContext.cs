@@ -184,6 +184,8 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblAdministrador>(entity =>
             {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Cnpj).IsFixedLength(true);
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
@@ -263,6 +265,8 @@ namespace DUDS.Data
 
                 entity.Property(e => e.Agencia).IsUnicode(false);
 
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Banco).IsUnicode(false);
 
                 entity.Property(e => e.Conta).IsUnicode(false);
@@ -284,6 +288,10 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblContrato>(entity =>
             {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.DirecaoPagamento).IsUnicode(false);
 
                 entity.Property(e => e.IdDocusign).IsUnicode(false);
@@ -291,6 +299,8 @@ namespace DUDS.Data
                 entity.Property(e => e.Status).IsUnicode(false);
 
                 entity.Property(e => e.TipoContrato).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
                 entity.Property(e => e.Versao).IsUnicode(false);
 
@@ -341,6 +351,8 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblDistribuidor>(entity =>
             {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Cnpj).IsFixedLength(true);
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
@@ -407,6 +419,8 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblFundo>(entity =>
             {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.ContagemDiasCotizacaoAplicacao).IsFixedLength(true);
 
                 entity.Property(e => e.ContagemDiasCotizacaoResgate).IsFixedLength(true);
@@ -450,6 +464,8 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblGestor>(entity =>
             {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Cnpj).IsFixedLength(true);
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
@@ -459,6 +475,8 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblInvestidor>(entity =>
             {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Cnpj).IsUnicode(false);
 
                 entity.Property(e => e.NomeCliente).IsUnicode(false);
@@ -825,6 +843,8 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblTipoConta>(entity =>
             {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.DescricaoConta).IsUnicode(false);

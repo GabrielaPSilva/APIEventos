@@ -34,5 +34,7 @@ namespace DUDS.Models
         [Column("usuario_modificacao")]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
+        [Column("ativo")]
+        public bool? Ativo { get; set; }
     }
 }

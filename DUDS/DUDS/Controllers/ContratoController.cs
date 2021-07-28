@@ -26,10 +26,26 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblContrato>>> Contrato()
         {
-            return await _context.TblContrato.ToListAsync();
+            try
+            {
+                var contratos = await _context.TblContrato.AsNoTracking().ToListAsync();
+
+                if (contratos != null)
+                {
+                    return Ok(contratos);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest();
+            }
         }
 
-        // GET: api/Contrato/5
+        // GET: api/Contrato/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblContrato>> GetContrato(int id)
         {
@@ -40,7 +56,35 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblContrato;
+            return Ok(tblContrato);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ContratoModel>> CadastrarContrato(ContratoModel tblContratoModel)
+        {
+            var itensContrato = new TblContrato
+            {
+                CodDistribuidor = tblContratoModel.CodDistribuidor,
+                TipoContrato = tblContratoModel.TipoContrato,
+                Versao = tblContratoModel.Versao,
+                Status = tblContratoModel.Status,
+                IdDocusign = tblContratoModel.IdDocusign,
+                DirecaoPagamento = tblContratoModel.DirecaoPagamento,
+                ClausulaRetroatividade = tblContratoModel.ClausulaRetroatividade,
+                DataRetroatividade = tblContratoModel.DataRetroatividade,
+                DataAssinatura = tblContratoModel.DataAssinatura,
+                Ativo = tblContratoModel.Ativo,
+                UsuarioModificacao = tblContratoModel.UsuarioModificacao,
+                DataModificacao = tblContratoModel.DataModificacao
+            };
+
+            _context.TblContrato.Add(itensContrato);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetContrato),
+                new { id = itensContrato.Id },
+                Ok(itensContrato));
         }
 
         // PUT: api/Contrato/5
@@ -74,36 +118,46 @@ namespace DUDS.Controllers
         //    return NoContent();
         //}
 
-        //// POST: api/Contrato
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<TblContrato>> PostTblContrato(TblContrato tblContrato)
-        //{
-        //    _context.TblContrato.Add(tblContrato);
-        //    await _context.SaveChangesAsync();
+        // DELETE: api/Contrato/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarContrato(int id)
+        {
+            var tblContrato = await _context.TblContrato.FindAsync(id);
 
-        //    return CreatedAtAction("GetTblContrato", new { id = tblContrato.Id }, tblContrato);
-        //}
+            if (tblContrato == null)
+            {
+                return NotFound();
+            }
 
-        //// DELETE: api/Contrato/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTblContrato(int id)
-        //{
-        //    var tblContrato = await _context.TblContrato.FindAsync(id);
-        //    if (tblContrato == null)
-        //    {
-        //        return NotFound();
-        //    }
+            _context.TblContrato.Remove(tblContrato);
+            await _context.SaveChangesAsync();
 
-        //    _context.TblContrato.Remove(tblContrato);
-        //    await _context.SaveChangesAsync();
+            return Ok();
+        }
 
-        //    return NoContent();
-        //}
+        // DESATIVA: api/Contrato/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarContrato(int id)
+        {
+            var registroContrato = _context.TblContrato.Find(id);
 
-        //private bool TblContratoExists(int id)
-        //{
-        //    return _context.TblContrato.Any(e => e.Id == id);
-        //}
+            if (registroContrato != null)
+            {
+                registroContrato.Ativo = false;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        private bool ContratoExists(int id)
+        {
+            return _context.TblContrato.Any(e => e.Id == id);
+        }
     }
 }

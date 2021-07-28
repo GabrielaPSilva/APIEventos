@@ -30,6 +30,7 @@ namespace DUDS.Controllers
             return await _context.TblDeparaFundoproduto.ToListAsync();
         }
 
+        #region Fundo
         // GET: api/Fundo
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblFundo>>> Fundo()
@@ -44,7 +45,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (InvalidOperationException e)
@@ -93,7 +94,7 @@ namespace DUDS.Controllers
                 DiasLiquidacaoResgate = tblFundoModel.DiasLiquidacaoResgate,
                 ContagemDiasLiquidacaoResgate = tblFundoModel.ContagemDiasLiquidacaoResgate,
                 Mnemonico = tblFundoModel.Mnemonico,
-
+                UsuarioModificacao = tblFundoModel.UsuarioModificacao,
                 NomeReduzido = tblFundoModel.NomeReduzido,
                 ClassificacaoAnbima = tblFundoModel.ClassificacaoAnbima,
                 ClassificacaoCvm = tblFundoModel.ClassificacaoCvm,
@@ -105,7 +106,7 @@ namespace DUDS.Controllers
                 Isin = tblFundoModel.Isin,
                 NumeroGiin = tblFundoModel.NumeroGiin,
                 CdFundoAdm = tblFundoModel.CdFundoAdm,
-                DataEncerramento = tblFundoModel.DataEncerramento
+                Ativo = tblFundoModel.Ativo
             };
 
             _context.TblFundo.Add(itensFundo);
@@ -119,7 +120,7 @@ namespace DUDS.Controllers
 
         // DELETE: api/Fundo/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFundo(int id)
+        public async Task<IActionResult> DeletarFundo(int id)
         {
             var tblFundo = await _context.TblFundo.FindAsync(id);
 
@@ -133,5 +134,88 @@ namespace DUDS.Controllers
 
             return Ok();
         }
+
+        // DESATIVA: api/Fundo/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarFundo(int id)
+        {
+            var registroFundo = _context.TblFundo.Find(id);
+
+            if (registroFundo != null)
+            {
+                registroFundo.Ativo = false;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        //PUT: api/Fundo/id
+        [HttpPut("{Fundo}")]
+        public async Task<IActionResult> EditarFundo([FromBody] FundoModel fundo)
+        {
+            try
+            {
+                var registroFundo = _context.TblFundo.Find(fundo.Id);
+
+                if (registroFundo != null)
+                {
+                    registroFundo.NomeFundo = fundo.NomeFundo;
+                    registroFundo.NomeReduzido = fundo.NomeReduzido;
+                    registroFundo.Cnpj = fundo.Cnpj;
+                    registroFundo.PerformanceFee = fundo.PerformanceFee;
+                    registroFundo.AdmFee = fundo.AdmFee;
+                    registroFundo.TipoFundo = fundo.TipoFundo;
+                    registroFundo.MasterId = fundo.MasterId;
+                    registroFundo.TipoCota = fundo.TipoCota;
+                    registroFundo.CodAdministrador = fundo.CodAdministrador;
+                    registroFundo.CodCustodiante = fundo.CodCustodiante;
+                    registroFundo.CodGestor = fundo.CodGestor;
+                    registroFundo.MoedaFundo = fundo.MoedaFundo;
+                    registroFundo.Estrategia = fundo.Estrategia;
+                    registroFundo.DiasCotizacaoAplicacao = fundo.DiasCotizacaoAplicacao;
+                    registroFundo.ContagemDiasCotizacaoAplicacao = fundo.ContagemDiasCotizacaoAplicacao;
+                    registroFundo.DiasCotizacaoResgate = fundo.DiasCotizacaoResgate;
+                    registroFundo.ContagemDiasCotizacaoResgate = fundo.ContagemDiasCotizacaoResgate;
+                    registroFundo.DiasLiquidacaoAplicacao = fundo.DiasLiquidacaoAplicacao;
+                    registroFundo.ContagemDiasLiquidacaoAplicacao = fundo.ContagemDiasLiquidacaoAplicacao;
+                    registroFundo.DiasLiquidacaoResgate = fundo.DiasLiquidacaoResgate;
+                    registroFundo.ContagemDiasLiquidacaoResgate = fundo.ContagemDiasLiquidacaoResgate;
+                    registroFundo.Mnemonico = fundo.Mnemonico;
+                    registroFundo.UsuarioModificacao = fundo.UsuarioModificacao;
+                    registroFundo.NomeReduzido = fundo.NomeReduzido;
+                    registroFundo.ClassificacaoAnbima = fundo.ClassificacaoAnbima;
+                    registroFundo.ClassificacaoCvm = fundo.ClassificacaoCvm;
+                    registroFundo.DataCotaInicial = fundo.DataCotaInicial;
+                    registroFundo.ValorCotaInicial = fundo.ValorCotaInicial;
+                    registroFundo.CodAnbima = fundo.CodAnbima;
+                    registroFundo.CodCvm = fundo.CodCvm;
+                    registroFundo.AtivoCetip = fundo.AtivoCetip;
+                    registroFundo.Isin = fundo.Isin;
+                    registroFundo.NumeroGiin = fundo.NumeroGiin;
+                    registroFundo.CdFundoAdm = fundo.CdFundoAdm;
+                    registroFundo.DataEncerramento = fundo.DataEncerramento;
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException) when (!FundoExists(fundo.Id))
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        private bool FundoExists(int id)
+        {
+            return _context.TblFundo.Any(e => e.Id == id);
+        }
+        #endregion
     }
 }
