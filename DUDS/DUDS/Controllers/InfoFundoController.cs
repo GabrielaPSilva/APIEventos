@@ -37,7 +37,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                var fundos = await _context.TblFundo.OrderBy(c => c.NomeFundo).AsNoTracking().ToListAsync();
+                var fundos = await _context.TblFundo.Where(c => c.Ativo == true).OrderBy(c => c.NomeFundo).AsNoTracking().ToListAsync();
 
                 if (fundos != null)
                 {

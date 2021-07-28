@@ -26,7 +26,7 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblAdministrador>>> Administrador()
         {
-            return await _context.TblAdministrador.OrderBy(c => c.NomeAdministrador).AsNoTracking().ToListAsync();
+            return await _context.TblAdministrador.Where(c => c.Ativo == true).OrderBy(c => c.NomeAdministrador).AsNoTracking().ToListAsync();
         }
 
         // GET: api/Administrador/id
@@ -44,15 +44,15 @@ namespace DUDS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<AdministradorModel>> CadastrarAdministrador(AdministradorModel tblAdministrador)
+        public async Task<ActionResult<AdministradorModel>> CadastrarAdministrador(AdministradorModel tblAdministradorModel)
         {
             var itensAdministrador = new TblAdministrador
             {
-                NomeAdministrador = tblAdministrador.NomeAdministrador,
-                Cnpj = tblAdministrador.Cnpj,
-                DataModificacao = tblAdministrador.DataModificacao,
-                UsuarioModificacao = tblAdministrador.UsuarioModificacao,
-                Ativo = tblAdministrador.Ativo
+                NomeAdministrador = tblAdministradorModel.NomeAdministrador,
+                Cnpj = tblAdministradorModel.Cnpj,
+                DataModificacao = tblAdministradorModel.DataModificacao,
+                UsuarioModificacao = tblAdministradorModel.UsuarioModificacao,
+                Ativo = tblAdministradorModel.Ativo
             };
 
             _context.TblAdministrador.Add(itensAdministrador);
@@ -107,7 +107,7 @@ namespace DUDS.Controllers
         //    return CreatedAtAction("GetTblAdministrador", new { id = tblAdministrador.Id }, tblAdministrador);
         //}
 
-        // DELETE: api/Fundo/id
+        // DELETE: api/Administrador/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAdministrador(int id)
         {
@@ -124,7 +124,7 @@ namespace DUDS.Controllers
             return Ok();
         }
 
-        // DESATIVA: api/Fundo/id
+        // DESATIVA: api/Administrador/id
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarAdministrador(int id)
         {

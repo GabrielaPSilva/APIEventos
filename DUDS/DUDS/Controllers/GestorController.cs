@@ -26,7 +26,7 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblGestor>>> Gestor()
         {
-            return await _context.TblGestor.ToListAsync();
+            return await _context.TblGestor.Where(c => c.Ativo == true).OrderBy(c => c.NomeGestor).AsNoTracking().ToListAsync();
         }
 
         // GET: api/Gestor/id
@@ -40,7 +40,7 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblGestor;
+            return Ok(tblGestor);
         }
 
         // PUT: api/Gestor/5
@@ -101,9 +101,69 @@ namespace DUDS.Controllers
         //    return NoContent();
         //}
 
-        //private bool TblGestorExists(int id)
-        //{
-        //    return _context.TblGestor.Any(e => e.Id == id);
-        //}
+        [HttpPost]
+        public async Task<ActionResult<GestorModel>> CadastrarGestor(GestorModel tblGestorModel)
+        {
+            var itensGestor = new TblGestor
+            {
+                NomeGestor = tblGestorModel.NomeGestor,
+                Cnpj = tblGestorModel.Cnpj,
+                CodGestorAdm = tblGestorModel.CodGestorAdm,
+                DataModificacao = tblGestorModel.DataModificacao,
+                UsuarioModificacao = tblGestorModel.UsuarioModificacao,
+                Ativo = tblGestorModel.Ativo
+            };
+
+            _context.TblGestor.Add(itensGestor);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetGestor),
+                new { id = itensGestor.Id },
+                Ok(itensGestor));
+        }
+
+        // DELETE: api/Gestor/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarGestor(int id)
+        {
+            var tblGestor = await _context.TblGestor.FindAsync(id);
+
+            if (tblGestor == null)
+            {
+                return NotFound();
+            }
+
+            _context.TblGestor.Remove(tblGestor);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        // DESATIVA: api/Gestor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarGestor(int id)
+        {
+            var registroGestor = _context.TblGestor.Find(id);
+
+            if (registroGestor != null)
+            {
+                registroGestor.Ativo = false;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
+        private bool GestorExists(int id)
+        {
+            return _context.TblGestor.Any(e => e.Id == id);
+        }
     }
 }

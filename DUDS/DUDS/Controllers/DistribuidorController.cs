@@ -26,7 +26,7 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblDistribuidor>>> Distribuidor()
         {
-            return await _context.TblDistribuidor.ToListAsync();
+            return await _context.TblDistribuidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeDistribuidorReduzido).AsNoTracking().ToListAsync();
         }
 
         // GET: api/Distribuidor/id
@@ -40,7 +40,7 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblDistribuidor;
+            return Ok(tblDistribuidor);
         }
 
         // PUT: api/Distribuidor/5
@@ -85,25 +85,70 @@ namespace DUDS.Controllers
         //    return CreatedAtAction("GetTblDistribuidor", new { id = tblDistribuidor.Id }, tblDistribuidor);
         //}
 
-        //// DELETE: api/Distribuidor/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTblDistribuidor(int id)
-        //{
-        //    var tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
-        //    if (tblDistribuidor == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPost]
+        public async Task<ActionResult<DistribuidorModel>> CadastrarDistribuidor(DistribuidorModel tblDistribuidorModel)
+        {
+            var itensDistribuidor = new TblDistribuidor
+            {
+                NomeDistribuidor = tblDistribuidorModel.NomeDistribuidor,
+                NomeDistribuidorReduzido = tblDistribuidorModel.NomeDistribuidorReduzido,
+                Cnpj = tblDistribuidorModel.Cnpj,
+                ClassificacaoDistribuidor = tblDistribuidorModel.ClassificacaoDistribuidor,
+                CodDistrAdm = tblDistribuidorModel.CodDistrAdm,
+                DataModificacao = tblDistribuidorModel.DataModificacao,
+                UsuarioModificacao = tblDistribuidorModel.UsuarioModificacao,
+                Ativo = tblDistribuidorModel.Ativo,
+            };
 
-        //    _context.TblDistribuidor.Remove(tblDistribuidor);
-        //    await _context.SaveChangesAsync();
+            _context.TblDistribuidor.Add(itensDistribuidor);
+            await _context.SaveChangesAsync();
 
-        //    return NoContent();
-        //}
+            return CreatedAtAction(
+                nameof(GetDistribuidor),
+                new { id = itensDistribuidor.Id },
+                Ok(itensDistribuidor));
+        }
 
-        //private bool TblDistribuidorExists(int id)
-        //{
-        //    return _context.TblDistribuidor.Any(e => e.Id == id);
-        //}
+        // DELETE: api/Distribuidor/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarDistribuidor(int id)
+        {
+            var tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
+
+            if (tblDistribuidor == null)
+            {
+                return NotFound();
+            }
+
+            _context.TblDistribuidor.Remove(tblDistribuidor);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        // DESATIVA: api/Distribuidor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarDistribuidor(int id)
+        {
+            var registroDistribuidor = _context.TblDistribuidor.Find(id);
+
+            if (registroDistribuidor != null)
+            {
+                registroDistribuidor.Ativo = false;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        private bool TblDistribuidorExists(int id)
+        {
+            return _context.TblDistribuidor.Any(e => e.Id == id);
+        }
     }
 }

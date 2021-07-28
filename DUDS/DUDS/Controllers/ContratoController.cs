@@ -28,7 +28,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                var contratos = await _context.TblContrato.AsNoTracking().ToListAsync();
+                var contratos = await _context.TblContrato.Where(c => c.Ativo == true).AsNoTracking().ToListAsync();
 
                 if (contratos != null)
                 {
