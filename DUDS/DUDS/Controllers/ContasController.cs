@@ -27,7 +27,7 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblContas>>> Contas()
         {
-            return await _context.TblContas.ToListAsync();
+            return await _context.TblContas.Where(c => c.Ativo == true).ToListAsync();
         }
 
         // GET: api/Contas/5
@@ -41,7 +41,7 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblContas;
+            return Ok(tblContas);
         }
 
         [HttpPost]
@@ -67,6 +67,43 @@ namespace DUDS.Controllers
                 Ok(itensConta));
         }
 
+
+        // DELETE: api/Conta/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarConta(int id)
+        {
+            var tblConta = await _context.TblContas.FindAsync(id);
+
+            if (tblConta == null)
+            {
+                return NotFound();
+            }
+
+            _context.TblContas.Remove(tblConta);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        // DESATIVA: api/Fundo/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarConta(int id)
+        {
+            var registroConta = _context.TblContas.Find(id);
+
+            if (registroConta != null)
+            {
+                registroConta.Ativo = false;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
         #endregion
 
         #region Tipo Conta
@@ -74,7 +111,7 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblTipoConta>>> TipoContas()
         {
-            return await _context.TblTipoConta.ToListAsync();
+            return await _context.TblTipoConta.Where(c => c.Ativo == true).OrderBy(c => c.TipoConta).ToListAsync();
         }
 
         // GET: api/TipoContas/5
@@ -112,6 +149,49 @@ namespace DUDS.Controllers
                     Id = itensTipoConta.Id,
                 },
                 Ok(itensTipoConta));
+        }
+
+
+        // DELETE: api/TipoConta/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarTipoConta(int id)
+        {
+            var tblTipoConta = await _context.TblTipoConta.FindAsync(id);
+
+            if (tblTipoConta == null)
+            {
+                return NotFound();
+            }
+
+            _context.TblTipoConta.Remove(tblTipoConta);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        // DESATIVA: api/TipoConta/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarTipoConta(int id)
+        {
+            var registroTipoConta = _context.TblTipoConta.Find(id);
+
+            if (registroTipoConta != null)
+            {
+                registroTipoConta.Ativo = false;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        private bool TipoContasExists(int id)
+        {
+            return _context.TblTipoConta.Any(e => e.Id == id);
         }
 
         #endregion
@@ -170,27 +250,6 @@ namespace DUDS.Controllers
         //    }
 
         //    return CreatedAtAction("GetTblContas", new { id = tblContas.CodFundo }, tblContas);
-        //}
-
-        //// DELETE: api/Contas/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTblContas(int id)
-        //{
-        //    var tblContas = await _context.TblContas.FindAsync(id);
-        //    if (tblContas == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.TblContas.Remove(tblContas);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
-        //private bool TblContasExists(int id)
-        //{
-        //    return _context.TblContas.Any(e => e.CodFundo == id);
         //}
     }
 }
