@@ -28,6 +28,8 @@ namespace DUDS.Models
         public decimal SaldoParcial { get; set; }
         [Column("saldo_gestor", TypeName = "decimal(22, 10)")]
         public decimal SaldoGestor { get; set; }
+        [Column("id")]
+        public int Id { get; set; }
 
         [ForeignKey(nameof(CodFundo))]
         [InverseProperty(nameof(TblFundo.TblPagamentoServico))]

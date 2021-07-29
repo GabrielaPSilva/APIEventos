@@ -30,9 +30,9 @@ namespace DUDS.Controllers
 
         // GET: api/Investidor/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblGestor>> GetGestor(int id)
+        public async Task<ActionResult<TblGestor>> GetInvestidor(int id)
         {
-            var tblGestor = await _context.TblGestor.FindAsync(id);
+            var tblGestor = await _context.TblInvestidor.FindAsync(id);
 
             if (tblGestor == null)
             {
@@ -43,31 +43,30 @@ namespace DUDS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GestorModel>> CadastrarGestor(GestorModel tblGestorModel)
+        public async Task<ActionResult<InvestidorModel>> CadastrarInvestidor(InvestidorModel tblInvestidorModel)
         {
-            var itensGestor = new TblGestor
+            var itensInvestidor = new TblInvestidor
             {
-                NomeGestor = tblGestorModel.NomeGestor,
-                Cnpj = tblGestorModel.Cnpj,
-                CodGestorAdm = tblGestorModel.CodGestorAdm,
-                DataModificacao = tblGestorModel.DataModificacao,
-                UsuarioModificacao = tblGestorModel.UsuarioModificacao,
-                Ativo = tblGestorModel.Ativo
+                NomeCliente = tblInvestidorModel.NomeCliente,
+                Cnpj = tblInvestidorModel.Cnpj,
+                TipoCliente = tblInvestidorModel.TipoCliente,
+                CodAdministrador = tblInvestidorModel.CodAdministrador,
+                CodGestor = tblInvestidorModel.CodGestor
             };
 
-            _context.TblGestor.Add(itensGestor);
+            _context.TblInvestidor.Add(itensInvestidor);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(
-                nameof(GetGestor),
-                new { id = itensGestor.Id },
-                Ok(itensGestor));
+                nameof(GetInvestidor),
+                new { id = itensInvestidor.Id },
+                Ok(itensInvestidor));
         }
 
 
         //PUT: api/Investidor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarGestor(int id, InvestidorModel investidor)
+        public async Task<IActionResult> EditarInvestidor(int id, InvestidorModel investidor)
         {
             try
             {

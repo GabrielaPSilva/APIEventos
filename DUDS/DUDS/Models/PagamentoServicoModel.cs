@@ -8,6 +8,8 @@ namespace DUDS.Models
 {
     public class PagamentoServicoModel
     {
+        public int id { get; set; }
+
         [StringLength(7)]
         public string Competencia { get; set; }
         public int CodFundo { get; set; }

@@ -47,7 +47,7 @@ namespace DUDS.Controllers
 
         // GET: api/ErrosPagamento/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblErrosPagamento>> GetErrosPagamento(string id)
+        public async Task<ActionResult<TblErrosPagamento>> GetErrosPagamento(int id)
         {
             var tblErrosPagamento = await _context.TblErrosPagamento.FindAsync(id);
 

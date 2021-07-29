@@ -78,7 +78,7 @@ namespace DUDS.Controllers
                 {
                     registroGestor.NomeGestor = gestor.NomeGestor == null ? registroGestor.NomeGestor : gestor.NomeGestor;
                     registroGestor.Cnpj = gestor.Cnpj == null ? registroGestor.Cnpj : gestor.Cnpj;
-                    registroGestor.CodGestorAdm = (gestor.CodGestorAdm == null || gestor.CodGestorAdm == 0) ? registroGestor.CodGestorAdm : gestor.CodGestorAdm;
+                    registroGestor.CodGestorAdm = gestor.CodGestorAdm == 0 ? registroGestor.CodGestorAdm : gestor.CodGestorAdm;
 
                     await _context.SaveChangesAsync();
                 }

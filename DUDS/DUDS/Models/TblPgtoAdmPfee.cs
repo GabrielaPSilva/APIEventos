@@ -29,6 +29,8 @@ namespace DUDS.Models
         public decimal TaxaAdministracao { get; set; }
         [Column("taxa_gestao", TypeName = "decimal(22, 10)")]
         public decimal TaxaGestao { get; set; }
+        [Column("id")]
+        public int Id { get; set; }
 
         [ForeignKey(nameof(CodCliente))]
         [InverseProperty(nameof(TblCliente.TblPgtoAdmPfee))]

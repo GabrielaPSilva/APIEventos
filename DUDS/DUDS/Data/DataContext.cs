@@ -600,6 +600,8 @@ namespace DUDS.Data
                     .IsUnicode(false)
                     .IsFixedLength(true);
 
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPagamentoServico)
                     .HasForeignKey(d => d.CodFundo)
@@ -613,6 +615,8 @@ namespace DUDS.Data
                     .HasName("PK_tbl_pgto_adm_pfee_1");
 
                 entity.Property(e => e.Competencia).IsFixedLength(true);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.HasOne(d => d.CodClienteNavigation)
                     .WithMany(p => p.TblPgtoAdmPfee)

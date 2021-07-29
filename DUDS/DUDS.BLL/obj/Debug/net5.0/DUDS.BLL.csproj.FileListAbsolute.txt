@@ -2,7 +2,6 @@ C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug
 C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\net5.0\DUDS.BLL.dll
 C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\net5.0\ref\DUDS.BLL.dll
 C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\bin\Debug\net5.0\DUDS.BLL.pdb
-C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\net5.0\DUDS.BLL.csprojAssemblyReference.cache
 C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\net5.0\DUDS.BLL.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\net5.0\DUDS.BLL.AssemblyInfoInputs.cache
 C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\net5.0\DUDS.BLL.AssemblyInfo.cs
@@ -10,3 +9,4 @@ C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug
 C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\net5.0\DUDS.BLL.dll
 C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\net5.0\ref\DUDS.BLL.dll
 C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\net5.0\DUDS.BLL.pdb
+C:\Users\gpinheiro\source\repos\DahliaUnifiedDataService\DUDS\DUDS.BLL\obj\Debug\net5.0\DUDS.BLL.csprojAssemblyReference.cache

@@ -34,7 +34,7 @@ namespace DUDS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TblLogErros>> CadastrarLogErro(TblLogErros tblLogErros)
+        public async Task<ActionResult<LogErrosModel>> CadastrarLogErro(LogErrosModel tblLogErros)
         {
             var itensLogger = new TblLogErros
             {
