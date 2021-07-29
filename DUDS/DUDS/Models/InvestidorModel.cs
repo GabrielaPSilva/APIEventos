@@ -10,14 +10,14 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(200)]
         public string NomeCliente { get; set; }
 
         [StringLength(14)]
         public string Cnpj { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(20)]
         public string TipoCliente { get; set; }
         public int? CodAdministrador { get; set; }

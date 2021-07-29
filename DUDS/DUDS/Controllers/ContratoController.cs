@@ -88,12 +88,12 @@ namespace DUDS.Controllers
         }
 
         //PUT: api/Contrato/id
-        [HttpPut]
-        public async Task<IActionResult> EditarContrato(ContratoModel contrato)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarContrato(int id, ContratoModel contrato)
         {
             try
             {
-                var registroContrato = _context.TblContrato.Find(contrato.Id);
+                var registroContrato = _context.TblContrato.Find(id);
 
                 if (registroContrato != null)
                 {

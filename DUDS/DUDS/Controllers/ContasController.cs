@@ -68,12 +68,12 @@ namespace DUDS.Controllers
         }
 
         //PUT: api/Conta/id
-        [HttpPut]
-        public async Task<IActionResult> EditarConta(ContaModel conta)
+        [HttpPut("{CodFundo}, {CodTipoConta}")]
+        public async Task<IActionResult> EditarConta(int codFundo, int codTipoConta, ContaModel conta)
         {
             try
             {
-                var registroConta = _context.TblContas.Find(conta.Id);
+                var registroConta = _context.TblContas.Find(codFundo, codTipoConta);
 
                 if (registroConta != null)
                 {
@@ -183,12 +183,12 @@ namespace DUDS.Controllers
         }
 
         //PUT: api/TipoConta/id
-        [HttpPut]
-        public async Task<IActionResult> EditarTipoConta(TipoContaModel tipoConta)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarTipoConta(int id, TipoContaModel tipoConta)
         {
             try
             {
-                var registroTipoConta = _context.TblTipoConta.Find(tipoConta.Id);
+                var registroTipoConta = _context.TblTipoConta.Find(id);
 
                 if (registroTipoConta != null)
                 {

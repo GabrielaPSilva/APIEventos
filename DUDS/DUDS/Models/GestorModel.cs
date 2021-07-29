@@ -10,7 +10,7 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(100)]
         public string NomeGestor { get; set; }
 
@@ -19,7 +19,7 @@ namespace DUDS.Models
         public int? CodGestorAdm { get; set; }
         public DateTime DataModificacao { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
         public bool? Ativo { get; set; }

@@ -11,22 +11,22 @@ namespace DUDS.Models
         public int Id { get; set; }
         public int? CodDistribuidor { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(20)]
         public string TipoContrato { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(20)]
         public string Versao { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(10)]
         public string Status { get; set; }
 
         [StringLength(50)]
         public string IdDocusign { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(20)]
         public string DirecaoPagamento { get; set; }
         public bool ClausulaRetroatividade { get; set; }

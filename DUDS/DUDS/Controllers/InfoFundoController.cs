@@ -156,12 +156,12 @@ namespace DUDS.Controllers
         }
 
         //PUT: api/Fundo/id
-        [HttpPut]
-        public async Task<IActionResult> EditarFundo(FundoModel fundo)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarFundo(int id, FundoModel fundo)
         {
             try
             {
-                var registroFundo = _context.TblFundo.Find(fundo.Id);
+                var registroFundo = _context.TblFundo.Find(id);
 
                 if (registroFundo != null)
                 {

@@ -65,12 +65,12 @@ namespace DUDS.Controllers
         }
 
         //PUT: api/Administrador/id
-        [HttpPut]
-        public async Task<IActionResult> EditarAdministrador(AdministradorModel administrador)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarAdministrador(int id, AdministradorModel administrador)
         {
             try
             {
-                var registroAdministrador = _context.TblAdministrador.Find(administrador.Id);
+                var registroAdministrador = _context.TblAdministrador.Find(id);
 
                 if (registroAdministrador != null)
                 {

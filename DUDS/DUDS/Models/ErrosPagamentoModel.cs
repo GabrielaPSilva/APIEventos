@@ -12,16 +12,16 @@ namespace DUDS.Models
         public DateTime DataAgendamento { get; set; }
         public int CodFundo { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string TipoDespesa { get; set; }
         public double ValorBruto { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(14)]
         public string CpfCnpjFavorecido { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string Favorecido { get; set; }
 
@@ -37,7 +37,7 @@ namespace DUDS.Models
         [StringLength(14)]
         public string CnpjFundoInvestidor { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(100)]
         public string MensagemErro { get; set; }
     }

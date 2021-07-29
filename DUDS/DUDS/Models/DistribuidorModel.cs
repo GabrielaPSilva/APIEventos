@@ -10,25 +10,25 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(100)]
         public string NomeDistribuidor { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string NomeDistribuidorReduzido { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(14)]
         public string Cnpj { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string ClassificacaoDistribuidor { get; set; }
         public int? CodDistrAdm { get; set; }
         public DateTime DataModificacao { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
         public bool? Ativo { get; set; }

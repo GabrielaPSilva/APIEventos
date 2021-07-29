@@ -12,13 +12,13 @@ namespace DUDS.Models
         public int CodFundo { get; set; }
         public int CodTipoConta { get; set; }
 
-        [Required]
+        //[Required]
         public string Banco { get; set; }
 
-        [Required]
+        //[Required]
         public string Agencia { get; set; }
 
-        [Required]
+        //[Required]
         public string Conta { get; set; }
         public DateTime DataModificacao { get; set; }
         public string UsuarioModificacao { get; set; }

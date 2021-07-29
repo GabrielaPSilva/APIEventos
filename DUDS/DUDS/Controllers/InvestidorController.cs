@@ -66,12 +66,12 @@ namespace DUDS.Controllers
 
 
         //PUT: api/Investidor/id
-        [HttpPut]
-        public async Task<IActionResult> EditarGestor(InvestidorModel investidor)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarGestor(int id, InvestidorModel investidor)
         {
             try
             {
-                var registroInvestidor = _context.TblInvestidor.Find(investidor.Id);
+                var registroInvestidor = _context.TblInvestidor.Find(id);
 
                 if (registroInvestidor != null)
                 {

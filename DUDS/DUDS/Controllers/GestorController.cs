@@ -67,12 +67,12 @@ namespace DUDS.Controllers
 
 
         //PUT: api/Gestor/id
-        [HttpPut]
-        public async Task<IActionResult> EditarGestor(GestorModel gestor)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarGestor(int id, GestorModel gestor)
         {
             try
             {
-                var registroGestor = _context.TblGestor.Find(gestor.Id);
+                var registroGestor = _context.TblGestor.Find(id);
 
                 if (registroGestor != null)
                 {

@@ -10,10 +10,10 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        //[Required]
         public string TipoConta { get; set; }
 
-        [Required]
+        //[Required]
         public string DescricaoConta { get; set; }
         public DateTime DataModificacao { get; set; }
         public string UsuarioModificacao { get; set; }

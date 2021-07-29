@@ -44,12 +44,12 @@ namespace DUDS.Controllers
         }
 
         //PUT: api/Distribuidor/id
-        [HttpPut]
-        public async Task<IActionResult> EditarDistribuidor(DistribuidorModel distribuidor)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarDistribuidor(int id, DistribuidorModel distribuidor)
         {
             try
             {
-                var registroDistribuidor = _context.TblDistribuidor.Find(distribuidor.Id);
+                var registroDistribuidor = _context.TblDistribuidor.Find(id);
 
                 if (registroDistribuidor != null)
                 {
