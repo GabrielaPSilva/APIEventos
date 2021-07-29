@@ -68,7 +68,7 @@ namespace DUDS.Controllers
         }
 
         //PUT: api/Conta/id
-        [HttpPut("{CodFundo}, {CodTipoConta}")]
+        [HttpPut("{codFundo}/{codTipoConta}")]
         public async Task<IActionResult> EditarConta(int codFundo, int codTipoConta, ContaModel conta)
         {
             try
@@ -95,10 +95,10 @@ namespace DUDS.Controllers
         }
 
         // DELETE: api/Conta/id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarConta(int id)
+        [HttpDelete("{codFundo}/{codTipoConta}")]
+        public async Task<IActionResult> DeletarConta(int codFundo, int codTipoConta)
         {
-            var tblConta = await _context.TblContas.FindAsync(id);
+            var tblConta = await _context.TblContas.FindAsync(codFundo, codTipoConta);
 
             if (tblConta == null)
             {
@@ -112,10 +112,10 @@ namespace DUDS.Controllers
         }
 
         // DESATIVA: api/Fundo/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarConta(int id)
+        [HttpPut("{codFundo}/{codTipoConta}")]
+        public async Task<IActionResult> DesativarConta(int codFundo, int codTipoConta)
         {
-            var registroConta = _context.TblContas.Find(id);
+            var registroConta = _context.TblContas.Find(codFundo, codTipoConta);
 
             if (registroConta != null)
             {
