@@ -8,6 +8,7 @@ namespace DUDS.Models
 {
     public class ContaModel
     {
+        public int Id { get; set; }
         public int CodFundo { get; set; }
         public int CodTipoConta { get; set; }
 

@@ -67,6 +67,32 @@ namespace DUDS.Controllers
                 Ok(itensConta));
         }
 
+        //PUT: api/Conta/id
+        [HttpPut]
+        public async Task<IActionResult> EditarConta(ContaModel conta)
+        {
+            try
+            {
+                var registroConta = _context.TblContas.Find(conta.Id);
+
+                if (registroConta != null)
+                {
+                    registroConta.CodFundo = conta.CodFundo == 0 ? registroConta.CodFundo : conta.CodFundo;
+                    registroConta.CodTipoConta = conta.CodTipoConta == 0 ? registroConta.CodTipoConta : conta.CodTipoConta;
+                    registroConta.Banco = conta.Banco == null ? registroConta.Banco : conta.Banco;
+                    registroConta.Agencia = conta.Agencia == null ? registroConta.Agencia : conta.Agencia;
+                    registroConta.Conta = conta.Conta == null ? registroConta.Conta : conta.Conta;
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
 
         // DELETE: api/Conta/id
         [HttpDelete("{id}")]
@@ -103,6 +129,11 @@ namespace DUDS.Controllers
             {
                 return NotFound();
             }
+        }
+
+        private bool ContasExists(int id)
+        {
+            return _context.TblContas.Any(e => e.Id == id);
         }
         #endregion
 
@@ -151,6 +182,29 @@ namespace DUDS.Controllers
                 Ok(itensTipoConta));
         }
 
+        //PUT: api/TipoConta/id
+        [HttpPut]
+        public async Task<IActionResult> EditarTipoConta(TipoContaModel tipoConta)
+        {
+            try
+            {
+                var registroTipoConta = _context.TblTipoConta.Find(tipoConta.Id);
+
+                if (registroTipoConta != null)
+                {
+                    registroTipoConta.TipoConta = tipoConta.TipoConta == null ? registroTipoConta.TipoConta : tipoConta.TipoConta;
+                    registroTipoConta.DescricaoConta = tipoConta.DescricaoConta == null ? registroTipoConta.DescricaoConta : tipoConta.DescricaoConta;
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException) when (!TipoContasExists(tipoConta.Id))
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
 
         // DELETE: api/TipoConta/id
         [HttpDelete("{id}")]
@@ -195,61 +249,5 @@ namespace DUDS.Controllers
         }
 
         #endregion
-
-        // PUT: api/Contas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblContas(int id, TblContas tblContas)
-        //{
-        //    if (id != tblContas.CodFundo)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(tblContas).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblContasExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //// POST: api/Contas
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<TblContas>> PostTblContas(TblContas tblContas)
-        //{
-        //    _context.TblContas.Add(tblContas);
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateException)
-        //    {
-        //        if (TblContasExists(tblContas.CodFundo))
-        //        {
-        //            return Conflict();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return CreatedAtAction("GetTblContas", new { id = tblContas.CodFundo }, tblContas);
-        //}
     }
 }

@@ -38,6 +38,8 @@ namespace DUDS.Models
         public string UsuarioModificacao { get; set; }
         [Column("ativo")]
         public bool? Ativo { get; set; }
+        [Column("id")]
+        public int Id { get; set; }
 
         [ForeignKey(nameof(CodFundo))]
         [InverseProperty(nameof(TblFundo.TblContas))]

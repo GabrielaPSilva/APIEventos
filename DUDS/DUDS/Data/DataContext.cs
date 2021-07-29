@@ -273,6 +273,8 @@ namespace DUDS.Data
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblContas)
                     .HasForeignKey(d => d.CodFundo)
