@@ -43,47 +43,32 @@ namespace DUDS.Controllers
             return Ok(tblDistribuidor);
         }
 
-        // PUT: api/Distribuidor/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblDistribuidor(int id, TblDistribuidor tblDistribuidor)
-        //{
-        //    if (id != tblDistribuidor.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        //PUT: api/Distribuidor/id
+        [HttpPut]
+        public async Task<IActionResult> EditarDistribuidor(DistribuidorModel distribuidor)
+        {
+            try
+            {
+                var registroDistribuidor = _context.TblDistribuidor.Find(distribuidor.Id);
 
-        //    _context.Entry(tblDistribuidor).State = EntityState.Modified;
+                if (registroDistribuidor != null)
+                {
+                    registroDistribuidor.NomeDistribuidor = distribuidor.NomeDistribuidor == null ? registroDistribuidor.NomeDistribuidor : distribuidor.NomeDistribuidor;
+                    registroDistribuidor.NomeDistribuidorReduzido = distribuidor.NomeDistribuidorReduzido == null ? registroDistribuidor.NomeDistribuidorReduzido : distribuidor.NomeDistribuidorReduzido;
+                    registroDistribuidor.Cnpj = distribuidor.Cnpj == null ? registroDistribuidor.Cnpj : distribuidor.Cnpj;
+                    registroDistribuidor.ClassificacaoDistribuidor = distribuidor.ClassificacaoDistribuidor == null ? registroDistribuidor.ClassificacaoDistribuidor : distribuidor.ClassificacaoDistribuidor;
+                    registroDistribuidor.CodDistrAdm = (distribuidor.CodDistrAdm == null || distribuidor.CodDistrAdm == 0) ? registroDistribuidor.CodDistrAdm : distribuidor.CodDistrAdm;
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblDistribuidorExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException) when (!DistribuidorExists(distribuidor.Id))
+            {
+                return NotFound();
+            }  
 
-        //    return NoContent();
-        //}
-
-        //// POST: api/Distribuidor
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<TblDistribuidor>> PostTblDistribuidor(TblDistribuidor tblDistribuidor)
-        //{
-        //    _context.TblDistribuidor.Add(tblDistribuidor);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetTblDistribuidor", new { id = tblDistribuidor.Id }, tblDistribuidor);
-        //}
+            return NoContent();
+        }
 
         [HttpPost]
         public async Task<ActionResult<DistribuidorModel>> CadastrarDistribuidor(DistribuidorModel tblDistribuidorModel)
@@ -146,7 +131,7 @@ namespace DUDS.Controllers
             }
         }
 
-        private bool TblDistribuidorExists(int id)
+        private bool DistribuidorExists(int id)
         {
             return _context.TblDistribuidor.Any(e => e.Id == id);
         }

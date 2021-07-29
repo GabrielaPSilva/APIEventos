@@ -43,64 +43,6 @@ namespace DUDS.Controllers
             return Ok(tblGestor);
         }
 
-        // PUT: api/Gestor/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblGestor(int id, TblGestor tblGestor)
-        //{
-        //    if (id != tblGestor.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(tblGestor).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblGestorExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //// POST: api/Gestor
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<TblGestor>> PostTblGestor(TblGestor tblGestor)
-        //{
-        //    _context.TblGestor.Add(tblGestor);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetTblGestor", new { id = tblGestor.Id }, tblGestor);
-        //}
-
-        //// DELETE: api/Gestor/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTblGestor(int id)
-        //{
-        //    var tblGestor = await _context.TblGestor.FindAsync(id);
-        //    if (tblGestor == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.TblGestor.Remove(tblGestor);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
         [HttpPost]
         public async Task<ActionResult<GestorModel>> CadastrarGestor(GestorModel tblGestorModel)
         {
@@ -121,6 +63,32 @@ namespace DUDS.Controllers
                 nameof(GetGestor),
                 new { id = itensGestor.Id },
                 Ok(itensGestor));
+        }
+
+
+        //PUT: api/Gestor/id
+        [HttpPut]
+        public async Task<IActionResult> EditarGestor(GestorModel gestor)
+        {
+            try
+            {
+                var registroGestor = _context.TblGestor.Find(gestor.Id);
+
+                if (registroGestor != null)
+                {
+                    registroGestor.NomeGestor = gestor.NomeGestor == null ? registroGestor.NomeGestor : gestor.NomeGestor;
+                    registroGestor.Cnpj = gestor.Cnpj == null ? registroGestor.Cnpj : gestor.Cnpj;
+                    registroGestor.CodGestorAdm = (gestor.CodGestorAdm == null || gestor.CodGestorAdm == 0) ? registroGestor.CodGestorAdm : gestor.CodGestorAdm;
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException) when (!GestorExists(gestor.Id))
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
 
         // DELETE: api/Gestor/id

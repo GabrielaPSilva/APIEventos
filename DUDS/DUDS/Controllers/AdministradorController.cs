@@ -64,48 +64,29 @@ namespace DUDS.Controllers
                 Ok(itensAdministrador));
         }
 
+        //PUT: api/Administrador/id
+        [HttpPut]
+        public async Task<IActionResult> EditarAdministrador(AdministradorModel administrador)
+        {
+            try
+            {
+                var registroAdministrador = _context.TblAdministrador.Find(administrador.Id);
 
-        // PUT: api/Administrador/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblAdministrador(int id, TblAdministrador tblAdministrador)
-        //{
-        //    if (id != tblAdministrador.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+                if (registroAdministrador != null)
+                {
+                    registroAdministrador.NomeAdministrador = administrador.NomeAdministrador == null ? registroAdministrador.NomeAdministrador : administrador.NomeAdministrador;
+                    registroAdministrador.Cnpj = administrador.Cnpj == null ? registroAdministrador.Cnpj : administrador.Cnpj;
 
-        //    _context.Entry(tblAdministrador).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException) when (!AdministradorExists(administrador.Id))
+            {
+                return NotFound();
+            }
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblAdministradorExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //// POST: api/Administrador
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<TblAdministrador>> PostTblAdministrador(TblAdministrador tblAdministrador)
-        //{
-        //    _context.TblAdministrador.Add(tblAdministrador);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetTblAdministrador", new { id = tblAdministrador.Id }, tblAdministrador);
-        //}
+            return NoContent();
+        }
 
         // DELETE: api/Administrador/id
         [HttpDelete("{id}")]

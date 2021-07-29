@@ -21,17 +21,80 @@ namespace DUDS.Controllers
         {
             _context = context;
         }
-
         // GET: api/Investidor
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblInvestidor>>> Investidor()
         {
-            return await _context.TblInvestidor.ToListAsync();
+            return await _context.TblInvestidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeCliente).AsNoTracking().ToListAsync();
         }
 
-        // GET: api/Investidor/5
+        // GET: api/Investidor/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblInvestidor>> GetInvestidor(int id)
+        public async Task<ActionResult<TblGestor>> GetGestor(int id)
+        {
+            var tblGestor = await _context.TblGestor.FindAsync(id);
+
+            if (tblGestor == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tblGestor);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<GestorModel>> CadastrarGestor(GestorModel tblGestorModel)
+        {
+            var itensGestor = new TblGestor
+            {
+                NomeGestor = tblGestorModel.NomeGestor,
+                Cnpj = tblGestorModel.Cnpj,
+                CodGestorAdm = tblGestorModel.CodGestorAdm,
+                DataModificacao = tblGestorModel.DataModificacao,
+                UsuarioModificacao = tblGestorModel.UsuarioModificacao,
+                Ativo = tblGestorModel.Ativo
+            };
+
+            _context.TblGestor.Add(itensGestor);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetGestor),
+                new { id = itensGestor.Id },
+                Ok(itensGestor));
+        }
+
+
+        //PUT: api/Investidor/id
+        [HttpPut]
+        public async Task<IActionResult> EditarGestor(InvestidorModel investidor)
+        {
+            try
+            {
+                var registroInvestidor = _context.TblInvestidor.Find(investidor.Id);
+
+                if (registroInvestidor != null)
+                {
+                    registroInvestidor.NomeCliente = investidor.NomeCliente == null ? registroInvestidor.NomeCliente : investidor.NomeCliente;
+                    registroInvestidor.Cnpj = investidor.Cnpj == null ? registroInvestidor.Cnpj : investidor.Cnpj;
+                    registroInvestidor.TipoCliente = investidor.TipoCliente == null ? registroInvestidor.TipoCliente : investidor.TipoCliente;
+                    registroInvestidor.CodAdministrador = investidor.CodAdministrador == 0 ? registroInvestidor.CodAdministrador : investidor.CodAdministrador;
+                    registroInvestidor.CodGestor = investidor.CodGestor == 0 ? registroInvestidor.CodGestor : investidor.CodGestor;
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException) when (!InvestidorExists(investidor.Id))
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/Investidor/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarInvestidor(int id)
         {
             var tblInvestidor = await _context.TblInvestidor.FindAsync(id);
 
@@ -40,70 +103,35 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblInvestidor;
+            _context.TblInvestidor.Remove(tblInvestidor);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
-        // PUT: api/Investidor/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblInvestidor(int id, TblInvestidor tblInvestidor)
-        //{
-        //    if (id != tblInvestidor.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        // DESATIVA: api/Investidor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarInvestidor(int id)
+        {
+            var registroInvestidor = _context.TblInvestidor.Find(id);
 
-        //    _context.Entry(tblInvestidor).State = EntityState.Modified;
+            if (registroInvestidor != null)
+            {
+                registroInvestidor.Ativo = false;
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblInvestidorExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+                await _context.SaveChangesAsync();
 
-        //    return NoContent();
-        //}
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
-        //// POST: api/Investidor
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<TblInvestidor>> PostTblInvestidor(TblInvestidor tblInvestidor)
-        //{
-        //    _context.TblInvestidor.Add(tblInvestidor);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetTblInvestidor", new { id = tblInvestidor.Id }, tblInvestidor);
-        //}
-
-        //// DELETE: api/Investidor/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTblInvestidor(int id)
-        //{
-        //    var tblInvestidor = await _context.TblInvestidor.FindAsync(id);
-        //    if (tblInvestidor == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.TblInvestidor.Remove(tblInvestidor);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
-        //private bool TblInvestidorExists(int id)
-        //{
-        //    return _context.TblInvestidor.Any(e => e.Id == id);
-        //}
+        private bool InvestidorExists(int id)
+        {
+            return _context.TblInvestidor.Any(e => e.Id == id);
+        }
     }
 }

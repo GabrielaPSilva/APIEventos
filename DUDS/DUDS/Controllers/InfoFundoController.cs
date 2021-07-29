@@ -173,8 +173,8 @@ namespace DUDS.Controllers
                     registroFundo.TipoFundo = fundo.TipoFundo == null ? registroFundo.TipoFundo : fundo.TipoFundo;
                     registroFundo.MasterId = (fundo.MasterId == null || fundo.MasterId == 0) ? registroFundo.MasterId : fundo.MasterId;
                     registroFundo.TipoCota = fundo.TipoCota == null ? registroFundo.TipoCota : fundo.TipoCota;
-                    registroFundo.CodAdministrador = (fundo.CodAdministrador == 0 || fundo.CodAdministrador == null) ? registroFundo.CodAdministrador : fundo.CodAdministrador;
-                    registroFundo.CodCustodiante = (fundo.CodCustodiante == 0 || fundo.CodCustodiante == null) ? registroFundo.CodCustodiante : fundo.CodCustodiante;
+                    registroFundo.CodAdministrador = fundo.CodAdministrador == 0 ? registroFundo.CodAdministrador : fundo.CodAdministrador;
+                    registroFundo.CodCustodiante = fundo.CodCustodiante == 0 ? registroFundo.CodCustodiante : fundo.CodCustodiante;
                     registroFundo.CodGestor = (fundo.CodGestor == 0 || fundo.CodGestor == null) ? registroFundo.CodGestor : fundo.CodGestor;
                     registroFundo.MoedaFundo = fundo.MoedaFundo == null ? registroFundo.MoedaFundo : fundo.MoedaFundo;
                     registroFundo.Estrategia = fundo.Estrategia == null ? registroFundo.Estrategia : fundo.Estrategia;

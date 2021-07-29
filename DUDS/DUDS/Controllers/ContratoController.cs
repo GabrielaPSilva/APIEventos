@@ -87,36 +87,36 @@ namespace DUDS.Controllers
                 Ok(itensContrato));
         }
 
-        // PUT: api/Contrato/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblContrato(int id, TblContrato tblContrato)
-        //{
-        //    if (id != tblContrato.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        //PUT: api/Contrato/id
+        [HttpPut]
+        public async Task<IActionResult> EditarContrato(ContratoModel contrato)
+        {
+            try
+            {
+                var registroContrato = _context.TblContrato.Find(contrato.Id);
 
-        //    _context.Entry(tblContrato).State = EntityState.Modified;
+                if (registroContrato != null)
+                {
+                    registroContrato.CodDistribuidor = (contrato.CodDistribuidor == null || contrato.CodDistribuidor == 0) ? registroContrato.CodDistribuidor : contrato.CodDistribuidor;
+                    registroContrato.TipoContrato = contrato.TipoContrato == null ? registroContrato.TipoContrato : contrato.TipoContrato;
+                    registroContrato.Versao = contrato.Versao == null ? registroContrato.Versao : contrato.Versao;
+                    registroContrato.Status = contrato.Status == null ? registroContrato.Status : contrato.Status;
+                    registroContrato.IdDocusign = contrato.IdDocusign == null ? registroContrato.IdDocusign : contrato.IdDocusign;
+                    registroContrato.DirecaoPagamento = contrato.DirecaoPagamento == null ? registroContrato.DirecaoPagamento : contrato.DirecaoPagamento;
+                    registroContrato.ClausulaRetroatividade = contrato.ClausulaRetroatividade == false ? registroContrato.ClausulaRetroatividade : contrato.ClausulaRetroatividade;
+                    registroContrato.DataRetroatividade = contrato.DataRetroatividade == null ? registroContrato.DataRetroatividade : contrato.DataRetroatividade;
+                    registroContrato.DataAssinatura = contrato.DataAssinatura == null ? registroContrato.DataAssinatura : contrato.DataAssinatura;
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblContratoExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException) when (!ContratoExists(contrato.Id))
+            {
+                return NotFound();
+            }
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         // DELETE: api/Contrato/id
         [HttpDelete("{id}")]
