@@ -43,6 +43,28 @@ namespace DUDS.Controllers
             return Ok(tblDistribuidor);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<DistribuidorModel>> CadastrarDistribuidor(DistribuidorModel tblDistribuidorModel)
+        {
+            var itensDistribuidor = new TblDistribuidor
+            {
+                NomeDistribuidor = tblDistribuidorModel.NomeDistribuidor,
+                Cnpj = tblDistribuidorModel.Cnpj,
+                ClassificacaoDistribuidor = tblDistribuidorModel.ClassificacaoDistribuidor,
+                DataModificacao = tblDistribuidorModel.DataModificacao,
+                UsuarioModificacao = tblDistribuidorModel.UsuarioModificacao,
+                Ativo = tblDistribuidorModel.Ativo,
+            };
+
+            _context.TblDistribuidor.Add(itensDistribuidor);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetDistribuidor),
+                new { id = itensDistribuidor.Id },
+                Ok(itensDistribuidor));
+        }
+
         //PUT: api/Distribuidor/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarDistribuidor(int id, DistribuidorModel distribuidor)
@@ -56,7 +78,6 @@ namespace DUDS.Controllers
                     registroDistribuidor.NomeDistribuidor = distribuidor.NomeDistribuidor == null ? registroDistribuidor.NomeDistribuidor : distribuidor.NomeDistribuidor;
                     registroDistribuidor.Cnpj = distribuidor.Cnpj == null ? registroDistribuidor.Cnpj : distribuidor.Cnpj;
                     registroDistribuidor.ClassificacaoDistribuidor = distribuidor.ClassificacaoDistribuidor == null ? registroDistribuidor.ClassificacaoDistribuidor : distribuidor.ClassificacaoDistribuidor;
-                    registroDistribuidor.CodDistrAdm = (distribuidor.CodDistrAdm == null || distribuidor.CodDistrAdm == 0) ? registroDistribuidor.CodDistrAdm : distribuidor.CodDistrAdm;
 
                     await _context.SaveChangesAsync();
                 }
@@ -64,32 +85,9 @@ namespace DUDS.Controllers
             catch (DbUpdateConcurrencyException) when (!DistribuidorExists(distribuidor.Id))
             {
                 return NotFound();
-            }  
+            }
 
             return NoContent();
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<DistribuidorModel>> CadastrarDistribuidor(DistribuidorModel tblDistribuidorModel)
-        {
-            var itensDistribuidor = new TblDistribuidor
-            {
-                NomeDistribuidor = tblDistribuidorModel.NomeDistribuidor,
-                Cnpj = tblDistribuidorModel.Cnpj,
-                ClassificacaoDistribuidor = tblDistribuidorModel.ClassificacaoDistribuidor,
-                CodDistrAdm = tblDistribuidorModel.CodDistrAdm,
-                DataModificacao = tblDistribuidorModel.DataModificacao,
-                UsuarioModificacao = tblDistribuidorModel.UsuarioModificacao,
-                Ativo = tblDistribuidorModel.Ativo,
-            };
-
-            _context.TblDistribuidor.Add(itensDistribuidor);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(
-                nameof(GetDistribuidor),
-                new { id = itensDistribuidor.Id },
-                Ok(itensDistribuidor));
         }
 
         // DELETE: api/Distribuidor/id
@@ -137,14 +135,14 @@ namespace DUDS.Controllers
         #region Distribuidor Administrador
         // GET: api/DistribuidorAdministrador
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblDistribuidorAdministrador>>> GetTblDistribuidorAdministrador()
+        public async Task<ActionResult<IEnumerable<TblDistribuidorAdministrador>>> DistribuidorAdministrador()
         {
             return await _context.TblDistribuidorAdministrador.ToListAsync();
         }
 
         // GET: api/DistribuidorAdministrador/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblDistribuidorAdministrador>> GetTblDistribuidorAdministrador(int id)
+        public async Task<ActionResult<TblDistribuidorAdministrador>> GetDistribuidorAdministrador(int id)
         {
             var tblDistribuidorAdministrador = await _context.TblDistribuidorAdministrador.FindAsync(id);
 
@@ -153,7 +151,28 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblDistribuidorAdministrador;
+            return Ok(tblDistribuidorAdministrador);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<DistribuidorAdministradorModel>> CadastrarDistribuidorAdmin(DistribuidorAdministradorModel tblDistribuidorAdminModel)
+        {
+            var itensDistribuidorAdmin = new TblDistribuidorAdministrador
+            {
+                CodAdministrador = tblDistribuidorAdminModel.CodAdministrador,
+                CodDistrAdm = tblDistribuidorAdminModel.CodDistrAdm,
+                CodDistribuidor = tblDistribuidorAdminModel.CodDistribuidor,
+                UsuarioModificacao = tblDistribuidorAdminModel.UsuarioModificacao,
+                DataModificacao = tblDistribuidorAdminModel.DataModificacao
+            };
+
+            _context.TblDistribuidorAdministrador.Add(itensDistribuidorAdmin);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetDistribuidorAdministrador),
+                new { id = itensDistribuidorAdmin.Id },
+                Ok(itensDistribuidorAdmin));
         }
         #endregion
     }

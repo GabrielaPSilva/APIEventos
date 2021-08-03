@@ -163,14 +163,14 @@ namespace DUDS.Controllers
         #region Contrato Distribuicao
         // GET: api/ContratoDistribuicao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoDistribuicao>>> GetTblContratoDistribuicao()
+        public async Task<ActionResult<IEnumerable<TblContratoDistribuicao>>> ContratoDistribuicao()
         {
             return await _context.TblContratoDistribuicao.ToListAsync();
         }
 
-        // GET: api/ContratoDistribuicao/5
+        // GET: api/ContratoDistribuicao/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoDistribuicao>> GetTblContratoDistribuicao(int id)
+        public async Task<ActionResult<TblContratoDistribuicao>> GetContratoDistribuicao(int id)
         {
             var tblContratoDistribuicao = await _context.TblContratoDistribuicao.FindAsync(id);
 
@@ -179,8 +179,29 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblContratoDistribuicao;
+            return Ok(tblContratoDistribuicao);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<ContratoDistribuicaoModel>> CadastrarContrato(ContratoDistribuicaoModel tblContratoDistribuicaoModel)
+        {
+            var itensContratoDistribuicao = new TblContratoDistribuicao
+            {
+                CodContrato = tblContratoDistribuicaoModel.CodContrato,
+                CodFundo = tblContratoDistribuicaoModel.CodFundo,
+                UsuarioModificacao = tblContratoDistribuicaoModel.UsuarioModificacao,
+                DataModificacao = tblContratoDistribuicaoModel.DataModificacao
+            };
+
+            _context.TblContratoDistribuicao.Add(itensContratoDistribuicao);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetContratoDistribuicao),
+                new { id = itensContratoDistribuicao.Id },
+                Ok(itensContratoDistribuicao));
+        }
+
         #endregion
     }
 }

@@ -154,6 +154,27 @@ namespace DUDS.Controllers
 
             return tblInvestidorDistribuidor;
         }
+
+        [HttpPost]
+        public async Task<ActionResult<InvestidorModel>> CadastrarInvestidorDistribuidor(InvestidorModel tblInvestidorModel)
+        {
+            var itensInvestidor = new TblInvestidor
+            {
+                NomeCliente = tblInvestidorModel.NomeCliente,
+                Cnpj = tblInvestidorModel.Cnpj,
+                TipoCliente = tblInvestidorModel.TipoCliente,
+                CodAdministrador = tblInvestidorModel.CodAdministrador,
+                CodGestor = tblInvestidorModel.CodGestor
+            };
+
+            _context.TblInvestidor.Add(itensInvestidor);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetInvestidor),
+                new { id = itensInvestidor.Id },
+                Ok(itensInvestidor));
+        }
         #endregion
     }
 }

@@ -9,18 +9,19 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_distribuidor_administrador")]
+    [Index(nameof(CodAdministrador), nameof(CodDistribuidor), Name = "IX_tbl_distribuidor_administrador", IsUnique = true)]
     public partial class TblDistribuidorAdministrador
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
-        [Column("cod_distr_adm")]
-        [StringLength(50)]
-        public string CodDistrAdm { get; set; }
         [Column("cod_distribuidor")]
         public int CodDistribuidor { get; set; }
         [Column("cod_administrador")]
         public int CodAdministrador { get; set; }
+        [Column("cod_distr_adm")]
+        [StringLength(50)]
+        public string CodDistrAdm { get; set; }
         [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]

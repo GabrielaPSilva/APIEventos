@@ -26,7 +26,7 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblAlocador>>> Alocador()
         {
-            return await _context.TblAlocador.ToListAsync();
+            return await _context.TblAlocador.AsNoTracking().ToListAsync();
         }
 
         // GET: api/Alocador/5
@@ -49,7 +49,9 @@ namespace DUDS.Controllers
             var itensAlocador = new TblAlocador
             {
                 CodCliente = tblAlocadorModel.CodCliente,
-                CodContratoFundo = tblAlocadorModel.CodContratoFundo
+                CodContratoFundo = tblAlocadorModel.CodContratoFundo,
+                UsuarioModificacao = tblAlocadorModel.UsuarioModificacao,
+                DataModificacao = tblAlocadorModel.DataModificacao
             };
 
             _context.TblAlocador.Add(itensAlocador);

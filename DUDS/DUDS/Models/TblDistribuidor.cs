@@ -38,8 +38,6 @@ namespace DUDS.Models
         [Column("classificacao_distribuidor")]
         [StringLength(50)]
         public string ClassificacaoDistribuidor { get; set; }
-        [Column("cod_distr_adm")]
-        public int? CodDistrAdm { get; set; }
         [Column("data_modificacao", TypeName = "smalldatetime")]
         public DateTime DataModificacao { get; set; }
         [Required]

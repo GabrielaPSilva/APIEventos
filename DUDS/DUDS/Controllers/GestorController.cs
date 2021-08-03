@@ -135,7 +135,6 @@ namespace DUDS.Controllers
             }
         }
 
-
         private bool GestorExists(int id)
         {
             return _context.TblGestor.Any(e => e.Id == id);
