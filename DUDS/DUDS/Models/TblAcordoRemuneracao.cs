@@ -33,14 +33,14 @@ namespace DUDS.Models
         [Column("data_vigencia_fim", TypeName = "date")]
         public DateTime DataVigenciaFim { get; set; }
         [Required]
-        [Column("ativo")]
-        public bool? Ativo { get; set; }
-        [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
-        [Column("data_modificacao", TypeName = "datetime")]
+        [Column("data_modificacao", TypeName = "date")]
         public DateTime DataModificacao { get; set; }
+        [Required]
+        [Column("ativo")]
+        public bool? Ativo { get; set; }
 
         [ForeignKey(nameof(CodContratoFundo))]
         [InverseProperty(nameof(TblContratoDistribuicao.TblAcordoRemuneracao))]

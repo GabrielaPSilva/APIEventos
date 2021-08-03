@@ -24,6 +24,11 @@ namespace DUDS.Models
         public int CodContrato { get; set; }
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
+        [Column("usuario_modificacao")]
+        [StringLength(100)]
+        public string UsuarioModificacao { get; set; }
+        [Column("data_modificacao", TypeName = "datetime")]
+        public DateTime? DataModificacao { get; set; }
 
         [ForeignKey(nameof(CodContrato))]
         [InverseProperty(nameof(TblContrato.TblContratoDistribuicao))]

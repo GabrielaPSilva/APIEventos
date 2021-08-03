@@ -23,6 +23,12 @@ namespace DUDS.Models
         public int CodDistribuidor { get; set; }
         [Column("cod_custodiante")]
         public int CodCustodiante { get; set; }
+        [Column("data_modificacao", TypeName = "date")]
+        public DateTime DataModificacao { get; set; }
+        [Required]
+        [Column("usuario_modificacao")]
+        [StringLength(100)]
+        public string UsuarioModificacao { get; set; }
 
         [ForeignKey(nameof(CodCustodiante))]
         [InverseProperty(nameof(TblCustodiante.TblInvestidorDistribuidor))]

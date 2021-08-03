@@ -24,14 +24,14 @@ namespace DUDS.Controllers
 
         // GET: api/Alocador
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblAlocador>>> GetTblAlocador()
+        public async Task<ActionResult<IEnumerable<TblAlocador>>> Alocador()
         {
             return await _context.TblAlocador.ToListAsync();
         }
 
         // GET: api/Alocador/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblAlocador>> GetTblAlocador(int id)
+        public async Task<ActionResult<TblAlocador>> GetAlocador(int id)
         {
             var tblAlocador = await _context.TblAlocador.FindAsync(id);
 
@@ -40,68 +40,28 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblAlocador;
+            return Ok(tblAlocador);
         }
 
-        // PUT: api/Alocador/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblAlocador(int id, TblAlocador tblAlocador)
-        {
-            if (id != tblAlocador.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(tblAlocador).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblAlocadorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Alocador
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TblAlocador>> PostTblAlocador(TblAlocador tblAlocador)
+        public async Task<ActionResult<AlocadorController>> CadastrarAdministrador(AlocadorModel tblAlocadorModel)
         {
-            _context.TblAlocador.Add(tblAlocador);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTblAlocador", new { id = tblAlocador.Id }, tblAlocador);
-        }
-
-        // DELETE: api/Alocador/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblAlocador(int id)
-        {
-            var tblAlocador = await _context.TblAlocador.FindAsync(id);
-            if (tblAlocador == null)
+            var itensAlocador = new TblAlocador
             {
-                return NotFound();
-            }
+                CodCliente = tblAlocadorModel.CodCliente,
+                CodContratoFundo = tblAlocadorModel.CodContratoFundo
+            };
 
-            _context.TblAlocador.Remove(tblAlocador);
+            _context.TblAlocador.Add(itensAlocador);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return CreatedAtAction(
+                nameof(GetAlocador),
+                new { id = itensAlocador.Id },
+                Ok(itensAlocador));
         }
 
-        private bool TblAlocadorExists(int id)
+        private bool AlocadorExists(int id)
         {
             return _context.TblAlocador.Any(e => e.Id == id);
         }

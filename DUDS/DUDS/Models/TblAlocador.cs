@@ -18,6 +18,12 @@ namespace DUDS.Models
         public int CodContratoFundo { get; set; }
         [Column("cod_cliente")]
         public long CodCliente { get; set; }
+        [Required]
+        [Column("usuario_modificacao")]
+        [StringLength(100)]
+        public string UsuarioModificacao { get; set; }
+        [Column("data_modificacao", TypeName = "date")]
+        public DateTime DataModificacao { get; set; }
 
         [ForeignKey(nameof(CodCliente))]
         [InverseProperty(nameof(TblCliente.TblAlocador))]

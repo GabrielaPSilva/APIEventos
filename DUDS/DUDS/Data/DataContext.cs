@@ -211,6 +211,10 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblAlocador>(entity =>
             {
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
+
                 entity.HasOne(d => d.CodClienteNavigation)
                     .WithMany(p => p.TblAlocador)
                     .HasForeignKey(d => d.CodCliente)
@@ -318,6 +322,10 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblContratoDistribuicao>(entity =>
             {
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
+
                 entity.HasOne(d => d.CodContratoNavigation)
                     .WithMany(p => p.TblContratoDistribuicao)
                     .HasForeignKey(d => d.CodContrato)
@@ -356,6 +364,10 @@ namespace DUDS.Data
             modelBuilder.Entity<TblDistribuidorAdministrador>(entity =>
             {
                 entity.Property(e => e.CodDistrAdm).IsUnicode(false);
+
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
                 entity.HasOne(d => d.CodAdministradorNavigation)
                     .WithMany(p => p.TblDistribuidorAdministrador)
@@ -490,6 +502,10 @@ namespace DUDS.Data
             modelBuilder.Entity<TblInvestidorDistribuidor>(entity =>
             {
                 entity.Property(e => e.CodInvestCustodia).IsUnicode(false);
+
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
                 entity.HasOne(d => d.CodCustodianteNavigation)
                     .WithMany(p => p.TblInvestidorDistribuidor)

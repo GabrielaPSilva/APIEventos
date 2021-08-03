@@ -10,21 +10,21 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string Sistema { get; set; }
 
-        [Required]
+        //[Required]
         public string Metodo { get; set; }
         public int Linha { get; set; }
 
-        [Required]
+        //[Required]
         public string Mensagem { get; set; }
 
-        [Required]
+        //[Required]
         public string Descricao { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         public DateTime DataCadastro { get; set; }
