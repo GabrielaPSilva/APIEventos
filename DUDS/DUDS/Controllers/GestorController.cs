@@ -118,7 +118,14 @@ namespace DUDS.Controllers
             {
                 registroGestor.Ativo = false;
 
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException e)
+                {
+                    return Conflict(e);
+                }
 
                 return Ok();
             }

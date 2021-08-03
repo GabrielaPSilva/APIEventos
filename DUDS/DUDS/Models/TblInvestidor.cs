@@ -11,6 +11,11 @@ namespace DUDS.Models
     [Table("tbl_investidor")]
     public partial class TblInvestidor
     {
+        public TblInvestidor()
+        {
+            TblInvestidorDistribuidor = new HashSet<TblInvestidorDistribuidor>();
+        }
+
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -34,7 +39,11 @@ namespace DUDS.Models
         [Column("usuario_modificacao")]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
+        [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
+
+        [InverseProperty("CodInvestidorNavigation")]
+        public virtual ICollection<TblInvestidorDistribuidor> TblInvestidorDistribuidor { get; set; }
     }
 }

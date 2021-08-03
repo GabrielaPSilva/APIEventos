@@ -24,7 +24,5 @@ namespace DUDS.Models
 
         [ForeignKey(nameof(CodCustodiante))]
         public virtual TblCustodiante CodCustodianteNavigation { get; set; }
-        [ForeignKey(nameof(CodFundo))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

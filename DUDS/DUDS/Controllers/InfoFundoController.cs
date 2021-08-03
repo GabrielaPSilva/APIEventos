@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 using Microsoft.AspNetCore.Authorization;
+using Logger.Enum;
+using Logger;
+using Microsoft.Extensions.Configuration;
 
 namespace DUDS.Controllers
 {
@@ -18,6 +21,7 @@ namespace DUDS.Controllers
     {
         private readonly DataContext _context;
         private static readonly Dictionary<int, TblFundo> tblFundoStore = new Dictionary<int, TblFundo>();
+        string Sistema = "DUDS";
 
         public InfoFundoController(DataContext context)
         {
@@ -41,7 +45,9 @@ namespace DUDS.Controllers
 
                 if (fundos != null)
                 {
+
                     return Ok(fundos);
+
                 }
                 else
                 {
@@ -50,6 +56,8 @@ namespace DUDS.Controllers
             }
             catch (InvalidOperationException e)
             {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+
                 return BadRequest();
             }
         }
@@ -59,13 +67,24 @@ namespace DUDS.Controllers
         public async Task<ActionResult<TblFundo>> GetFundo(int id)
         {
             var tblFundo = await _context.TblFundo.FindAsync(id);
-
-            if (tblFundo == null)
+            
+            try
             {
-                return NotFound();
+                if(tblFundo != null)
+                {
+                    return Ok(tblFundo);
+                }
+                else
+                {
+                    //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, "String", 1,"e", Sistema);
+                }
+            }
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
             }
 
-            return Ok(tblFundo);
+            return NoContent();
         }
 
         [HttpPost]

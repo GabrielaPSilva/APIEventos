@@ -132,5 +132,28 @@ namespace DUDS.Controllers
         {
             return _context.TblInvestidor.Any(e => e.Id == id);
         }
+
+        #region Investidor Distribuidor
+        // GET: api/InvestidorDistribuidor
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TblInvestidorDistribuidor>>> GetTblInvestidorDistribuidor()
+        {
+            return await _context.TblInvestidorDistribuidor.ToListAsync();
+        }
+
+        // GET: api/InvestidorDistribuidor/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblInvestidorDistribuidor>> GetTblInvestidorDistribuidor(int id)
+        {
+            var tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(id);
+
+            if (tblInvestidorDistribuidor == null)
+            {
+                return NotFound();
+            }
+
+            return tblInvestidorDistribuidor;
+        }
+        #endregion
     }
 }

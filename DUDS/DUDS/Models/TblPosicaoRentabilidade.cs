@@ -41,9 +41,5 @@ namespace DUDS.Models
         public decimal VariacaoVintequatroMeses { get; set; }
         [Column("variacoa_trintaseis_meses", TypeName = "decimal(22, 10)")]
         public decimal VariacoaTrintaseisMeses { get; set; }
-
-        [ForeignKey(nameof(CodFundo))]
-        [InverseProperty(nameof(TblFundo.TblPosicaoRentabilidade))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

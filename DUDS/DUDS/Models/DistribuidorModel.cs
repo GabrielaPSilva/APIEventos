@@ -15,10 +15,6 @@ namespace DUDS.Models
         public string NomeDistribuidor { get; set; }
 
         //[Required]
-        [StringLength(50)]
-        public string NomeDistribuidorReduzido { get; set; }
-
-        //[Required]
         [StringLength(14)]
         public string Cnpj { get; set; }
 

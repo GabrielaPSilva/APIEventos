@@ -48,5 +48,9 @@ namespace DUDS.Models
         [Column("mensagem_erro")]
         [StringLength(100)]
         public string MensagemErro { get; set; }
+
+        [ForeignKey(nameof(CodFundo))]
+        [InverseProperty(nameof(TblFundo.TblErrosPagamento))]
+        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

@@ -59,9 +59,5 @@ namespace DUDS.Models
         public decimal PercSobreAtivo { get; set; }
         [Column("perc_sobre_total", TypeName = "decimal(22, 10)")]
         public decimal PercSobreTotal { get; set; }
-
-        [ForeignKey(nameof(CodFundo))]
-        [InverseProperty(nameof(TblFundo.TblPosicaoOpcaoFuturo))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

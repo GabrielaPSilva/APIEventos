@@ -31,8 +31,5 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodCliente))]
         [InverseProperty(nameof(TblCliente.TblCalculoPgtoAdmPfee))]
         public virtual TblCliente CodClienteNavigation { get; set; }
-        [ForeignKey(nameof(CodFundo))]
-        [InverseProperty(nameof(TblFundo.TblCalculoPgtoAdmPfee))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

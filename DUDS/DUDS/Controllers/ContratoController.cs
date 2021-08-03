@@ -159,5 +159,28 @@ namespace DUDS.Controllers
         {
             return _context.TblContrato.Any(e => e.Id == id);
         }
+
+        #region Contrato Distribuicao
+        // GET: api/ContratoDistribuicao
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TblContratoDistribuicao>>> GetTblContratoDistribuicao()
+        {
+            return await _context.TblContratoDistribuicao.ToListAsync();
+        }
+
+        // GET: api/ContratoDistribuicao/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblContratoDistribuicao>> GetTblContratoDistribuicao(int id)
+        {
+            var tblContratoDistribuicao = await _context.TblContratoDistribuicao.FindAsync(id);
+
+            if (tblContratoDistribuicao == null)
+            {
+                return NotFound();
+            }
+
+            return tblContratoDistribuicao;
+        }
+        #endregion
     }
 }

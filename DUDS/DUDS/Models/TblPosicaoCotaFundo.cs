@@ -55,9 +55,5 @@ namespace DUDS.Models
         [Column("segmento")]
         [StringLength(30)]
         public string Segmento { get; set; }
-
-        [ForeignKey(nameof(CodFundo))]
-        [InverseProperty(nameof(TblFundo.TblPosicaoCotaFundo))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

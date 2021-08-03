@@ -18,44 +18,10 @@ namespace DUDS.Models
         public TblFundo()
         {
             InverseMaster = new HashSet<TblFundo>();
-            TblAcordoDistribuicao = new HashSet<TblAcordoDistribuicao>();
-            TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
-            TblContas = new HashSet<TblContas>();
-            TblContratoDistribuicao = new HashSet<TblContratoDistribuicao>();
-            TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
+            TblErrosPagamento = new HashSet<TblErrosPagamento>();
             TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
             TblPagamentoServico = new HashSet<TblPagamentoServico>();
             TblPgtoAdmPfee = new HashSet<TblPgtoAdmPfee>();
-            TblPosicaoAcao = new HashSet<TblPosicaoAcao>();
-            TblPosicaoAdr = new HashSet<TblPosicaoAdr>();
-            TblPosicaoBdr = new HashSet<TblPosicaoBdr>();
-            TblPosicaoCambio = new HashSet<TblPosicaoCambio>();
-            TblPosicaoCliente = new HashSet<TblPosicaoCliente>();
-            TblPosicaoContacorrente = new HashSet<TblPosicaoContacorrente>();
-            TblPosicaoCotaFundo = new HashSet<TblPosicaoCotaFundo>();
-            TblPosicaoCpr = new HashSet<TblPosicaoCpr>();
-            TblPosicaoEmprAcao = new HashSet<TblPosicaoEmprAcao>();
-            TblPosicaoFuturo = new HashSet<TblPosicaoFuturo>();
-            TblPosicaoOpcaoAcao = new HashSet<TblPosicaoOpcaoAcao>();
-            TblPosicaoOpcaoFuturo = new HashSet<TblPosicaoOpcaoFuturo>();
-            TblPosicaoPatrimonio = new HashSet<TblPosicaoPatrimonio>();
-            TblPosicaoRendafixa = new HashSet<TblPosicaoRendafixa>();
-            TblPosicaoRentabilidade = new HashSet<TblPosicaoRentabilidade>();
-            TblPosicaoTesouraria = new HashSet<TblPosicaoTesouraria>();
-            TblXmlAnbimaAcoes = new HashSet<TblXmlAnbimaAcoes>();
-            TblXmlAnbimaCaixa = new HashSet<TblXmlAnbimaCaixa>();
-            TblXmlAnbimaCorretagem = new HashSet<TblXmlAnbimaCorretagem>();
-            TblXmlAnbimaCotas = new HashSet<TblXmlAnbimaCotas>();
-            TblXmlAnbimaDebenture = new HashSet<TblXmlAnbimaDebenture>();
-            TblXmlAnbimaDespesas = new HashSet<TblXmlAnbimaDespesas>();
-            TblXmlAnbimaForwardsmoedas = new HashSet<TblXmlAnbimaForwardsmoedas>();
-            TblXmlAnbimaFuturos = new HashSet<TblXmlAnbimaFuturos>();
-            TblXmlAnbimaHeader = new HashSet<TblXmlAnbimaHeader>();
-            TblXmlAnbimaOpcoesacoes = new HashSet<TblXmlAnbimaOpcoesacoes>();
-            TblXmlAnbimaOutrasdespesas = new HashSet<TblXmlAnbimaOutrasdespesas>();
-            TblXmlAnbimaProvisao = new HashSet<TblXmlAnbimaProvisao>();
-            TblXmlAnbimaTitprivado = new HashSet<TblXmlAnbimaTitprivado>();
-            TblXmlAnbimaTitpublico = new HashSet<TblXmlAnbimaTitpublico>();
         }
 
         [Key]
@@ -155,6 +121,7 @@ namespace DUDS.Models
         [Column("usuario_modificacao")]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
+        [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
 
@@ -173,80 +140,12 @@ namespace DUDS.Models
         [InverseProperty(nameof(TblFundo.Master))]
         public virtual ICollection<TblFundo> InverseMaster { get; set; }
         [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblAcordoDistribuicao> TblAcordoDistribuicao { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblContas> TblContas { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblContratoDistribuicao> TblContratoDistribuicao { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
+        public virtual ICollection<TblErrosPagamento> TblErrosPagamento { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblOrdemPassivo> TblOrdemPassivo { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblPagamentoServico> TblPagamentoServico { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblPgtoAdmPfee> TblPgtoAdmPfee { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoAcao> TblPosicaoAcao { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoAdr> TblPosicaoAdr { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoBdr> TblPosicaoBdr { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoCambio> TblPosicaoCambio { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoCliente> TblPosicaoCliente { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoContacorrente> TblPosicaoContacorrente { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoCotaFundo> TblPosicaoCotaFundo { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoCpr> TblPosicaoCpr { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoEmprAcao> TblPosicaoEmprAcao { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoFuturo> TblPosicaoFuturo { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoOpcaoAcao> TblPosicaoOpcaoAcao { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoOpcaoFuturo> TblPosicaoOpcaoFuturo { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoPatrimonio> TblPosicaoPatrimonio { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoRendafixa> TblPosicaoRendafixa { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoRentabilidade> TblPosicaoRentabilidade { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblPosicaoTesouraria> TblPosicaoTesouraria { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaAcoes> TblXmlAnbimaAcoes { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaCaixa> TblXmlAnbimaCaixa { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaCorretagem> TblXmlAnbimaCorretagem { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaCotas> TblXmlAnbimaCotas { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaDebenture> TblXmlAnbimaDebenture { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaDespesas> TblXmlAnbimaDespesas { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaForwardsmoedas> TblXmlAnbimaForwardsmoedas { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaFuturos> TblXmlAnbimaFuturos { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaHeader> TblXmlAnbimaHeader { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaOpcoesacoes> TblXmlAnbimaOpcoesacoes { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaOutrasdespesas> TblXmlAnbimaOutrasdespesas { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaProvisao> TblXmlAnbimaProvisao { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaTitprivado> TblXmlAnbimaTitprivado { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblXmlAnbimaTitpublico> TblXmlAnbimaTitpublico { get; set; }
     }
 }

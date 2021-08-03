@@ -26,7 +26,7 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblDistribuidor>>> Distribuidor()
         {
-            return await _context.TblDistribuidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeDistribuidorReduzido).AsNoTracking().ToListAsync();
+            return await _context.TblDistribuidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeDistribuidor).AsNoTracking().ToListAsync();
         }
 
         // GET: api/Distribuidor/id
@@ -54,7 +54,6 @@ namespace DUDS.Controllers
                 if (registroDistribuidor != null)
                 {
                     registroDistribuidor.NomeDistribuidor = distribuidor.NomeDistribuidor == null ? registroDistribuidor.NomeDistribuidor : distribuidor.NomeDistribuidor;
-                    registroDistribuidor.NomeDistribuidorReduzido = distribuidor.NomeDistribuidorReduzido == null ? registroDistribuidor.NomeDistribuidorReduzido : distribuidor.NomeDistribuidorReduzido;
                     registroDistribuidor.Cnpj = distribuidor.Cnpj == null ? registroDistribuidor.Cnpj : distribuidor.Cnpj;
                     registroDistribuidor.ClassificacaoDistribuidor = distribuidor.ClassificacaoDistribuidor == null ? registroDistribuidor.ClassificacaoDistribuidor : distribuidor.ClassificacaoDistribuidor;
                     registroDistribuidor.CodDistrAdm = (distribuidor.CodDistrAdm == null || distribuidor.CodDistrAdm == 0) ? registroDistribuidor.CodDistrAdm : distribuidor.CodDistrAdm;
@@ -76,7 +75,6 @@ namespace DUDS.Controllers
             var itensDistribuidor = new TblDistribuidor
             {
                 NomeDistribuidor = tblDistribuidorModel.NomeDistribuidor,
-                NomeDistribuidorReduzido = tblDistribuidorModel.NomeDistribuidorReduzido,
                 Cnpj = tblDistribuidorModel.Cnpj,
                 ClassificacaoDistribuidor = tblDistribuidorModel.ClassificacaoDistribuidor,
                 CodDistrAdm = tblDistribuidorModel.CodDistrAdm,
@@ -135,5 +133,28 @@ namespace DUDS.Controllers
         {
             return _context.TblDistribuidor.Any(e => e.Id == id);
         }
+
+        #region Distribuidor Administrador
+        // GET: api/DistribuidorAdministrador
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TblDistribuidorAdministrador>>> GetTblDistribuidorAdministrador()
+        {
+            return await _context.TblDistribuidorAdministrador.ToListAsync();
+        }
+
+        // GET: api/DistribuidorAdministrador/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblDistribuidorAdministrador>> GetTblDistribuidorAdministrador(int id)
+        {
+            var tblDistribuidorAdministrador = await _context.TblDistribuidorAdministrador.FindAsync(id);
+
+            if (tblDistribuidorAdministrador == null)
+            {
+                return NotFound();
+            }
+
+            return tblDistribuidorAdministrador;
+        }
+        #endregion
     }
 }

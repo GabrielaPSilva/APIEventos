@@ -36,14 +36,12 @@ namespace DUDS.Models
         [Column("usuario_modificacao")]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
+        [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
         [Column("id")]
         public int Id { get; set; }
 
-        [ForeignKey(nameof(CodFundo))]
-        [InverseProperty(nameof(TblFundo.TblContas))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
         [ForeignKey(nameof(CodTipoConta))]
         [InverseProperty(nameof(TblTipoConta.TblContas))]
         public virtual TblTipoConta CodTipoContaNavigation { get; set; }

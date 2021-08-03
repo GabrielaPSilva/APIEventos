@@ -46,6 +46,7 @@ namespace DUDS.Models
         public DateTime? DataRetroatividade { get; set; }
         [Column("data_assinatura", TypeName = "date")]
         public DateTime? DataAssinatura { get; set; }
+        [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
         [Column("usuario_modificacao")]

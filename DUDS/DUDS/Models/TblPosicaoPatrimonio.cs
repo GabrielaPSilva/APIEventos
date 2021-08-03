@@ -27,9 +27,5 @@ namespace DUDS.Models
         public decimal ValorCotaLiquida { get; set; }
         [Column("patrimonio", TypeName = "decimal(22, 10)")]
         public decimal Patrimonio { get; set; }
-
-        [ForeignKey(nameof(CodFundo))]
-        [InverseProperty(nameof(TblFundo.TblPosicaoPatrimonio))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

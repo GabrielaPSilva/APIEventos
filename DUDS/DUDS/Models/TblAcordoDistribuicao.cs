@@ -40,8 +40,5 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblAcordoDistribuicao))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
-        [ForeignKey(nameof(CodFundo))]
-        [InverseProperty(nameof(TblFundo.TblAcordoDistribuicao))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

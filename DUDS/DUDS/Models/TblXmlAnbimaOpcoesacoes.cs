@@ -63,9 +63,5 @@ namespace DUDS.Models
         public int? CodCustodiante { get; set; }
         [Column("data_import", TypeName = "datetime")]
         public DateTime? DataImport { get; set; }
-
-        [ForeignKey(nameof(CodFundo))]
-        [InverseProperty(nameof(TblFundo.TblXmlAnbimaOpcoesacoes))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

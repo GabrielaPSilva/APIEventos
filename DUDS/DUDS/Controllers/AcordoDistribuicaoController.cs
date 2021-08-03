@@ -10,7 +10,8 @@ using DUDS.Models;
 
 namespace DUDS.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Route("api/[Controller]/[action]")]
     [ApiController]
     public class AcordoDistribuicaoController : ControllerBase
     {

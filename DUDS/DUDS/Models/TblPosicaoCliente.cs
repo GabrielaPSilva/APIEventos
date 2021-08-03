@@ -52,8 +52,5 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodCustodiante))]
         [InverseProperty(nameof(TblCustodiante.TblPosicaoCliente))]
         public virtual TblCustodiante CodCustodianteNavigation { get; set; }
-        [ForeignKey(nameof(CodFundo))]
-        [InverseProperty(nameof(TblFundo.TblPosicaoCliente))]
-        public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

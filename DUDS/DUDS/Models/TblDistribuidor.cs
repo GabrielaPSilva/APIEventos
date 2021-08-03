@@ -17,6 +17,8 @@ namespace DUDS.Models
             TblAcordoDistribuicao = new HashSet<TblAcordoDistribuicao>();
             TblCliente = new HashSet<TblCliente>();
             TblContrato = new HashSet<TblContrato>();
+            TblDistribuidorAdministrador = new HashSet<TblDistribuidorAdministrador>();
+            TblInvestidorDistribuidor = new HashSet<TblInvestidorDistribuidor>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
             TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
         }
@@ -28,10 +30,6 @@ namespace DUDS.Models
         [Column("nome_distribuidor")]
         [StringLength(100)]
         public string NomeDistribuidor { get; set; }
-        [Required]
-        [Column("nome_distribuidor_reduzido")]
-        [StringLength(50)]
-        public string NomeDistribuidorReduzido { get; set; }
         [Required]
         [Column("cnpj")]
         [StringLength(14)]
@@ -48,6 +46,7 @@ namespace DUDS.Models
         [Column("usuario_modificacao")]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
+        [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
 
@@ -57,6 +56,10 @@ namespace DUDS.Models
         public virtual ICollection<TblCliente> TblCliente { get; set; }
         [InverseProperty("CodDistribuidorNavigation")]
         public virtual ICollection<TblContrato> TblContrato { get; set; }
+        [InverseProperty("CodDistribuidorNavigation")]
+        public virtual ICollection<TblDistribuidorAdministrador> TblDistribuidorAdministrador { get; set; }
+        [InverseProperty("CodDistribuidorNavigation")]
+        public virtual ICollection<TblInvestidorDistribuidor> TblInvestidorDistribuidor { get; set; }
         [InverseProperty("CodDistribuidorNavigation")]
         public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
         [InverseProperty("CodDistribuidorNavigation")]

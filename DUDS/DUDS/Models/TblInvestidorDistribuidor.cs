@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DUDS.Models
 {
-    [Keyless]
     [Table("tbl_investidor_distribuidor")]
     public partial class TblInvestidorDistribuidor
     {
+        [Key]
+        [Column("id")]
+        public int Id { get; set; }
         [Column("cod_invest_custodia")]
         [StringLength(50)]
         public string CodInvestCustodia { get; set; }
@@ -23,10 +25,13 @@ namespace DUDS.Models
         public int CodCustodiante { get; set; }
 
         [ForeignKey(nameof(CodCustodiante))]
+        [InverseProperty(nameof(TblCustodiante.TblInvestidorDistribuidor))]
         public virtual TblCustodiante CodCustodianteNavigation { get; set; }
         [ForeignKey(nameof(CodDistribuidor))]
+        [InverseProperty(nameof(TblDistribuidor.TblInvestidorDistribuidor))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
         [ForeignKey(nameof(CodInvestidor))]
+        [InverseProperty(nameof(TblInvestidor.TblInvestidorDistribuidor))]
         public virtual TblInvestidor CodInvestidorNavigation { get; set; }
     }
 }

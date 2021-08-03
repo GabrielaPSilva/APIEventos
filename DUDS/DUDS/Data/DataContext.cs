@@ -22,6 +22,7 @@ namespace DUDS.Data
         public virtual DbSet<Auditoria> Auditoria { get; set; }
         public virtual DbSet<EmployeeData> EmployeeData { get; set; }
         public virtual DbSet<TblAcordoDistribuicao> TblAcordoDistribuicao { get; set; }
+        public virtual DbSet<TblAcordoRemuneracao> TblAcordoRemuneracao { get; set; }
         public virtual DbSet<TblAdministrador> TblAdministrador { get; set; }
         public virtual DbSet<TblAlocador> TblAlocador { get; set; }
         public virtual DbSet<TblBcbEntidadesSupervisionadas> TblBcbEntidadesSupervisionadas { get; set; }
@@ -174,12 +175,27 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodDistribuidor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_acordo_distribuicao_tbl_distribuidor");
+            });
 
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblAcordoDistribuicao)
-                    .HasForeignKey(d => d.CodFundo)
+            modelBuilder.Entity<TblAcordoRemuneracao>(entity =>
+            {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.DataVigenciaFim).HasDefaultValueSql("('9999-12-31')");
+
+                entity.Property(e => e.TipoRange).IsUnicode(false);
+
+                entity.Property(e => e.TipoTaxa).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
+
+                entity.HasOne(d => d.CodContratoFundoNavigation)
+                    .WithMany(p => p.TblAcordoRemuneracao)
+                    .HasForeignKey(d => d.CodContratoFundo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_acordo_distribuicao_tbl_fundo");
+                    .HasConstraintName("FK_AcordoRemuneracao_Contrato");
             });
 
             modelBuilder.Entity<TblAdministrador>(entity =>
@@ -226,12 +242,6 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodCliente)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_calculo_pgto_adm_pfee_tbl_cliente");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblCalculoPgtoAdmPfee)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_calculo_pgto_adm_pfee_tbl_fundo");
             });
 
             modelBuilder.Entity<TblCliente>(entity =>
@@ -275,12 +285,6 @@ namespace DUDS.Data
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblContas)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_contas_tbl_fundo");
-
                 entity.HasOne(d => d.CodTipoContaNavigation)
                     .WithMany(p => p.TblContas)
                     .HasForeignKey(d => d.CodTipoConta)
@@ -319,12 +323,6 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodContrato)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ContratoFundo_Contrato");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblContratoDistribuicao)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ContratoFundo_Fundo");
             });
 
             modelBuilder.Entity<TblCustodiante>(entity =>
@@ -344,11 +342,6 @@ namespace DUDS.Data
                     .WithMany()
                     .HasForeignKey(d => d.CodCustodiante)
                     .HasConstraintName("FK_tbl_depara_fundoproduto_tbl_custodiante");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany()
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_depara_fundoproduto_tbl_fundo");
             });
 
             modelBuilder.Entity<TblDistribuidor>(entity =>
@@ -365,13 +358,13 @@ namespace DUDS.Data
                 entity.Property(e => e.CodDistrAdm).IsUnicode(false);
 
                 entity.HasOne(d => d.CodAdministradorNavigation)
-                    .WithMany()
+                    .WithMany(p => p.TblDistribuidorAdministrador)
                     .HasForeignKey(d => d.CodAdministrador)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DistribuidorAdministrador_Administrador");
 
                 entity.HasOne(d => d.CodDistribuidorNavigation)
-                    .WithMany()
+                    .WithMany(p => p.TblDistribuidorAdministrador)
                     .HasForeignKey(d => d.CodDistribuidor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DistribuidorAdministrador_Distribuidor");
@@ -394,6 +387,12 @@ namespace DUDS.Data
                 entity.Property(e => e.Status).IsUnicode(false);
 
                 entity.Property(e => e.TipoDespesa).IsUnicode(false);
+
+                entity.HasOne(d => d.CodFundoNavigation)
+                    .WithMany(p => p.TblErrosPagamento)
+                    .HasForeignKey(d => d.CodFundo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ErrosPagamento_Fundo");
             });
 
             modelBuilder.Entity<TblFiCad>(entity =>
@@ -493,19 +492,19 @@ namespace DUDS.Data
                 entity.Property(e => e.CodInvestCustodia).IsUnicode(false);
 
                 entity.HasOne(d => d.CodCustodianteNavigation)
-                    .WithMany()
+                    .WithMany(p => p.TblInvestidorDistribuidor)
                     .HasForeignKey(d => d.CodCustodiante)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_InvestidorDistribuidor_Custodiante");
 
                 entity.HasOne(d => d.CodDistribuidorNavigation)
-                    .WithMany()
+                    .WithMany(p => p.TblInvestidorDistribuidor)
                     .HasForeignKey(d => d.CodDistribuidor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_InvestidorDistribuidor_Distribuidor");
 
                 entity.HasOne(d => d.CodInvestidorNavigation)
-                    .WithMany()
+                    .WithMany(p => p.TblInvestidorDistribuidor)
                     .HasForeignKey(d => d.CodInvestidor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_InvestidorDistribuidor_Investidor");
@@ -548,12 +547,6 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodDistribuidor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_movimentacao_nota_tbl_distribuidor");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblMovimentacaoNota)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_movimentacao_nota_tbl_fundo");
 
                 entity.HasOne(d => d.CodGestorNavigation)
                     .WithMany(p => p.TblMovimentacaoNota)
@@ -635,12 +628,6 @@ namespace DUDS.Data
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
                     .HasName("PK_tbl_posicao_acao_1");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoAcao)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_acao_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoAdr>(entity =>
@@ -649,24 +636,12 @@ namespace DUDS.Data
                     .HasName("PK_tbl_posicao_adr_1");
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoAdr)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_adr_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoBdr>(entity =>
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
                     .HasName("PK_tbl_posicao_bdr_1");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoBdr)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_bdr_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoCambio>(entity =>
@@ -679,12 +654,6 @@ namespace DUDS.Data
                 entity.Property(e => e.MoedaVendida).IsFixedLength(true);
 
                 entity.Property(e => e.Tipo).IsFixedLength(true);
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoCambio)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_cambio_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoCliente>(entity =>
@@ -703,24 +672,12 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodCustodiante)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_posicao_cliente_tbl_custodiante");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoCliente)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_cliente_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoContacorrente>(entity =>
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Codigo })
                     .HasName("PK_tbl_posicao_contacorrente_1");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoContacorrente)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_contacorrente_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoCotaFundo>(entity =>
@@ -729,45 +686,18 @@ namespace DUDS.Data
                     .HasName("PK_tbl_posicao_cota_fundo_1");
 
                 entity.Property(e => e.Cnpj).IsFixedLength(true);
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoCotaFundo)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_cota_fundo_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblPosicaoCpr>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoCpr)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_cpr_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoEmprAcao>(entity =>
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo, e.CodOperacao })
                     .HasName("PK_tbl_posicao_empr_acao_1");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoEmprAcao)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_empr_acao_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoFuturo>(entity =>
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo, e.Vencimento, e.Corretora })
                     .HasName("PK_tbl_posicao_futuro_1");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoFuturo)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_futuro_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoOpcaoAcao>(entity =>
@@ -776,70 +706,34 @@ namespace DUDS.Data
                     .HasName("PK_tbl_posicao_opcao_acao_1");
 
                 entity.Property(e => e.Praca).IsFixedLength(true);
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoOpcaoAcao)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_opcao_acao_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoOpcaoFuturo>(entity =>
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo, e.Vencimento, e.Tipo, e.Corretora })
                     .HasName("PK_tbl_posicao_opcao_futuro_1");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoOpcaoFuturo)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_opcao_futuro_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoPatrimonio>(entity =>
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo });
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoPatrimonio)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_patrimonio_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoRendafixa>(entity =>
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Codigo })
                     .HasName("PK_tbl_posicao_rendafixa_1");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoRendafixa)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_rendafixa_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoRentabilidade>(entity =>
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Indexador });
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoRentabilidade)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_rentabilidade_fundo_tbl_fundo");
             });
 
             modelBuilder.Entity<TblPosicaoTesouraria>(entity =>
             {
                 entity.HasKey(e => new { e.DataRef, e.CodFundo })
                     .HasName("PK_tbl_posicao_tesouraria_1");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblPosicaoTesouraria)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_tesouraria_tbl_fundo");
             });
 
             modelBuilder.Entity<TblTeste>(entity =>
@@ -856,118 +750,6 @@ namespace DUDS.Data
                 entity.Property(e => e.DescricaoConta).IsUnicode(false);
 
                 entity.Property(e => e.TipoConta).IsUnicode(false);
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaAcoes>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaAcoes)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_acoes_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaCaixa>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaCaixa)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_caixa_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaCorretagem>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaCorretagem)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_corretagem_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaCotas>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaCotas)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_cotas_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaDebenture>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaDebenture)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_debenture_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaDespesas>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaDespesas)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_despesas_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaForwardsmoedas>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaForwardsmoedas)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_forwardsmoedas_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaFuturos>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaFuturos)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_futuros_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaHeader>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaHeader)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_header_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaOpcoesacoes>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaOpcoesacoes)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_opcoesacoes_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaOutrasdespesas>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaOutrasdespesas)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_outrasdespesas_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaProvisao>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaProvisao)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_provisao_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaTitprivado>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaTitprivado)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_titprivado_tbl_fundo");
-            });
-
-            modelBuilder.Entity<TblXmlAnbimaTitpublico>(entity =>
-            {
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblXmlAnbimaTitpublico)
-                    .HasForeignKey(d => d.CodFundo)
-                    .HasConstraintName("FK_tbl_xmlAnbima_titpublico_tbl_fundo");
             });
 
             OnModelCreatingPartial(modelBuilder);
