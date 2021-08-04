@@ -39,7 +39,7 @@ namespace DUDS
                 //options.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.All;
                 //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             });
-
+            /*
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,7 +58,7 @@ namespace DUDS
                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                };
            });
-
+            */
             services.AddCors(options =>
             {
                 options.AddPolicy("EnableCORS", builder =>
@@ -72,7 +72,7 @@ namespace DUDS
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dahlia Unified Data Service", Version = "v1" });
-
+                /*
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",
@@ -96,7 +96,7 @@ namespace DUDS
                          new string[] {}
                     }
                 });
-
+                */
             });
         }
 
@@ -114,7 +114,7 @@ namespace DUDS
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            // app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
