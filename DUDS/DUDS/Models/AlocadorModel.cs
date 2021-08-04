@@ -9,8 +9,8 @@ namespace DUDS.Models
     public class AlocadorModel
     {
         public int Id { get; set; }
-        public int CodContratoFundo { get; set; }
-        public long CodCliente { get; set; }
+        public int CodContratoDistribuicao { get; set; }
+        public int CodInvestidor { get; set; }
 
         //[Required]
         [StringLength(100)]

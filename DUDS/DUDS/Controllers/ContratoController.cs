@@ -183,7 +183,7 @@ namespace DUDS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ContratoDistribuicaoModel>> CadastrarContrato(ContratoDistribuicaoModel tblContratoDistribuicaoModel)
+        public async Task<ActionResult<ContratoDistribuicaoModel>> CadastrarContratoDistribuicao(ContratoDistribuicaoModel tblContratoDistribuicaoModel)
         {
             var itensContratoDistribuicao = new TblContratoDistribuicao
             {

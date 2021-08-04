@@ -25,7 +25,10 @@
 
   <ItemGroup>
     <Folder Include="App_Start\" />
-    <Folder Include="Data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DUDS.BLL\DUDS.BLL.csproj" />
   </ItemGroup>
 
 </Project>

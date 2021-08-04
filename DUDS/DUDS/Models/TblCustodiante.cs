@@ -16,6 +16,7 @@ namespace DUDS.Models
         {
             TblFundo = new HashSet<TblFundo>();
             TblInvestidorDistribuidor = new HashSet<TblInvestidorDistribuidor>();
+            TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
             TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
             TblPosicaoCliente = new HashSet<TblPosicaoCliente>();
         }
@@ -37,11 +38,16 @@ namespace DUDS.Models
         [Column("usuario_modificacao")]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
+        [Required]
+        [Column("ativo")]
+        public bool? Ativo { get; set; }
 
         [InverseProperty("CodCustodianteNavigation")]
         public virtual ICollection<TblFundo> TblFundo { get; set; }
         [InverseProperty("CodCustodianteNavigation")]
         public virtual ICollection<TblInvestidorDistribuidor> TblInvestidorDistribuidor { get; set; }
+        [InverseProperty("CodCustodianteNavigation")]
+        public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
         [InverseProperty("CodCustodianteNavigation")]
         public virtual ICollection<TblOrdemPassivo> TblOrdemPassivo { get; set; }
         [InverseProperty("CodCustodianteNavigation")]

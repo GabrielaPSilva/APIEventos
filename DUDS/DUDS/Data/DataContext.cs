@@ -179,21 +179,25 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblAcordoRemuneracao>(entity =>
             {
+                entity.HasKey(e => new { e.CodContratoDistribuicao, e.Percentual, e.TipoTaxa, e.TipoRange });
+
+                entity.Property(e => e.TipoTaxa).IsUnicode(false);
+
+                entity.Property(e => e.TipoRange).IsUnicode(false);
+
                 entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.DataVigenciaFim).HasDefaultValueSql("('9999-12-31')");
 
-                entity.Property(e => e.TipoRange).IsUnicode(false);
-
-                entity.Property(e => e.TipoTaxa).IsUnicode(false);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
-                entity.HasOne(d => d.CodContratoFundoNavigation)
+                entity.HasOne(d => d.CodContratoDistribuicaoNavigation)
                     .WithMany(p => p.TblAcordoRemuneracao)
-                    .HasForeignKey(d => d.CodContratoFundo)
+                    .HasForeignKey(d => d.CodContratoDistribuicao)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AcordoRemuneracao_Contrato");
             });
@@ -211,21 +215,25 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblAlocador>(entity =>
             {
+                entity.HasKey(e => new { e.CodInvestidor, e.CodContratoDistribuicao });
+
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
-                entity.HasOne(d => d.CodClienteNavigation)
+                entity.HasOne(d => d.CodContratoDistribuicaoNavigation)
                     .WithMany(p => p.TblAlocador)
-                    .HasForeignKey(d => d.CodCliente)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Alocador_Cliente");
-
-                entity.HasOne(d => d.CodContratoFundoNavigation)
-                    .WithMany(p => p.TblAlocador)
-                    .HasForeignKey(d => d.CodContratoFundo)
+                    .HasForeignKey(d => d.CodContratoDistribuicao)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Alocador_Contrato");
+
+                entity.HasOne(d => d.CodInvestidorNavigation)
+                    .WithMany(p => p.TblAlocador)
+                    .HasForeignKey(d => d.CodInvestidor)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Alocador_Cliente");
             });
 
             modelBuilder.Entity<TblBcbEntidadesSupervisionadas>(entity =>
@@ -252,25 +260,13 @@ namespace DUDS.Data
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Cnpj).IsFixedLength(true);
-
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
-
-                entity.HasOne(d => d.CodAdministradorNavigation)
-                    .WithMany(p => p.TblCliente)
-                    .HasForeignKey(d => d.CodAdministrador)
-                    .HasConstraintName("FK_tbl_cliente_tbl_administrador");
 
                 entity.HasOne(d => d.CodDistribuidorNavigation)
                     .WithMany(p => p.TblCliente)
                     .HasForeignKey(d => d.CodDistribuidor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_cliente_tbl_distribuidor");
-
-                entity.HasOne(d => d.CodGestorNavigation)
-                    .WithMany(p => p.TblCliente)
-                    .HasForeignKey(d => d.CodGestor)
-                    .HasConstraintName("FK_tbl_cliente_tbl_gestor");
             });
 
             modelBuilder.Entity<TblContas>(entity =>
@@ -335,6 +331,8 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblCustodiante>(entity =>
             {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Cnpj).IsFixedLength(true);
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
@@ -497,13 +495,27 @@ namespace DUDS.Data
                 entity.Property(e => e.TipoCliente).IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
+
+                entity.HasOne(d => d.CodAdministradorNavigation)
+                    .WithMany(p => p.TblInvestidor)
+                    .HasForeignKey(d => d.CodAdministrador)
+                    .HasConstraintName("FK_Investidor_Administrador");
+
+                entity.HasOne(d => d.CodGestorNavigation)
+                    .WithMany(p => p.TblInvestidor)
+                    .HasForeignKey(d => d.CodGestor)
+                    .HasConstraintName("FK_Investidor_Gestor");
             });
 
             modelBuilder.Entity<TblInvestidorDistribuidor>(entity =>
             {
+                entity.HasKey(e => new { e.CodInvestCustodia, e.CodInvestidor, e.CodDistribuidor, e.CodCustodiante });
+
                 entity.Property(e => e.CodInvestCustodia).IsUnicode(false);
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
@@ -558,6 +570,12 @@ namespace DUDS.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_movimentacao_nota_tbl_administrador");
 
+                entity.HasOne(d => d.CodCustodianteNavigation)
+                    .WithMany(p => p.TblMovimentacaoNota)
+                    .HasForeignKey(d => d.CodCustodiante)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_movimentacao_nota_tbl_custodiante");
+
                 entity.HasOne(d => d.CodDistribuidorNavigation)
                     .WithMany(p => p.TblMovimentacaoNota)
                     .HasForeignKey(d => d.CodDistribuidor)
@@ -586,6 +604,7 @@ namespace DUDS.Data
                 entity.HasOne(d => d.CodCustodianteNavigation)
                     .WithMany(p => p.TblOrdemPassivo)
                     .HasForeignKey(d => d.CodCustodiante)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_ordem_passivo_tbl_custodiante");
 
                 entity.HasOne(d => d.CodDistribuidorNavigation)
@@ -624,8 +643,6 @@ namespace DUDS.Data
                     .HasName("PK_tbl_pgto_adm_pfee_1");
 
                 entity.Property(e => e.Competencia).IsFixedLength(true);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.HasOne(d => d.CodClienteNavigation)
                     .WithMany(p => p.TblPgtoAdmPfee)

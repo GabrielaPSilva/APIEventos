@@ -48,7 +48,7 @@ namespace DUDS.Controllers
         {
             var itensAcordoRemuneracao = new TblAcordoRemuneracao
             {
-                CodContratoFundo = tblAcordoRemuneracaoModel.CodContratoFundo,
+                CodContratoDistribuicao = tblAcordoRemuneracaoModel.CodContratoDistribuicao,
                 Inicio = tblAcordoRemuneracaoModel.Inicio,
                 Fim = tblAcordoRemuneracaoModel.Fim,
                 Percentual = tblAcordoRemuneracaoModel.Percentual,
@@ -79,7 +79,7 @@ namespace DUDS.Controllers
 
                 if (registroAcordoRemuneracao != null)
                 {
-                    registroAcordoRemuneracao.CodContratoFundo = acordoRemuneracao.CodContratoFundo == 0 ? registroAcordoRemuneracao.CodContratoFundo : acordoRemuneracao.CodContratoFundo;
+                    registroAcordoRemuneracao.CodContratoDistribuicao = acordoRemuneracao.CodContratoDistribuicao == 0 ? registroAcordoRemuneracao.CodContratoDistribuicao : acordoRemuneracao.CodContratoDistribuicao;
                     registroAcordoRemuneracao.Inicio = acordoRemuneracao.Inicio == 0 ? registroAcordoRemuneracao.Inicio : acordoRemuneracao.Inicio;
                     registroAcordoRemuneracao.Fim = acordoRemuneracao.Fim == 0 ? registroAcordoRemuneracao.Fim : acordoRemuneracao.Fim;
                     registroAcordoRemuneracao.Percentual = acordoRemuneracao.Percentual == 0 ? registroAcordoRemuneracao.Percentual : acordoRemuneracao.Percentual;

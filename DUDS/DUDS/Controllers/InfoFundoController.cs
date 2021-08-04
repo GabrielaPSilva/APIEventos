@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Logger.Enum;
 using Logger;
 using Microsoft.Extensions.Configuration;
+using DUDS.Service.Interface;
 
 namespace DUDS.Controllers
 {
@@ -20,12 +21,14 @@ namespace DUDS.Controllers
     public class InfoFundoController : Controller
     {
         private readonly DataContext _context;
+        private readonly IConfiguracaoService _configService;
         private static readonly Dictionary<int, TblFundo> tblFundoStore = new Dictionary<int, TblFundo>();
         string Sistema = "DUDS";
 
-        public InfoFundoController(DataContext context)
+        public InfoFundoController(DataContext context, IConfiguracaoService configService)
         {
             _context = context;
+            _configService = configService;
         }
 
         [HttpGet]
@@ -67,10 +70,10 @@ namespace DUDS.Controllers
         public async Task<ActionResult<TblFundo>> GetFundo(int id)
         {
             var tblFundo = await _context.TblFundo.FindAsync(id);
-            
+
             try
             {
-                if(tblFundo != null)
+                if (tblFundo != null)
                 {
                     return Ok(tblFundo);
                 }
@@ -137,43 +140,6 @@ namespace DUDS.Controllers
                 Ok(itensFundo));
         }
 
-        // DELETE: api/Fundo/id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarFundo(int id)
-        {
-            var tblFundo = await _context.TblFundo.FindAsync(id);
-
-            if (tblFundo == null)
-            {
-                return NotFound();
-            }
-
-            _context.TblFundo.Remove(tblFundo);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        // DESATIVA: api/Fundo/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarFundo(int id)
-        {
-            var registroFundo = _context.TblFundo.Find(id);
-
-            if (registroFundo != null)
-            {
-                registroFundo.Ativo = false;
-
-                await _context.SaveChangesAsync();
-
-                return Ok();
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
         //PUT: api/Fundo/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarFundo(int id, FundoModel fundo)
@@ -229,6 +195,61 @@ namespace DUDS.Controllers
             }
 
             return NoContent();
+        }
+
+        // DELETE: api/Fundo/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarFundo(int id)
+        {
+            var existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+
+            if (!existeRegistro)
+            {
+                var tblFundo = await _context.TblFundo.FindAsync(id);
+
+                if (tblFundo == null)
+                {
+                    return NotFound();
+                }
+
+                _context.TblFundo.Remove(tblFundo);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        // DESATIVA: api/Fundo/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarFundo(int id)
+        {
+            var existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+
+            if (!existeRegistro)
+            {
+                var registroFundo = _context.TblFundo.Find(id);
+
+                if (registroFundo != null)
+                {
+                    registroFundo.Ativo = false;
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         private bool FundoExists(int id)

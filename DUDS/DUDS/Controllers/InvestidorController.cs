@@ -136,14 +136,14 @@ namespace DUDS.Controllers
         #region Investidor Distribuidor
         // GET: api/InvestidorDistribuidor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblInvestidorDistribuidor>>> GetTblInvestidorDistribuidor()
+        public async Task<ActionResult<IEnumerable<TblInvestidorDistribuidor>>> InvestidorDistribuidor()
         {
-            return await _context.TblInvestidorDistribuidor.ToListAsync();
+            return await _context.TblInvestidorDistribuidor.AsNoTracking().ToListAsync();
         }
 
         // GET: api/InvestidorDistribuidor/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblInvestidorDistribuidor>> GetTblInvestidorDistribuidor(int id)
+        public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(int id)
         {
             var tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(id);
 
@@ -152,28 +152,29 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblInvestidorDistribuidor;
+            return Ok(tblInvestidorDistribuidor);
         }
 
         [HttpPost]
-        public async Task<ActionResult<InvestidorModel>> CadastrarInvestidorDistribuidor(InvestidorModel tblInvestidorModel)
+        public async Task<ActionResult<InvestidorDistribuidorModel>> CadastrarInvestidorDistribuidor(InvestidorDistribuidorModel tblInvestidorDistribuidorModel)
         {
-            var itensInvestidor = new TblInvestidor
+            var itensInvestidorDistribuidor = new TblInvestidorDistribuidor
             {
-                NomeCliente = tblInvestidorModel.NomeCliente,
-                Cnpj = tblInvestidorModel.Cnpj,
-                TipoCliente = tblInvestidorModel.TipoCliente,
-                CodAdministrador = tblInvestidorModel.CodAdministrador,
-                CodGestor = tblInvestidorModel.CodGestor
+                CodCustodiante = tblInvestidorDistribuidorModel.CodCustodiante,
+                CodDistribuidor = tblInvestidorDistribuidorModel.CodDistribuidor,
+                CodInvestCustodia = tblInvestidorDistribuidorModel.CodInvestCustodia,
+                CodInvestidor = tblInvestidorDistribuidorModel.CodInvestidor,
+                UsuarioModificacao = tblInvestidorDistribuidorModel.UsuarioModificacao,
+                DataModificacao = tblInvestidorDistribuidorModel.DataModificacao
             };
 
-            _context.TblInvestidor.Add(itensInvestidor);
+            _context.TblInvestidorDistribuidor.Add(itensInvestidorDistribuidor);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(
                 nameof(GetInvestidor),
-                new { id = itensInvestidor.Id },
-                Ok(itensInvestidor));
+                new { id = itensInvestidorDistribuidor.Id },
+                Ok(itensInvestidorDistribuidor));
         }
         #endregion
     }

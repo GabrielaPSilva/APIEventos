@@ -1,3 +1,5 @@
+using DUDS.Service;
+using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -98,6 +100,8 @@ namespace DUDS
                 });
 
             });
+
+            services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
