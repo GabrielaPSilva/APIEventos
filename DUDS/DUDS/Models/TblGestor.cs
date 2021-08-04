@@ -14,8 +14,8 @@ namespace DUDS.Models
     {
         public TblGestor()
         {
-            TblCliente = new HashSet<TblCliente>();
             TblFundo = new HashSet<TblFundo>();
+            TblInvestidor = new HashSet<TblInvestidor>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
         }
 
@@ -29,8 +29,6 @@ namespace DUDS.Models
         [Column("cnpj")]
         [StringLength(14)]
         public string Cnpj { get; set; }
-        [Column("cod_gestor_adm")]
-        public int? CodGestorAdm { get; set; }
         [Column("data_modificacao", TypeName = "smalldatetime")]
         public DateTime DataModificacao { get; set; }
         [Required]
@@ -42,9 +40,9 @@ namespace DUDS.Models
         public bool? Ativo { get; set; }
 
         [InverseProperty("CodGestorNavigation")]
-        public virtual ICollection<TblCliente> TblCliente { get; set; }
-        [InverseProperty("CodGestorNavigation")]
         public virtual ICollection<TblFundo> TblFundo { get; set; }
+        [InverseProperty("CodGestorNavigation")]
+        public virtual ICollection<TblInvestidor> TblInvestidor { get; set; }
         [InverseProperty("CodGestorNavigation")]
         public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
     }

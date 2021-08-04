@@ -33,9 +33,9 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodContrato))]
         [InverseProperty(nameof(TblContrato.TblContratoDistribuicao))]
         public virtual TblContrato CodContratoNavigation { get; set; }
-        [InverseProperty("CodContratoFundoNavigation")]
+        [InverseProperty("CodContratoDistribuicaoNavigation")]
         public virtual ICollection<TblAcordoRemuneracao> TblAcordoRemuneracao { get; set; }
-        [InverseProperty("CodContratoFundoNavigation")]
+        [InverseProperty("CodContratoDistribuicaoNavigation")]
         public virtual ICollection<TblAlocador> TblAlocador { get; set; }
     }
 }

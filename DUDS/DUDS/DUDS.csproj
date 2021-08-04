@@ -31,7 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Folder Include="App_Start\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DUDS.BLL\DUDS.BLL.csproj" />
   </ItemGroup>
 
 </Project>

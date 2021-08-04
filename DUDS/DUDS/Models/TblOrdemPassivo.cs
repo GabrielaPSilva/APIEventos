@@ -53,7 +53,7 @@ namespace DUDS.Models
         [Column("ordem_mae")]
         public int OrdemMae { get; set; }
         [Column("cod_custodiante")]
-        public int? CodCustodiante { get; set; }
+        public int CodCustodiante { get; set; }
 
         [ForeignKey(nameof(CdCotista))]
         [InverseProperty(nameof(TblCliente.TblOrdemPassivo))]

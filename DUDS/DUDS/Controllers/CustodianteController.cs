@@ -26,7 +26,7 @@ namespace DUDS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblCustodiante>>> Custodiante()
         {
-            return await _context.TblCustodiante.ToListAsync();
+            return await _context.TblCustodiante.Where(c => c.Ativo == true).OrderBy(c => c.NomeCustodiante).AsNoTracking().ToListAsync();
         }
 
         // GET: api/Custodiante/id
@@ -40,70 +40,91 @@ namespace DUDS.Controllers
                 return NotFound();
             }
 
-            return tblCustodiante;
+            return Ok(tblCustodiante);
         }
 
-        // PUT: api/Custodiante/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblCustodiante(int id, TblCustodiante tblCustodiante)
-        //{
-        //    if (id != tblCustodiante.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPost]
+        public async Task<ActionResult<CustodianteModel>> CadastrarCustodiante(CustodianteModel tblCustodianteModel)
+        {
+            var itensCustodiante = new TblCustodiante
+            {
+                NomeCustodiante = tblCustodianteModel.NomeCustodiante,
+                UsuarioModificacao = tblCustodianteModel.UsuarioModificacao,
+                DataModificacao = tblCustodianteModel.DataModificacao
+            };
 
-        //    _context.Entry(tblCustodiante).State = EntityState.Modified;
+            _context.TblCustodiante.Add(itensCustodiante);
+            await _context.SaveChangesAsync();
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblCustodianteExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            return CreatedAtAction(
+                nameof(GetCustodiante),
+                new { id = itensCustodiante.Id },
+                Ok(itensCustodiante));
+        }
 
-        //    return NoContent();
-        //}
+        //PUT: api/Custodiante/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarCustodiante(int id, CustodianteModel custodiante)
+        {
+            try
+            {
+                var registroCustodiante = _context.TblCustodiante.Find(id);
 
-        //// POST: api/Custodiante
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<TblCustodiante>> PostTblCustodiante(TblCustodiante tblCustodiante)
-        //{
-        //    _context.TblCustodiante.Add(tblCustodiante);
-        //    await _context.SaveChangesAsync();
+                if (registroCustodiante != null)
+                {
+                    registroCustodiante.NomeCustodiante = custodiante.NomeCustodiante == null ? registroCustodiante.NomeCustodiante : custodiante.NomeCustodiante;
 
-        //    return CreatedAtAction("GetTblCustodiante", new { id = tblCustodiante.Id }, tblCustodiante);
-        //}
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException) when (!CustodianteExists(custodiante.Id))
+            {
+                return NotFound();
+            }
 
-        //// DELETE: api/Custodiante/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTblCustodiante(int id)
-        //{
-        //    var tblCustodiante = await _context.TblCustodiante.FindAsync(id);
-        //    if (tblCustodiante == null)
-        //    {
-        //        return NotFound();
-        //    }
+            return NoContent();
+        }
 
-        //    _context.TblCustodiante.Remove(tblCustodiante);
-        //    await _context.SaveChangesAsync();
+        // DELETE: api/Custodiante/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarCustodiante(int id)
+        {
+            var tblCustodiante = await _context.TblCustodiante.FindAsync(id);
 
-        //    return NoContent();
-        //}
+            if (tblCustodiante == null)
+            {
+                return NotFound();
+            }
 
-        //private bool TblCustodianteExists(int id)
-        //{
-        //    return _context.TblCustodiante.Any(e => e.Id == id);
-        //}
+            _context.TblCustodiante.Remove(tblCustodiante);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        // DESATIVA: api/Custodiante/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarCustodiante(int id)
+        {
+            var registroCustodiante = _context.TblCustodiante.Find(id);
+
+            if (registroCustodiante != null)
+            {
+                registroCustodiante.Ativo = false;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        private bool CustodianteExists(int id)
+        {
+            return _context.TblCustodiante.Any(e => e.Id == id);
+        }
     }
 }

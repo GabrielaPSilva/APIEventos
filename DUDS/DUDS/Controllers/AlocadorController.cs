@@ -48,8 +48,8 @@ namespace DUDS.Controllers
         {
             var itensAlocador = new TblAlocador
             {
-                CodCliente = tblAlocadorModel.CodCliente,
-                CodContratoFundo = tblAlocadorModel.CodContratoFundo,
+                CodInvestidor = tblAlocadorModel.CodInvestidor,
+                CodContratoDistribuicao = tblAlocadorModel.CodContratoDistribuicao,
                 UsuarioModificacao = tblAlocadorModel.UsuarioModificacao,
                 DataModificacao = tblAlocadorModel.DataModificacao
             };

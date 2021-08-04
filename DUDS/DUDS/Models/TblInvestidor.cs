@@ -13,6 +13,7 @@ namespace DUDS.Models
     {
         public TblInvestidor()
         {
+            TblAlocador = new HashSet<TblAlocador>();
             TblInvestidorDistribuidor = new HashSet<TblInvestidorDistribuidor>();
         }
 
@@ -43,6 +44,14 @@ namespace DUDS.Models
         [Column("ativo")]
         public bool? Ativo { get; set; }
 
+        [ForeignKey(nameof(CodAdministrador))]
+        [InverseProperty(nameof(TblAdministrador.TblInvestidor))]
+        public virtual TblAdministrador CodAdministradorNavigation { get; set; }
+        [ForeignKey(nameof(CodGestor))]
+        [InverseProperty(nameof(TblGestor.TblInvestidor))]
+        public virtual TblGestor CodGestorNavigation { get; set; }
+        [InverseProperty("CodInvestidorNavigation")]
+        public virtual ICollection<TblAlocador> TblAlocador { get; set; }
         [InverseProperty("CodInvestidorNavigation")]
         public virtual ICollection<TblInvestidorDistribuidor> TblInvestidorDistribuidor { get; set; }
     }

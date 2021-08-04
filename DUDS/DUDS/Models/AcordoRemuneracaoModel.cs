@@ -9,7 +9,7 @@ namespace DUDS.Models
     public class AcordoRemuneracaoModel
     {
         public int Id { get; set; }
-        public int CodContratoFundo { get; set; }
+        public int CodContratoDistribuicao { get; set; }
         public double Inicio { get; set; }
         public double Fim { get; set; }
         public double Percentual { get; set; }
