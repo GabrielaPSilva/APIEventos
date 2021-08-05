@@ -28,197 +28,80 @@ namespace DUDS.Service
 
         public async Task<bool> GetValidacaoExisteIdOutrasTabelas(int id, string tableName)
         {
-            var codInvestidor = _config["RelacaoTabelas:tbl_investidor"].Split(',').Select(t => t.Trim()).ToArray();
-            var codFundo = _config["RelacaoTabelas:tbl_fundo"].Split(',').Select(t => t.Trim()).ToArray();
-            var codDistribuidor = _config["RelacaoTabelas:tbl_distribuidor"].Split(',').Select(t => t.Trim()).ToArray();
-            var codAdministrador = _config["RelacaoTabelas:tbl_administrador"].Split(',').Select(t => t.Trim()).ToArray();
-            var codGestor = _config["RelacaoTabelas:tbl_gestor"].Split(',').Select(t => t.Trim()).ToArray();
-            var codContratoDistribuicao = _config["RelacaoTabelas:tbl_contrato_distribuicao"].Split(',').Select(t => t.Trim()).ToArray();
-            var codTipoConta = _config["RelacaoTabelas:tbl_tipo_conta"].Split(',').Select(t => t.Trim()).ToArray();
-            var codContrato = _config["RelacaoTabelas:tbl_contrato"].Split(',').Select(t => t.Trim()).ToArray();
-            var codCustodiante = _config["RelacaoTabelas:tbl_custodiante"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codInvestidor = _config["RelacaoTabelas:tbl_investidor"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codFundo = _config["RelacaoTabelas:tbl_fundo"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codDistribuidor = _config["RelacaoTabelas:tbl_distribuidor"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codAdministrador = _config["RelacaoTabelas:tbl_administrador"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codGestor = _config["RelacaoTabelas:tbl_gestor"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codContratoDistribuicao = _config["RelacaoTabelas:tbl_contrato_distribuicao"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codTipoConta = _config["RelacaoTabelas:tbl_tipo_conta"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codContrato = _config["RelacaoTabelas:tbl_contrato"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codCustodiante = _config["RelacaoTabelas:tbl_custodiante"].Split(',').Select(t => t.Trim()).ToArray();
 
-            var connection = _context.Database.GetDbConnection();
-            var transaction = _context.Database.CurrentTransaction?.GetDbTransaction();
-            var commandTimeout = _context.Database.GetCommandTimeout();
-
+            string[] tableUsed = null;
+            string codUsed = string.Empty;
             bool retorno = false;
+
+            switch (tableName)
+            {
+                case "tbl_investidor":
+                    tableUsed = codInvestidor;
+                    codUsed = "cod_investidor = ";
+                    break;
+                case "tbl_fundo":
+                    tableUsed = codFundo;
+                    codUsed = "cod_fundo = ";
+                    break;
+                case "tbl_distribuidor":
+                    tableUsed = codDistribuidor;
+                    codUsed = "cod_distribuidor = ";
+                    break;
+                case "tbl_administrador":
+                    tableUsed = codAdministrador;
+                    codUsed = "cod_administrador = ";
+                    break;
+                case "tbl_gestor":
+                    tableUsed = codGestor;
+                    codUsed = "cod_gestor = ";
+                    break;
+                case "tbl_contrato_distribuicao":
+                    tableUsed = codContratoDistribuicao;
+                    codUsed = "cod_contrato_distribuicao = ";
+                    break;
+                case "tbl_tipo_conta":
+                    tableUsed = codTipoConta;
+                    codUsed = "cod_tipo_conta = ";
+                    break;
+                case "tbl_contrato":
+                    tableUsed = codContrato;
+                    codUsed = "cod_contrato = ";
+                    break;
+                case "tbl_custodiante":
+                    tableUsed = codCustodiante;
+                    codUsed = "cod_custodiante = ";
+                    break;
+                default:
+                    break;
+            }
 
             try
             {
-                var command = new CommandDefinition();
-
-                if (tableName == "tbl_investidor")
+                foreach (var item in tableUsed)
                 {
-                    foreach (var investidor in codInvestidor)
+                    StringBuilder query = new StringBuilder();
+                    query.AppendLine("SELECT * FROM " + item + " WHERE " + codUsed + id);
+
+                    using (var con = ConnectionFactory.Dahlia())
                     {
-                        StringBuilder query = new StringBuilder();
-                        query.AppendLine("SELECT * FROM " + investidor + " WHERE cod_fundo = " + id);
+                        retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { item, id }) > 0;
 
-                        using (var con = ConnectionFactory.Dahlia())
+                        if (retorno)
                         {
-                            retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { investidor, id }) > 0;
-
-                            if (retorno)
-                            {
-                                return retorno;
-                                break;
-                            }
+                            return retorno;
                         }
                     }
                 }
-                else if (tableName == "tbl_fundo")
-                {
-                    foreach (var fundo in codFundo)
-                    {
-                        StringBuilder query = new StringBuilder();
-                        query.AppendLine("SELECT * FROM " + fundo + " WHERE cod_fundo = " + id);
 
-                        using (var con = ConnectionFactory.Dahlia())
-                        {
-                            retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { fundo, id }) > 0;
-
-                            if (retorno)
-                            {
-                                return retorno;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (tableName == "tbl_distribuidor")
-                {
-                    foreach (var distribuidor in codDistribuidor)
-                    {
-                        StringBuilder query = new StringBuilder();
-                        query.AppendLine("SELECT * FROM " + distribuidor + " WHERE cod_fundo = " + id);
-
-                        using (var con = ConnectionFactory.Dahlia())
-                        {
-                            retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { distribuidor, id }) > 0;
-
-                            if (retorno)
-                            {
-                                return retorno;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (tableName == "tbl_administrador")
-                {
-                    foreach (var admin in codAdministrador)
-                    {
-                        StringBuilder query = new StringBuilder();
-                        query.AppendLine("SELECT * FROM " + admin + " WHERE cod_fundo = " + id);
-
-                        using (var con = ConnectionFactory.Dahlia())
-                        {
-                            retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { admin, id }) > 0;
-
-                            if (retorno)
-                            {
-                                return retorno;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (tableName == "tbl_gestor")
-                {
-                    foreach (var gestor in codGestor)
-                    {
-                        StringBuilder query = new StringBuilder();
-                        query.AppendLine("SELECT * FROM " + gestor + " WHERE cod_fundo = " + id);
-
-                        using (var con = ConnectionFactory.Dahlia())
-                        {
-                            retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { gestor, id }) > 0;
-
-                            if (retorno)
-                            {
-                                return retorno;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (tableName == "tbl_contrato_distribuicao")
-                {
-                    foreach (var contratoDistribuicao in codContratoDistribuicao)
-                    {
-                        StringBuilder query = new StringBuilder();
-                        query.AppendLine("SELECT * FROM " + contratoDistribuicao + " WHERE cod_fundo = " + id);
-
-                        using (var con = ConnectionFactory.Dahlia())
-                        {
-                            retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { contratoDistribuicao, id }) > 0;
-
-                            if (retorno)
-                            {
-                                return retorno;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (tableName == "tbl_tipo_conta")
-                {
-                    foreach (var tipoConta in codTipoConta)
-                    {
-                        StringBuilder query = new StringBuilder();
-                        query.AppendLine("SELECT * FROM " + tipoConta + " WHERE cod_fundo = " + id);
-
-                        using (var con = ConnectionFactory.Dahlia())
-                        {
-                            retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { tipoConta, id }) > 0;
-
-                            if (retorno)
-                            {
-                                return retorno;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (tableName == "tbl_contrato")
-                {
-                    foreach (var contrato in codContrato)
-                    {
-                        StringBuilder query = new StringBuilder();
-                        query.AppendLine("SELECT * FROM " + contrato + " WHERE cod_fundo = " + id);
-
-                        using (var con = ConnectionFactory.Dahlia())
-                        {
-                            retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { contrato, id }) > 0;
-
-                            if (retorno)
-                            {
-                                return retorno;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (tableName == "tbl_custodiante")
-                {
-                    foreach (var custodiante in codCustodiante)
-                    {
-                        StringBuilder query = new StringBuilder();
-                        query.AppendLine("SELECT * FROM " + custodiante + " WHERE cod_fundo = " + id);
-
-                        using (var con = ConnectionFactory.Dahlia())
-                        {
-                            retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { custodiante, id }) > 0;
-
-                            if (retorno)
-                            {
-                                return retorno;
-                                break;
-                            }
-                        }
-                    }
-                }
             }
             catch (Exception e)
             {

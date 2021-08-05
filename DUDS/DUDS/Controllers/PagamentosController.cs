@@ -82,23 +82,6 @@ namespace DUDS.Controllers
                 Ok(itensPagamentoServico));
         }
 
-        // DELETE: api/Pagamentos/id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarPagamentoServico(int id)
-        {
-            var tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(id);
-
-            if (tblPagamentoServico == null)
-            {
-                return NotFound();
-            }
-
-            _context.TblPagamentoServico.Remove(tblPagamentoServico);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
         #endregion
 
         #region Pagamento Admin Pfee
@@ -143,23 +126,6 @@ namespace DUDS.Controllers
             return CreatedAtAction(
                 nameof(GetPgtoAdmPfee),
                 Ok(itensPagamentoAdminPfee));
-        }
-
-        // DELETE: api/Fundo/id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarPagamentoAdminPfee(int id)
-        {
-            var tblPagamentoAdminPfee = await _context.TblPgtoAdmPfee.FindAsync(id);
-
-            if (tblPagamentoAdminPfee == null)
-            {
-                return NotFound();
-            }
-
-            _context.TblPgtoAdmPfee.Remove(tblPagamentoAdminPfee);
-            await _context.SaveChangesAsync();
-
-            return Ok();
         }
 
         #endregion
