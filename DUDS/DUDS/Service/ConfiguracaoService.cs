@@ -91,9 +91,9 @@ namespace DUDS.Service
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("SELECT * FROM " + item + " WHERE " + codUsed + id);
 
-                    using (var con = ConnectionFactory.Dahlia())
+                    using (var connection = await SqlHelpers.Standard.ConnectionFactory.ConexaoAsync("db_dahlia_dev"))
                     {
-                        retorno = await con.QueryFirstOrDefaultAsync<int>(query.ToString(), new { item, id }) > 0;
+                        retorno = await connection.QueryFirstOrDefaultAsync<int>(query.ToString(), new { item, id }) > 0;
 
                         if (retorno)
                         {
