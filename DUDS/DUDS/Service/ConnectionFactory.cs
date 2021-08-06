@@ -12,10 +12,11 @@ namespace DUDS.Service
     {
         public static DbConnection Dahlia()
         {
-            var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["InsertOnlyEvent"].ConnectionString);
-            connection.Open();
+            return null;
+            //var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["InsertOnlyEvent"].ConnectionString);
+            //connection.Open();
 
-            return connection;
+            //return connection;
         }
     }
 }

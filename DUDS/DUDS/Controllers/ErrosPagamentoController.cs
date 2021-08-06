@@ -22,47 +22,59 @@ namespace DUDS.Controllers
             _context = context;
         }
 
-        // GET: api/ErrosPagamento
+        // GET: api/ErrosPagamento/ErrosPagamento
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblPagamentoServico>>> ErrosPagamento()
         {
             try
             {
-                var errosPagamento = await _context.TblErrosPagamento.OrderBy(c => c.DataAgendamento).AsNoTracking().ToListAsync();
+                List<TblErrosPagamento> errosPagamento = await _context.TblErrosPagamento.OrderBy(c => c.DataAgendamento).AsNoTracking().ToListAsync();
 
                 if (errosPagamento != null)
                 {
-                    return Ok(errosPagamento);
+                    return Ok(new { errosPagamento, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
             catch (InvalidOperationException e)
             {
-                return BadRequest();
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
         }
 
-        // GET: api/ErrosPagamento/id
+        // GET: api/ErrosPagamento/GetErrosPagamento/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblErrosPagamento>> GetErrosPagamento(int id)
         {
-            var tblErrosPagamento = await _context.TblErrosPagamento.FindAsync(id);
+            TblErrosPagamento tblErrosPagamento = await _context.TblErrosPagamento.FindAsync(id);
 
-            if (tblErrosPagamento == null)
+            try
             {
-                return NotFound();
+                if (tblErrosPagamento != null)
+                {
+                    return Ok(new { tblErrosPagamento, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblErrosPagamento);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/ErrosPagamento/CadastrarPagamentoServico/ErrosPagamentoModel
         [HttpPost]
         public async Task<ActionResult<ErrosPagamentoModel>> CadastrarPagamentoServico(ErrosPagamentoModel errosPagamentoModel)
         {
-            var itensErrosPagamento = new TblErrosPagamento
+            TblErrosPagamento itensErrosPagamento = new TblErrosPagamento
             {
                 DataAgendamento = errosPagamentoModel.DataAgendamento,
                 CodFundo = errosPagamentoModel.CodFundo,
@@ -77,13 +89,20 @@ namespace DUDS.Controllers
                 MensagemErro = errosPagamentoModel.MensagemErro
             };
 
-            _context.TblErrosPagamento.Add(itensErrosPagamento);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblErrosPagamento.Add(itensErrosPagamento);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetErrosPagamento),
-                new { id = itensErrosPagamento.Id },
-                Ok(itensErrosPagamento));
+                return CreatedAtAction(
+                    nameof(GetErrosPagamento),
+                    new { id = itensErrosPagamento.Id },
+                    Ok(new { itensErrosPagamento, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
     }
 }

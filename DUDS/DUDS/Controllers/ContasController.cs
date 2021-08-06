@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using DUDS.Service.Interface;
 
 namespace DUDS.Controllers
 {
@@ -16,38 +17,68 @@ namespace DUDS.Controllers
     public class ContasController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IConfiguracaoService _configService;
 
-        public ContasController(DataContext context)
+        public ContasController(DataContext context, IConfiguracaoService configService)
         {
             _context = context;
+            _configService = configService;
         }
 
         #region Conta
-        // GET: api/Contas
+        // GET: api/Contas/Contas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblContas>>> Contas()
         {
-            return await _context.TblContas.Where(c => c.Ativo == true).ToListAsync();
+            try
+            {
+                List<TblContas> contas = await _context.TblContas.Where(c => c.Ativo == true).ToListAsync();
+
+                if (contas != null)
+                {
+                    return Ok(new { contas, Mensagem.SucessoListar });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // GET: api/Contas/5
+        // GET: api/Contas/GetContas/codFundo/codTipoConta
         [HttpGet]
         public async Task<ActionResult<TblContas>> GetContas(int codFundo, int codTipoConta)
         {
-            var tblContas = await _context.TblContas.FindAsync(codFundo, codTipoConta);
+            TblContas tblContas = await _context.TblContas.FindAsync(codFundo, codTipoConta);
 
-            if (tblContas == null)
+            try
             {
-                return NotFound();
+                if (tblContas != null)
+                {
+                    return Ok(new { tblContas, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblContas);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Contas/CadastrarConta/ContaModel
         [HttpPost]
         public async Task<ActionResult<ContaModel>> CadastrarConta(ContaModel tblContaModel)
         {
-            var itensConta = new TblContas
+            TblContas itensConta = new TblContas
             {
                 CodFundo = tblContaModel.CodFundo,
                 CodTipoConta = tblContaModel.CodTipoConta,
@@ -57,23 +88,33 @@ namespace DUDS.Controllers
                 UsuarioModificacao = tblContaModel.UsuarioModificacao
             };
 
-            _context.TblContas.Add(itensConta);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblContas.Add(itensConta);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetContas),
-                new { codFundo = itensConta.CodFundo,
-                      codTipoConta = itensConta.CodTipoConta },
-                Ok(itensConta));
+                return CreatedAtAction(
+                    nameof(GetContas),
+                    new
+                    {
+                        codFundo = itensConta.CodFundo,
+                        codTipoConta = itensConta.CodTipoConta
+                    },
+                    Ok(new { itensConta, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
 
-        //PUT: api/Conta/id
+        //PUT: api/Conta/EditarConta/codFundo/codTipoConta
         [HttpPut("{codFundo}/{codTipoConta}")]
         public async Task<IActionResult> EditarConta(int codFundo, int codTipoConta, ContaModel conta)
         {
             try
             {
-                var registroConta = _context.TblContas.Find(codFundo, codTipoConta);
+                TblContas registroConta = _context.TblContas.Find(codFundo, codTipoConta);
 
                 if (registroConta != null)
                 {
@@ -83,51 +124,91 @@ namespace DUDS.Controllers
                     registroConta.Agencia = conta.Agencia == null ? registroConta.Agencia : conta.Agencia;
                     registroConta.Conta = conta.Conta == null ? registroConta.Conta : conta.Conta;
 
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoAtualizado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                    }
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!ContasExists(conta.Id))
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
-
-            return NoContent();
         }
 
-        // DELETE: api/Conta/id
+        // DELETE: api/Conta/DeletarConta/codFundo/codTipoConta
         [HttpDelete("{codFundo}/{codTipoConta}")]
-        public async Task<IActionResult> DeletarConta(int codFundo, int codTipoConta)
+        public async Task<IActionResult> DeletarConta(int codFundo, int codTipoConta, int id)
         {
-            var tblConta = await _context.TblContas.FindAsync(codFundo, codTipoConta);
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
 
-            if (tblConta == null)
+            if (!existeRegistro)
             {
-                return NotFound();
-            }
+                TblContas tblConta = await _context.TblContas.FindAsync(codFundo, codTipoConta);
 
-            _context.TblContas.Remove(tblConta);
-            await _context.SaveChangesAsync();
+                if (tblConta == null)
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
 
-            return Ok();
-        }
-
-        // DESATIVA: api/Fundo/id
-        [HttpPut("{codFundo}/{codTipoConta}")]
-        public async Task<IActionResult> DesativarConta(int codFundo, int codTipoConta)
-        {
-            var registroConta = _context.TblContas.Find(codFundo, codTipoConta);
-
-            if (registroConta != null)
-            {
-                registroConta.Ativo = false;
-
-                await _context.SaveChangesAsync();
-
-                return Ok();
+                try
+                {
+                    _context.TblContas.Remove(tblConta);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Mensagem.SucessoExcluido });
+                }
+                catch (Exception)
+                {
+                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                }
             }
             else
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+            }
+        }
+
+        // DESATIVA: api/Contas/DesativarConta/codFundo/codTipoConta
+        [HttpPut("{codFundo}/{codTipoConta}")]
+        public async Task<IActionResult> DesativarConta(int codFundo, int codTipoConta, int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+
+            if (!existeRegistro)
+            {
+                TblContas registroConta = _context.TblContas.Find(codFundo, codTipoConta);
+
+                if (registroConta != null)
+                {
+                    registroConta.Ativo = false;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoDesativado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                    }
+                }
+                else
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
+            }
+            else
+            {
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
             }
         }
 
@@ -138,31 +219,59 @@ namespace DUDS.Controllers
         #endregion
 
         #region Tipo Conta
-        // GET: api/TipoContas
+        // GET: api/Contas/TipoContas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblTipoConta>>> TipoContas()
         {
-            return await _context.TblTipoConta.Where(c => c.Ativo == true).OrderBy(c => c.TipoConta).ToListAsync();
+            try
+            {
+                List<TblTipoConta> tiposConta = await _context.TblTipoConta.Where(c => c.Ativo == true).OrderBy(c => c.TipoConta).ToListAsync();
+
+                if (tiposConta != null)
+                {
+                    return Ok(new { tiposConta, Mensagem.SucessoListar });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // GET: api/TipoContas/5
+        // GET: api/Contas/TipoContas/id
         [HttpGet]
         public async Task<ActionResult<TblTipoConta>> GetTipoContas(int id)
         {
-            var tblContas = await _context.TblTipoConta.FindAsync(id);
+            TblTipoConta tblContas = await _context.TblTipoConta.FindAsync(id);
 
-            if (tblContas == null)
+            try
             {
-                return NotFound();
+                if (tblContas != null)
+                {
+                    return Ok(new { tblContas, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return tblContas;
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Contas/CadastrarTipoConta/TipoContaModel
         [HttpPost]
         public async Task<ActionResult<TipoContaModel>> CadastrarTipoConta(TipoContaModel tblTipoContaModel)
         {
-            var itensTipoConta = new TblTipoConta
+            TblTipoConta itensTipoConta = new TblTipoConta
             {
                 Id = tblTipoContaModel.Id,
                 TipoConta = tblTipoContaModel.TipoConta,
@@ -170,76 +279,123 @@ namespace DUDS.Controllers
                 UsuarioModificacao = tblTipoContaModel.UsuarioModificacao
             };
 
-            _context.TblTipoConta.Add(itensTipoConta);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblTipoConta.Add(itensTipoConta);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetContas),
-                new
-                {
-                    Id = itensTipoConta.Id,
-                },
-                Ok(itensTipoConta));
+                return CreatedAtAction(
+                    nameof(GetContas),
+                    new
+                    {
+                        Id = itensTipoConta.Id,
+                    },
+                     Ok(new { itensTipoConta, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
 
-        //PUT: api/TipoConta/id
+        //PUT: api/Contas/TipoConta/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarTipoConta(int id, TipoContaModel tipoConta)
         {
             try
             {
-                var registroTipoConta = _context.TblTipoConta.Find(id);
+                TblTipoConta registroTipoConta = _context.TblTipoConta.Find(id);
 
                 if (registroTipoConta != null)
                 {
                     registroTipoConta.TipoConta = tipoConta.TipoConta == null ? registroTipoConta.TipoConta : tipoConta.TipoConta;
                     registroTipoConta.DescricaoConta = tipoConta.DescricaoConta == null ? registroTipoConta.DescricaoConta : tipoConta.DescricaoConta;
 
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoAtualizado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                    }
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
             catch (DbUpdateConcurrencyException) when (!TipoContasExists(tipoConta.Id))
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
-
-            return NoContent();
         }
 
-        // DELETE: api/TipoConta/id
+        // DELETE: api/Contas/DeletarTipoConta/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarTipoConta(int id)
         {
-            var tblTipoConta = await _context.TblTipoConta.FindAsync(id);
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
 
-            if (tblTipoConta == null)
+            if (!existeRegistro)
             {
-                return NotFound();
-            }
+                TblTipoConta tblTipoConta = await _context.TblTipoConta.FindAsync(id);
 
-            _context.TblTipoConta.Remove(tblTipoConta);
-            await _context.SaveChangesAsync();
+                if (tblTipoConta == null)
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
 
-            return Ok();
-        }
-
-        // DESATIVA: api/TipoConta/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarTipoConta(int id)
-        {
-            var registroTipoConta = _context.TblTipoConta.Find(id);
-
-            if (registroTipoConta != null)
-            {
-                registroTipoConta.Ativo = false;
-
-                await _context.SaveChangesAsync();
-
-                return Ok();
+                try
+                {
+                    _context.TblTipoConta.Remove(tblTipoConta);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Mensagem.SucessoExcluido });
+                }
+                catch (Exception)
+                {
+                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                }
             }
             else
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+            }
+        }
+
+        // DESATIVA: api/DesativarTipoConta/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarTipoConta(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+
+            if (!existeRegistro)
+            {
+                TblTipoConta registroTipoConta = _context.TblTipoConta.Find(id);
+
+                if (registroTipoConta != null)
+                {
+                    registroTipoConta.Ativo = false;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoDesativado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                    }
+                }
+                else
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
+            }
+            else
+            {
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
             }
         }
 

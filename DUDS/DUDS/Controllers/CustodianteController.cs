@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using DUDS.Service.Interface;
 
 namespace DUDS.Controllers
 {
@@ -16,109 +17,186 @@ namespace DUDS.Controllers
     public class CustodianteController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IConfiguracaoService _configService;
 
-        public CustodianteController(DataContext context)
+        public CustodianteController(DataContext context, IConfiguracaoService configService)
         {
             _context = context;
+            _configService = configService;
         }
 
-        // GET: api/Custodiante
+        // GET: api/Custodiante/Custodiante
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblCustodiante>>> Custodiante()
         {
-            return await _context.TblCustodiante.Where(c => c.Ativo == true).OrderBy(c => c.NomeCustodiante).AsNoTracking().ToListAsync();
+            try
+            {
+                List<TblCustodiante> custodiantes = await _context.TblCustodiante.Where(c => c.Ativo == true).OrderBy(c => c.NomeCustodiante).AsNoTracking().ToListAsync();
+
+                if (custodiantes != null)
+                {
+                    return Ok(new { custodiantes, Mensagem.SucessoListar });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // GET: api/Custodiante/id
+        // GET: api/Custodiante/GetCustodiante/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblCustodiante>> GetCustodiante(int id)
         {
-            var tblCustodiante = await _context.TblCustodiante.FindAsync(id);
+            TblCustodiante tblCustodiante = await _context.TblCustodiante.FindAsync(id);
 
-            if (tblCustodiante == null)
+            try
             {
-                return NotFound();
+                if (tblCustodiante != null)
+                {
+                    return Ok(new { tblCustodiante, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblCustodiante);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Custodiante/CadastrarCustodiante/CustodianteModel
         [HttpPost]
         public async Task<ActionResult<CustodianteModel>> CadastrarCustodiante(CustodianteModel tblCustodianteModel)
         {
-            var itensCustodiante = new TblCustodiante
+            TblCustodiante itensCustodiante = new TblCustodiante
             {
                 NomeCustodiante = tblCustodianteModel.NomeCustodiante,
                 UsuarioModificacao = tblCustodianteModel.UsuarioModificacao,
                 DataModificacao = tblCustodianteModel.DataModificacao
             };
 
-            _context.TblCustodiante.Add(itensCustodiante);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblCustodiante.Add(itensCustodiante);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetCustodiante),
-                new { id = itensCustodiante.Id },
-                Ok(itensCustodiante));
+                return CreatedAtAction(
+                    nameof(GetCustodiante),
+                    new { id = itensCustodiante.Id },
+                   Ok(new { itensCustodiante, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
 
-        //PUT: api/Custodiante/id
+        //PUT: api/Custodiante/EditarCustodiante/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarCustodiante(int id, CustodianteModel custodiante)
         {
             try
             {
-                var registroCustodiante = _context.TblCustodiante.Find(id);
+                TblCustodiante registroCustodiante = _context.TblCustodiante.Find(id);
 
                 if (registroCustodiante != null)
                 {
                     registroCustodiante.NomeCustodiante = custodiante.NomeCustodiante == null ? registroCustodiante.NomeCustodiante : custodiante.NomeCustodiante;
 
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoAtualizado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                    }
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
             catch (DbUpdateConcurrencyException) when (!CustodianteExists(custodiante.Id))
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
-
-            return NoContent();
         }
 
-        // DELETE: api/Custodiante/id
+        // DELETE: api/Custodiante/DeletarCustodiante/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarCustodiante(int id)
         {
-            var tblCustodiante = await _context.TblCustodiante.FindAsync(id);
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
 
-            if (tblCustodiante == null)
+            if (!existeRegistro)
             {
-                return NotFound();
-            }
+                TblCustodiante tblCustodiante = await _context.TblCustodiante.FindAsync(id);
 
-            _context.TblCustodiante.Remove(tblCustodiante);
-            await _context.SaveChangesAsync();
+                if (tblCustodiante == null)
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
 
-            return Ok();
-        }
-
-        // DESATIVA: api/Custodiante/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarCustodiante(int id)
-        {
-            var registroCustodiante = _context.TblCustodiante.Find(id);
-
-            if (registroCustodiante != null)
-            {
-                registroCustodiante.Ativo = false;
-
-                await _context.SaveChangesAsync();
-
-                return Ok();
+                try
+                {
+                    _context.TblCustodiante.Remove(tblCustodiante);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Mensagem.SucessoExcluido });
+                }
+                catch (Exception)
+                {
+                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                }
             }
             else
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+            }
+        }
+
+        // DESATIVA: api/Custodiante/DesativarCustodiante/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarCustodiante(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+
+            if (!existeRegistro)
+            {
+                TblCustodiante registroCustodiante = _context.TblCustodiante.Find(id);
+
+                if (registroCustodiante != null)
+                {
+                    registroCustodiante.Ativo = false;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoDesativado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                    }
+                }
+                else
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
+            }
+            else
+            {
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
             }
         }
 

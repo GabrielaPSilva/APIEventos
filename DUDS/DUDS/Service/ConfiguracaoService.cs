@@ -86,7 +86,7 @@ namespace DUDS.Service
 
             try
             {
-                foreach (var item in tableUsed)
+                foreach (string item in tableUsed)
                 {
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("SELECT * FROM " + item + " WHERE " + codUsed + id);

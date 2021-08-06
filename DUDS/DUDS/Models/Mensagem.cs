@@ -8,21 +8,17 @@ namespace DUDS.Models
     public class Mensagem
     {
         public const string ErroPadrao = "Ops! Ocorreu um erro.";
-        public const string ErroCadastrarRelatorio = "Erro ao cadastrar relatório.";
-        public const string ErroAtualizarRelatorio = "Erro ao atualizar relatório.";
-        public const string ErroExcluirRelatorio = "Erro ao excluir relatório.";
-        public const string ErroCadastrarColuna = "Erro ao cadastrar coluna de configuração.";
-        public const string ErroAtualizarColuna = "Erro ao atualizar coluna de configuração.";
-        public const string ErroTipoInvalido = "Opção de filtro não encontrado ou inválido.";
-        public const string RelatorioCadastrado = "Relatório cadastrado com sucesso.";
-        public const string RelatorioAtualizado = "Relatório atualizado com sucesso.";
-        public const string RelatorioExcluido = "Relatório excluido com sucesso.";
-        public const string ColunaCadastrada = "Coluna de configuração cadastrada com sucesso.";
-        public const string ColunaAtualizada = "Coluna de configuração atualizada com sucesso.";
-        public const string LogAtualizarGeradorRelatorio = "Erro ao atualizar tabela GeradorRelatorio.";
-        public const string LogAtualizarRelatorioConfiguracao = "Erro ao atualizar tabela GeradorRelatorioConfiguracao.";
-        public const string LogCadastrarGeradorRelatorio = "Erro ao inserir registro na tabela GeradorRelatorio.";
-        public const string LogCadastrarRelatorioConfiguracao = "Erro ao inserir registro na tabela GeradorRelatorioConfiguracao.";
-        public const string LogDesativarRelatorio = "Erro ao desativar relatório na tabela GeradorRelatorio.";
+        public const string ErroCadastrar = "Erro ao cadastrar.";
+        public const string ErroAtualizar = "Erro ao atualizar.";
+        public const string ErroExcluir = "Erro ao excluir.";
+        public const string ErroDesativar = "Erro ao desativar.";
+        public const string ErroTipoInvalido = "Opção de pesquisa não encontrada ou inválida.";
+        public const string SucessoListar = "Listado com sucesso.";
+        public const string SucessoCadastrado = "Cadastrado com sucesso.";
+        public const string SucessoAtualizado = "Atualizado com sucesso.";
+        public const string SucessoExcluido = "Excluido com sucesso.";
+        public const string SucessoDesativado = "Desativado com sucesso.";
+        public const string ExisteRegistroDesativar = "Erro ao desativar, esse código possui registro em outras tabelas.";
+        public const string ExisteRegistroExcluir = "Erro ao excluir, esse código possui registro em outras tabelas.";
     }
 }

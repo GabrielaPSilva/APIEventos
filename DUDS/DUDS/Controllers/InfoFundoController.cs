@@ -22,7 +22,7 @@ namespace DUDS.Controllers
     {
         private readonly DataContext _context;
         private readonly IConfiguracaoService _configService;
-        private static readonly Dictionary<int, TblFundo> tblFundoStore = new Dictionary<int, TblFundo>();
+        //private static readonly Dictionary<int, TblFundo> tblFundoStore = new Dictionary<int, TblFundo>();
         string Sistema = "DUDS";
 
         public InfoFundoController(DataContext context, IConfiguracaoService configService)
@@ -31,69 +31,69 @@ namespace DUDS.Controllers
             _configService = configService;
         }
 
+        #region De Para Fundo
+        // GET: api/InfoFundo/DeparaFundoProduto
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblDeparaFundoproduto>>> DeparaFundoproduto()
+        public async Task<ActionResult<IEnumerable<TblDeparaFundoproduto>>> DeparaFundoProduto()
         {
             return await _context.TblDeparaFundoproduto.ToListAsync();
         }
+        #endregion
 
         #region Fundo
-        // GET: api/Fundo
+        // GET: api/InfoFundo/Fundo
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblFundo>>> Fundo()
         {
             try
             {
-                var fundos = await _context.TblFundo.Where(c => c.Ativo == true).OrderBy(c => c.NomeFundo).AsNoTracking().ToListAsync();
+                List<TblFundo> fundos = await _context.TblFundo.Where(c => c.Ativo == true).OrderBy(c => c.NomeFundo).AsNoTracking().ToListAsync();
 
                 if (fundos != null)
                 {
-
-                    return Ok(fundos);
-
+                    return Ok(new { fundos, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-
-                return BadRequest();
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
         }
 
-        // GET: api/Fundo/id
+        // GET: api/InfoFundo/GetFundo/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblFundo>> GetFundo(int id)
         {
-            var tblFundo = await _context.TblFundo.FindAsync(id);
+            TblFundo tblFundo = await _context.TblFundo.FindAsync(id);
 
             try
             {
                 if (tblFundo != null)
                 {
-                    return Ok(tblFundo);
+                    return Ok(new { tblFundo, Mensagem.SucessoCadastrado });
                 }
                 else
                 {
-                    //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, "String", 1,"e", Sistema);
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
-
-            return NoContent();
         }
 
+        //POST: api/InfoFundo/CadastrarFundo/FundoModel
         [HttpPost]
         public async Task<ActionResult<FundoModel>> CadastrarFundo(FundoModel tblFundoModel)
         {
-            var itensFundo = new TblFundo
+            TblFundo itensFundo = new TblFundo
             {
                 NomeFundo = tblFundoModel.NomeFundo,
                 Cnpj = tblFundoModel.Cnpj,
@@ -131,22 +131,29 @@ namespace DUDS.Controllers
                 Ativo = tblFundoModel.Ativo
             };
 
-            _context.TblFundo.Add(itensFundo);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblFundo.Add(itensFundo);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetFundo),
-                new { id = itensFundo.Id },
-                Ok(itensFundo));
+                return CreatedAtAction(
+                  nameof(GetFundo),
+                  new { id = itensFundo.Id },
+                  Ok(new { itensFundo, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
 
-        //PUT: api/Fundo/id
+        //PUT: api/InfoFundo/EditarFundo/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarFundo(int id, FundoModel fundo)
         {
             try
             {
-                var registroFundo = _context.TblFundo.Find(id);
+                TblFundo registroFundo = _context.TblFundo.Find(id);
 
                 if (registroFundo != null)
                 {
@@ -186,69 +193,91 @@ namespace DUDS.Controllers
                     registroFundo.CdFundoAdm = (fundo.CdFundoAdm == null || fundo.CdFundoAdm == 0) ? registroFundo.CdFundoAdm : fundo.CdFundoAdm;
                     registroFundo.DataEncerramento = fundo.DataEncerramento == null ? registroFundo.DataEncerramento : fundo.DataEncerramento;
 
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoAtualizado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                    }
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
             catch (DbUpdateConcurrencyException) when (!FundoExists(fundo.Id))
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
-
-            return NoContent();
         }
 
-        // DELETE: api/Fundo/id
+        // DELETE: api/InfoFundo/DeletarFundo/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarFundo(int id)
         {
-            var existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
 
             if (!existeRegistro)
             {
-                var tblFundo = await _context.TblFundo.FindAsync(id);
+                TblFundo tblFundo = await _context.TblFundo.FindAsync(id);
 
                 if (tblFundo == null)
                 {
-                    return NotFound();
+                    return NotFound(Mensagem.ErroTipoInvalido);
                 }
 
-                _context.TblFundo.Remove(tblFundo);
-                await _context.SaveChangesAsync();
-
-                return Ok();
+                try
+                {
+                    _context.TblFundo.Remove(tblFundo);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Mensagem.SucessoExcluido });
+                }
+                catch (Exception)
+                {
+                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                }
             }
             else
             {
-                return BadRequest();
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
             }
         }
 
-        // DESATIVA: api/Fundo/id
+        // DESATIVA: api/InfoFundo/DesativarFundo/id
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarFundo(int id)
         {
-            var existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
 
             if (!existeRegistro)
             {
-                var registroFundo = _context.TblFundo.Find(id);
+                TblFundo registroFundo = _context.TblFundo.Find(id);
 
                 if (registroFundo != null)
                 {
                     registroFundo.Ativo = false;
 
-                    await _context.SaveChangesAsync();
-
-                    return Ok();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoDesativado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                    }
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound(Mensagem.ErroTipoInvalido);
                 }
             }
             else
             {
-                return BadRequest();
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
             }
         }
 

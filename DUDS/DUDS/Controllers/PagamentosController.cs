@@ -23,47 +23,59 @@ namespace DUDS.Controllers
         }
 
         #region Pagamento Servico
-        // GET: api/Pagamentos
+        // GET: api/Pagamentos/PagamentoServico
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblPagamentoServico>>> PagamentoServico()
         {
             try
             {
-                var pgmtoServico = await _context.TblPagamentoServico.AsNoTracking().ToListAsync();
+                List<TblPagamentoServico> pgtosServico = await _context.TblPagamentoServico.AsNoTracking().ToListAsync();
 
-                if (pgmtoServico != null)
+                if (pgtosServico != null)
                 {
-                    return Ok(pgmtoServico);
+                    return Ok(new { pgtosServico, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
             catch (InvalidOperationException e)
             {
-                return BadRequest();
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
         }
 
-        // GET: api/Pagamentos/id
+        // GET: api/Pagamentos/GetPagamentoServico/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblPagamentoServico>> GetPagamentoServico(string id)
         {
-            var tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(id);
+            TblPagamentoServico tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(id);
 
-            if (tblPagamentoServico == null)
+            try
             {
-                return NotFound();
+                if (tblPagamentoServico != null)
+                {
+                    return Ok(new { tblPagamentoServico, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblPagamentoServico);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Pagamentos/CadastrarPagamentoServico/PagamentoServicoModel
         [HttpPost]
         public async Task<ActionResult<PagamentoServicoModel>> CadastrarPagamentoServico(PagamentoServicoModel tblPagamentoServicoModel)
         {
-            var itensPagamentoServico = new TblPagamentoServico
+            TblPagamentoServico itensPagamentoServico = new TblPagamentoServico
             {
                 Competencia = tblPagamentoServicoModel.Competencia,
                 CodFundo = tblPagamentoServicoModel.CodFundo,
@@ -74,42 +86,77 @@ namespace DUDS.Controllers
                 SaldoGestor = tblPagamentoServicoModel.SaldoGestor
             };
 
-            _context.TblPagamentoServico.Add(itensPagamentoServico);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblPagamentoServico.Add(itensPagamentoServico);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetPagamentoServico),
-                Ok(itensPagamentoServico));
+                return CreatedAtAction(
+                    nameof(GetPagamentoServico),
+                    Ok(new { itensPagamentoServico, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
 
         #endregion
 
         #region Pagamento Admin Pfee
-        // GET: api/PgtoAdmPfee
+        // GET: api/Pagamentos/PgtoAdmPfee
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> PgtoAdmPfee()
         {
-            return await _context.TblPgtoAdmPfee.ToListAsync();
+            try
+            {
+                List<TblPgtoAdmPfee> pgtosAdmPfee = await _context.TblPgtoAdmPfee.AsNoTracking().ToListAsync();
+                
+                if (pgtosAdmPfee != null)
+                {
+                    return Ok(new { pgtosAdmPfee, Mensagem.SucessoListar });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // GET: api/PgtoAdmPfee/5
+        // GET: api/Pagamentos/GetPgtoAdmPfee/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfee(string id)
         {
-            var tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(id);
-
-            if (tblPgtoAdmPfee == null)
+            TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(id);
+            
+            try
             {
-                return NotFound();
+                if (tblPgtoAdmPfee != null)
+                {
+                    return Ok(new { tblPgtoAdmPfee, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblPgtoAdmPfee);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Pagamentos/CadastrarPagamentoAdminPfee/PagamentoAdminPfeeModel
         [HttpPost]
         public async Task<ActionResult<PagamentoAdminPfeeModel>> CadastrarPagamentoAdminPfee(PagamentoAdminPfeeModel tblPagamentoAdminPfeeModel)
         {
-            var itensPagamentoAdminPfee = new TblPgtoAdmPfee
+            TblPgtoAdmPfee itensPagamentoAdminPfee = new TblPgtoAdmPfee
             {
                 Competencia = tblPagamentoAdminPfeeModel.Competencia,
                 CodCliente = tblPagamentoAdminPfeeModel.CodCliente,
@@ -120,12 +167,19 @@ namespace DUDS.Controllers
                 TaxaGestao = tblPagamentoAdminPfeeModel.TaxaGestao
             };
 
-            _context.TblPgtoAdmPfee.Add(itensPagamentoAdminPfee);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblPgtoAdmPfee.Add(itensPagamentoAdminPfee);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetPgtoAdmPfee),
-                Ok(itensPagamentoAdminPfee));
+                return CreatedAtAction(
+                    nameof(GetPgtoAdmPfee),
+                   Ok(new { itensPagamentoAdminPfee, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
 
         #endregion

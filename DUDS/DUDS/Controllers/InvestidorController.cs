@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using DUDS.Service.Interface;
 
 namespace DUDS.Controllers
 {
@@ -16,36 +17,67 @@ namespace DUDS.Controllers
     public class InvestidorController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IConfiguracaoService _configService;
 
-        public InvestidorController(DataContext context)
+        public InvestidorController(DataContext context, IConfiguracaoService configService)
         {
             _context = context;
+            _configService = configService;
         }
-        // GET: api/Investidor
+
+        // GET: api/Investidor/Investidor
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblInvestidor>>> Investidor()
         {
-            return await _context.TblInvestidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeCliente).AsNoTracking().ToListAsync();
+            try
+            {
+                List<TblInvestidor> investidores = await _context.TblInvestidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeCliente).AsNoTracking().ToListAsync();
+
+                if (investidores != null)
+                {
+                    return Ok(new { investidores, Mensagem.SucessoListar });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // GET: api/Investidor/id
+        // GET: api/Investidor/GetInvestidor/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblGestor>> GetInvestidor(int id)
         {
-            var tblGestor = await _context.TblInvestidor.FindAsync(id);
+            TblInvestidor tblInvestidor = await _context.TblInvestidor.FindAsync(id);
 
-            if (tblGestor == null)
+            try
             {
-                return NotFound();
+                if (tblInvestidor != null)
+                {
+                    return Ok(new { tblInvestidor, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblGestor);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Investidor/CadastrarInvestidor/InvestidorModel
         [HttpPost]
         public async Task<ActionResult<InvestidorModel>> CadastrarInvestidor(InvestidorModel tblInvestidorModel)
         {
-            var itensInvestidor = new TblInvestidor
+            TblInvestidor itensInvestidor = new TblInvestidor
             {
                 NomeCliente = tblInvestidorModel.NomeCliente,
                 Cnpj = tblInvestidorModel.Cnpj,
@@ -54,23 +86,29 @@ namespace DUDS.Controllers
                 CodGestor = tblInvestidorModel.CodGestor
             };
 
-            _context.TblInvestidor.Add(itensInvestidor);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblInvestidor.Add(itensInvestidor);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetInvestidor),
-                new { id = itensInvestidor.Id },
-                Ok(itensInvestidor));
+                return CreatedAtAction(
+                    nameof(GetInvestidor),
+                    new { id = itensInvestidor.Id },
+                     Ok(new { itensInvestidor, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
 
-
-        //PUT: api/Investidor/id
+        //PUT: api/Investidor/EditarInvestidor/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarInvestidor(int id, InvestidorModel investidor)
         {
             try
             {
-                var registroInvestidor = _context.TblInvestidor.Find(id);
+                TblInvestidor registroInvestidor = _context.TblInvestidor.Find(id);
 
                 if (registroInvestidor != null)
                 {
@@ -80,51 +118,91 @@ namespace DUDS.Controllers
                     registroInvestidor.CodAdministrador = investidor.CodAdministrador == 0 ? registroInvestidor.CodAdministrador : investidor.CodAdministrador;
                     registroInvestidor.CodGestor = investidor.CodGestor == 0 ? registroInvestidor.CodGestor : investidor.CodGestor;
 
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoAtualizado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                    }
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
             catch (DbUpdateConcurrencyException) when (!InvestidorExists(investidor.Id))
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
-
-            return NoContent();
         }
 
-        // DELETE: api/Investidor/id
+        // DELETE: api/Investidor/DeletarInvestidor/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarInvestidor(int id)
         {
-            var tblInvestidor = await _context.TblInvestidor.FindAsync(id);
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
 
-            if (tblInvestidor == null)
+            if (!existeRegistro)
             {
-                return NotFound();
-            }
+                TblInvestidor tblInvestidor = await _context.TblInvestidor.FindAsync(id);
 
-            _context.TblInvestidor.Remove(tblInvestidor);
-            await _context.SaveChangesAsync();
+                if (tblInvestidor == null)
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
 
-            return Ok();
-        }
-
-        // DESATIVA: api/Investidor/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarInvestidor(int id)
-        {
-            var registroInvestidor = _context.TblInvestidor.Find(id);
-
-            if (registroInvestidor != null)
-            {
-                registroInvestidor.Ativo = false;
-
-                await _context.SaveChangesAsync();
-
-                return Ok();
+                try
+                {
+                    _context.TblInvestidor.Remove(tblInvestidor);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Mensagem.SucessoExcluido });
+                }
+                catch (Exception)
+                {
+                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                }
             }
             else
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+            }
+        }
+
+        // DESATIVA: api/Investidor/DesativarInvestidor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarInvestidor(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+
+            if (!existeRegistro)
+            {
+                var registroInvestidor = _context.TblInvestidor.Find(id);
+
+                if (registroInvestidor != null)
+                {
+                    registroInvestidor.Ativo = false;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoDesativado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                    }
+                }
+                else
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
+            }
+            else
+            {
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
             }
         }
 
@@ -134,31 +212,59 @@ namespace DUDS.Controllers
         }
 
         #region Investidor Distribuidor
-        // GET: api/InvestidorDistribuidor
+        // GET: api/Investidor/InvestidorDistribuidor
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblInvestidorDistribuidor>>> InvestidorDistribuidor()
         {
-            return await _context.TblInvestidorDistribuidor.AsNoTracking().ToListAsync();
+            try
+            {
+                List<TblInvestidorDistribuidor> investidorDistribuidores = await _context.TblInvestidorDistribuidor.AsNoTracking().ToListAsync();
+               
+                if (investidorDistribuidores != null)
+                {
+                    return Ok(new { investidorDistribuidores, Mensagem.SucessoListar });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // GET: api/InvestidorDistribuidor/5
+        // GET: api/Investidor/GetInvestidorDistribuidor/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(int id)
         {
-            var tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(id);
+            TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(id);
 
-            if (tblInvestidorDistribuidor == null)
+            try
             {
-                return NotFound();
+                if (tblInvestidorDistribuidor != null)
+                {
+                    return Ok(new { tblInvestidorDistribuidor, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblInvestidorDistribuidor);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Investidor/CadastrarInvestidorDistribuidor/InvestidorDistribuidorModel
         [HttpPost]
         public async Task<ActionResult<InvestidorDistribuidorModel>> CadastrarInvestidorDistribuidor(InvestidorDistribuidorModel tblInvestidorDistribuidorModel)
         {
-            var itensInvestidorDistribuidor = new TblInvestidorDistribuidor
+            TblInvestidorDistribuidor itensInvestidorDistribuidor = new TblInvestidorDistribuidor
             {
                 CodCustodiante = tblInvestidorDistribuidorModel.CodCustodiante,
                 CodDistribuidor = tblInvestidorDistribuidorModel.CodDistribuidor,
@@ -168,13 +274,20 @@ namespace DUDS.Controllers
                 DataModificacao = tblInvestidorDistribuidorModel.DataModificacao
             };
 
-            _context.TblInvestidorDistribuidor.Add(itensInvestidorDistribuidor);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblInvestidorDistribuidor.Add(itensInvestidorDistribuidor);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetInvestidor),
-                new { id = itensInvestidorDistribuidor.Id },
-                Ok(itensInvestidorDistribuidor));
+                return CreatedAtAction(
+                    nameof(GetInvestidor),
+                    new { id = itensInvestidorDistribuidor.Id },
+                    Ok(new { itensInvestidorDistribuidor, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
         #endregion
     }

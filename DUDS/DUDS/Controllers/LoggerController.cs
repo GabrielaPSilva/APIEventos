@@ -20,23 +20,35 @@ namespace DUDS.Controllers
             _context = context;
         }
 
+        // GET: api/Logger/GetLogErros/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblLogErros>> GetLogErros(int id)
         {
-            var tblLogErros = await _context.TblLogErros.FindAsync(id);
+            TblLogErros tblLogErros = await _context.TblLogErros.FindAsync(id);
 
-            if (tblLogErros == null)
+            try
             {
-                return NotFound();
+                if (tblLogErros == null)
+                {
+                    return Ok(new { tblLogErros, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblLogErros);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Logger/CadastrarLogErro/LogErrosModel
         [HttpPost]
         public async Task<ActionResult<LogErrosModel>> CadastrarLogErro(LogErrosModel tblLogErros)
         {
-            var itensLogger = new TblLogErros
+            TblLogErros itensLogger = new TblLogErros
             {
                 Sistema = tblLogErros.Sistema,
                 Metodo = tblLogErros.Metodo,
@@ -47,14 +59,20 @@ namespace DUDS.Controllers
                 DataCadastro = tblLogErros.DataCadastro
             };
 
-            _context.TblLogErros.Add(itensLogger);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblLogErros.Add(itensLogger);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetLogErros),
-                new { id = itensLogger.Id },
-                Ok(itensLogger));
+                return CreatedAtAction(
+                    nameof(GetLogErros),
+                    new { id = itensLogger.Id },
+                     Ok(new { itensLogger, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
-
     }
 }

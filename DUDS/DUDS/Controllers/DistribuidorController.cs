@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using DUDS.Service.Interface;
 
 namespace DUDS.Controllers
 {
@@ -16,37 +17,67 @@ namespace DUDS.Controllers
     public class DistribuidorController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IConfiguracaoService _configService;
 
-        public DistribuidorController(DataContext context)
+        public DistribuidorController(DataContext context, IConfiguracaoService configService)
         {
             _context = context;
+            _configService = configService;
         }
 
-        // GET: api/Distribuidor
+        // GET: api/Distribuidor/Distribuidor
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblDistribuidor>>> Distribuidor()
         {
-            return await _context.TblDistribuidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeDistribuidor).AsNoTracking().ToListAsync();
+            try
+            {
+                List<TblDistribuidor> distribuidores = await _context.TblDistribuidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeDistribuidor).AsNoTracking().ToListAsync();
+
+                if (distribuidores != null)
+                {
+                    return Ok(new { distribuidores, Mensagem.SucessoListar });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // GET: api/Distribuidor/id
+        // GET: api/Distribuidor/GetDistribuidor/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblDistribuidor>> GetDistribuidor(int id)
         {
-            var tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
+            TblDistribuidor tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
 
-            if (tblDistribuidor == null)
+            try
             {
-                return NotFound();
+                if (tblDistribuidor != null)
+                {
+                    return Ok(new { tblDistribuidor, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblDistribuidor);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Distribuidor/CadastrarDistribuidor/DistribuidorModel
         [HttpPost]
         public async Task<ActionResult<DistribuidorModel>> CadastrarDistribuidor(DistribuidorModel tblDistribuidorModel)
         {
-            var itensDistribuidor = new TblDistribuidor
+            TblDistribuidor itensDistribuidor = new TblDistribuidor
             {
                 NomeDistribuidor = tblDistribuidorModel.NomeDistribuidor,
                 Cnpj = tblDistribuidorModel.Cnpj,
@@ -56,22 +87,29 @@ namespace DUDS.Controllers
                 Ativo = tblDistribuidorModel.Ativo,
             };
 
-            _context.TblDistribuidor.Add(itensDistribuidor);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblDistribuidor.Add(itensDistribuidor);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetDistribuidor),
-                new { id = itensDistribuidor.Id },
-                Ok(itensDistribuidor));
+                return CreatedAtAction(
+                    nameof(GetDistribuidor),
+                    new { id = itensDistribuidor.Id },
+                    Ok(new { itensDistribuidor, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
 
-        //PUT: api/Distribuidor/id
+        //PUT: api/Distribuidor/EditarDistribuidor/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarDistribuidor(int id, DistribuidorModel distribuidor)
         {
             try
             {
-                var registroDistribuidor = _context.TblDistribuidor.Find(id);
+                TblDistribuidor registroDistribuidor = _context.TblDistribuidor.Find(id);
 
                 if (registroDistribuidor != null)
                 {
@@ -79,51 +117,91 @@ namespace DUDS.Controllers
                     registroDistribuidor.Cnpj = distribuidor.Cnpj == null ? registroDistribuidor.Cnpj : distribuidor.Cnpj;
                     registroDistribuidor.ClassificacaoDistribuidor = distribuidor.ClassificacaoDistribuidor == null ? registroDistribuidor.ClassificacaoDistribuidor : distribuidor.ClassificacaoDistribuidor;
 
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoAtualizado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                    }
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
             catch (DbUpdateConcurrencyException) when (!DistribuidorExists(distribuidor.Id))
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
             }
-
-            return NoContent();
         }
 
-        // DELETE: api/Distribuidor/id
+        // DELETE: api/Distribuidor/DeletarDistribuidor/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarDistribuidor(int id)
         {
-            var tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
 
-            if (tblDistribuidor == null)
+            if (!existeRegistro)
             {
-                return NotFound();
-            }
+                TblDistribuidor tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
 
-            _context.TblDistribuidor.Remove(tblDistribuidor);
-            await _context.SaveChangesAsync();
+                if (tblDistribuidor == null)
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
 
-            return Ok();
-        }
-
-        // DESATIVA: api/Distribuidor/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarDistribuidor(int id)
-        {
-            var registroDistribuidor = _context.TblDistribuidor.Find(id);
-
-            if (registroDistribuidor != null)
-            {
-                registroDistribuidor.Ativo = false;
-
-                await _context.SaveChangesAsync();
-
-                return Ok();
+                try
+                {
+                    _context.TblDistribuidor.Remove(tblDistribuidor);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Mensagem.SucessoExcluido });
+                }
+                catch (Exception)
+                {
+                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                }
             }
             else
             {
-                return NotFound();
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+            }
+        }
+
+        // DESATIVA: api/Distribuidor/DesativarDistribuidor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarDistribuidor(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+
+            if (!existeRegistro)
+            {
+                var registroDistribuidor = _context.TblDistribuidor.Find(id);
+
+                if (registroDistribuidor != null)
+                {
+                    registroDistribuidor.Ativo = false;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Mensagem.SucessoDesativado });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                    }
+                }
+                else
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
+            }
+            else
+            {
+                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
             }
         }
 
@@ -133,31 +211,59 @@ namespace DUDS.Controllers
         }
 
         #region Distribuidor Administrador
-        // GET: api/DistribuidorAdministrador
+        // GET: api/Distribuidor/DistribuidorAdministrador
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblDistribuidorAdministrador>>> DistribuidorAdministrador()
         {
-            return await _context.TblDistribuidorAdministrador.ToListAsync();
+            try
+            {
+                List<TblDistribuidorAdministrador> distribuidorAdministradores = await _context.TblDistribuidorAdministrador.AsNoTracking().ToListAsync();
+
+                if (distribuidorAdministradores != null)
+                {
+                    return Ok(new { distribuidorAdministradores, Mensagem.SucessoListar });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // GET: api/DistribuidorAdministrador/5
+        // GET: api/Distribuidor/GetDistribuidorAdministrador/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblDistribuidorAdministrador>> GetDistribuidorAdministrador(int id)
         {
-            var tblDistribuidorAdministrador = await _context.TblDistribuidorAdministrador.FindAsync(id);
+            TblDistribuidorAdministrador tblDistribuidorAdministrador = await _context.TblDistribuidorAdministrador.FindAsync(id);
 
-            if (tblDistribuidorAdministrador == null)
+            try
             {
-                return NotFound();
+                if (tblDistribuidorAdministrador != null)
+                {
+                    return Ok(new { tblDistribuidorAdministrador, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
             }
-
-            return Ok(tblDistribuidorAdministrador);
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
+        //POST: api/Distribuidor/CadastrarDistribuidorAdmin/DistribuidorAdministradorModel
         [HttpPost]
         public async Task<ActionResult<DistribuidorAdministradorModel>> CadastrarDistribuidorAdmin(DistribuidorAdministradorModel tblDistribuidorAdminModel)
         {
-            var itensDistribuidorAdmin = new TblDistribuidorAdministrador
+            TblDistribuidorAdministrador itensDistribuidorAdmin = new TblDistribuidorAdministrador
             {
                 CodAdministrador = tblDistribuidorAdminModel.CodAdministrador,
                 CodDistrAdm = tblDistribuidorAdminModel.CodDistrAdm,
@@ -166,13 +272,20 @@ namespace DUDS.Controllers
                 DataModificacao = tblDistribuidorAdminModel.DataModificacao
             };
 
-            _context.TblDistribuidorAdministrador.Add(itensDistribuidorAdmin);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TblDistribuidorAdministrador.Add(itensDistribuidorAdmin);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetDistribuidorAdministrador),
-                new { id = itensDistribuidorAdmin.Id },
-                Ok(itensDistribuidorAdmin));
+                return CreatedAtAction(
+                    nameof(GetDistribuidorAdministrador),
+                    new { id = itensDistribuidorAdmin.Id },
+                    Ok(new { itensDistribuidorAdmin, Mensagem.SucessoCadastrado }));
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
         }
         #endregion
     }
