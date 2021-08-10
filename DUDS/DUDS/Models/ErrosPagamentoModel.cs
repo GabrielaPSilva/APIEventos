@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.OData.Edm;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace DUDS.Models
     public class ErrosPagamentoModel
     {
         public int Id { get; set; }
-        public DateTime DataAgendamento { get; set; }
+        public Date DataAgendamento { get; set; }
         public int CodFundo { get; set; }
 
         //[Required]

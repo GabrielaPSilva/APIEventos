@@ -21,6 +21,7 @@ namespace DUDS.Data
         public virtual DbSet<AuditEmployeeData> AuditEmployeeData { get; set; }
         public virtual DbSet<Auditoria> Auditoria { get; set; }
         public virtual DbSet<EmployeeData> EmployeeData { get; set; }
+        public virtual DbSet<TblAcordoDistribuicao> TblAcordoDistribuicao { get; set; }
         public virtual DbSet<TblAcordoRemuneracao> TblAcordoRemuneracao { get; set; }
         public virtual DbSet<TblAdministrador> TblAdministrador { get; set; }
         public virtual DbSet<TblAlocador> TblAlocador { get; set; }
@@ -161,6 +162,19 @@ namespace DUDS.Data
                 entity.Property(e => e.EmpSsn)
                     .IsUnicode(false)
                     .IsFixedLength(true);
+            });
+
+            modelBuilder.Entity<TblAcordoDistribuicao>(entity =>
+            {
+                entity.HasKey(e => new { e.CodCliente, e.CodFundo, e.CodDistribuidor });
+
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.CodDistribuidorNavigation)
+                    .WithMany(p => p.TblAcordoDistribuicao)
+                    .HasForeignKey(d => d.CodDistribuidor)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_acordo_distribuicao_tbl_distribuidor");
             });
 
             modelBuilder.Entity<TblAcordoRemuneracao>(entity =>
@@ -378,6 +392,8 @@ namespace DUDS.Data
 
                 entity.Property(e => e.Favorecido).IsUnicode(false);
 
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
                 entity.Property(e => e.MensagemErro).IsUnicode(false);
 
                 entity.Property(e => e.Status).IsUnicode(false);
@@ -385,7 +401,7 @@ namespace DUDS.Data
                 entity.Property(e => e.TipoDespesa).IsUnicode(false);
 
                 entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblErrosPagamento)
+                    .WithMany()
                     .HasForeignKey(d => d.CodFundo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ErrosPagamento_Fundo");

@@ -195,6 +195,7 @@ namespace DUDS.Controllers
 
                     try
                     {
+                        //_context.Entry(registroFundo).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
                         return Ok(new { Mensagem.SucessoAtualizado });
                     }

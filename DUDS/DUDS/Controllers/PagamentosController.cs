@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using EFCore.BulkExtensions;
 
 namespace DUDS.Controllers
 {
@@ -47,11 +48,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Pagamentos/GetPagamentoServico/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblPagamentoServico>> GetPagamentoServico(string id)
+        // GET: api/Pagamentos/GetPagamentoServico/cod_fundo
+        [HttpGet("{cod_fundo}")]
+        public async Task<ActionResult<TblPagamentoServico>> GetPagamentoServico(int cod_fundo)
         {
-            TblPagamentoServico tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(id);
+            TblPagamentoServico tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(cod_fundo);
 
             try
             {
@@ -71,29 +72,35 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Pagamentos/CadastrarPagamentoServico/PagamentoServicoModel
+        //POST: api/Pagamentos/CadastrarPagamentoServico/List<PagamentoServicoModel>
         [HttpPost]
-        public async Task<ActionResult<PagamentoServicoModel>> CadastrarPagamentoServico(PagamentoServicoModel tblPagamentoServicoModel)
+        public async Task<ActionResult<PagamentoServicoModel>> CadastrarPagamentoServico(List<PagamentoServicoModel> tblPagamentoServicoModel)
         {
-            TblPagamentoServico itensPagamentoServico = new TblPagamentoServico
-            {
-                Competencia = tblPagamentoServicoModel.Competencia,
-                CodFundo = tblPagamentoServicoModel.CodFundo,
-                TaxaAdm = tblPagamentoServicoModel.TaxaAdm,
-                AdmFiduciaria = tblPagamentoServicoModel.AdmFiduciaria,
-                Servico = tblPagamentoServicoModel.Servico,
-                SaldoParcial = tblPagamentoServicoModel.SaldoParcial,
-                SaldoGestor = tblPagamentoServicoModel.SaldoGestor
-            };
+            List<TblPagamentoServico> listaPagamentosServico = new List<TblPagamentoServico>();
+            TblPagamentoServico itensPagamentoServico = new TblPagamentoServico();
 
             try
             {
-                _context.TblPagamentoServico.Add(itensPagamentoServico);
+                foreach (var line in tblPagamentoServicoModel)
+                {
+                    itensPagamentoServico = new TblPagamentoServico
+                    {
+                        Competencia = line.Competencia,
+                        CodFundo = line.CodFundo,
+                        TaxaAdm = line.TaxaAdm,
+                        AdmFiduciaria = line.AdmFiduciaria,
+                        Servico = line.Servico,
+                        SaldoParcial = line.SaldoParcial,
+                        SaldoGestor = line.SaldoGestor
+                    };
+
+                    listaPagamentosServico.Add(itensPagamentoServico);
+                }
+
+                await _context.BulkInsertAsync(listaPagamentosServico);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(
-                    nameof(GetPagamentoServico),
-                    Ok(new { itensPagamentoServico, Mensagem.SucessoCadastrado }));
+                return Ok(new { itensPagamentoServico, Mensagem.SucessoCadastrado });
             }
             catch (Exception)
             {
@@ -101,6 +108,28 @@ namespace DUDS.Controllers
             }
         }
 
+        // DELETE: api/Pagamentos/DeletarPagamentoServico/competencia
+        [HttpDelete("{competencia}")]
+        public async Task<ActionResult<IEnumerable<TblPagamentoServico>>> DeletarPagamentoServico(string competencia)
+        {
+            IList<TblPagamentoServico> tblPagamentoServico = await _context.TblPagamentoServico.Where(c => c.Competencia == competencia).ToListAsync();
+
+            if (tblPagamentoServico == null)
+            {
+                return NotFound(Mensagem.ErroTipoInvalido);
+            }
+
+            try
+            {
+                _context.TblPagamentoServico.RemoveRange(tblPagamentoServico);
+                await _context.SaveChangesAsync();
+                return Ok(new { Mensagem.SucessoExcluido });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+            }
+        }
         #endregion
 
         #region Pagamento Admin Pfee
@@ -128,11 +157,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Pagamentos/GetPgtoAdmPfee/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfee(string id)
+        // GET: api/Pagamentos/GetPgtoAdmPfee/cod_fundo
+        [HttpGet("{cod_fundo}")]
+        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfee(int cod_fundo)
         {
-            TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(id);
+            TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(cod_fundo);
             
             try
             {
@@ -152,29 +181,35 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Pagamentos/CadastrarPagamentoAdminPfee/PagamentoAdminPfeeModel
+        //POST: api/Pagamentos/CadastrarPagamentoAdminPfee/List<PagamentoAdminPfeeModel>
         [HttpPost]
-        public async Task<ActionResult<PagamentoAdminPfeeModel>> CadastrarPagamentoAdminPfee(PagamentoAdminPfeeModel tblPagamentoAdminPfeeModel)
+        public async Task<ActionResult<PagamentoAdminPfeeModel>> CadastrarPagamentoAdminPfee(List<PagamentoAdminPfeeModel> tblPagamentoAdminPfeeModel)
         {
-            TblPgtoAdmPfee itensPagamentoAdminPfee = new TblPgtoAdmPfee
-            {
-                Competencia = tblPagamentoAdminPfeeModel.Competencia,
-                CodCliente = tblPagamentoAdminPfeeModel.CodCliente,
-                CodFundo = tblPagamentoAdminPfeeModel.CodFundo,
-                TaxaPerformanceApropriada = tblPagamentoAdminPfeeModel.TaxaPerformanceApropriada,
-                TaxaPerformanceResgate = tblPagamentoAdminPfeeModel.TaxaPerformanceResgate,
-                TaxaAdministracao = tblPagamentoAdminPfeeModel.TaxaAdministracao,
-                TaxaGestao = tblPagamentoAdminPfeeModel.TaxaGestao
-            };
+            List<TblPgtoAdmPfee> listaPagamentosAdminPfee = new List<TblPgtoAdmPfee>();
+            TblPgtoAdmPfee itensPagamentoAdminPfee = new TblPgtoAdmPfee();
 
             try
             {
-                _context.TblPgtoAdmPfee.Add(itensPagamentoAdminPfee);
+                foreach (var line in tblPagamentoAdminPfeeModel)
+                {
+                    itensPagamentoAdminPfee = new TblPgtoAdmPfee
+                    {
+                        Competencia = line.Competencia,
+                        CodCliente = line.CodCliente,
+                        CodFundo = line.CodFundo,
+                        TaxaPerformanceApropriada = line.TaxaPerformanceApropriada,
+                        TaxaPerformanceResgate = line.TaxaPerformanceResgate,
+                        TaxaAdministracao = line.TaxaAdministracao,
+                        TaxaGestao = line.TaxaGestao
+                    };
+
+                    listaPagamentosAdminPfee.Add(itensPagamentoAdminPfee);
+                }
+
+                await _context.BulkInsertAsync(listaPagamentosAdminPfee);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(
-                    nameof(GetPgtoAdmPfee),
-                   Ok(new { itensPagamentoAdminPfee, Mensagem.SucessoCadastrado }));
+                return Ok(new { itensPagamentoAdminPfee, Mensagem.SucessoCadastrado });
             }
             catch (Exception)
             {
@@ -182,6 +217,28 @@ namespace DUDS.Controllers
             }
         }
 
+        // DELETE: api/Pagamentos/DeletarPagamentoAdminPfee/competencia
+        [HttpDelete("{competencia}")]
+        public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> DeletarPagamentoAdminPfee(string competencia)
+        {
+            IList<TblPgtoAdmPfee> tblPagamentoAdminPfee = await _context.TblPgtoAdmPfee.Where(c => c.Competencia == competencia).ToListAsync();
+
+            if (tblPagamentoAdminPfee == null)
+            {
+                return NotFound(Mensagem.ErroTipoInvalido);
+            }
+
+            try
+            {
+                _context.TblPgtoAdmPfee.RemoveRange(tblPagamentoAdminPfee);
+                await _context.SaveChangesAsync();
+                return Ok(new { Mensagem.SucessoExcluido });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+            }
+        }
         #endregion
     }
 }

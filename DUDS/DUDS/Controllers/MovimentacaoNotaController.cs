@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using Microsoft.Data.SqlClient;
+using EFCore.BulkExtensions;
 
 namespace DUDS.Controllers
 {
@@ -21,102 +23,129 @@ namespace DUDS.Controllers
             _context = context;
         }
 
-        // GET: api/TblMovimentacaoNota
+        // GET: api/MovimentacaoNota/MovimentacaoNota
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblMovimentacaoNota>>> GetTblMovimentacaoNota()
+        public async Task<ActionResult<IEnumerable<TblMovimentacaoNota>>> MovimentacaoNota()
         {
-            return await _context.TblMovimentacaoNota.ToListAsync();
-        }
-
-        // GET: api/TblMovimentacaoNota/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblMovimentacaoNota>> GetTblMovimentacaoNota(int id)
-        {
-            var tblMovimentacaoNota = await _context.TblMovimentacaoNota.FindAsync(id);
-
-            if (tblMovimentacaoNota == null)
-            {
-                return NotFound();
-            }
-
-            return tblMovimentacaoNota;
-        }
-
-        // PUT: api/TblMovimentacaoNota/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblMovimentacaoNota(int id, TblMovimentacaoNota tblMovimentacaoNota)
-        {
-            if (id != tblMovimentacaoNota.CodMovimentacao)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(tblMovimentacaoNota).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblMovimentacaoNotaExists(id))
+                List<TblMovimentacaoNota> movimentacaoNotas = await _context.TblMovimentacaoNota.AsNoTracking().ToListAsync();
+               
+                if (movimentacaoNotas != null)
                 {
-                    return NotFound();
+                    return Ok(new { movimentacaoNotas, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    throw;
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
                 }
             }
-
-            return NoContent();
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // POST: api/TblMovimentacaoNota
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // GET: api/MovimentacaoNota/GetMovimentacaoNota/cod_fundo
+        [HttpGet("{cod_fundo}")]
+        public async Task<ActionResult<TblMovimentacaoNota>> GetMovimentacaoNota(int cod_fundo, DateTime data_movimentacao)
+        {
+            TblMovimentacaoNota tblMovimentacaoNota = await _context.TblMovimentacaoNota.FindAsync(cod_fundo, data_movimentacao);
+
+            try
+            {
+                if (tblMovimentacaoNota != null)
+                {
+                    return Ok(new { tblMovimentacaoNota, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
+        }
+
+        //POST: api/MovimentacaoNota/CadastrarMovimentacaoNota/FundoModel
         [HttpPost]
-        public async Task<ActionResult<TblMovimentacaoNota>> PostTblMovimentacaoNota(TblMovimentacaoNota tblMovimentacaoNota)
+        public async Task<ActionResult<List<MovimentacaoNotaModel>>> CadastrarMovimentacaoNota(List<MovimentacaoNotaModel> tblListMovimentacaoNotaModel)
         {
-            _context.TblMovimentacaoNota.Add(tblMovimentacaoNota);
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (TblMovimentacaoNotaExists(tblMovimentacaoNota.CodMovimentacao))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                List<TblMovimentacaoNota> listaMovimentacoes = new List<TblMovimentacaoNota>();
+                TblMovimentacaoNota itensMovimentacao = new TblMovimentacaoNota();
 
-            return CreatedAtAction("GetTblMovimentacaoNota", new { id = tblMovimentacaoNota.CodMovimentacao }, tblMovimentacaoNota);
+                foreach (var line in tblListMovimentacaoNotaModel)
+                {
+                    itensMovimentacao = new TblMovimentacaoNota
+                    {
+                        CodFundo = line.CodFundo,
+                        DataMovimentacao = line.DataMovimentacao,
+                        DataCotizacao = line.DataCotizacao,
+                        CdCotista = line.CdCotista,
+                        CodMovimentacao = line.CodMovimentacao,
+                        TipoMovimentacao = line.TipoMovimentacao,
+                        QtdeCotas = line.QtdeCotas,
+                        ValorCota = line.ValorCota,
+                        ValorBruto = line.ValorBruto,
+                        Irrf = line.Irrf,
+                        Iof = line.Iof,
+                        ValorLiquido = line.ValorLiquido,
+                        NotaAplicacao = line.NotaAplicacao,
+                        RendimentoBruto = line.RendimentoBruto,
+                        ValorPerformance = line.ValorPerformance,
+                        NumOrdem = line.NumOrdem,
+                        TipoTransferencia = line.TipoTransferencia,
+                        CodDistribuidor = line.CodDistribuidor,
+                        Operador = line.Operador,
+                        CodGestor = line.CodGestor,
+                        CodOrdemMae = line.CodOrdemMae,
+                        Penalty = line.Penalty,
+                        CodAdm = line.CodAdm,
+                        ClassTributaria = line.ClassTributaria,
+                        CodCustodiante = line.CodCustodiante
+                    };
+
+                    listaMovimentacoes.Add(itensMovimentacao);
+                }
+
+                await _context.BulkInsertAsync(listaMovimentacoes);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { itensMovimentacao, Mensagem.SucessoCadastrado });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar, e});
+            }
         }
 
-        // DELETE: api/TblMovimentacaoNota/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblMovimentacaoNota(int id)
+        // DELETE: api/MovimentacaoNota/DeletarMovimentacaoNota/data_movimentacao
+        [HttpDelete("{data_movimentacao}")]
+        public async Task<ActionResult<IEnumerable<TblMovimentacaoNota>>> DeletarMovimentacaoNota(DateTime data_movimentacao)
         {
-            var tblMovimentacaoNota = await _context.TblMovimentacaoNota.FindAsync(id);
+            IList<TblMovimentacaoNota> tblMovimentacaoNota = await _context.TblMovimentacaoNota.Where(c => c.DataMovimentacao == data_movimentacao).ToListAsync();
+
             if (tblMovimentacaoNota == null)
             {
-                return NotFound();
+                return NotFound(Mensagem.ErroTipoInvalido);
             }
 
-            _context.TblMovimentacaoNota.Remove(tblMovimentacaoNota);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool TblMovimentacaoNotaExists(int id)
-        {
-            return _context.TblMovimentacaoNota.Any(e => e.CodMovimentacao == id);
+            try
+            {
+                _context.TblMovimentacaoNota.RemoveRange(tblMovimentacaoNota);
+                await _context.SaveChangesAsync();
+                return Ok(new { Mensagem.SucessoExcluido });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+            }
         }
     }
 }

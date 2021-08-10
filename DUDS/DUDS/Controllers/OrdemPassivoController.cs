@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using EFCore.BulkExtensions;
 
 namespace DUDS.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Route("api/[Controller]/[action]")]
     [ApiController]
     public class OrdemPassivoController : ControllerBase
     {
@@ -21,18 +23,35 @@ namespace DUDS.Controllers
             _context = context;
         }
 
-        // GET: api/OrdemPassivo
+        // GET: api/OrdemPassivo/OrdemPassivo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblOrdemPassivo>>> GetTblOrdemPassivo()
+        public async Task<ActionResult<IEnumerable<TblOrdemPassivo>>> OrdemPassivo()
         {
-            return await _context.TblOrdemPassivo.ToListAsync();
+            try
+            {
+                List<TblOrdemPassivo> ordemPassivos = await _context.TblOrdemPassivo.AsNoTracking().ToListAsync();
+                
+                if (ordemPassivos != null)
+                {
+                    return Ok(new { ordemPassivos, Mensagem.SucessoListar });
+                }
+                else
+                {
+                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+            }
         }
 
-        // GET: api/OrdemPassivo/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblOrdemPassivo>> GetTblOrdemPassivo(int id)
+        // GET: api/OrdemPassivo/GetOrdemPassivo/cod_fundo
+        [HttpGet("{cod_fundo}")]
+        public async Task<ActionResult<TblOrdemPassivo>> GetOrdemPassivo(int cod_fundo)
         {
-            var tblOrdemPassivo = await _context.TblOrdemPassivo.FindAsync(id);
+            var tblOrdemPassivo = await _context.TblOrdemPassivo.FindAsync(cod_fundo);
 
             if (tblOrdemPassivo == null)
             {
@@ -42,81 +61,71 @@ namespace DUDS.Controllers
             return tblOrdemPassivo;
         }
 
-        // PUT: api/OrdemPassivo/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblOrdemPassivo(int id, TblOrdemPassivo tblOrdemPassivo)
-        //{
-        //    if (id != tblOrdemPassivo.NumOrdem)
-        //    {
-        //        return BadRequest();
-        //    }
+        //POST: api/OrdemPassivo/CadastrarOrdemPassivo/List<PagamentoServicoModel
+        [HttpPost]
+        public async Task<ActionResult<OrdemPassivoModel>> CadastrarOrdemPassivo(List<OrdemPassivoModel> tblOrdemPassivoModel)
+        {
+            List<TblOrdemPassivo> listaOrdemPassivo = new List<TblOrdemPassivo>();
+            TblOrdemPassivo itensOrdemPassivo = new TblOrdemPassivo();
 
-        //    _context.Entry(tblOrdemPassivo).State = EntityState.Modified;
+            try
+            {
+                foreach (var line in tblOrdemPassivoModel)
+                {
+                    itensOrdemPassivo = new TblOrdemPassivo
+                    {
+                        NumOrdem = line.NumOrdem,
+                        CdCotista = line.CdCotista,
+                        CodFundo = line.CodFundo,
+                        DsOperacao = line.DsOperacao,
+                        VlValor = line.VlValor,
+                        IdNota = line.IdNota,
+                        DtEnvio = line.DtEnvio,
+                        DtEntrada = line.DtEntrada,
+                        DtProcessamento = line.DtProcessamento,
+                        DtCompensacao = line.DtCompensacao,
+                        DtAgendamento = line.DtAgendamento,
+                        DtCotizacao = line.DtCotizacao,
+                        CodDistribuidor = line.CodDistribuidor,
+                        OrdemMae = line.OrdemMae,
+                        CodCustodiante = line.CodCustodiante
+                    };
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblOrdemPassivoExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+                    listaOrdemPassivo.Add(itensOrdemPassivo);
+                }
 
-        //    return NoContent();
-        //}
+                await _context.BulkInsertAsync(listaOrdemPassivo);
+                await _context.SaveChangesAsync();
 
-        //// POST: api/OrdemPassivo
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<TblOrdemPassivo>> PostTblOrdemPassivo(TblOrdemPassivo tblOrdemPassivo)
-        //{
-        //    _context.TblOrdemPassivo.Add(tblOrdemPassivo);
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateException)
-        //    {
-        //        if (TblOrdemPassivoExists(tblOrdemPassivo.NumOrdem))
-        //        {
-        //            return Conflict();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+                return Ok(new { itensOrdemPassivo, Mensagem.SucessoCadastrado });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+            }
+        }
 
-        //    return CreatedAtAction("GetTblOrdemPassivo", new { id = tblOrdemPassivo.NumOrdem }, tblOrdemPassivo);
-        //}
+        // DELETE: api/OrdemPassivo/DeletarOrdemPassivo/dt_entrada
+        [HttpDelete("{dt_entrada}")]
+        public async Task<ActionResult<IEnumerable<TblPagamentoServico>>> DeletarOrdemPassivo(DateTime dt_entrada)
+        {
+            IList<TblOrdemPassivo> tblOrdemPassivo = await _context.TblOrdemPassivo.Where(c => c.DtEntrada == dt_entrada).ToListAsync();
 
-        //// DELETE: api/OrdemPassivo/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTblOrdemPassivo(int id)
-        //{
-        //    var tblOrdemPassivo = await _context.TblOrdemPassivo.FindAsync(id);
-        //    if (tblOrdemPassivo == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (tblOrdemPassivo == null)
+            {
+                return NotFound(Mensagem.ErroTipoInvalido);
+            }
 
-        //    _context.TblOrdemPassivo.Remove(tblOrdemPassivo);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
-        //private bool TblOrdemPassivoExists(int id)
-        //{
-        //    return _context.TblOrdemPassivo.Any(e => e.NumOrdem == id);
-        //}
+            try
+            {
+                _context.TblOrdemPassivo.RemoveRange(tblOrdemPassivo);
+                await _context.SaveChangesAsync();
+                return Ok(new { Mensagem.SucessoExcluido });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+            }
+        }
     }
 }
