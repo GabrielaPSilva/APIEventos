@@ -105,7 +105,7 @@ namespace DUDS.Controllers
 
         //POST: api/Investidor/CadastrarInvestidor/List<InvestidorModel>
         [HttpPost]
-        public async Task<ActionResult<List<InvestidorModel>>> CadastrarInvestidor(List<InvestidorModel> tblListInvestidorModel)
+        public async Task<ActionResult<List<InvestidorModel>>> CadastrarInvestidores(List<InvestidorModel> tblListInvestidorModel)
         {
             try
             {
@@ -327,7 +327,7 @@ namespace DUDS.Controllers
 
         //POST: api/Investidor/CadastrarInvestidorDistribuidor/List<InvestidorDistribuidorModel>
         [HttpPost]
-        public async Task<ActionResult<List<InvestidorDistribuidorModel>>> CadastrarInvestidorDistribuidor(List<InvestidorDistribuidorModel> tblListInvestidorDistribuidorModel)
+        public async Task<ActionResult<List<InvestidorDistribuidorModel>>> CadastrarInvestidorDistribuidores(List<InvestidorDistribuidorModel> tblListInvestidorDistribuidorModel)
         {
             try
             {

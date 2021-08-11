@@ -33,19 +33,24 @@ namespace DUDS.Controllers
             {
                 List<TblDistribuidor> distribuidores = await _context.TblDistribuidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeDistribuidor).AsNoTracking().ToListAsync();
 
+                if (distribuidores.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (distribuidores != null)
                 {
                     return Ok(new { distribuidores, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -63,13 +68,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -97,9 +102,9 @@ namespace DUDS.Controllers
                     new { id = itensDistribuidor.Id },
                     Ok(new { itensDistribuidor, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
@@ -120,21 +125,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoAtualizado });
+                        return Ok(new { registroDistribuidor, Mensagem.SucessoAtualizado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
                     }
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
-            catch (DbUpdateConcurrencyException) when (!DistribuidorExists(distribuidor.Id))
+            catch (DbUpdateConcurrencyException e) when (!DistribuidorExists(distribuidor.Id))
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -142,7 +147,7 @@ namespace DUDS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarDistribuidor(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_distribuidor");
 
             if (!existeRegistro)
             {
@@ -159,14 +164,14 @@ namespace DUDS.Controllers
                     await _context.SaveChangesAsync();
                     return Ok(new { Mensagem.SucessoExcluido });
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
                 }
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 
@@ -174,7 +179,7 @@ namespace DUDS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarDistribuidor(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_distribuidor");
 
             if (!existeRegistro)
             {
@@ -189,9 +194,9 @@ namespace DUDS.Controllers
                         await _context.SaveChangesAsync();
                         return Ok(new { Mensagem.SucessoDesativado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
                     }
                 }
                 else
@@ -201,7 +206,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 
@@ -219,19 +224,24 @@ namespace DUDS.Controllers
             {
                 List<TblDistribuidorAdministrador> distribuidorAdministradores = await _context.TblDistribuidorAdministrador.AsNoTracking().ToListAsync();
 
+                if (distribuidorAdministradores.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (distribuidorAdministradores != null)
                 {
                     return Ok(new { distribuidorAdministradores, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -249,13 +259,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -282,11 +292,44 @@ namespace DUDS.Controllers
                     new { id = itensDistribuidorAdmin.Id },
                     Ok(new { itensDistribuidorAdmin, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
+
+        // DELETE: api/Distribuidor/DeletarDistribuidorAdministrador/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarDistribuidorAdministrador(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_distribuidor_administrador");
+
+            if (!existeRegistro)
+            {
+                TblDistribuidorAdministrador tblDistribuidorAdmin = _context.TblDistribuidorAdministrador.Where(c => c.Id == id).FirstOrDefault();
+
+                if (tblDistribuidorAdmin == null)
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
+
+                try
+                {
+                    _context.TblDistribuidorAdministrador.Remove(tblDistribuidorAdmin);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Mensagem.SucessoExcluido });
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                }
+            }
+            else
+            {
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
+            }
+        }
+
         #endregion
     }
 }
