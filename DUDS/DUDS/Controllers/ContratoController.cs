@@ -234,7 +234,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblContratoDistribuicao> contratosDistribuicao = await _context.TblContratoDistribuicao.OrderBy(c => c.CodFundo).ToListAsync();
+                List<TblContratoDistribuicao> contratosDistribuicao = await _context.TblContratoDistribuicao.OrderBy(c => c.CodContrato).ToListAsync();
 
                 if (contratosDistribuicao.Count() == 0)
                 {

@@ -150,7 +150,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Conta/DeletarConta/codFundo/codTipoConta
+        // DELETE: api/Conta/DeletarConta/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarConta(int id)
         {
@@ -182,7 +182,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Contas/DesativarConta/codFundo/codTipoConta
+        // DESATIVA: api/Contas/DesativarConta/id
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarConta(int id)
         {

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 using DUDS.Service.Interface;
+using EFCore.BulkExtensions;
 
 namespace DUDS.Controllers
 {
@@ -102,6 +103,40 @@ namespace DUDS.Controllers
             }
         }
 
+        //POST: api/Investidor/CadastrarInvestidor/List<InvestidorModel>
+        [HttpPost]
+        public async Task<ActionResult<List<InvestidorModel>>> CadastrarInvestidor(List<InvestidorModel> tblListInvestidorModel)
+        {
+            try
+            {
+                List<TblInvestidor> listaInvestidores = new List<TblInvestidor>();
+                TblInvestidor itensInvestidor = new TblInvestidor();
+
+                foreach (var line in tblListInvestidorModel)
+                {
+                    itensInvestidor = new TblInvestidor
+                    {
+                        NomeCliente = line.NomeCliente,
+                        Cnpj = line.Cnpj,
+                        TipoCliente = line.TipoCliente,
+                        CodAdministrador = line.CodAdministrador,
+                        CodGestor = line.CodGestor
+                    };
+
+                    listaInvestidores.Add(itensInvestidor);
+                }
+
+                await _context.BulkInsertAsync(listaInvestidores);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { itensInvestidor, Mensagem.SucessoCadastrado });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar, e });
+            }
+        }
+
         //PUT: api/Investidor/EditarInvestidor/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarInvestidor(int id, InvestidorModel investidor)
@@ -143,7 +178,7 @@ namespace DUDS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarInvestidor(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_investidor");
 
             if (!existeRegistro)
             {
@@ -175,7 +210,7 @@ namespace DUDS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarInvestidor(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_investidor");
 
             if (!existeRegistro)
             {
@@ -289,6 +324,74 @@ namespace DUDS.Controllers
                 return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
             }
         }
+
+        //POST: api/Investidor/CadastrarInvestidorDistribuidor/List<InvestidorDistribuidorModel>
+        [HttpPost]
+        public async Task<ActionResult<List<InvestidorDistribuidorModel>>> CadastrarInvestidorDistribuidor(List<InvestidorDistribuidorModel> tblListInvestidorDistribuidorModel)
+        {
+            try
+            {
+                List<TblInvestidorDistribuidor> listaInvestidorDIstribuidores = new List<TblInvestidorDistribuidor>();
+                TblInvestidorDistribuidor itensInvestidorDistribuidor = new TblInvestidorDistribuidor();
+
+                foreach (var line in tblListInvestidorDistribuidorModel)
+                {
+                    itensInvestidorDistribuidor = new TblInvestidorDistribuidor
+                    {
+                        CodAdministrador = line.CodAdministrador,
+                        CodDistribuidor = line.CodDistribuidor,
+                        CodInvestCustodia = line.CodInvestCustodia,
+                        CodInvestidor = line.CodInvestidor,
+                        UsuarioModificacao = line.UsuarioModificacao,
+                        DataModificacao = line.DataModificacao
+                    };
+
+                    listaInvestidorDIstribuidores.Add(itensInvestidorDistribuidor);
+                }
+
+                await _context.BulkInsertAsync(listaInvestidorDIstribuidores);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { itensInvestidorDistribuidor, Mensagem.SucessoCadastrado });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar, e });
+            }
+        }
+
+        // DELETE: api/Investidor/DeletarInvestidorDistribuidor/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarInvestidorDistribuidor(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_investidor_distribuidor");
+
+            if (!existeRegistro)
+            {
+                TblInvestidorDistribuidor tblInvestidorDistribuidor = _context.TblInvestidorDistribuidor.Where(c => c.Id == id).FirstOrDefault();
+
+                if (tblInvestidorDistribuidor == null)
+                {
+                    return NotFound(Mensagem.ErroTipoInvalido);
+                }
+
+                try
+                {
+                    _context.TblInvestidorDistribuidor.Remove(tblInvestidorDistribuidor);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Mensagem.SucessoExcluido });
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                }
+            }
+            else
+            {
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
+            }
+        }
+
         #endregion
     }
 }
