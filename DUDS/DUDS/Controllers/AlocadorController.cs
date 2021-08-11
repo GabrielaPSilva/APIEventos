@@ -80,7 +80,7 @@ namespace DUDS.Controllers
 
         //POST: api/Alocador/CadastrarAlocador/AlocadorModel
         [HttpPost]
-        public async Task<ActionResult<AlocadorController>> CadastrarAlocador(AlocadorModel tblAlocadorModel)
+        public async Task<ActionResult<AlocadorModel>> CadastrarAlocador(AlocadorModel tblAlocadorModel)
         {
             TblAlocador itensAlocador = new TblAlocador
             {

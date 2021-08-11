@@ -49,19 +49,24 @@ namespace DUDS.Controllers
             {
                 List<TblFundo> fundos = await _context.TblFundo.Where(c => c.Ativo == true).OrderBy(c => c.NomeFundo).AsNoTracking().ToListAsync();
 
+                if (fundos.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (fundos != null)
                 {
                     return Ok(new { fundos, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -79,13 +84,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -141,9 +146,9 @@ namespace DUDS.Controllers
                   new { id = itensFundo.Id },
                   Ok(new { itensFundo, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
@@ -199,19 +204,19 @@ namespace DUDS.Controllers
                         await _context.SaveChangesAsync();
                         return Ok(new { Mensagem.SucessoAtualizado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
                     }
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
-            catch (DbUpdateConcurrencyException) when (!FundoExists(fundo.Id))
+            catch (DbUpdateConcurrencyException e) when (!FundoExists(fundo.Id))
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -236,14 +241,14 @@ namespace DUDS.Controllers
                     await _context.SaveChangesAsync();
                     return Ok(new { Mensagem.SucessoExcluido });
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
                 }
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 
@@ -266,9 +271,9 @@ namespace DUDS.Controllers
                         await _context.SaveChangesAsync();
                         return Ok(new { Mensagem.SucessoDesativado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
                     }
                 }
                 else
@@ -278,7 +283,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 

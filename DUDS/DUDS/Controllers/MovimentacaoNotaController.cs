@@ -29,21 +29,26 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblMovimentacaoNota> movimentacaoNotas = await _context.TblMovimentacaoNota.AsNoTracking().ToListAsync();
-               
+                List<TblMovimentacaoNota> movimentacaoNotas = await _context.TblMovimentacaoNota.OrderByDescending(c => c.DataMovimentacao).AsNoTracking().ToListAsync();
+
+                if (movimentacaoNotas.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (movimentacaoNotas != null)
                 {
                     return Ok(new { movimentacaoNotas, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -61,13 +66,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -121,7 +126,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar, e});
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar, e});
             }
         }
 
@@ -142,9 +147,9 @@ namespace DUDS.Controllers
                 await _context.SaveChangesAsync();
                 return Ok(new { Mensagem.SucessoExcluido });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
             }
         }
     }

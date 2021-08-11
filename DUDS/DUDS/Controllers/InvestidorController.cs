@@ -34,19 +34,24 @@ namespace DUDS.Controllers
             {
                 List<TblInvestidor> investidores = await _context.TblInvestidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeCliente).AsNoTracking().ToListAsync();
 
+                if (investidores.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (investidores != null)
                 {
                     return Ok(new { investidores, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -64,13 +69,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -97,9 +102,9 @@ namespace DUDS.Controllers
                     new { id = itensInvestidor.Id },
                      Ok(new { itensInvestidor, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
@@ -133,7 +138,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar, e });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar, e });
             }
         }
 
@@ -156,21 +161,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoAtualizado });
+                        return Ok(new { registroInvestidor, Mensagem.SucessoAtualizado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
                     }
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return NotFound(Mensagem.ErroTipoInvalido);
                 }
             }
-            catch (DbUpdateConcurrencyException) when (!InvestidorExists(investidor.Id))
+            catch (DbUpdateConcurrencyException e) when (!InvestidorExists(investidor.Id))
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -195,9 +200,9 @@ namespace DUDS.Controllers
                     await _context.SaveChangesAsync();
                     return Ok(new { Mensagem.SucessoExcluido });
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
                 }
             }
             else
@@ -225,9 +230,9 @@ namespace DUDS.Controllers
                         await _context.SaveChangesAsync();
                         return Ok(new { Mensagem.SucessoDesativado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
                     }
                 }
                 else
@@ -237,7 +242,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 
@@ -254,20 +259,25 @@ namespace DUDS.Controllers
             try
             {
                 List<TblInvestidorDistribuidor> investidorDistribuidores = await _context.TblInvestidorDistribuidor.AsNoTracking().ToListAsync();
-               
+
+                if (investidorDistribuidores.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (investidorDistribuidores != null)
                 {
                     return Ok(new { investidorDistribuidores, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -285,13 +295,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -319,9 +329,9 @@ namespace DUDS.Controllers
                     new { id = itensInvestidorDistribuidor.Id },
                     Ok(new { itensInvestidorDistribuidor, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
@@ -356,7 +366,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar, e });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar, e });
             }
         }
 

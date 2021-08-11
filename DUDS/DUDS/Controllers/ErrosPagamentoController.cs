@@ -32,19 +32,24 @@ namespace DUDS.Controllers
             {
                 List<TblErrosPagamento> errosPagamento = await _context.TblErrosPagamento.OrderBy(c => c.DataAgendamento).AsNoTracking().ToListAsync();
 
+                if (errosPagamento.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (errosPagamento != null)
                 {
                     return Ok(new { errosPagamento, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -62,7 +67,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
@@ -129,9 +134,9 @@ namespace DUDS.Controllers
                 await _context.SaveChangesAsync();
                 return Ok(new { Mensagem.SucessoExcluido });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
             }
         }
     }

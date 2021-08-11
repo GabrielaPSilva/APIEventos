@@ -245,11 +245,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Distribuidor/GetDistribuidorAdministrador/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblDistribuidorAdministrador>> GetDistribuidorAdministrador(int id)
+        // GET: api/Distribuidor/GetDistribuidorAdministrador/cod_distribuidor/cod_administrador
+        [HttpGet("{cod_distribuidor}/{cod_administrador}")]
+        public async Task<ActionResult<TblDistribuidorAdministrador>> GetDistribuidorAdministrador(int cod_distribuidor, int cod_administrador)
         {
-            TblDistribuidorAdministrador tblDistribuidorAdministrador = await _context.TblDistribuidorAdministrador.FindAsync(id);
+            TblDistribuidorAdministrador tblDistribuidorAdministrador = await _context.TblDistribuidorAdministrador.FindAsync(cod_distribuidor, cod_administrador);
 
             try
             {
@@ -271,7 +271,7 @@ namespace DUDS.Controllers
 
         //POST: api/Distribuidor/CadastrarDistribuidorAdmin/DistribuidorAdministradorModel
         [HttpPost]
-        public async Task<ActionResult<DistribuidorAdministradorModel>> CadastrarDistribuidorAdmin(DistribuidorAdministradorModel tblDistribuidorAdminModel)
+        public async Task<ActionResult<DistribuidorAdministradorModel>> CadastrarDistribuidorAdministrador(DistribuidorAdministradorModel tblDistribuidorAdminModel)
         {
             TblDistribuidorAdministrador itensDistribuidorAdmin = new TblDistribuidorAdministrador
             {

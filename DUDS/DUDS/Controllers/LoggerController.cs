@@ -34,13 +34,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -69,9 +69,9 @@ namespace DUDS.Controllers
                     new { id = itensLogger.Id },
                      Ok(new { itensLogger, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
     }

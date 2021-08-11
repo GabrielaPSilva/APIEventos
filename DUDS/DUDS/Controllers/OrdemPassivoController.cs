@@ -29,39 +29,54 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblOrdemPassivo> ordemPassivos = await _context.TblOrdemPassivo.AsNoTracking().ToListAsync();
-                
+                List<TblOrdemPassivo> ordemPassivos = await _context.TblOrdemPassivo.OrderByDescending(c => c.DtEntrada).AsNoTracking().ToListAsync();
+
+                if (ordemPassivos.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (ordemPassivos != null)
                 {
                     return Ok(new { ordemPassivos, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
-        // GET: api/OrdemPassivo/GetOrdemPassivo/cod_fundo
-        [HttpGet("{cod_fundo}")]
-        public async Task<ActionResult<TblOrdemPassivo>> GetOrdemPassivo(int cod_fundo)
+        // GET: api/OrdemPassivo/GetOrdemPassivo/cd_cotista/num_ordem
+        [HttpGet("{cd_cotista}/{num_ordem}")]
+        public async Task<ActionResult<TblOrdemPassivo>> GetOrdemPassivo(int cd_cotista, string num_ordem)
         {
-            var tblOrdemPassivo = await _context.TblOrdemPassivo.FindAsync(cod_fundo);
+            TblOrdemPassivo tblOrdemPassivo = await _context.TblOrdemPassivo.FindAsync(cd_cotista, num_ordem);
 
-            if (tblOrdemPassivo == null)
+            try
             {
-                return NotFound();
+                if (tblOrdemPassivo != null)
+                {
+                    return Ok(new { tblOrdemPassivo, Mensagem.SucessoCadastrado });
+                }
+                else
+                {
+                    return BadRequest(Mensagem.ErroTipoInvalido);
+                }
             }
-
-            return tblOrdemPassivo;
+            catch (Exception e)
+            {
+                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+            }
         }
 
-        //POST: api/OrdemPassivo/CadastrarOrdemPassivo/List<PagamentoServicoModel
+        //POST: api/OrdemPassivo/CadastrarOrdemPassivo/List<OrdemPassivoModel
         [HttpPost]
         public async Task<ActionResult<OrdemPassivoModel>> CadastrarOrdemPassivo(List<OrdemPassivoModel> tblOrdemPassivoModel)
         {
@@ -99,9 +114,9 @@ namespace DUDS.Controllers
 
                 return Ok(new { itensOrdemPassivo, Mensagem.SucessoCadastrado });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
@@ -122,9 +137,9 @@ namespace DUDS.Controllers
                 await _context.SaveChangesAsync();
                 return Ok(new { Mensagem.SucessoExcluido });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
             }
         }
     }

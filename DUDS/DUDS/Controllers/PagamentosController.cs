@@ -30,7 +30,12 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblPagamentoServico> pgtosServico = await _context.TblPagamentoServico.AsNoTracking().ToListAsync();
+                List<TblPagamentoServico> pgtosServico = await _context.TblPagamentoServico.OrderByDescending(c => c.Competencia).AsNoTracking().ToListAsync();
+
+                if (pgtosServico.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
 
                 if (pgtosServico != null)
                 {
@@ -38,13 +43,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -62,13 +67,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -102,9 +107,9 @@ namespace DUDS.Controllers
 
                 return Ok(new { itensPagamentoServico, Mensagem.SucessoCadastrado });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
@@ -124,10 +129,10 @@ namespace DUDS.Controllers
                 _context.TblPagamentoServico.RemoveRange(tblPagamentoServico);
                 await _context.SaveChangesAsync();
                 return Ok(new { Mensagem.SucessoExcluido });
-            }
-            catch (Exception)
+            } 
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
             }
         }
         #endregion
@@ -139,21 +144,26 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblPgtoAdmPfee> pgtosAdmPfee = await _context.TblPgtoAdmPfee.AsNoTracking().ToListAsync();
-                
+                List<TblPgtoAdmPfee> pgtosAdmPfee = await _context.TblPgtoAdmPfee.OrderByDescending(c => c.Competencia).AsNoTracking().ToListAsync();
+
+                if (pgtosAdmPfee.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (pgtosAdmPfee != null)
                 {
                     return Ok(new { pgtosAdmPfee, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -171,13 +181,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -211,9 +221,9 @@ namespace DUDS.Controllers
 
                 return Ok(new { itensPagamentoAdminPfee, Mensagem.SucessoCadastrado });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
@@ -234,9 +244,9 @@ namespace DUDS.Controllers
                 await _context.SaveChangesAsync();
                 return Ok(new { Mensagem.SucessoExcluido });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
             }
         }
         #endregion

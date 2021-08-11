@@ -85,6 +85,7 @@ namespace DUDS.Controllers
             TblCustodiante itensCustodiante = new TblCustodiante
             {
                 NomeCustodiante = tblCustodianteModel.NomeCustodiante,
+                Cnpj = tblCustodianteModel.Cnpj,
                 UsuarioModificacao = tblCustodianteModel.UsuarioModificacao,
                 DataModificacao = tblCustodianteModel.DataModificacao
             };
@@ -116,6 +117,7 @@ namespace DUDS.Controllers
                 if (registroCustodiante != null)
                 {
                     registroCustodiante.NomeCustodiante = custodiante.NomeCustodiante == null ? registroCustodiante.NomeCustodiante : custodiante.NomeCustodiante;
+                    registroCustodiante.Cnpj = custodiante.Cnpj == null ? registroCustodiante.Cnpj : custodiante.Cnpj;
 
                     try
                     {
