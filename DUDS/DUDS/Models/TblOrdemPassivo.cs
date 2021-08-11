@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_ordem_passivo")]
-    [Index(nameof(CdCotista), Name = "cd_cotista_tbl_ordem_passivo")]
+    [Index(nameof(CodInvestidor), Name = "cd_cotista_tbl_ordem_passivo")]
     [Index(nameof(CodDistribuidor), Name = "cod_distr_tbl_ordem_passivo")]
     [Index(nameof(CodFundo), Name = "cod_fundo_tbl_ordem_passivo")]
     [Index(nameof(DtAgendamento), Name = "dt_agend_tbl_ordem_passivo")]
@@ -24,8 +24,8 @@ namespace DUDS.Models
         [StringLength(15)]
         public string NumOrdem { get; set; }
         [Key]
-        [Column("cd_cotista")]
-        public long CdCotista { get; set; }
+        [Column("cod_investidor")]
+        public long CodInvestidor { get; set; }
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
         [Required]
@@ -55,9 +55,6 @@ namespace DUDS.Models
         [Column("cod_administrador")]
         public int CodAdministrador { get; set; }
 
-        [ForeignKey(nameof(CdCotista))]
-        [InverseProperty(nameof(TblCliente.TblOrdemPassivo))]
-        public virtual TblCliente CdCotistaNavigation { get; set; }
         [ForeignKey(nameof(CodAdministrador))]
         [InverseProperty(nameof(TblAdministrador.TblOrdemPassivo))]
         public virtual TblAdministrador CodAdministradorNavigation { get; set; }
@@ -67,5 +64,8 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodFundo))]
         [InverseProperty(nameof(TblFundo.TblOrdemPassivo))]
         public virtual TblFundo CodFundoNavigation { get; set; }
+        [ForeignKey(nameof(CodInvestidor))]
+        [InverseProperty(nameof(TblCliente.TblOrdemPassivo))]
+        public virtual TblCliente CodInvestidorNavigation { get; set; }
     }
 }

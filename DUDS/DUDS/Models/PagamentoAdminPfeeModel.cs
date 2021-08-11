@@ -10,7 +10,7 @@ namespace DUDS.Models
     {
         [StringLength(7)]
         public string Competencia { get; set; }
-        public long CodCliente { get; set; }
+        public long CodInvestidor { get; set; }
         public int CodFundo { get; set; }
         public decimal TaxaPerformanceApropriada { get; set; }
         public decimal TaxaPerformanceResgate { get; set; }

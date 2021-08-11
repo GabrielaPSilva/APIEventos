@@ -16,8 +16,8 @@ namespace DUDS.Models
         [StringLength(6)]
         public string Competencia { get; set; }
         [Key]
-        [Column("cod_cliente")]
-        public long CodCliente { get; set; }
+        [Column("cod_investidor")]
+        public long CodInvestidor { get; set; }
         [Key]
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
@@ -28,8 +28,8 @@ namespace DUDS.Models
         [Column("valor_pfee_sementre", TypeName = "decimal(22, 10)")]
         public decimal ValorPfeeSementre { get; set; }
 
-        [ForeignKey(nameof(CodCliente))]
+        [ForeignKey(nameof(CodInvestidor))]
         [InverseProperty(nameof(TblCliente.TblCalculoPgtoAdmPfee))]
-        public virtual TblCliente CodClienteNavigation { get; set; }
+        public virtual TblCliente CodInvestidorNavigation { get; set; }
     }
 }

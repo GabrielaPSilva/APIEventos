@@ -52,11 +52,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/OrdemPassivo/GetOrdemPassivo/cd_cotista/num_ordem
-        [HttpGet("{cd_cotista}/{num_ordem}")]
-        public async Task<ActionResult<TblOrdemPassivo>> GetOrdemPassivo(int cd_cotista, string num_ordem)
+        // GET: api/OrdemPassivo/GetOrdemPassivo/cod_investidor/num_ordem
+        [HttpGet("{cod_investidor}/{num_ordem}")]
+        public async Task<ActionResult<TblOrdemPassivo>> GetOrdemPassivo(int cod_investidor, string num_ordem)
         {
-            TblOrdemPassivo tblOrdemPassivo = await _context.TblOrdemPassivo.FindAsync(cd_cotista, num_ordem);
+            TblOrdemPassivo tblOrdemPassivo = await _context.TblOrdemPassivo.FindAsync(cod_investidor, num_ordem);
 
             try
             {
@@ -90,7 +90,7 @@ namespace DUDS.Controllers
                     itensOrdemPassivo = new TblOrdemPassivo
                     {
                         NumOrdem = line.NumOrdem,
-                        CdCotista = line.CdCotista,
+                        CodInvestidor = line.CodInvestidor,
                         CodFundo = line.CodFundo,
                         DsOperacao = line.DsOperacao,
                         VlValor = line.VlValor,

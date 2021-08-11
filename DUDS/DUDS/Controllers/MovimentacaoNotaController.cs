@@ -92,7 +92,7 @@ namespace DUDS.Controllers
                         CodFundo = line.CodFundo,
                         DataMovimentacao = line.DataMovimentacao,
                         DataCotizacao = line.DataCotizacao,
-                        CdCotista = line.CdCotista,
+                        CodInvestidor = line.CodInvestidor,
                         CodMovimentacao = line.CodMovimentacao,
                         TipoMovimentacao = line.TipoMovimentacao,
                         QtdeCotas = line.QtdeCotas,

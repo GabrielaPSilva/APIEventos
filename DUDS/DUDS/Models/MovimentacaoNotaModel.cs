@@ -11,7 +11,7 @@ namespace DUDS.Models
         public int CodFundo { get; set; }
         public DateTime DataMovimentacao { get; set; }
         public DateTime DataCotizacao { get; set; }
-        public long CdCotista { get; set; }
+        public long CodInvestidor { get; set; }
         public int CodMovimentacao { get; set; }
 
         [Required]

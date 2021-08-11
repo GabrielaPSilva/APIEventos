@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_movimentacao_nota")]
-    [Index(nameof(CdCotista), Name = "cd_cotista_tbl_movimentacao_nota")]
+    [Index(nameof(CodInvestidor), Name = "cd_cotista_tbl_movimentacao_nota")]
     [Index(nameof(CodAdm), Name = "cod_adm_tbl_movimentacao_nota")]
     [Index(nameof(CodDistribuidor), Name = "cod_distr_tbl_movimentacao_nota")]
     [Index(nameof(CodFundo), Name = "cod_fundo_tbl_movimentacao_nota")]
@@ -24,8 +24,8 @@ namespace DUDS.Models
         public DateTime DataMovimentacao { get; set; }
         [Column("data_cotizacao", TypeName = "date")]
         public DateTime DataCotizacao { get; set; }
-        [Column("cd_cotista")]
-        public long CdCotista { get; set; }
+        [Column("cod_investidor")]
+        public long CodInvestidor { get; set; }
         [Key]
         [Column("cod_movimentacao")]
         public int CodMovimentacao { get; set; }
@@ -83,14 +83,14 @@ namespace DUDS.Models
         [Column("cod_custodiante")]
         public int CodCustodiante { get; set; }
 
-        [ForeignKey(nameof(CdCotista))]
-        [InverseProperty(nameof(TblCliente.TblMovimentacaoNota))]
-        public virtual TblCliente CdCotistaNavigation { get; set; }
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblMovimentacaoNota))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
         [ForeignKey(nameof(CodGestor))]
         [InverseProperty(nameof(TblGestor.TblMovimentacaoNota))]
         public virtual TblGestor CodGestorNavigation { get; set; }
+        [ForeignKey(nameof(CodInvestidor))]
+        [InverseProperty(nameof(TblCliente.TblMovimentacaoNota))]
+        public virtual TblCliente CodInvestidorNavigation { get; set; }
     }
 }

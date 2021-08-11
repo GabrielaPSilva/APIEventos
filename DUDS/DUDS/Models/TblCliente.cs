@@ -48,13 +48,13 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblCliente))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
-        [InverseProperty("CodClienteNavigation")]
+        [InverseProperty("CodInvestidorNavigation")]
         public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
-        [InverseProperty("CdCotistaNavigation")]
+        [InverseProperty("CodInvestidorNavigation")]
         public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
-        [InverseProperty("CdCotistaNavigation")]
+        [InverseProperty("CodInvestidorNavigation")]
         public virtual ICollection<TblOrdemPassivo> TblOrdemPassivo { get; set; }
-        [InverseProperty("CodClienteNavigation")]
+        [InverseProperty("CodInvestidorNavigation")]
         public virtual ICollection<TblPgtoAdmPfee> TblPgtoAdmPfee { get; set; }
         [InverseProperty("CodClienteNavigation")]
         public virtual ICollection<TblPosicaoCliente> TblPosicaoCliente { get; set; }

@@ -245,13 +245,13 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblCalculoPgtoAdmPfee>(entity =>
             {
-                entity.HasKey(e => new { e.Competencia, e.CodCliente, e.CodFundo });
+                entity.HasKey(e => new { e.Competencia, e.CodInvestidor, e.CodFundo });
 
                 entity.Property(e => e.Competencia).IsFixedLength(true);
 
-                entity.HasOne(d => d.CodClienteNavigation)
+                entity.HasOne(d => d.CodInvestidorNavigation)
                     .WithMany(p => p.TblCalculoPgtoAdmPfee)
-                    .HasForeignKey(d => d.CodCliente)
+                    .HasForeignKey(d => d.CodInvestidor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_calculo_pgto_adm_pfee_tbl_cliente");
             });
@@ -362,6 +362,8 @@ namespace DUDS.Data
             modelBuilder.Entity<TblDistribuidorAdministrador>(entity =>
             {
                 entity.HasKey(e => new { e.CodDistribuidor, e.CodAdministrador });
+
+                entity.Property(e => e.CodAdministrador).HasComment("Administrador na qual possui o valor do campo cod_distr_adm");
 
                 entity.Property(e => e.CodDistrAdm).IsUnicode(false);
 
@@ -494,6 +496,10 @@ namespace DUDS.Data
 
                 entity.Property(e => e.Cnpj).IsUnicode(false);
 
+                entity.Property(e => e.CodAdministrador).HasComment("Administrador do fundo investidor");
+
+                entity.Property(e => e.CodGestor).HasComment("Gestor do fundo investidor");
+
                 entity.Property(e => e.NomeCliente).IsUnicode(false);
 
                 entity.Property(e => e.TipoCliente).IsUnicode(false);
@@ -516,6 +522,8 @@ namespace DUDS.Data
                 entity.HasKey(e => new { e.CodInvestCustodia, e.CodInvestidor, e.CodDistribuidor, e.CodAdministrador });
 
                 entity.Property(e => e.CodInvestCustodia).IsUnicode(false);
+
+                entity.Property(e => e.CodAdministrador).HasComment("Administrador na qual o investidor possui o valor do campo cod_invest_custodia baseado no Distribuidor");
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 
@@ -562,12 +570,6 @@ namespace DUDS.Data
 
                 entity.Property(e => e.TipoMovimentacao).IsFixedLength(true);
 
-                entity.HasOne(d => d.CdCotistaNavigation)
-                    .WithMany(p => p.TblMovimentacaoNota)
-                    .HasForeignKey(d => d.CdCotista)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_movimentacao_nota_tbl_cliente");
-
                 entity.HasOne(d => d.CodDistribuidorNavigation)
                     .WithMany(p => p.TblMovimentacaoNota)
                     .HasForeignKey(d => d.CodDistribuidor)
@@ -579,19 +581,19 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodGestor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_movimentacao_nota_tbl_gestor");
+
+                entity.HasOne(d => d.CodInvestidorNavigation)
+                    .WithMany(p => p.TblMovimentacaoNota)
+                    .HasForeignKey(d => d.CodInvestidor)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_movimentacao_nota_tbl_cliente");
             });
 
             modelBuilder.Entity<TblOrdemPassivo>(entity =>
             {
-                entity.HasKey(e => new { e.NumOrdem, e.CdCotista });
+                entity.HasKey(e => new { e.NumOrdem, e.CodInvestidor });
 
                 entity.Property(e => e.DsOperacao).IsFixedLength(true);
-
-                entity.HasOne(d => d.CdCotistaNavigation)
-                    .WithMany(p => p.TblOrdemPassivo)
-                    .HasForeignKey(d => d.CdCotista)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_ordem_passivo_tbl_cliente");
 
                 entity.HasOne(d => d.CodAdministradorNavigation)
                     .WithMany(p => p.TblOrdemPassivo)
@@ -610,6 +612,12 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodFundo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_ordem_passivo_tbl_fundo");
+
+                entity.HasOne(d => d.CodInvestidorNavigation)
+                    .WithMany(p => p.TblOrdemPassivo)
+                    .HasForeignKey(d => d.CodInvestidor)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_ordem_passivo_tbl_cliente");
             });
 
             modelBuilder.Entity<TblPagamentoServico>(entity =>
@@ -631,22 +639,22 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblPgtoAdmPfee>(entity =>
             {
-                entity.HasKey(e => new { e.Competencia, e.CodCliente, e.CodFundo })
+                entity.HasKey(e => new { e.Competencia, e.CodInvestidor, e.CodFundo })
                     .HasName("PK_tbl_pgto_adm_pfee_1");
 
                 entity.Property(e => e.Competencia).IsFixedLength(true);
-
-                entity.HasOne(d => d.CodClienteNavigation)
-                    .WithMany(p => p.TblPgtoAdmPfee)
-                    .HasForeignKey(d => d.CodCliente)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_pgto_adm_pfee_tbl_cliente");
 
                 entity.HasOne(d => d.CodFundoNavigation)
                     .WithMany(p => p.TblPgtoAdmPfee)
                     .HasForeignKey(d => d.CodFundo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_pgto_adm_pfee_tbl_fundo");
+
+                entity.HasOne(d => d.CodInvestidorNavigation)
+                    .WithMany(p => p.TblPgtoAdmPfee)
+                    .HasForeignKey(d => d.CodInvestidor)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_pgto_adm_pfee_tbl_cliente");
             });
 
             modelBuilder.Entity<TblPosicaoAcao>(entity =>

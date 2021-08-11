@@ -205,7 +205,7 @@ namespace DUDS.Controllers
                     itensPagamentoAdminPfee = new TblPgtoAdmPfee
                     {
                         Competencia = line.Competencia,
-                        CodCliente = line.CodCliente,
+                        CodInvestidor = line.CodInvestidor,
                         CodFundo = line.CodFundo,
                         TaxaPerformanceApropriada = line.TaxaPerformanceApropriada,
                         TaxaPerformanceResgate = line.TaxaPerformanceResgate,
