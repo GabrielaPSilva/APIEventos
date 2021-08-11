@@ -14,6 +14,7 @@ namespace DUDS.Models
         public const string ErroDesativar = "Erro ao desativar.";
         public const string ErroTipoInvalido = "Opção de pesquisa não encontrada ou inválida.";
         public const string SucessoListar = "Listado com sucesso.";
+        public const string ErroListar = "Nenhum registro encontrado.";
         public const string SucessoCadastrado = "Cadastrado com sucesso.";
         public const string SucessoAtualizado = "Atualizado com sucesso.";
         public const string SucessoExcluido = "Excluido com sucesso.";

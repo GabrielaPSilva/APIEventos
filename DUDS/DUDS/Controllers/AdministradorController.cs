@@ -33,18 +33,23 @@ namespace DUDS.Controllers
             {
                 List<TblAdministrador> administradores = await _context.TblAdministrador.Where(c => c.Ativo == true).OrderBy(c => c.NomeAdministrador).AsNoTracking().ToListAsync();
 
+                if (administradores.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (administradores != null)
                 {
                     return Ok(new { administradores, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -56,18 +61,18 @@ namespace DUDS.Controllers
 
             try
             {
-                if (tblAdministrador == null)
+                if (tblAdministrador != null)
                 {
                     return Ok(new { tblAdministrador, Mensagem.SucessoCadastrado });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -94,9 +99,9 @@ namespace DUDS.Controllers
                    new { id = itensAdministrador.Id },
                    Ok(new { itensAdministrador, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
@@ -116,21 +121,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoAtualizado });
+                        return Ok(new { registroAdministrador, Mensagem.SucessoAtualizado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
                     }
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
-            catch (DbUpdateConcurrencyException) when (!AdministradorExists(administrador.Id))
+            catch (DbUpdateConcurrencyException e) when (!AdministradorExists(administrador.Id))
             {
-                return NotFound();
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -155,14 +160,14 @@ namespace DUDS.Controllers
                     await _context.SaveChangesAsync();
                     return Ok(new { Mensagem.SucessoExcluido });
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
                 }
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 
@@ -185,9 +190,9 @@ namespace DUDS.Controllers
                         await _context.SaveChangesAsync();
                         return Ok(new { Mensagem.SucessoDesativado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
                     }
                 }
                 else
@@ -197,7 +202,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 

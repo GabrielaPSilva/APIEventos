@@ -266,7 +266,7 @@ namespace DUDS.Controllers
         {
             TblInvestidorDistribuidor itensInvestidorDistribuidor = new TblInvestidorDistribuidor
             {
-                CodCustodiante = tblInvestidorDistribuidorModel.CodCustodiante,
+                CodAdministrador = tblInvestidorDistribuidorModel.CodAdministrador,
                 CodDistribuidor = tblInvestidorDistribuidorModel.CodDistribuidor,
                 CodInvestCustodia = tblInvestidorDistribuidorModel.CodInvestCustodia,
                 CodInvestidor = tblInvestidorDistribuidorModel.CodInvestidor,

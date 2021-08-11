@@ -33,30 +33,35 @@ namespace DUDS.Controllers
             {
                 List<TblAcordoRemuneracao> acordosRemuneracao = await _context.TblAcordoRemuneracao.Where(c => c.Ativo == true).AsNoTracking().ToListAsync();
 
+                if (acordosRemuneracao.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (acordosRemuneracao != null)
                 {
                     return Ok(new { acordosRemuneracao, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
-                return BadRequest(new
+                return NotFound(new
                 {
-                    Erro = true,
+                    Erro = e,
                     Mensagem.ErroPadrao
                 });
             }
         }
 
-        // GET: api/AcordoRemuneracao/GetAcordoRemuneracao/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblAcordoRemuneracao>> GetAcordoRemuneracao(int id)
+        // GET: api/AcordoRemuneracao/GetAcordoRemuneracao/cod_contrato_distribuicao/percentual/tipo_taxa/tipo_range
+        [HttpGet("{cod_contrato_distribuicao}/{percentual}/{tipo_taxa}/{tipo_range}")]
+        public async Task<ActionResult<TblAcordoRemuneracao>> GetAcordoRemuneracao(int cod_contrato_distribuicao, double percentual, string tipo_taxa, string tipo_range)
         {
-            TblAcordoRemuneracao tblAcordoRemuneracao = await _context.TblAcordoRemuneracao.FindAsync(id);
+            TblAcordoRemuneracao tblAcordoRemuneracao = await _context.TblAcordoRemuneracao.FindAsync(cod_contrato_distribuicao, percentual, tipo_taxa, tipo_range);
 
             try
             {
@@ -66,7 +71,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
 
             }
@@ -75,7 +80,7 @@ namespace DUDS.Controllers
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
                 return BadRequest(new
                 {
-                    Erro = true,
+                    Erro = e,
                     Mensagem.ErroPadrao
                 });
             }
@@ -106,55 +111,60 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                    nameof(GetAcordoRemuneracao),
-                   new { id = itensAcordoRemuneracao.Id },
+                   new {
+                           cod_contrato_distribuicao = itensAcordoRemuneracao.CodContratoDistribuicao,
+                           percentual = itensAcordoRemuneracao.Percentual,
+                           tipo_taxa = itensAcordoRemuneracao.TipoTaxa,
+                           tipo_range = itensAcordoRemuneracao.TipoRange
+                       },
                    Ok(new { itensAcordoRemuneracao, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
         //PUT: api/AcordoRemuneracao/EditarAcordoRemuneracao/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditarAcordoRemuneracao(int id, AcordoRemuneracaoModel acordoRemuneracao)
-        {
-            try
-            {
-                TblAcordoRemuneracao registroAcordoRemuneracao = _context.TblAcordoRemuneracao.Find(id);
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> EditarAcordoRemuneracao(int id, AcordoRemuneracaoModel acordoRemuneracao)
+        //{
+        //    try
+        //    {
+        //        TblAcordoRemuneracao registroAcordoRemuneracao  = _context.TblAcordoRemuneracao.Where(c => c.Id == id).FirstOrDefault();
 
-                if (registroAcordoRemuneracao != null)
-                {
-                    registroAcordoRemuneracao.CodContratoDistribuicao = acordoRemuneracao.CodContratoDistribuicao == 0 ? registroAcordoRemuneracao.CodContratoDistribuicao : acordoRemuneracao.CodContratoDistribuicao;
-                    registroAcordoRemuneracao.Inicio = acordoRemuneracao.Inicio == 0 ? registroAcordoRemuneracao.Inicio : acordoRemuneracao.Inicio;
-                    registroAcordoRemuneracao.Fim = acordoRemuneracao.Fim == 0 ? registroAcordoRemuneracao.Fim : acordoRemuneracao.Fim;
-                    registroAcordoRemuneracao.Percentual = acordoRemuneracao.Percentual == 0 ? registroAcordoRemuneracao.Percentual : acordoRemuneracao.Percentual;
-                    registroAcordoRemuneracao.TipoTaxa = acordoRemuneracao.TipoTaxa == null ? registroAcordoRemuneracao.TipoTaxa : acordoRemuneracao.TipoTaxa;
-                    registroAcordoRemuneracao.TipoRange = acordoRemuneracao.TipoRange == null ? registroAcordoRemuneracao.TipoRange : acordoRemuneracao.TipoRange;
-                    registroAcordoRemuneracao.DataVigenciaInicio = acordoRemuneracao.DataVigenciaInicio == null ? registroAcordoRemuneracao.DataVigenciaInicio : acordoRemuneracao.DataVigenciaInicio;
-                    registroAcordoRemuneracao.DataVigenciaFim = acordoRemuneracao.DataVigenciaFim == null ? registroAcordoRemuneracao.DataVigenciaFim : acordoRemuneracao.DataVigenciaFim;
+        //        if (registroAcordoRemuneracao != null)
+        //        {
+        //            registroAcordoRemuneracao.CodContratoDistribuicao = acordoRemuneracao.CodContratoDistribuicao == 0 ? registroAcordoRemuneracao.CodContratoDistribuicao : acordoRemuneracao.CodContratoDistribuicao;
+        //            registroAcordoRemuneracao.Inicio = acordoRemuneracao.Inicio == 0 ? registroAcordoRemuneracao.Inicio : acordoRemuneracao.Inicio;
+        //            registroAcordoRemuneracao.Fim = acordoRemuneracao.Fim == 0 ? registroAcordoRemuneracao.Fim : acordoRemuneracao.Fim;
+        //            registroAcordoRemuneracao.Percentual = acordoRemuneracao.Percentual == 0 ? registroAcordoRemuneracao.Percentual : acordoRemuneracao.Percentual;
+        //            registroAcordoRemuneracao.TipoTaxa = acordoRemuneracao.TipoTaxa == null ? registroAcordoRemuneracao.TipoTaxa : acordoRemuneracao.TipoTaxa;
+        //            registroAcordoRemuneracao.TipoRange = acordoRemuneracao.TipoRange == null ? registroAcordoRemuneracao.TipoRange : acordoRemuneracao.TipoRange;
+        //            registroAcordoRemuneracao.DataVigenciaInicio = acordoRemuneracao.DataVigenciaInicio == null ? registroAcordoRemuneracao.DataVigenciaInicio : acordoRemuneracao.DataVigenciaInicio;
+        //            registroAcordoRemuneracao.DataVigenciaFim = acordoRemuneracao.DataVigenciaFim == null ? registroAcordoRemuneracao.DataVigenciaFim : acordoRemuneracao.DataVigenciaFim;
 
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoAtualizado });
-                    }
-                    catch (Exception)
-                    {
-                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
-                    }
+        //            try
+        //            {
+        //                await _context.SaveChangesAsync();
+        //                return Ok(new { Mensagem.SucessoAtualizado });
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+        //            }
 
-                }
-                else
-                {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
-                }
-            }
-            catch (DbUpdateConcurrencyException) when (!AcordoRemuneracaoExists(acordoRemuneracao.Id))
-            {
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
-            }
-        }
+        //        }
+        //        else
+        //        {
+        //            return BadRequest(Mensagem.ErroTipoInvalido);
+        //        }
+        //    }
+        //    catch (DbUpdateConcurrencyException e) when (!AcordoRemuneracaoExists(acordoRemuneracao.Id))
+        //    {
+        //        return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+        //    }
+        //}
 
         // DELETE: api/AcordoRemuneracao/DeletarAcordoRemuneracao/id
         [HttpDelete("{id}")]
@@ -164,7 +174,7 @@ namespace DUDS.Controllers
 
             if (!existeRegistro)
             {
-                TblAcordoRemuneracao tblAcordoRemuneracao = await _context.TblAcordoRemuneracao.FindAsync(id);
+                TblAcordoRemuneracao tblAcordoRemuneracao = _context.TblAcordoRemuneracao.Where(c => c.Id == id).FirstOrDefault();
 
                 if (tblAcordoRemuneracao == null)
                 {
@@ -177,14 +187,14 @@ namespace DUDS.Controllers
                     await _context.SaveChangesAsync();
                     return Ok(new { Mensagem.SucessoExcluido });
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
                 }
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 
@@ -196,7 +206,7 @@ namespace DUDS.Controllers
 
             if (!existeRegistro)
             {
-                TblAcordoRemuneracao registroAcordoRemuneracao = _context.TblAcordoRemuneracao.Find(id);
+                TblAcordoRemuneracao registroAcordoRemuneracao = _context.TblAcordoRemuneracao.Where(c => c.Id == id).FirstOrDefault();
 
                 if (registroAcordoRemuneracao != null)
                 {
@@ -207,9 +217,9 @@ namespace DUDS.Controllers
                         await _context.SaveChangesAsync();
                         return Ok(new { Mensagem.SucessoDesativado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
                     }
                 }
                 else
@@ -219,7 +229,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 

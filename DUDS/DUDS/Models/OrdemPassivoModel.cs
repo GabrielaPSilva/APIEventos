@@ -26,6 +26,6 @@ namespace DUDS.Models
         public DateTime DtCotizacao { get; set; }
         public int CodDistribuidor { get; set; }
         public int OrdemMae { get; set; }
-        public int CodCustodiante { get; set; }
+        public int CodAdministrador { get; set; }
     }
 }

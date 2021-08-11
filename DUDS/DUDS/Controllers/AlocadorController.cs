@@ -33,27 +33,32 @@ namespace DUDS.Controllers
             {
                 List<TblAlocador> alocadores = await _context.TblAlocador.AsNoTracking().ToListAsync();
 
+                if (alocadores.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
+
                 if (alocadores != null)
                 {
                     return Ok(new { alocadores, Mensagem.SucessoListar });
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
-        // GET: api/Alocador/GetAlocador/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblAlocador>> GetAlocador(int id)
+        // GET: api/Alocador/GetAlocador/cod_investidor/cod_contrato_distribuicao
+        [HttpGet("{cod_investidor}/{cod_contrato_distribuicao}")]
+        public async Task<ActionResult<TblAlocador>> GetAlocador(int cod_investidor, int cod_contrato_distribuicao)
         {
-            TblAlocador tblAlocador = await _context.TblAlocador.FindAsync(id);
+            TblAlocador tblAlocador = await _context.TblAlocador.FindAsync(cod_investidor, cod_contrato_distribuicao);
 
             try
             {
@@ -63,13 +68,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -92,14 +97,16 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetAlocador),
-                    new { id = itensAlocador.Id },
+                    new {
+                            cod_investidor = itensAlocador.CodInvestidor,
+                            cod_contrato_distribuicao = itensAlocador.CodContratoDistribuicao
+                        },
                     Ok(new { itensAlocador, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
-           
         }
 
         //PUT: api/Alocador/EditarAlocador/id
@@ -108,7 +115,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                TblAlocador registroAlocador = _context.TblAlocador.Find(id);
+                TblAlocador registroAlocador = _context.TblAlocador.Where(c => c.Id == id).FirstOrDefault();
 
                 if (registroAlocador != null)
                 {
@@ -120,21 +127,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoAtualizado });
+                        return Ok(new { registroAlocador, Mensagem.SucessoAtualizado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
                     }
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
-            catch (DbUpdateConcurrencyException) when (!AlocadorExists(alocador.Id))
+            catch (DbUpdateConcurrencyException e) when (!AlocadorExists(alocador.Id))
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -146,7 +153,7 @@ namespace DUDS.Controllers
 
             if (!existeRegistro)
             {
-                TblAlocador tblAlocador = await _context.TblAlocador.FindAsync(id);
+                TblAlocador tblAlocador = _context.TblAlocador.Where(c => c.Id == id).FirstOrDefault();
 
                 if (tblAlocador == null)
                 {
@@ -159,14 +166,14 @@ namespace DUDS.Controllers
                     await _context.SaveChangesAsync();
                     return Ok(new { Mensagem.SucessoExcluido });
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
                 }
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 

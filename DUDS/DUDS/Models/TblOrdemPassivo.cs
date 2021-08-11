@@ -52,15 +52,15 @@ namespace DUDS.Models
         public int CodDistribuidor { get; set; }
         [Column("ordem_mae")]
         public int OrdemMae { get; set; }
-        [Column("cod_custodiante")]
-        public int CodCustodiante { get; set; }
+        [Column("cod_administrador")]
+        public int CodAdministrador { get; set; }
 
         [ForeignKey(nameof(CdCotista))]
         [InverseProperty(nameof(TblCliente.TblOrdemPassivo))]
         public virtual TblCliente CdCotistaNavigation { get; set; }
-        [ForeignKey(nameof(CodCustodiante))]
-        [InverseProperty(nameof(TblCustodiante.TblOrdemPassivo))]
-        public virtual TblCustodiante CodCustodianteNavigation { get; set; }
+        [ForeignKey(nameof(CodAdministrador))]
+        [InverseProperty(nameof(TblAdministrador.TblOrdemPassivo))]
+        public virtual TblAdministrador CodAdministradorNavigation { get; set; }
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblOrdemPassivo))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }

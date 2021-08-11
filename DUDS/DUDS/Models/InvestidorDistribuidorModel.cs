@@ -14,7 +14,7 @@ namespace DUDS.Models
         public string CodInvestCustodia { get; set; }
         public int CodInvestidor { get; set; }
         public int CodDistribuidor { get; set; }
-        public int CodCustodiante { get; set; }
+        public int CodAdministrador { get; set; }
         public DateTime DataModificacao { get; set; }
 
         //[Required]

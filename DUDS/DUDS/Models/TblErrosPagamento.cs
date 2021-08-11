@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DUDS.Models
 {
-    [Keyless]
     [Table("tbl_erros_pagamento")]
     public partial class TblErrosPagamento
     {
+        [Key]
         [Column("id")]
         public int Id { get; set; }
         [Column("data_agendamento", TypeName = "date")]
@@ -50,6 +50,7 @@ namespace DUDS.Models
         public string MensagemErro { get; set; }
 
         [ForeignKey(nameof(CodFundo))]
+        [InverseProperty(nameof(TblFundo.TblErrosPagamento))]
         public virtual TblFundo CodFundoNavigation { get; set; }
     }
 }

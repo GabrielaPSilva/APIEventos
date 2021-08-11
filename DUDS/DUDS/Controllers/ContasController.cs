@@ -32,7 +32,12 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblContas> contas = await _context.TblContas.Where(c => c.Ativo == true).ToListAsync();
+                var contas = await _context.TblContas.Where(c => c.Ativo == true).OrderBy(c => c.CodFundo).ToListAsync();
+
+                if (contas.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
 
                 if (contas != null)
                 {
@@ -40,21 +45,21 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
-        // GET: api/Contas/GetContas/codFundo/codTipoConta
-        [HttpGet]
-        public async Task<ActionResult<TblContas>> GetContas(int codFundo, int codTipoConta)
+        // GET: api/Contas/GetContas/cod_fundo/cod_tipo_conta
+        [HttpGet("{cod_fundo}/{cod_tipo_conta}")]
+        public async Task<ActionResult<TblContas>> GetContas(int cod_fundo, int cod_tipo_conta)
         {
-            TblContas tblContas = await _context.TblContas.FindAsync(codFundo, codTipoConta);
+            TblContas tblContas = await _context.TblContas.FindAsync(cod_fundo, cod_tipo_conta);
 
             try
             {
@@ -64,13 +69,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -97,24 +102,24 @@ namespace DUDS.Controllers
                     nameof(GetContas),
                     new
                     {
-                        codFundo = itensConta.CodFundo,
-                        codTipoConta = itensConta.CodTipoConta
+                        cod_fundo = itensConta.CodFundo,
+                        cod_tipo_conta = itensConta.CodTipoConta
                     },
                     Ok(new { itensConta, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
         //PUT: api/Conta/EditarConta/codFundo/codTipoConta
-        [HttpPut("{codFundo}/{codTipoConta}")]
-        public async Task<IActionResult> EditarConta(int codFundo, int codTipoConta, ContaModel conta)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarConta(int id, ContaModel conta)
         {
             try
             {
-                TblContas registroConta = _context.TblContas.Find(codFundo, codTipoConta);
+                TblContas registroConta = _context.TblContas.Where(c => c.Id == id).FirstOrDefault();
 
                 if (registroConta != null)
                 {
@@ -127,33 +132,33 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoAtualizado });
+                        return Ok(new { registroConta, Mensagem.SucessoAtualizado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
                     }
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
-            catch (DbUpdateConcurrencyException) when (!ContasExists(conta.Id))
+            catch (DbUpdateConcurrencyException e) when (!ContasExists(conta.Id))
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
         // DELETE: api/Conta/DeletarConta/codFundo/codTipoConta
-        [HttpDelete("{codFundo}/{codTipoConta}")]
-        public async Task<IActionResult> DeletarConta(int codFundo, int codTipoConta, int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarConta(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contas");
 
             if (!existeRegistro)
             {
-                TblContas tblConta = await _context.TblContas.FindAsync(codFundo, codTipoConta);
+                TblContas tblConta = _context.TblContas.Where(c => c.Id == id).FirstOrDefault();
 
                 if (tblConta == null)
                 {
@@ -166,26 +171,26 @@ namespace DUDS.Controllers
                     await _context.SaveChangesAsync();
                     return Ok(new { Mensagem.SucessoExcluido });
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
                 }
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 
         // DESATIVA: api/Contas/DesativarConta/codFundo/codTipoConta
-        [HttpPut("{codFundo}/{codTipoConta}")]
-        public async Task<IActionResult> DesativarConta(int codFundo, int codTipoConta, int id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarConta(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contas");
 
             if (!existeRegistro)
             {
-                TblContas registroConta = _context.TblContas.Find(codFundo, codTipoConta);
+                TblContas registroConta = _context.TblContas.Where(c => c.Id == id).FirstOrDefault();
 
                 if (registroConta != null)
                 {
@@ -196,9 +201,9 @@ namespace DUDS.Controllers
                         await _context.SaveChangesAsync();
                         return Ok(new { Mensagem.SucessoDesativado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
                     }
                 }
                 else
@@ -208,7 +213,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 
@@ -225,7 +230,12 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblTipoConta> tiposConta = await _context.TblTipoConta.Where(c => c.Ativo == true).OrderBy(c => c.TipoConta).ToListAsync();
+                var tiposConta = await _context.TblTipoConta.Where(c => c.Ativo == true).OrderBy(c => c.TipoConta).ToListAsync();
+
+                if (tiposConta.Count() == 0)
+                {
+                    return BadRequest(Mensagem.ErroListar);
+                }
 
                 if (tiposConta != null)
                 {
@@ -233,18 +243,18 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (InvalidOperationException e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
         // GET: api/Contas/TipoContas/id
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<ActionResult<TblTipoConta>> GetTipoContas(int id)
         {
             TblTipoConta tblContas = await _context.TblTipoConta.FindAsync(id);
@@ -257,13 +267,13 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
             catch (Exception e)
             {
                 //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -285,16 +295,16 @@ namespace DUDS.Controllers
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(
-                    nameof(GetContas),
+                    nameof(GetTipoContas),
                     new
                     {
                         Id = itensTipoConta.Id,
                     },
                      Ok(new { itensTipoConta, Mensagem.SucessoCadastrado }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroCadastrar });
+                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
             }
         }
 
@@ -314,21 +324,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoAtualizado });
+                        return Ok(new { registroTipoConta, Mensagem.SucessoAtualizado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroAtualizar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
                     }
                 }
                 else
                 {
-                    return NotFound(new { Erro = true, Mensagem.ErroTipoInvalido });
+                    return BadRequest(Mensagem.ErroTipoInvalido);
                 }
             }
-            catch (DbUpdateConcurrencyException) when (!TipoContasExists(tipoConta.Id))
+            catch (DbUpdateConcurrencyException e) when (!TipoContasExists(tipoConta.Id))
             {
-                return BadRequest(new { Erro = true, Mensagem.ErroPadrao });
+                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
 
@@ -336,7 +346,7 @@ namespace DUDS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarTipoConta(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_conta");
 
             if (!existeRegistro)
             {
@@ -353,14 +363,14 @@ namespace DUDS.Controllers
                     await _context.SaveChangesAsync();
                     return Ok(new { Mensagem.SucessoExcluido });
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return BadRequest(new { Erro = true, Mensagem.ErroExcluir });
+                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
                 }
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 
@@ -368,7 +378,7 @@ namespace DUDS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarTipoConta(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_conta");
 
             if (!existeRegistro)
             {
@@ -383,9 +393,9 @@ namespace DUDS.Controllers
                         await _context.SaveChangesAsync();
                         return Ok(new { Mensagem.SucessoDesativado });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { Erro = true, Mensagem.ErroDesativar });
+                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
                     }
                 }
                 else
@@ -395,7 +405,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest(Mensagem.ExisteRegistroDesativar);
             }
         }
 

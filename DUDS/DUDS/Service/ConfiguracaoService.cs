@@ -84,30 +84,32 @@ namespace DUDS.Service
                     break;
             }
 
-            try
+            if(tableUsed != null)
             {
-                foreach (string item in tableUsed)
+                try
                 {
-                    StringBuilder query = new StringBuilder();
-                    query.AppendLine("SELECT * FROM " + item + " WHERE " + codUsed + id);
-
-                    using (var connection = await SqlHelpers.Standard.ConnectionFactory.ConexaoAsync("db_dahlia_dev"))
+                    foreach (string item in tableUsed)
                     {
-                        retorno = await connection.QueryFirstOrDefaultAsync<int>(query.ToString(), new { item, id }) > 0;
+                        StringBuilder query = new StringBuilder();
+                        query.AppendLine("SELECT * FROM " + item + " WHERE " + codUsed + id);
 
-                        if (retorno)
+                        using (var connection = await SqlHelpers.Standard.ConnectionFactory.ConexaoAsync("db_dahlia_dev"))
                         {
-                            return retorno;
+                            retorno = await connection.QueryFirstOrDefaultAsync<int>(query.ToString(), new { item, id }) > 0;
+
+                            if (retorno)
+                            {
+                                return retorno;
+                            }
                         }
                     }
+
                 }
-
+                catch (Exception e)
+                {
+                    //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+                }
             }
-            catch (Exception e)
-            {
-                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-            }
-
             return retorno;
         }
     }

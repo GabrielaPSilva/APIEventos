@@ -12,11 +12,12 @@ namespace DUDS.Models
     [Index(nameof(CodAdministrador), nameof(CodDistribuidor), Name = "IX_tbl_distribuidor_administrador", IsUnique = true)]
     public partial class TblDistribuidorAdministrador
     {
-        [Key]
         [Column("id")]
         public int Id { get; set; }
+        [Key]
         [Column("cod_distribuidor")]
         public int CodDistribuidor { get; set; }
+        [Key]
         [Column("cod_administrador")]
         public int CodAdministrador { get; set; }
         [Column("cod_distr_adm")]

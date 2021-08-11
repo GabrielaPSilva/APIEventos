@@ -88,7 +88,7 @@ namespace DUDS.Controllers
                         DtCotizacao = line.DtCotizacao,
                         CodDistribuidor = line.CodDistribuidor,
                         OrdemMae = line.OrdemMae,
-                        CodCustodiante = line.CodCustodiante
+                        CodAdministrador = line.CodAdministrador
                     };
 
                     listaOrdemPassivo.Add(itensOrdemPassivo);

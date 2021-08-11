@@ -86,12 +86,6 @@ namespace DUDS.Models
         [ForeignKey(nameof(CdCotista))]
         [InverseProperty(nameof(TblCliente.TblMovimentacaoNota))]
         public virtual TblCliente CdCotistaNavigation { get; set; }
-        [ForeignKey(nameof(CodAdm))]
-        [InverseProperty(nameof(TblAdministrador.TblMovimentacaoNota))]
-        public virtual TblAdministrador CodAdmNavigation { get; set; }
-        [ForeignKey(nameof(CodCustodiante))]
-        [InverseProperty(nameof(TblCustodiante.TblMovimentacaoNota))]
-        public virtual TblCustodiante CodCustodianteNavigation { get; set; }
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblMovimentacaoNota))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
