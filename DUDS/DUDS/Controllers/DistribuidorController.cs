@@ -35,21 +35,21 @@ namespace DUDS.Controllers
 
                 if (distribuidores.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (distribuidores != null)
                 {
-                    return Ok(new { distribuidores, Mensagem.SucessoListar });
+                    return Ok(distribuidores);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -63,16 +63,16 @@ namespace DUDS.Controllers
             {
                 if (tblDistribuidor != null)
                 {
-                    return Ok(new { tblDistribuidor, Mensagem.SucessoCadastrado });
+                    return Ok(tblDistribuidor);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -98,11 +98,11 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetDistribuidor),
                     new { id = itensDistribuidor.Id },
-                    Ok(new { itensDistribuidor, Mensagem.SucessoCadastrado }));
+                    Ok(itensDistribuidor));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -123,21 +123,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { registroDistribuidor, Mensagem.SucessoAtualizado });
+                        return Ok(registroDistribuidor);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!DistribuidorExists(distribuidor.Id))
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -153,23 +153,23 @@ namespace DUDS.Controllers
 
                 if (tblDistribuidor == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblDistribuidor.Remove(tblDistribuidor);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblDistribuidor);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -190,21 +190,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoDesativado });
+                        return Ok(registroDistribuidor);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -224,21 +224,21 @@ namespace DUDS.Controllers
 
                 if (distribuidorAdministradores.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (distribuidorAdministradores != null)
                 {
-                    return Ok(new { distribuidorAdministradores, Mensagem.SucessoListar });
+                    return Ok(distribuidorAdministradores);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -252,16 +252,16 @@ namespace DUDS.Controllers
             {
                 if (tblDistribuidorAdministrador != null)
                 {
-                    return Ok(new { tblDistribuidorAdministrador, Mensagem.SucessoCadastrado });
+                    return Ok(tblDistribuidorAdministrador);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -286,11 +286,11 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetDistribuidorAdministrador),
                     new { id = itensDistribuidorAdmin.Id },
-                    Ok(new { itensDistribuidorAdmin, Mensagem.SucessoCadastrado }));
+                    Ok(itensDistribuidorAdmin));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -306,23 +306,23 @@ namespace DUDS.Controllers
 
                 if (tblDistribuidorAdmin == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblDistribuidorAdministrador.Remove(tblDistribuidorAdmin);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblDistribuidorAdmin);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 

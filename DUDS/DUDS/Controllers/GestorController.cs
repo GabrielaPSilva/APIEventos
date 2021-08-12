@@ -35,21 +35,21 @@ namespace DUDS.Controllers
 
                 if (gestores.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (gestores != null)
                 {
-                    return Ok(new { gestores, Mensagem.SucessoListar });
+                    return Ok(gestores);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -63,16 +63,16 @@ namespace DUDS.Controllers
             {
                 if (tblGestor != null)
                 {
-                    return Ok(new { tblGestor, Mensagem.SucessoCadastrado });
+                    return Ok(tblGestor);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -97,11 +97,11 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetGestor),
                     new { id = itensGestor.Id },
-                    Ok(new { itensGestor, Mensagem.SucessoCadastrado }));
+                    Ok(itensGestor));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -121,21 +121,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { registroGestor, Mensagem.SucessoAtualizado });
+                        return Ok(registroGestor);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!GestorExists(gestor.Id))
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -151,23 +151,23 @@ namespace DUDS.Controllers
 
                 if (tblGestor == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblGestor.Remove(tblGestor);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblGestor);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -188,21 +188,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoDesativado });
+                        return Ok(registroGestor);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 

@@ -34,21 +34,21 @@ namespace DUDS.Controllers
 
                 if (errosPagamento.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (errosPagamento != null)
                 {
-                    return Ok(new { errosPagamento, Mensagem.SucessoListar });
+                    return Ok(errosPagamento);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -62,16 +62,16 @@ namespace DUDS.Controllers
             {
                 if (tblErrosPagamento != null)
                 {
-                    return Ok(new { tblErrosPagamento, Mensagem.SucessoCadastrado });
+                    return Ok(tblErrosPagamento);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -107,11 +107,11 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaErros);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { itensErrosPagamento, Mensagem.SucessoCadastrado });
+                return Ok(itensErrosPagamento);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -123,18 +123,18 @@ namespace DUDS.Controllers
 
             if (tblErrosPagamento == null)
             {
-                return NotFound(Mensagem.ErroTipoInvalido);
+                return NotFound();
             }
 
             try
             {
                 _context.TblErrosPagamento.RemoveRange(tblErrosPagamento);
                 await _context.SaveChangesAsync();
-                return Ok(new { Mensagem.SucessoExcluido });
+                return Ok(tblErrosPagamento);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                return BadRequest(e);
             }
         }
     }

@@ -33,21 +33,21 @@ namespace DUDS.Controllers
 
                 if (movimentacaoNotas.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (movimentacaoNotas != null)
                 {
-                    return Ok(new { movimentacaoNotas, Mensagem.SucessoListar });
+                    return Ok(movimentacaoNotas);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -61,16 +61,16 @@ namespace DUDS.Controllers
             {
                 if (tblMovimentacaoNota != null)
                 {
-                    return Ok(new { tblMovimentacaoNota, Mensagem.SucessoCadastrado });
+                    return Ok(tblMovimentacaoNota);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -120,11 +120,11 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaMovimentacoes);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { itensMovimentacao, Mensagem.SucessoCadastrado });
+                return Ok(itensMovimentacao);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar, e});
+                return BadRequest(e);
             }
         }
 
@@ -136,18 +136,18 @@ namespace DUDS.Controllers
 
             if (tblMovimentacaoNota == null)
             {
-                return NotFound(Mensagem.ErroTipoInvalido);
+                return NotFound();
             }
 
             try
             {
                 _context.TblMovimentacaoNota.RemoveRange(tblMovimentacaoNota);
                 await _context.SaveChangesAsync();
-                return Ok(new { Mensagem.SucessoExcluido });
+                return Ok(tblMovimentacaoNota);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                return BadRequest(e);
             }
         }
     }

@@ -34,21 +34,21 @@ namespace DUDS.Controllers
 
                 if (pgtosServico.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (pgtosServico != null)
                 {
-                    return Ok(new { pgtosServico, Mensagem.SucessoListar });
+                    return Ok(pgtosServico);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -62,16 +62,16 @@ namespace DUDS.Controllers
             {
                 if (tblPagamentoServico != null)
                 {
-                    return Ok(new { tblPagamentoServico, Mensagem.SucessoCadastrado });
+                    return Ok(tblPagamentoServico);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -103,11 +103,11 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaPagamentosServico);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { itensPagamentoServico, Mensagem.SucessoCadastrado });
+                return Ok(itensPagamentoServico);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -119,18 +119,18 @@ namespace DUDS.Controllers
 
             if (tblPagamentoServico == null)
             {
-                return NotFound(Mensagem.ErroTipoInvalido);
+                return NotFound();
             }
 
             try
             {
                 _context.TblPagamentoServico.RemoveRange(tblPagamentoServico);
                 await _context.SaveChangesAsync();
-                return Ok(new { Mensagem.SucessoExcluido });
+                return Ok(tblPagamentoServico);
             } 
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                return BadRequest(e);
             }
         }
         #endregion
@@ -146,21 +146,21 @@ namespace DUDS.Controllers
 
                 if (pgtosAdmPfee.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (pgtosAdmPfee != null)
                 {
-                    return Ok(new { pgtosAdmPfee, Mensagem.SucessoListar });
+                    return Ok(pgtosAdmPfee);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -174,16 +174,16 @@ namespace DUDS.Controllers
             {
                 if (tblPgtoAdmPfee != null)
                 {
-                    return Ok(new { tblPgtoAdmPfee, Mensagem.SucessoCadastrado });
+                    return Ok(tblPgtoAdmPfee);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -215,11 +215,11 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaPagamentosAdminPfee);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { itensPagamentoAdminPfee, Mensagem.SucessoCadastrado });
+                return Ok(itensPagamentoAdminPfee);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -231,18 +231,18 @@ namespace DUDS.Controllers
 
             if (tblPagamentoAdminPfee == null)
             {
-                return NotFound(Mensagem.ErroTipoInvalido);
+                return NotFound();
             }
 
             try
             {
                 _context.TblPgtoAdmPfee.RemoveRange(tblPagamentoAdminPfee);
                 await _context.SaveChangesAsync();
-                return Ok(new { Mensagem.SucessoExcluido });
+                return Ok(tblPagamentoAdminPfee);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                return BadRequest(e);
             }
         }
         #endregion

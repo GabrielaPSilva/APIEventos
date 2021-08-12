@@ -35,21 +35,21 @@ namespace DUDS.Controllers
 
                 if (custodiantes.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (custodiantes != null)
                 {
-                    return Ok(new { custodiantes, Mensagem.SucessoListar });
+                    return Ok(custodiantes);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -63,16 +63,16 @@ namespace DUDS.Controllers
             {
                 if (tblCustodiante != null)
                 {
-                    return Ok(new { tblCustodiante, Mensagem.SucessoCadastrado });
+                    return Ok(tblCustodiante);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -96,11 +96,11 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetCustodiante),
                     new { id = itensCustodiante.Id },
-                   Ok(new { itensCustodiante, Mensagem.SucessoCadastrado }));
+                   Ok(itensCustodiante));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -120,21 +120,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { registroCustodiante, Mensagem.SucessoAtualizado });
+                        return Ok(registroCustodiante);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!CustodianteExists(custodiante.Id))
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -150,23 +150,23 @@ namespace DUDS.Controllers
 
                 if (tblCustodiante == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblCustodiante.Remove(tblCustodiante);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblCustodiante);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -187,21 +187,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoDesativado });
+                        return Ok(registroCustodiante);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 

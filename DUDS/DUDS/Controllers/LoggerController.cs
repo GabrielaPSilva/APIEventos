@@ -30,17 +30,16 @@ namespace DUDS.Controllers
             {
                 if (tblLogErros == null)
                 {
-                    return Ok(new { tblLogErros, Mensagem.SucessoCadastrado });
+                    return Ok(tblLogErros);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -67,11 +66,11 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetLogErros),
                     new { id = itensLogger.Id },
-                     Ok(new { itensLogger, Mensagem.SucessoCadastrado }));
+                     Ok(itensLogger));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
     }

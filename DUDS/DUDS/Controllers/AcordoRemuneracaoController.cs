@@ -35,25 +35,21 @@ namespace DUDS.Controllers
 
                 if (acordosRemuneracao.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (acordosRemuneracao != null)
                 {
-                    return Ok(new { acordosRemuneracao, Mensagem.SucessoListar });
+                    return Ok(acordosRemuneracao);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new
-                {
-                    Erro = e,
-                    Mensagem.ErroPadrao
-                });
+                return NotFound(e);
             }
         }
 
@@ -67,21 +63,17 @@ namespace DUDS.Controllers
             {
                 if (tblAcordoRemuneracao != null)
                 {
-                    return Ok(new { tblAcordoRemuneracao, Mensagem.SucessoCadastrado });
+                    return Ok(tblAcordoRemuneracao);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
 
             }
             catch (InvalidOperationException e)
             {
-                return BadRequest(new
-                {
-                    Erro = e,
-                    Mensagem.ErroPadrao
-                });
+                return BadRequest(e);
             }
         }
 
@@ -116,11 +108,11 @@ namespace DUDS.Controllers
                            tipo_taxa = itensAcordoRemuneracao.TipoTaxa,
                            tipo_range = itensAcordoRemuneracao.TipoRange
                        },
-                   Ok(new { itensAcordoRemuneracao, Mensagem.SucessoCadastrado }));
+                   Ok(itensAcordoRemuneracao));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -177,23 +169,23 @@ namespace DUDS.Controllers
 
                 if (tblAcordoRemuneracao == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblAcordoRemuneracao.Remove(tblAcordoRemuneracao);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblAcordoRemuneracao);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -214,21 +206,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoDesativado });
+                        return Ok(registroAcordoRemuneracao);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 

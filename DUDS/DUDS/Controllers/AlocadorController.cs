@@ -35,21 +35,21 @@ namespace DUDS.Controllers
 
                 if (alocadores.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (alocadores != null)
                 {
-                    return Ok(new { alocadores, Mensagem.SucessoListar });
+                    return Ok(alocadores);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -63,16 +63,16 @@ namespace DUDS.Controllers
             {
                 if (tblAlocador != null)
                 {
-                    return Ok(new { tblAlocador, Mensagem.SucessoCadastrado });
+                    return Ok(tblAlocador);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -99,11 +99,11 @@ namespace DUDS.Controllers
                             cod_investidor = itensAlocador.CodInvestidor,
                             cod_contrato_distribuicao = itensAlocador.CodContratoDistribuicao
                         },
-                    Ok(new { itensAlocador, Mensagem.SucessoCadastrado }));
+                    Ok(itensAlocador));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -125,21 +125,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { registroAlocador, Mensagem.SucessoAtualizado });
+                        return Ok(registroAlocador);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!AlocadorExists(alocador.Id))
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -155,23 +155,23 @@ namespace DUDS.Controllers
 
                 if (tblAlocador == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblAlocador.Remove(tblAlocador);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblAlocador);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 

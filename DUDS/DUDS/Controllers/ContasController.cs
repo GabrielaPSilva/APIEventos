@@ -36,21 +36,21 @@ namespace DUDS.Controllers
 
                 if (contas.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (contas != null)
                 {
-                    return Ok(new { contas, Mensagem.SucessoListar });
+                    return Ok(contas);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -64,16 +64,16 @@ namespace DUDS.Controllers
             {
                 if (tblContas != null)
                 {
-                    return Ok(new { tblContas, Mensagem.SucessoCadastrado });
+                    return Ok(tblContas);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -103,11 +103,11 @@ namespace DUDS.Controllers
                         cod_fundo = itensConta.CodFundo,
                         cod_tipo_conta = itensConta.CodTipoConta
                     },
-                    Ok(new { itensConta, Mensagem.SucessoCadastrado }));
+                    Ok(itensConta));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -130,21 +130,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { registroConta, Mensagem.SucessoAtualizado });
+                        return Ok(registroConta);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!ContasExists(conta.Id))
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -160,23 +160,23 @@ namespace DUDS.Controllers
 
                 if (tblConta == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblContas.Remove(tblConta);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblConta);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -197,21 +197,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoDesativado });
+                        return Ok(registroConta);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -232,21 +232,21 @@ namespace DUDS.Controllers
 
                 if (tiposConta.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (tiposConta != null)
                 {
-                    return Ok(new { tiposConta, Mensagem.SucessoListar });
+                    return Ok(tiposConta);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -260,16 +260,16 @@ namespace DUDS.Controllers
             {
                 if (tblContas != null)
                 {
-                    return Ok(new { tblContas, Mensagem.SucessoCadastrado });
+                    return Ok(tblContas);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -296,11 +296,11 @@ namespace DUDS.Controllers
                     {
                         Id = itensTipoConta.Id,
                     },
-                     Ok(new { itensTipoConta, Mensagem.SucessoCadastrado }));
+                     Ok(itensTipoConta));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -320,21 +320,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { registroTipoConta, Mensagem.SucessoAtualizado });
+                        return Ok(registroTipoConta);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!TipoContasExists(tipoConta.Id))
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -350,23 +350,23 @@ namespace DUDS.Controllers
 
                 if (tblTipoConta == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblTipoConta.Remove(tblTipoConta);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblTipoConta);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -387,21 +387,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoDesativado });
+                        return Ok(registroTipoConta);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 

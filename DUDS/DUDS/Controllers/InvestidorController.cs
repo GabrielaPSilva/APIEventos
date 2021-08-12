@@ -36,21 +36,21 @@ namespace DUDS.Controllers
 
                 if (investidores.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (investidores != null)
                 {
-                    return Ok(new { investidores, Mensagem.SucessoListar });
+                    return Ok(investidores);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -64,16 +64,16 @@ namespace DUDS.Controllers
             {
                 if (tblInvestidor != null)
                 {
-                    return Ok(new { tblInvestidor, Mensagem.SucessoCadastrado });
+                    return Ok(tblInvestidor);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -98,11 +98,11 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetInvestidor),
                     new { id = itensInvestidor.Id },
-                     Ok(new { itensInvestidor, Mensagem.SucessoCadastrado }));
+                     Ok(itensInvestidor));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -132,11 +132,11 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaInvestidores);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { itensInvestidor, Mensagem.SucessoCadastrado });
+                return Ok(itensInvestidor);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar, e });
+                return BadRequest(e);
             }
         }
 
@@ -159,21 +159,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { registroInvestidor, Mensagem.SucessoAtualizado });
+                        return Ok(registroInvestidor);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!InvestidorExists(investidor.Id))
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -189,23 +189,23 @@ namespace DUDS.Controllers
 
                 if (tblInvestidor == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblInvestidor.Remove(tblInvestidor);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblInvestidor);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(new { Erro = true, Mensagem.ExisteRegistroDesativar });
+                return BadRequest();
             }
         }
 
@@ -226,21 +226,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoDesativado });
+                        return Ok(registroInvestidor);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -260,21 +260,21 @@ namespace DUDS.Controllers
 
                 if (investidorDistribuidores.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (investidorDistribuidores != null)
                 {
-                    return Ok(new { investidorDistribuidores, Mensagem.SucessoListar });
+                    return Ok(investidorDistribuidores);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -288,16 +288,16 @@ namespace DUDS.Controllers
             {
                 if (tblInvestidorDistribuidor != null)
                 {
-                    return Ok(new { tblInvestidorDistribuidor, Mensagem.SucessoCadastrado });
+                    return Ok(tblInvestidorDistribuidor);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -323,11 +323,11 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetInvestidor),
                     new { id = itensInvestidorDistribuidor.Id },
-                    Ok(new { itensInvestidorDistribuidor, Mensagem.SucessoCadastrado }));
+                    Ok(itensInvestidorDistribuidor));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -358,11 +358,11 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaInvestidorDIstribuidores);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { itensInvestidorDistribuidor, Mensagem.SucessoCadastrado });
+                return Ok(itensInvestidorDistribuidor);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar, e });
+                return BadRequest(e);
             }
         }
 
@@ -378,23 +378,23 @@ namespace DUDS.Controllers
 
                 if (tblInvestidorDistribuidor == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblInvestidorDistribuidor.Remove(tblInvestidorDistribuidor);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblInvestidorDistribuidor);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 

@@ -33,21 +33,21 @@ namespace DUDS.Controllers
 
                 if (ordemPassivos.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (ordemPassivos != null)
                 {
-                    return Ok(new { ordemPassivos, Mensagem.SucessoListar });
+                    return Ok(ordemPassivos);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -61,16 +61,16 @@ namespace DUDS.Controllers
             {
                 if (tblOrdemPassivo != null)
                 {
-                    return Ok(new { tblOrdemPassivo, Mensagem.SucessoCadastrado });
+                    return Ok(tblOrdemPassivo);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -110,11 +110,11 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaOrdemPassivo);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { itensOrdemPassivo, Mensagem.SucessoCadastrado });
+                return Ok(itensOrdemPassivo);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -126,18 +126,18 @@ namespace DUDS.Controllers
 
             if (tblOrdemPassivo == null)
             {
-                return NotFound(Mensagem.ErroTipoInvalido);
+                return NotFound();
             }
 
             try
             {
                 _context.TblOrdemPassivo.RemoveRange(tblOrdemPassivo);
                 await _context.SaveChangesAsync();
-                return Ok(new { Mensagem.SucessoExcluido });
+                return Ok(tblOrdemPassivo);
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                return BadRequest(e);
             }
         }
     }

@@ -35,21 +35,21 @@ namespace DUDS.Controllers
 
                 if (contratos.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (contratos != null)
                 {
-                    return Ok(new { contratos, Mensagem.SucessoListar });
+                    return Ok(contratos);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -63,16 +63,16 @@ namespace DUDS.Controllers
             {
                 if (tblContrato != null)
                 {
-                    return Ok(new { tblContrato, Mensagem.SucessoCadastrado });
+                    return Ok(tblContrato);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -104,11 +104,11 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetContrato),
                     new { id = itensContrato.Id },
-                      Ok(new { itensContrato, Mensagem.SucessoCadastrado }));
+                      Ok(itensContrato));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -135,21 +135,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { registroContrato, Mensagem.SucessoAtualizado });
+                        return Ok(registroContrato);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!ContratoExists(contrato.Id))
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -165,23 +165,23 @@ namespace DUDS.Controllers
 
                 if (tblContrato == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblContrato.Remove(tblContrato);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblContrato);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -202,21 +202,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { Mensagem.SucessoDesativado });
+                        return Ok(registroContrato);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroDesativar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
@@ -236,21 +236,21 @@ namespace DUDS.Controllers
 
                 if (contratosDistribuicao.Count() == 0)
                 {
-                    return BadRequest(Mensagem.ErroListar);
+                    return NotFound();
                 }
 
                 if (contratosDistribuicao != null)
                 {
-                    return Ok(new { contratosDistribuicao, Mensagem.SucessoListar });
+                    return Ok(contratosDistribuicao);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -264,16 +264,16 @@ namespace DUDS.Controllers
             {
                 if (tblContratoDistribuicao != null)
                 {
-                    return Ok(new { tblContratoDistribuicao, Mensagem.SucessoCadastrado });
+                    return Ok(tblContratoDistribuicao);
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
+                return BadRequest(e);
             }
         }
 
@@ -297,11 +297,11 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetContratoDistribuicao),
                     new { id = itensContratoDistribuicao.Id },
-                    Ok(new { itensContratoDistribuicao, Mensagem.SucessoCadastrado }));
+                    Ok(itensContratoDistribuicao));
             }
             catch (Exception e)
             {
-                return BadRequest(new { Erro = e, Mensagem.ErroCadastrar });
+                return BadRequest(e);
             }
         }
 
@@ -321,21 +321,21 @@ namespace DUDS.Controllers
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(new { registroContratoDistribuicao, Mensagem.SucessoAtualizado });
+                        return Ok(registroContratoDistribuicao);
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
+                        return BadRequest(e);
                     }
                 }
                 else
                 {
-                    return BadRequest(Mensagem.ErroTipoInvalido);
+                    return BadRequest();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!ContratoDistribuicaoExists(contratoDistribuicao.Id))
             {
-                return NotFound(new { Erro = e, Mensagem.ErroPadrao });
+                return NotFound(e);
             }
         }
 
@@ -351,23 +351,23 @@ namespace DUDS.Controllers
 
                 if (tblContratoDistribuicao == null)
                 {
-                    return NotFound(Mensagem.ErroTipoInvalido);
+                    return NotFound();
                 }
 
                 try
                 {
                     _context.TblContratoDistribuicao.Remove(tblContratoDistribuicao);
                     await _context.SaveChangesAsync();
-                    return Ok(new { Mensagem.SucessoExcluido });
+                    return Ok(tblContratoDistribuicao);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(new { Erro = e, Mensagem.ErroExcluir });
+                    return BadRequest(e);
                 }
             }
             else
             {
-                return BadRequest(Mensagem.ExisteRegistroDesativar);
+                return BadRequest();
             }
         }
 
