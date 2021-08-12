@@ -48,7 +48,6 @@ namespace DUDS.Controllers
             }
             catch (InvalidOperationException e)
             {
-                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
                 return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
@@ -72,7 +71,6 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
                 return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
@@ -162,7 +160,6 @@ namespace DUDS.Controllers
             }
             catch (InvalidOperationException e)
             {
-                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
                 return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
@@ -186,7 +183,6 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
                 return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }

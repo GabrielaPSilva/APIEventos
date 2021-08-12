@@ -77,7 +77,6 @@ namespace DUDS.Controllers
             }
             catch (InvalidOperationException e)
             {
-                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
                 return BadRequest(new
                 {
                     Erro = e,

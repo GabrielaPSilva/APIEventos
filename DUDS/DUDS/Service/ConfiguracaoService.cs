@@ -107,7 +107,7 @@ namespace DUDS.Service
                 }
                 catch (Exception e)
                 {
-                    //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
+
                 }
             }
             return retorno;

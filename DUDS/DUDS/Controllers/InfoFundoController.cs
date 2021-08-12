@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 using Microsoft.AspNetCore.Authorization;
-using Logger.Enum;
-using Logger;
 using Microsoft.Extensions.Configuration;
 using DUDS.Service.Interface;
 
@@ -65,7 +63,6 @@ namespace DUDS.Controllers
             }
             catch (InvalidOperationException e)
             {
-                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
                 return NotFound(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
@@ -89,7 +86,6 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                //await new Logger.Logger().SalvarAsync(Mensagem.LogDesativarRelatorio, e, Sistema);
                 return BadRequest(new { Erro = e, Mensagem.ErroPadrao });
             }
         }
