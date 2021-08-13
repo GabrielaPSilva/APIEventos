@@ -285,7 +285,10 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetDistribuidorAdministrador),
-                    new { id = itensDistribuidorAdmin.Id },
+                    new {
+                            cod_distribuidor = itensDistribuidorAdmin.CodDistribuidor,
+                            cod_administrador = itensDistribuidorAdmin.CodAdministrador
+                        },
                     Ok(itensDistribuidorAdmin));
             }
             catch (Exception e)
