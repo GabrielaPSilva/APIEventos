@@ -278,11 +278,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Investidor/GetInvestidorDistribuidor/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(int id)
+        // GET: api/Investidor/GetInvestidorDistribuidor/cod_invest_custodia/cod_investidor/cod_distribuidor/cod_administrador
+        [HttpGet("{cod_invest_custodia}/{cod_investidor}/{cod_distribuidor}/{cod_administrador}")]
+        public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(string cod_invest_custodia, int cod_investidor, int cod_distribuidor, int cod_administrador)
         {
-            TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(id);
+            TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(cod_invest_custodia, cod_investidor, cod_distribuidor, cod_administrador);
 
             try
             {
@@ -322,7 +322,12 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetInvestidor),
-                    new { id = itensInvestidorDistribuidor.Id },
+                    new {
+                            cod_invest_custodia = itensInvestidorDistribuidor.CodInvestCustodia,
+                            cod_investidor = itensInvestidorDistribuidor.CodInvestidor,
+                            cod_distribuidor = itensInvestidorDistribuidor.CodDistribuidor,
+                            cod_administrador = itensInvestidorDistribuidor.CodAdministrador
+                        },
                     Ok(itensInvestidorDistribuidor));
             }
             catch (Exception e)

@@ -500,6 +500,8 @@ namespace DUDS.Data
 
                 entity.Property(e => e.CodGestor).HasComment("Gestor do fundo investidor");
 
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.NomeCliente).IsUnicode(false);
 
                 entity.Property(e => e.TipoCliente).IsUnicode(false);

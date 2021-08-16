@@ -52,11 +52,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Pagamentos/GetPagamentoServico/cod_fundo
-        [HttpGet("{cod_fundo}")]
-        public async Task<ActionResult<TblPagamentoServico>> GetPagamentoServico(int cod_fundo)
+        // GET: api/Pagamentos/GetPagamentoServico/competencia/cod_fundo
+        [HttpGet("{competencia}/{cod_fundo}")]
+        public async Task<ActionResult<TblPagamentoServico>> GetPagamentoServico(string competencia, int cod_fundo)
         {
-            TblPagamentoServico tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(cod_fundo);
+            TblPagamentoServico tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(competencia, cod_fundo);
 
             try
             {
@@ -164,11 +164,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Pagamentos/GetPgtoAdmPfee/cod_fundo
-        [HttpGet("{cod_fundo}")]
-        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfee(int cod_fundo)
+        // GET: api/Pagamentos/GetPgtoAdmPfee/competencia/cod_investidor/cod_fundo
+        [HttpGet("{competencia}/{cod_investidor}/{cod_fundo}")]
+        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfee(string competencia, int cod_investidor, int cod_fundo)
         {
-            TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(cod_fundo);
+            TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(competencia, cod_investidor, cod_fundo);
             
             try
             {

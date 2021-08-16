@@ -116,47 +116,6 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/AcordoRemuneracao/EditarAcordoRemuneracao/id
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> EditarAcordoRemuneracao(int id, AcordoRemuneracaoModel acordoRemuneracao)
-        //{
-        //    try
-        //    {
-        //        TblAcordoRemuneracao registroAcordoRemuneracao  = _context.TblAcordoRemuneracao.Where(c => c.Id == id).FirstOrDefault();
-
-        //        if (registroAcordoRemuneracao != null)
-        //        {
-        //            registroAcordoRemuneracao.CodContratoDistribuicao = acordoRemuneracao.CodContratoDistribuicao == 0 ? registroAcordoRemuneracao.CodContratoDistribuicao : acordoRemuneracao.CodContratoDistribuicao;
-        //            registroAcordoRemuneracao.Inicio = acordoRemuneracao.Inicio == 0 ? registroAcordoRemuneracao.Inicio : acordoRemuneracao.Inicio;
-        //            registroAcordoRemuneracao.Fim = acordoRemuneracao.Fim == 0 ? registroAcordoRemuneracao.Fim : acordoRemuneracao.Fim;
-        //            registroAcordoRemuneracao.Percentual = acordoRemuneracao.Percentual == 0 ? registroAcordoRemuneracao.Percentual : acordoRemuneracao.Percentual;
-        //            registroAcordoRemuneracao.TipoTaxa = acordoRemuneracao.TipoTaxa == null ? registroAcordoRemuneracao.TipoTaxa : acordoRemuneracao.TipoTaxa;
-        //            registroAcordoRemuneracao.TipoRange = acordoRemuneracao.TipoRange == null ? registroAcordoRemuneracao.TipoRange : acordoRemuneracao.TipoRange;
-        //            registroAcordoRemuneracao.DataVigenciaInicio = acordoRemuneracao.DataVigenciaInicio == null ? registroAcordoRemuneracao.DataVigenciaInicio : acordoRemuneracao.DataVigenciaInicio;
-        //            registroAcordoRemuneracao.DataVigenciaFim = acordoRemuneracao.DataVigenciaFim == null ? registroAcordoRemuneracao.DataVigenciaFim : acordoRemuneracao.DataVigenciaFim;
-
-        //            try
-        //            {
-        //                await _context.SaveChangesAsync();
-        //                return Ok(new { Mensagem.SucessoAtualizado });
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                return BadRequest(new { Erro = e, Mensagem.ErroAtualizar });
-        //            }
-
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(Mensagem.ErroTipoInvalido);
-        //        }
-        //    }
-        //    catch (DbUpdateConcurrencyException e) when (!AcordoRemuneracaoExists(acordoRemuneracao.Id))
-        //    {
-        //        return NotFound(new { Erro = e, Mensagem.ErroPadrao });
-        //    }
-        //}
-
         // DELETE: api/AcordoRemuneracao/DeletarAcordoRemuneracao/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAcordoRemuneracao(int id)

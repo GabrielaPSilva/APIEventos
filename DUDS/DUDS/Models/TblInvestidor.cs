@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_investidor")]
+    [Index(nameof(Cnpj), nameof(NomeCliente), Name = "IX_tbl_investidor", IsUnique = true)]
+    [Index(nameof(Cnpj), Name = "IX_tbl_investidor_cnpj")]
+    [Index(nameof(NomeCliente), Name = "IX_tbl_investidor_nome_cliente")]
     public partial class TblInvestidor
     {
         public TblInvestidor()
