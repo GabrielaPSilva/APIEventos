@@ -87,7 +87,8 @@ namespace DUDS.Controllers
                 Cnpj = tblInvestidorModel.Cnpj,
                 TipoCliente = tblInvestidorModel.TipoCliente,
                 CodAdministrador = tblInvestidorModel.CodAdministrador,
-                CodGestor = tblInvestidorModel.CodGestor
+                CodGestor = tblInvestidorModel.CodGestor,
+                UsuarioModificacao = tblInvestidorModel.UsuarioModificacao
             };
 
             try

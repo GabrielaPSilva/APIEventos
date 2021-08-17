@@ -117,7 +117,6 @@ namespace DUDS.Controllers
                 DiasLiquidacaoResgate = tblFundoModel.DiasLiquidacaoResgate,
                 ContagemDiasLiquidacaoResgate = tblFundoModel.ContagemDiasLiquidacaoResgate,
                 Mnemonico = tblFundoModel.Mnemonico,
-                UsuarioModificacao = tblFundoModel.UsuarioModificacao,
                 NomeReduzido = tblFundoModel.NomeReduzido,
                 ClassificacaoAnbima = tblFundoModel.ClassificacaoAnbima,
                 ClassificacaoCvm = tblFundoModel.ClassificacaoCvm,
@@ -128,7 +127,8 @@ namespace DUDS.Controllers
                 AtivoCetip = tblFundoModel.AtivoCetip,
                 Isin = tblFundoModel.Isin,
                 NumeroGiin = tblFundoModel.NumeroGiin,
-                CdFundoAdm = tblFundoModel.CdFundoAdm
+                CdFundoAdm = tblFundoModel.CdFundoAdm,
+                UsuarioModificacao = tblFundoModel.UsuarioModificacao
             };
 
             try
@@ -179,7 +179,6 @@ namespace DUDS.Controllers
                     registroFundo.DiasLiquidacaoResgate = (fundo.DiasLiquidacaoResgate == null || fundo.DiasLiquidacaoResgate == 0) ? registroFundo.DiasLiquidacaoResgate : fundo.DiasLiquidacaoResgate;
                     registroFundo.ContagemDiasLiquidacaoResgate = fundo.ContagemDiasLiquidacaoResgate == null ? registroFundo.ContagemDiasLiquidacaoResgate : fundo.ContagemDiasLiquidacaoResgate;
                     registroFundo.Mnemonico = fundo.Mnemonico == null ? registroFundo.Mnemonico : fundo.Mnemonico;
-                    registroFundo.UsuarioModificacao = fundo.UsuarioModificacao == null ? registroFundo.UsuarioModificacao : fundo.UsuarioModificacao;
                     registroFundo.NomeReduzido = fundo.NomeReduzido == null ? registroFundo.NomeReduzido : fundo.NomeReduzido;
                     registroFundo.ClassificacaoAnbima = fundo.ClassificacaoAnbima == null ? registroFundo.ClassificacaoAnbima : fundo.ClassificacaoAnbima;
                     registroFundo.ClassificacaoCvm = fundo.ClassificacaoCvm == null ? registroFundo.ClassificacaoCvm : fundo.ClassificacaoCvm;
