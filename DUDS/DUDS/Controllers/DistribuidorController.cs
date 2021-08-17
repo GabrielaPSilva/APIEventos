@@ -85,9 +85,7 @@ namespace DUDS.Controllers
                 NomeDistribuidor = tblDistribuidorModel.NomeDistribuidor,
                 Cnpj = tblDistribuidorModel.Cnpj,
                 ClassificacaoDistribuidor = tblDistribuidorModel.ClassificacaoDistribuidor,
-                DataModificacao = tblDistribuidorModel.DataModificacao,
-                UsuarioModificacao = tblDistribuidorModel.UsuarioModificacao,
-                Ativo = tblDistribuidorModel.Ativo,
+                UsuarioModificacao = tblDistribuidorModel.UsuarioModificacao
             };
 
             try
@@ -274,8 +272,7 @@ namespace DUDS.Controllers
                 CodAdministrador = tblDistribuidorAdminModel.CodAdministrador,
                 CodDistrAdm = tblDistribuidorAdminModel.CodDistrAdm,
                 CodDistribuidor = tblDistribuidorAdminModel.CodDistribuidor,
-                UsuarioModificacao = tblDistribuidorAdminModel.UsuarioModificacao,
-                DataModificacao = tblDistribuidorAdminModel.DataModificacao
+                UsuarioModificacao = tblDistribuidorAdminModel.UsuarioModificacao
             };
 
             try

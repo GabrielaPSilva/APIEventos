@@ -91,8 +91,7 @@ namespace DUDS.Controllers
                 TipoRange = tblAcordoRemuneracaoModel.TipoRange,
                 DataVigenciaInicio = tblAcordoRemuneracaoModel.DataVigenciaInicio,
                 DataVigenciaFim = tblAcordoRemuneracaoModel.DataVigenciaFim,
-                UsuarioModificacao = tblAcordoRemuneracaoModel.UsuarioModificacao,
-                DataModificacao = tblAcordoRemuneracaoModel.DataModificacao
+                UsuarioModificacao = tblAcordoRemuneracaoModel.UsuarioModificacao
             };
 
             try

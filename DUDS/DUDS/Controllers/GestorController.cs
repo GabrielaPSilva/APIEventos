@@ -84,9 +84,7 @@ namespace DUDS.Controllers
             {
                 NomeGestor = tblGestorModel.NomeGestor,
                 Cnpj = tblGestorModel.Cnpj,
-                DataModificacao = tblGestorModel.DataModificacao,
-                UsuarioModificacao = tblGestorModel.UsuarioModificacao,
-                Ativo = tblGestorModel.Ativo
+                UsuarioModificacao = tblGestorModel.UsuarioModificacao
             };
 
             try

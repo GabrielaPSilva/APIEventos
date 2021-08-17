@@ -128,8 +128,7 @@ namespace DUDS.Controllers
                 AtivoCetip = tblFundoModel.AtivoCetip,
                 Isin = tblFundoModel.Isin,
                 NumeroGiin = tblFundoModel.NumeroGiin,
-                CdFundoAdm = tblFundoModel.CdFundoAdm,
-                Ativo = tblFundoModel.Ativo
+                CdFundoAdm = tblFundoModel.CdFundoAdm
             };
 
             try

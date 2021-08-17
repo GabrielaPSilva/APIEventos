@@ -91,9 +91,7 @@ namespace DUDS.Controllers
                 ClausulaRetroatividade = tblContratoModel.ClausulaRetroatividade,
                 DataRetroatividade = tblContratoModel.DataRetroatividade,
                 DataAssinatura = tblContratoModel.DataAssinatura,
-                Ativo = tblContratoModel.Ativo,
-                UsuarioModificacao = tblContratoModel.UsuarioModificacao,
-                DataModificacao = tblContratoModel.DataModificacao
+                UsuarioModificacao = tblContratoModel.UsuarioModificacao
             };
 
             try
@@ -285,8 +283,7 @@ namespace DUDS.Controllers
             {
                 CodContrato = tblContratoDistribuicaoModel.CodContrato,
                 CodFundo = tblContratoDistribuicaoModel.CodFundo,
-                UsuarioModificacao = tblContratoDistribuicaoModel.UsuarioModificacao,
-                DataModificacao = tblContratoDistribuicaoModel.DataModificacao
+                UsuarioModificacao = tblContratoDistribuicaoModel.UsuarioModificacao
             };
 
             try

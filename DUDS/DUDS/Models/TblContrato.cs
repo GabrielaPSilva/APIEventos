@@ -54,6 +54,9 @@ namespace DUDS.Models
         public string UsuarioModificacao { get; set; }
         [Column("data_modificacao", TypeName = "datetime")]
         public DateTime? DataModificacao { get; set; }
+        [Column("parceiro")]
+        [StringLength(100)]
+        public string Parceiro { get; set; }
 
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblContrato))]

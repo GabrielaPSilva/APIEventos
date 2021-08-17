@@ -84,9 +84,7 @@ namespace DUDS.Controllers
             {
                 NomeAdministrador = tblAdministradorModel.NomeAdministrador,
                 Cnpj = tblAdministradorModel.Cnpj,
-                DataModificacao = tblAdministradorModel.DataModificacao,
-                UsuarioModificacao = tblAdministradorModel.UsuarioModificacao,
-                Ativo = tblAdministradorModel.Ativo
+                UsuarioModificacao = tblAdministradorModel.UsuarioModificacao
             };
 
             try

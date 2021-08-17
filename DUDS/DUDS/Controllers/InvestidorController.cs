@@ -309,10 +309,9 @@ namespace DUDS.Controllers
             {
                 CodAdministrador = tblInvestidorDistribuidorModel.CodAdministrador,
                 CodDistribuidor = tblInvestidorDistribuidorModel.CodDistribuidor,
-                CodInvestCustodia = tblInvestidorDistribuidorModel.CodInvestCustodia,
+                CodInvestAdministrador = tblInvestidorDistribuidorModel.CodInvestAdministrador,
                 CodInvestidor = tblInvestidorDistribuidorModel.CodInvestidor,
-                UsuarioModificacao = tblInvestidorDistribuidorModel.UsuarioModificacao,
-                DataModificacao = tblInvestidorDistribuidorModel.DataModificacao
+                UsuarioModificacao = tblInvestidorDistribuidorModel.UsuarioModificacao
             };
 
             try
@@ -323,7 +322,7 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetInvestidor),
                     new {
-                            cod_invest_custodia = itensInvestidorDistribuidor.CodInvestCustodia,
+                            cod_invest_administrador = itensInvestidorDistribuidor.CodInvestAdministrador,
                             cod_investidor = itensInvestidorDistribuidor.CodInvestidor,
                             cod_distribuidor = itensInvestidorDistribuidor.CodDistribuidor,
                             cod_administrador = itensInvestidorDistribuidor.CodAdministrador
@@ -351,10 +350,9 @@ namespace DUDS.Controllers
                     {
                         CodAdministrador = line.CodAdministrador,
                         CodDistribuidor = line.CodDistribuidor,
-                        CodInvestCustodia = line.CodInvestCustodia,
+                        CodInvestAdministrador = line.CodInvestAdministrador,
                         CodInvestidor = line.CodInvestidor,
-                        UsuarioModificacao = line.UsuarioModificacao,
-                        DataModificacao = line.DataModificacao
+                        UsuarioModificacao = line.UsuarioModificacao
                     };
 
                     listaInvestidorDIstribuidores.Add(itensInvestidorDistribuidor);

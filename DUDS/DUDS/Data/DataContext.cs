@@ -302,6 +302,8 @@ namespace DUDS.Data
 
                 entity.Property(e => e.IdDocusign).IsUnicode(false);
 
+                entity.Property(e => e.Parceiro).IsUnicode(false);
+
                 entity.Property(e => e.Status).IsUnicode(false);
 
                 entity.Property(e => e.TipoContrato).IsUnicode(false);
@@ -507,23 +509,13 @@ namespace DUDS.Data
                 entity.Property(e => e.TipoCliente).IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
-
-                entity.HasOne(d => d.CodAdministradorNavigation)
-                    .WithMany(p => p.TblInvestidor)
-                    .HasForeignKey(d => d.CodAdministrador)
-                    .HasConstraintName("FK_Investidor_Administrador");
-
-                entity.HasOne(d => d.CodGestorNavigation)
-                    .WithMany(p => p.TblInvestidor)
-                    .HasForeignKey(d => d.CodGestor)
-                    .HasConstraintName("FK_Investidor_Gestor");
             });
 
             modelBuilder.Entity<TblInvestidorDistribuidor>(entity =>
             {
-                entity.HasKey(e => new { e.CodInvestCustodia, e.CodInvestidor, e.CodDistribuidor, e.CodAdministrador });
+                entity.HasKey(e => new { e.CodInvestAdministrador, e.CodInvestidor, e.CodDistribuidor, e.CodAdministrador });
 
-                entity.Property(e => e.CodInvestCustodia).IsUnicode(false);
+                entity.Property(e => e.CodInvestAdministrador).IsUnicode(false);
 
                 entity.Property(e => e.CodAdministrador).HasComment("Administrador na qual o investidor possui o valor do campo cod_invest_custodia baseado no Distribuidor");
 

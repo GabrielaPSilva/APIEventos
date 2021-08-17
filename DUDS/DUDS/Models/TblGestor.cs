@@ -15,7 +15,6 @@ namespace DUDS.Models
         public TblGestor()
         {
             TblFundo = new HashSet<TblFundo>();
-            TblInvestidor = new HashSet<TblInvestidor>();
             TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
         }
 
@@ -41,8 +40,6 @@ namespace DUDS.Models
 
         [InverseProperty("CodGestorNavigation")]
         public virtual ICollection<TblFundo> TblFundo { get; set; }
-        [InverseProperty("CodGestorNavigation")]
-        public virtual ICollection<TblInvestidor> TblInvestidor { get; set; }
         [InverseProperty("CodGestorNavigation")]
         public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
     }

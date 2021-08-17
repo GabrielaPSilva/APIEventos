@@ -15,9 +15,9 @@ namespace DUDS.Models
         [Column("id")]
         public int Id { get; set; }
         [Key]
-        [Column("cod_invest_custodia")]
+        [Column("cod_invest_administrador")]
         [StringLength(50)]
-        public string CodInvestCustodia { get; set; }
+        public string CodInvestAdministrador { get; set; }
         [Key]
         [Column("cod_investidor")]
         public int CodInvestidor { get; set; }

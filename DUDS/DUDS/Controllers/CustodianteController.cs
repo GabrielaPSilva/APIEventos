@@ -84,8 +84,7 @@ namespace DUDS.Controllers
             {
                 NomeCustodiante = tblCustodianteModel.NomeCustodiante,
                 Cnpj = tblCustodianteModel.Cnpj,
-                UsuarioModificacao = tblCustodianteModel.UsuarioModificacao,
-                DataModificacao = tblCustodianteModel.DataModificacao
+                UsuarioModificacao = tblCustodianteModel.UsuarioModificacao
             };
 
             try
