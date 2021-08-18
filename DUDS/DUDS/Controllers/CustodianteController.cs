@@ -115,6 +115,7 @@ namespace DUDS.Controllers
                 {
                     registroCustodiante.NomeCustodiante = custodiante.NomeCustodiante == null ? registroCustodiante.NomeCustodiante : custodiante.NomeCustodiante;
                     registroCustodiante.Cnpj = custodiante.Cnpj == null ? registroCustodiante.Cnpj : custodiante.Cnpj;
+                    registroCustodiante.UsuarioModificacao = custodiante.UsuarioModificacao == null ? registroCustodiante.UsuarioModificacao : custodiante.UsuarioModificacao;
 
                     try
                     {

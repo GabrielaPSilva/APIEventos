@@ -124,7 +124,8 @@ namespace DUDS.Controllers
                         Cnpj = line.Cnpj,
                         TipoCliente = line.TipoCliente,
                         CodAdministrador = line.CodAdministrador,
-                        CodGestor = line.CodGestor
+                        CodGestor = line.CodGestor,
+                        UsuarioModificacao = line.UsuarioModificacao
                     };
 
                     listaInvestidores.Add(itensInvestidor);
@@ -156,6 +157,7 @@ namespace DUDS.Controllers
                     registroInvestidor.TipoCliente = investidor.TipoCliente == null ? registroInvestidor.TipoCliente : investidor.TipoCliente;
                     registroInvestidor.CodAdministrador = investidor.CodAdministrador == 0 ? registroInvestidor.CodAdministrador : investidor.CodAdministrador;
                     registroInvestidor.CodGestor = investidor.CodGestor == 0 ? registroInvestidor.CodGestor : investidor.CodGestor;
+                    registroInvestidor.UsuarioModificacao = investidor.UsuarioModificacao == null ? registroInvestidor.UsuarioModificacao : investidor.UsuarioModificacao;
 
                     try
                     {
@@ -369,6 +371,43 @@ namespace DUDS.Controllers
             }
         }
 
+        //PUT: api/Investidor/EditarInvestidorDistribuidor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarInvestidorDistribuidor(int id, InvestidorDistribuidorModel investidorDistribuidor)
+        {
+            try
+            {
+                TblInvestidorDistribuidor registroInvestidorDistribuidor = _context.TblInvestidorDistribuidor.Where(c => c.Id == id).FirstOrDefault();
+
+                if (registroInvestidorDistribuidor != null)
+                {
+                    registroInvestidorDistribuidor.CodInvestCustodia = investidorDistribuidor.CodInvestCustodia == null ? registroInvestidorDistribuidor.CodInvestCustodia : investidorDistribuidor.CodInvestCustodia;
+                    registroInvestidorDistribuidor.CodInvestidor = investidorDistribuidor.CodInvestidor == 0 ? registroInvestidorDistribuidor.CodInvestidor : investidorDistribuidor.CodInvestidor;
+                    registroInvestidorDistribuidor.CodDistribuidor = investidorDistribuidor.CodDistribuidor == 0 ? registroInvestidorDistribuidor.CodDistribuidor : investidorDistribuidor.CodDistribuidor;
+                    registroInvestidorDistribuidor.CodCustodiante = investidorDistribuidor.CodCustodiante == 0 ? registroInvestidorDistribuidor.CodCustodiante : investidorDistribuidor.CodCustodiante;
+                    registroInvestidorDistribuidor.UsuarioModificacao = investidorDistribuidor.UsuarioModificacao == null ? registroInvestidorDistribuidor.UsuarioModificacao : investidorDistribuidor.UsuarioModificacao;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroInvestidorDistribuidor);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!InvestidorDistribuidorExists(investidorDistribuidor.Id))
+            {
+                return NotFound(e);
+            }
+        }
+
         // DELETE: api/Investidor/DeletarInvestidorDistribuidor/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarInvestidorDistribuidor(int id)
@@ -399,6 +438,11 @@ namespace DUDS.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        private bool InvestidorDistribuidorExists(int id)
+        {
+            return _context.TblInvestidorDistribuidor.Any(e => e.Id == id);
         }
 
         #endregion

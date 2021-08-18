@@ -9,10 +9,12 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_sub_contrato")]
+    [Index(nameof(CodContrato), Name = "IX_tbl_sub_contrato")]
     public partial class TblSubContrato
     {
         public TblSubContrato()
         {
+            TblAlocador = new HashSet<TblAlocador>();
             TblContratoDistribuicao = new HashSet<TblContratoDistribuicao>();
         }
 
@@ -48,6 +50,8 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodContrato))]
         [InverseProperty(nameof(TblContrato.TblSubContrato))]
         public virtual TblContrato CodContratoNavigation { get; set; }
+        [InverseProperty("CodInvestidor1")]
+        public virtual ICollection<TblAlocador> TblAlocador { get; set; }
         [InverseProperty("CodSubContratoNavigation")]
         public virtual ICollection<TblContratoDistribuicao> TblContratoDistribuicao { get; set; }
     }

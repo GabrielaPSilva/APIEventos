@@ -10,7 +10,7 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
         public int CodInvestidor { get; set; }
-        public int CodContratoDistribuicao { get; set; }
+        public int CodSubContrato { get; set; }
 
         //[Required]
         [StringLength(20)]

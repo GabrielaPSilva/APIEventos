@@ -9,14 +9,9 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_contrato_distribuicao")]
+    [Index(nameof(CodFundo), nameof(CodSubContrato), Name = "IX_tbl_contrato_distribuicao", IsUnique = true)]
     public partial class TblContratoDistribuicao
     {
-        public TblContratoDistribuicao()
-        {
-            TblAcordoRemuneracao = new HashSet<TblAcordoRemuneracao>();
-            TblAlocador = new HashSet<TblAlocador>();
-        }
-
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -24,18 +19,20 @@ namespace DUDS.Models
         public int CodSubContrato { get; set; }
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
+        [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         [Column("data_modificacao", TypeName = "datetime")]
-        public DateTime? DataModificacao { get; set; }
+        public DateTime DataModificacao { get; set; }
 
+        [ForeignKey(nameof(CodFundo))]
+        [InverseProperty(nameof(TblFundo.TblContratoDistribuicao))]
+        public virtual TblFundo CodFundoNavigation { get; set; }
         [ForeignKey(nameof(CodSubContrato))]
         [InverseProperty(nameof(TblSubContrato.TblContratoDistribuicao))]
         public virtual TblSubContrato CodSubContratoNavigation { get; set; }
         [InverseProperty("CodContratoDistribuicaoNavigation")]
-        public virtual ICollection<TblAcordoRemuneracao> TblAcordoRemuneracao { get; set; }
-        [InverseProperty("CodContratoDistribuicaoNavigation")]
-        public virtual ICollection<TblAlocador> TblAlocador { get; set; }
+        public virtual TblAcordoRemuneracao TblAcordoRemuneracao { get; set; }
     }
 }

@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_contrato")]
+    [Index(nameof(CodDistribuidor), Name = "IX_tbl_contrato")]
+    [Index(nameof(Parceiro), Name = "IX_tbl_contrato_1")]
     public partial class TblContrato
     {
         public TblContrato()
@@ -21,6 +23,8 @@ namespace DUDS.Models
         public int Id { get; set; }
         [Column("cod_distribuidor")]
         public int? CodDistribuidor { get; set; }
+        [Column("parceiro")]
+        public int? Parceiro { get; set; }
         [Required]
         [Column("tipo_contrato")]
         [StringLength(20)]
@@ -28,13 +32,12 @@ namespace DUDS.Models
         [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
+        [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         [Column("data_modificacao", TypeName = "datetime")]
-        public DateTime? DataModificacao { get; set; }
-        [Column("parceiro")]
-        public int? Parceiro { get; set; }
+        public DateTime DataModificacao { get; set; }
 
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblContrato))]

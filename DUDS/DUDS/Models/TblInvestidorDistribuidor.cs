@@ -9,18 +9,21 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_investidor_distribuidor")]
+    [Index(nameof(Id), Name = "IX_tbl_investidor_distribuidor", IsUnique = true)]
     public partial class TblInvestidorDistribuidor
     {
-        [Key]
         [Column("id")]
         public int Id { get; set; }
         [Column("cod_invest_custodia")]
         [StringLength(50)]
         public string CodInvestCustodia { get; set; }
+        [Key]
         [Column("cod_investidor")]
         public int CodInvestidor { get; set; }
+        [Key]
         [Column("cod_distribuidor")]
         public int CodDistribuidor { get; set; }
+        [Key]
         [Column("cod_custodiante")]
         public int CodCustodiante { get; set; }
         [Column("data_modificacao", TypeName = "date")]

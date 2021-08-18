@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +31,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblAcordoRemuneracao> acordosRemuneracao = await _context.TblAcordoRemuneracao.Where(c => c.Ativo == true).AsNoTracking().ToListAsync();
+                List<TblAcordoRemuneracao> acordosRemuneracao = await _context.TblAcordoRemuneracao.Where(c => c.Ativo == true).OrderBy(c => c.CodContratoDistribuicao).AsNoTracking().ToListAsync();
 
                 if (acordosRemuneracao.Count() == 0)
                 {
@@ -106,6 +106,43 @@ namespace DUDS.Controllers
             }
         }
 
+        //PUT: api/AcordoRemuneracao/EditarAcordoRemuneracao/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarAcordoRemuneracao(int id, AcordoRemuneracaoModel acordoRemuneracao)
+        {
+            try
+            {
+                TblAcordoRemuneracao registroAcordoRemuneracao = _context.TblAcordoRemuneracao.Find(id);
+
+                if (registroAcordoRemuneracao != null)
+                {
+                    registroAcordoRemuneracao.CodContratoDistribuicao = acordoRemuneracao.CodContratoDistribuicao == 0 ? registroAcordoRemuneracao.CodContratoDistribuicao : acordoRemuneracao.CodContratoDistribuicao;
+                    registroAcordoRemuneracao.TipoRange = acordoRemuneracao.TipoRange == null ? registroAcordoRemuneracao.TipoRange : acordoRemuneracao.TipoRange;
+                    registroAcordoRemuneracao.DataVigenciaInicio = acordoRemuneracao.DataVigenciaInicio == null ? registroAcordoRemuneracao.DataVigenciaInicio : acordoRemuneracao.DataVigenciaInicio;
+                    registroAcordoRemuneracao.DataVigenciaFim = acordoRemuneracao.DataVigenciaFim == null ? registroAcordoRemuneracao.DataVigenciaFim : acordoRemuneracao.DataVigenciaFim;
+                    registroAcordoRemuneracao.UsuarioModificacao = acordoRemuneracao.UsuarioModificacao == null ? registroAcordoRemuneracao.UsuarioModificacao : acordoRemuneracao.UsuarioModificacao;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroAcordoRemuneracao);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!AcordoRemuneracaoExists(acordoRemuneracao.Id))
+            {
+                return NotFound(e);
+            }
+        }
+
         // DELETE: api/AcordoRemuneracao/DeletarAcordoRemuneracao/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAcordoRemuneracao(int id)
@@ -114,7 +151,7 @@ namespace DUDS.Controllers
 
             if (!existeRegistro)
             {
-                TblAcordoRemuneracao tblAcordoRemuneracao = _context.TblAcordoRemuneracao.Where(c => c.Id == id).FirstOrDefault();
+                TblAcordoRemuneracao tblAcordoRemuneracao = _context.TblAcordoRemuneracao.Find(id);
 
                 if (tblAcordoRemuneracao == null)
                 {
@@ -146,7 +183,7 @@ namespace DUDS.Controllers
 
             if (!existeRegistro)
             {
-                TblAcordoRemuneracao registroAcordoRemuneracao = _context.TblAcordoRemuneracao.Where(c => c.Id == id).FirstOrDefault();
+                TblAcordoRemuneracao registroAcordoRemuneracao = _context.TblAcordoRemuneracao.Find(id);
 
                 if (registroAcordoRemuneracao != null)
                 {

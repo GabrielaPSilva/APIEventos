@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_lista_condicoes")]
+    [Index(nameof(CodFundo), nameof(CodAcordoCondicional), Name = "IX_tbl_lista_condicoes", IsUnique = true)]
     public partial class TblListaCondicoes
     {
         [Key]
