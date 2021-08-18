@@ -20,8 +20,8 @@ namespace DUDS.Models
         [Key]
         [Column("id")]
         public int Id { get; set; }
-        [Column("cod_contrato")]
-        public int CodContrato { get; set; }
+        [Column("cod_sub_contrato")]
+        public int CodSubContrato { get; set; }
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
         [Column("usuario_modificacao")]
@@ -30,9 +30,9 @@ namespace DUDS.Models
         [Column("data_modificacao", TypeName = "datetime")]
         public DateTime? DataModificacao { get; set; }
 
-        [ForeignKey(nameof(CodContrato))]
-        [InverseProperty(nameof(TblContrato.TblContratoDistribuicao))]
-        public virtual TblContrato CodContratoNavigation { get; set; }
+        [ForeignKey(nameof(CodSubContrato))]
+        [InverseProperty(nameof(TblSubContrato.TblContratoDistribuicao))]
+        public virtual TblSubContrato CodSubContratoNavigation { get; set; }
         [InverseProperty("CodContratoDistribuicaoNavigation")]
         public virtual ICollection<TblAcordoRemuneracao> TblAcordoRemuneracao { get; set; }
         [InverseProperty("CodContratoDistribuicaoNavigation")]

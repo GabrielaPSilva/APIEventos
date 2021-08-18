@@ -279,11 +279,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Investidor/GetInvestidorDistribuidor/cod_invest_custodia/cod_investidor/cod_distribuidor/cod_administrador
-        [HttpGet("{cod_invest_custodia}/{cod_investidor}/{cod_distribuidor}/{cod_administrador}")]
-        public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(string cod_invest_custodia, int cod_investidor, int cod_distribuidor, int cod_administrador)
+        // GET: api/Investidor/GetInvestidorDistribuidor/cod_investidor/cod_distribuidor/cod_custodiante
+        [HttpGet("{cod_investidor}/{cod_distribuidor}/{cod_custodiante}")]
+        public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(int cod_investidor, int cod_distribuidor, int cod_custodiante)
         {
-            TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(cod_invest_custodia, cod_investidor, cod_distribuidor, cod_administrador);
+            TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(cod_investidor, cod_distribuidor, cod_custodiante);
 
             try
             {
@@ -308,9 +308,9 @@ namespace DUDS.Controllers
         {
             TblInvestidorDistribuidor itensInvestidorDistribuidor = new TblInvestidorDistribuidor
             {
-                CodAdministrador = tblInvestidorDistribuidorModel.CodAdministrador,
+                CodCustodiante = tblInvestidorDistribuidorModel.CodCustodiante,
                 CodDistribuidor = tblInvestidorDistribuidorModel.CodDistribuidor,
-                CodInvestAdministrador = tblInvestidorDistribuidorModel.CodInvestAdministrador,
+                CodInvestCustodia = tblInvestidorDistribuidorModel.CodInvestCustodia,
                 CodInvestidor = tblInvestidorDistribuidorModel.CodInvestidor,
                 UsuarioModificacao = tblInvestidorDistribuidorModel.UsuarioModificacao
             };
@@ -323,10 +323,9 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetInvestidor),
                     new {
-                            cod_invest_administrador = itensInvestidorDistribuidor.CodInvestAdministrador,
                             cod_investidor = itensInvestidorDistribuidor.CodInvestidor,
                             cod_distribuidor = itensInvestidorDistribuidor.CodDistribuidor,
-                            cod_administrador = itensInvestidorDistribuidor.CodAdministrador
+                            cod_custodiante = itensInvestidorDistribuidor.CodCustodiante
                         },
                     Ok(itensInvestidorDistribuidor));
             }
@@ -349,9 +348,9 @@ namespace DUDS.Controllers
                 {
                     itensInvestidorDistribuidor = new TblInvestidorDistribuidor
                     {
-                        CodAdministrador = line.CodAdministrador,
+                        CodCustodiante = line.CodCustodiante,
                         CodDistribuidor = line.CodDistribuidor,
-                        CodInvestAdministrador = line.CodInvestAdministrador,
+                        CodInvestCustodia = line.CodInvestCustodia,
                         CodInvestidor = line.CodInvestidor,
                         UsuarioModificacao = line.UsuarioModificacao
                     };

@@ -13,7 +13,7 @@ namespace DUDS.Models
     {
         public TblContrato()
         {
-            TblContratoDistribuicao = new HashSet<TblContratoDistribuicao>();
+            TblSubContrato = new HashSet<TblSubContrato>();
         }
 
         [Key]
@@ -26,27 +26,6 @@ namespace DUDS.Models
         [StringLength(20)]
         public string TipoContrato { get; set; }
         [Required]
-        [Column("versao")]
-        [StringLength(20)]
-        public string Versao { get; set; }
-        [Required]
-        [Column("status")]
-        [StringLength(10)]
-        public string Status { get; set; }
-        [Column("id_docusign")]
-        [StringLength(50)]
-        public string IdDocusign { get; set; }
-        [Required]
-        [Column("direcao_pagamento")]
-        [StringLength(20)]
-        public string DirecaoPagamento { get; set; }
-        [Column("clausula_retroatividade")]
-        public bool ClausulaRetroatividade { get; set; }
-        [Column("data_retroatividade", TypeName = "date")]
-        public DateTime? DataRetroatividade { get; set; }
-        [Column("data_assinatura", TypeName = "date")]
-        public DateTime? DataAssinatura { get; set; }
-        [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
         [Column("usuario_modificacao")]
@@ -55,13 +34,15 @@ namespace DUDS.Models
         [Column("data_modificacao", TypeName = "datetime")]
         public DateTime? DataModificacao { get; set; }
         [Column("parceiro")]
-        [StringLength(100)]
-        public string Parceiro { get; set; }
+        public int? Parceiro { get; set; }
 
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblContrato))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
+        [ForeignKey(nameof(Parceiro))]
+        [InverseProperty(nameof(TblGestor.TblContrato))]
+        public virtual TblGestor ParceiroNavigation { get; set; }
         [InverseProperty("CodContratoNavigation")]
-        public virtual ICollection<TblContratoDistribuicao> TblContratoDistribuicao { get; set; }
+        public virtual ICollection<TblSubContrato> TblSubContrato { get; set; }
     }
 }

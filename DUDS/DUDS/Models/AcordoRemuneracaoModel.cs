@@ -10,12 +10,6 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
         public int CodContratoDistribuicao { get; set; }
-        public double Inicio { get; set; }
-        public double Fim { get; set; }
-        public double Percentual { get; set; }
-
-        [StringLength(15)]
-        public string TipoTaxa { get; set; }
 
         [StringLength(15)]
         public string TipoRange { get; set; }

@@ -84,6 +84,7 @@ namespace DUDS.Controllers
             {
                 CodInvestidor = tblAlocadorModel.CodInvestidor,
                 CodContratoDistribuicao = tblAlocadorModel.CodContratoDistribuicao,
+                DirecaoPagamento = tblAlocadorModel.DirecaoPagamento,
                 UsuarioModificacao = tblAlocadorModel.UsuarioModificacao
             };
 
@@ -118,6 +119,7 @@ namespace DUDS.Controllers
                 {
                     registroAlocador.CodInvestidor = alocador.CodInvestidor == 0 ? registroAlocador.CodInvestidor : alocador.CodInvestidor;
                     registroAlocador.CodContratoDistribuicao = alocador.CodContratoDistribuicao == 0 ? registroAlocador.CodContratoDistribuicao : alocador.CodContratoDistribuicao;
+                    registroAlocador.DirecaoPagamento = alocador.DirecaoPagamento == null ? registroAlocador.DirecaoPagamento : alocador.DirecaoPagamento;
 
                     try
                     {

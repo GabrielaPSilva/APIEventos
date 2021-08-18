@@ -9,17 +9,19 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_alocador")]
-    [Index(nameof(Id), Name = "IX_tbl_alocador", IsUnique = true)]
     public partial class TblAlocador
     {
+        [Key]
         [Column("id")]
         public int Id { get; set; }
-        [Key]
         [Column("cod_investidor")]
         public int CodInvestidor { get; set; }
-        [Key]
         [Column("cod_contrato_distribuicao")]
         public int CodContratoDistribuicao { get; set; }
+        [Required]
+        [Column("direcao_pagamento")]
+        [StringLength(20)]
+        public string DirecaoPagamento { get; set; }
         [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]

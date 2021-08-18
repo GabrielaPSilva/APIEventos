@@ -83,14 +83,8 @@ namespace DUDS.Controllers
             TblContrato itensContrato = new TblContrato
             {
                 CodDistribuidor = tblContratoModel.CodDistribuidor,
+                Parceiro = tblContratoModel.Parceiro,
                 TipoContrato = tblContratoModel.TipoContrato,
-                Versao = tblContratoModel.Versao,
-                Status = tblContratoModel.Status,
-                IdDocusign = tblContratoModel.IdDocusign,
-                DirecaoPagamento = tblContratoModel.DirecaoPagamento,
-                ClausulaRetroatividade = tblContratoModel.ClausulaRetroatividade,
-                DataRetroatividade = tblContratoModel.DataRetroatividade,
-                DataAssinatura = tblContratoModel.DataAssinatura,
                 UsuarioModificacao = tblContratoModel.UsuarioModificacao
             };
 
@@ -122,13 +116,7 @@ namespace DUDS.Controllers
                 {
                     registroContrato.CodDistribuidor = (contrato.CodDistribuidor == null || contrato.CodDistribuidor == 0) ? registroContrato.CodDistribuidor : contrato.CodDistribuidor;
                     registroContrato.TipoContrato = contrato.TipoContrato == null ? registroContrato.TipoContrato : contrato.TipoContrato;
-                    registroContrato.Versao = contrato.Versao == null ? registroContrato.Versao : contrato.Versao;
-                    registroContrato.Status = contrato.Status == null ? registroContrato.Status : contrato.Status;
-                    registroContrato.IdDocusign = contrato.IdDocusign == null ? registroContrato.IdDocusign : contrato.IdDocusign;
-                    registroContrato.DirecaoPagamento = contrato.DirecaoPagamento == null ? registroContrato.DirecaoPagamento : contrato.DirecaoPagamento;
-                    registroContrato.ClausulaRetroatividade = contrato.ClausulaRetroatividade == false ? registroContrato.ClausulaRetroatividade : contrato.ClausulaRetroatividade;
-                    registroContrato.DataRetroatividade = contrato.DataRetroatividade == null ? registroContrato.DataRetroatividade : contrato.DataRetroatividade;
-                    registroContrato.DataAssinatura = contrato.DataAssinatura == null ? registroContrato.DataAssinatura : contrato.DataAssinatura;
+                    registroContrato.Parceiro = contrato.Parceiro == null ? registroContrato.Parceiro : contrato.Parceiro;
 
                     try
                     {
@@ -230,7 +218,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblContratoDistribuicao> contratosDistribuicao = await _context.TblContratoDistribuicao.OrderBy(c => c.CodContrato).ToListAsync();
+                List<TblContratoDistribuicao> contratosDistribuicao = await _context.TblContratoDistribuicao.OrderBy(c => c.CodSubContrato).ToListAsync();
 
                 if (contratosDistribuicao.Count() == 0)
                 {
@@ -281,7 +269,7 @@ namespace DUDS.Controllers
         {
             TblContratoDistribuicao itensContratoDistribuicao = new TblContratoDistribuicao
             {
-                CodContrato = tblContratoDistribuicaoModel.CodContrato,
+                CodSubContrato = tblContratoDistribuicaoModel.CodSubContrato,
                 CodFundo = tblContratoDistribuicaoModel.CodFundo,
                 UsuarioModificacao = tblContratoDistribuicaoModel.UsuarioModificacao
             };
@@ -312,7 +300,7 @@ namespace DUDS.Controllers
 
                 if (registroContratoDistribuicao != null)
                 {
-                    registroContratoDistribuicao.CodContrato = contratoDistribuicao.CodContrato == 0 ? registroContratoDistribuicao.CodContrato : contratoDistribuicao.CodContrato;
+                    registroContratoDistribuicao.CodSubContrato = contratoDistribuicao.CodSubContrato == 0 ? registroContratoDistribuicao.CodSubContrato : contratoDistribuicao.CodSubContrato;
                     registroContratoDistribuicao.CodFundo  = contratoDistribuicao.CodFundo == 0 ? registroContratoDistribuicao.CodFundo : contratoDistribuicao.CodFundo;
 
                     try

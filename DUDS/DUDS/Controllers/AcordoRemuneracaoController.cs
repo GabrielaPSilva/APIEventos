@@ -54,10 +54,10 @@ namespace DUDS.Controllers
         }
 
         // GET: api/AcordoRemuneracao/GetAcordoRemuneracao/cod_contrato_distribuicao/percentual/tipo_taxa/tipo_range
-        [HttpGet("{cod_contrato_distribuicao}/{percentual}/{tipo_taxa}/{tipo_range}")]
-        public async Task<ActionResult<TblAcordoRemuneracao>> GetAcordoRemuneracao(int cod_contrato_distribuicao, double percentual, string tipo_taxa, string tipo_range)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblAcordoRemuneracao>> GetAcordoRemuneracao(int id)
         {
-            TblAcordoRemuneracao tblAcordoRemuneracao = await _context.TblAcordoRemuneracao.FindAsync(cod_contrato_distribuicao, percentual, tipo_taxa, tipo_range);
+            TblAcordoRemuneracao tblAcordoRemuneracao = await _context.TblAcordoRemuneracao.FindAsync(id);
 
             try
             {
@@ -84,10 +84,6 @@ namespace DUDS.Controllers
             TblAcordoRemuneracao itensAcordoRemuneracao = new TblAcordoRemuneracao
             {
                 CodContratoDistribuicao = tblAcordoRemuneracaoModel.CodContratoDistribuicao,
-                Inicio = tblAcordoRemuneracaoModel.Inicio,
-                Fim = tblAcordoRemuneracaoModel.Fim,
-                Percentual = tblAcordoRemuneracaoModel.Percentual,
-                TipoTaxa = tblAcordoRemuneracaoModel.TipoTaxa,
                 TipoRange = tblAcordoRemuneracaoModel.TipoRange,
                 DataVigenciaInicio = tblAcordoRemuneracaoModel.DataVigenciaInicio,
                 DataVigenciaFim = tblAcordoRemuneracaoModel.DataVigenciaFim,
@@ -101,12 +97,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                    nameof(GetAcordoRemuneracao),
-                   new {
-                           cod_contrato_distribuicao = itensAcordoRemuneracao.CodContratoDistribuicao,
-                           percentual = itensAcordoRemuneracao.Percentual,
-                           tipo_taxa = itensAcordoRemuneracao.TipoTaxa,
-                           tipo_range = itensAcordoRemuneracao.TipoRange
-                       },
+                   new { id = itensAcordoRemuneracao.Id },
                    Ok(itensAcordoRemuneracao));
             }
             catch (Exception e)
