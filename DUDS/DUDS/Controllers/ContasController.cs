@@ -32,7 +32,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                var contas = await _context.TblContas.Where(c => c.Ativo == true).OrderBy(c => c.CodFundo).ToListAsync();
+                var contas = await _context.TblContas.Where(c => c.Ativo == true).ToListAsync();
 
                 if (contas.Count() == 0)
                 {
@@ -55,10 +55,10 @@ namespace DUDS.Controllers
         }
 
         // GET: api/Contas/GetContas/cod_fundo/cod_tipo_conta
-        [HttpGet("{cod_fundo}/{cod_tipo_conta}")]
-        public async Task<ActionResult<TblContas>> GetContas(int cod_fundo, int cod_tipo_conta)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblContas>> GetContas(int id)
         {
-            TblContas tblContas = await _context.TblContas.FindAsync(cod_fundo, cod_tipo_conta);
+            TblContas tblContas = await _context.TblContas.FindAsync(id);
 
             try
             {
@@ -84,6 +84,7 @@ namespace DUDS.Controllers
             TblContas itensConta = new TblContas
             {
                 CodFundo = tblContaModel.CodFundo,
+                CodInvestidor = tblContaModel.CodInvestidor,
                 CodTipoConta = tblContaModel.CodTipoConta,
                 Banco = tblContaModel.Banco,
                 Agencia = tblContaModel.Agencia,
@@ -99,10 +100,7 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetContas),
                     new
-                    {
-                        cod_fundo = itensConta.CodFundo,
-                        cod_tipo_conta = itensConta.CodTipoConta
-                    },
+                    { id = itensConta.Id },
                     Ok(itensConta));
             }
             catch (Exception e)
@@ -117,11 +115,12 @@ namespace DUDS.Controllers
         {
             try
             {
-                TblContas registroConta = _context.TblContas.Where(c => c.Id == id).FirstOrDefault();
+                TblContas registroConta = _context.TblContas.Find(id);
 
                 if (registroConta != null)
                 {
                     registroConta.CodFundo = conta.CodFundo == 0 ? registroConta.CodFundo : conta.CodFundo;
+                    registroConta.CodInvestidor = conta.CodInvestidor == 0 ? registroConta.CodInvestidor : conta.CodInvestidor;
                     registroConta.CodTipoConta = conta.CodTipoConta == 0 ? registroConta.CodTipoConta : conta.CodTipoConta;
                     registroConta.Banco = conta.Banco == null ? registroConta.Banco : conta.Banco;
                     registroConta.Agencia = conta.Agencia == null ? registroConta.Agencia : conta.Agencia;
@@ -157,7 +156,7 @@ namespace DUDS.Controllers
 
             if (!existeRegistro)
             {
-                TblContas tblConta = _context.TblContas.Where(c => c.Id == id).FirstOrDefault();
+                TblContas tblConta = _context.TblContas.Find(id);
 
                 if (tblConta == null)
                 {
@@ -189,7 +188,7 @@ namespace DUDS.Controllers
 
             if (!existeRegistro)
             {
-                TblContas registroConta = _context.TblContas.Where(c => c.Id == id).FirstOrDefault();
+                TblContas registroConta = _context.TblContas.Find(id);
 
                 if (registroConta != null)
                 {
@@ -344,22 +343,39 @@ namespace DUDS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarTipoConta(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_conta");
+            TblTipoConta tblTipoConta = await _context.TblTipoConta.FindAsync(id);
 
-            if (!existeRegistro)
+            if (tblTipoConta == null)
             {
-                TblTipoConta tblTipoConta = await _context.TblTipoConta.FindAsync(id);
+                return NotFound();
+            }
 
-                if (tblTipoConta == null)
-                {
-                    return NotFound();
-                }
+            try
+            {
+                _context.TblTipoConta.Remove(tblTipoConta);
+                await _context.SaveChangesAsync();
+                return Ok(tblTipoConta);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DESATIVA: api/DesativarTipoConta/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarTipoConta(int id)
+        {
+            TblTipoConta registroTipoConta = _context.TblTipoConta.Find(id);
+
+            if (registroTipoConta != null)
+            {
+                registroTipoConta.Ativo = false;
 
                 try
                 {
-                    _context.TblTipoConta.Remove(tblTipoConta);
                     await _context.SaveChangesAsync();
-                    return Ok(tblTipoConta);
+                    return Ok(registroTipoConta);
                 }
                 catch (Exception e)
                 {
@@ -368,42 +384,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest();
-            }
-        }
-
-        // DESATIVA: api/DesativarTipoConta/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarTipoConta(int id)
-        {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_conta");
-
-            if (!existeRegistro)
-            {
-                TblTipoConta registroTipoConta = _context.TblTipoConta.Find(id);
-
-                if (registroTipoConta != null)
-                {
-                    registroTipoConta.Ativo = false;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroTipoConta);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
+                return NotFound();
             }
         }
 

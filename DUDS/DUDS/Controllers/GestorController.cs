@@ -142,22 +142,39 @@ namespace DUDS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarGestor(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_gestor");
+            var tblGestor = await _context.TblGestor.FindAsync(id);
 
-            if (!existeRegistro)
+            if (tblGestor == null)
             {
-                var tblGestor = await _context.TblGestor.FindAsync(id);
+                return NotFound();
+            }
 
-                if (tblGestor == null)
-                {
-                    return NotFound();
-                }
+            try
+            {
+                _context.TblGestor.Remove(tblGestor);
+                await _context.SaveChangesAsync();
+                return Ok(tblGestor);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DESATIVA: api/Gestor/DesativarGestor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarGestor(int id)
+        {
+            TblGestor registroGestor = _context.TblGestor.Find(id);
+
+            if (registroGestor != null)
+            {
+                registroGestor.Ativo = false;
 
                 try
                 {
-                    _context.TblGestor.Remove(tblGestor);
                     await _context.SaveChangesAsync();
-                    return Ok(tblGestor);
+                    return Ok(registroGestor);
                 }
                 catch (Exception e)
                 {
@@ -166,45 +183,10 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
-
-        // DESATIVA: api/Gestor/DesativarGestor/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarGestor(int id)
-        {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_gestor");
-
-            if (!existeRegistro)
-            {
-                TblGestor registroGestor = _context.TblGestor.Find(id);
-
-                if (registroGestor != null)
-                {
-                    registroGestor.Ativo = false;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroGestor);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
+        
         private bool GestorExists(int id)
         {
             return _context.TblGestor.Any(e => e.Id == id);

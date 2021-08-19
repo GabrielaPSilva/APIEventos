@@ -175,7 +175,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/AcordoRemuneracao/id
+        // DESATIVA: api/AcordoRemuneracao/DesativarAcordoRemuneracao/id
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarAcordoRemuneracao(int id)
         {

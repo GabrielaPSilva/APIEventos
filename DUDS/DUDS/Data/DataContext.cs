@@ -288,8 +288,6 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblContas>(entity =>
             {
-                entity.HasKey(e => new { e.CodFundo, e.CodTipoConta });
-
                 entity.Property(e => e.Agencia).IsUnicode(false);
 
                 entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
@@ -300,7 +298,15 @@ namespace DUDS.Data
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.HasOne(d => d.CodFundoNavigation)
+                    .WithMany(p => p.TblContas)
+                    .HasForeignKey(d => d.CodFundo)
+                    .HasConstraintName("FK_tbl_contas_tbl_fundo");
+
+                entity.HasOne(d => d.CodInvestidorNavigation)
+                    .WithMany(p => p.TblContas)
+                    .HasForeignKey(d => d.CodInvestidor)
+                    .HasConstraintName("FK_tbl_contas_tbl_investidor");
 
                 entity.HasOne(d => d.CodTipoContaNavigation)
                     .WithMany(p => p.TblContas)

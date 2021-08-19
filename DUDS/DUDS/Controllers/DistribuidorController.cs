@@ -145,22 +145,39 @@ namespace DUDS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarDistribuidor(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_distribuidor");
+            TblDistribuidor tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
 
-            if (!existeRegistro)
+            if (tblDistribuidor == null)
             {
-                TblDistribuidor tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
+                return NotFound();
+            }
 
-                if (tblDistribuidor == null)
-                {
-                    return NotFound();
-                }
+            try
+            {
+                _context.TblDistribuidor.Remove(tblDistribuidor);
+                await _context.SaveChangesAsync();
+                return Ok(tblDistribuidor);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DESATIVA: api/Distribuidor/DesativarDistribuidor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarDistribuidor(int id)
+        {
+            TblDistribuidor registroDistribuidor = _context.TblDistribuidor.Find(id);
+
+            if (registroDistribuidor != null)
+            {
+                registroDistribuidor.Ativo = false;
 
                 try
                 {
-                    _context.TblDistribuidor.Remove(tblDistribuidor);
                     await _context.SaveChangesAsync();
-                    return Ok(tblDistribuidor);
+                    return Ok(registroDistribuidor);
                 }
                 catch (Exception e)
                 {
@@ -169,42 +186,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest();
-            }
-        }
-
-        // DESATIVA: api/Distribuidor/DesativarDistribuidor/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarDistribuidor(int id)
-        {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_distribuidor");
-
-            if (!existeRegistro)
-            {
-                var registroDistribuidor = _context.TblDistribuidor.Find(id);
-
-                if (registroDistribuidor != null)
-                {
-                    registroDistribuidor.Ativo = false;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroDistribuidor);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -285,10 +267,11 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetDistribuidorAdministrador),
-                    new {
-                            cod_distribuidor = itensDistribuidorAdmin.CodDistribuidor,
-                            cod_administrador = itensDistribuidorAdmin.CodAdministrador
-                        },
+                    new
+                    {
+                        cod_distribuidor = itensDistribuidorAdmin.CodDistribuidor,
+                        cod_administrador = itensDistribuidorAdmin.CodAdministrador
+                    },
                     Ok(itensDistribuidorAdmin));
             }
             catch (Exception e)
