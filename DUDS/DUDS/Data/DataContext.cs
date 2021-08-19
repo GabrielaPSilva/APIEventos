@@ -537,9 +537,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblInvestidorDistribuidor>(entity =>
             {
-                entity.HasKey(e => new { e.CodInvestidor, e.CodDistribuidor, e.CodCustodiante });
+                entity.HasKey(e => new { e.CodInvestidor, e.CodDistribuidor, e.CodAdministrador });
 
-                entity.Property(e => e.CodInvestCustodia).IsUnicode(false);
+                entity.Property(e => e.CodInvestAdministrador).IsUnicode(false);
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 
@@ -547,11 +547,11 @@ namespace DUDS.Data
 
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
-                entity.HasOne(d => d.CodCustodianteNavigation)
+                entity.HasOne(d => d.CodAdministradorNavigation)
                     .WithMany(p => p.TblInvestidorDistribuidor)
-                    .HasForeignKey(d => d.CodCustodiante)
+                    .HasForeignKey(d => d.CodAdministrador)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_InvestidorDistribuidor_Custodiante");
+                    .HasConstraintName("FK_InvestidorDistribuidor_Administrador");
 
                 entity.HasOne(d => d.CodDistribuidorNavigation)
                     .WithMany(p => p.TblInvestidorDistribuidor)

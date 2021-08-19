@@ -281,11 +281,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Investidor/GetInvestidorDistribuidor/cod_investidor/cod_distribuidor/cod_custodiante
-        [HttpGet("{cod_investidor}/{cod_distribuidor}/{cod_custodiante}")]
-        public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(int cod_investidor, int cod_distribuidor, int cod_custodiante)
+        // GET: api/Investidor/GetInvestidorDistribuidor/cod_investidor/cod_distribuidor/cod_administrador
+        [HttpGet("{cod_investidor}/{cod_distribuidor}/{cod_administrador}")]
+        public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(int cod_investidor, int cod_distribuidor, int cod_administrador)
         {
-            TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(cod_investidor, cod_distribuidor, cod_custodiante);
+            TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(cod_investidor, cod_distribuidor, cod_administrador);
 
             try
             {
@@ -310,9 +310,9 @@ namespace DUDS.Controllers
         {
             TblInvestidorDistribuidor itensInvestidorDistribuidor = new TblInvestidorDistribuidor
             {
-                CodCustodiante = tblInvestidorDistribuidorModel.CodCustodiante,
+                CodAdministrador = tblInvestidorDistribuidorModel.CodAdministrador,
                 CodDistribuidor = tblInvestidorDistribuidorModel.CodDistribuidor,
-                CodInvestCustodia = tblInvestidorDistribuidorModel.CodInvestCustodia,
+                CodInvestAdministrador = tblInvestidorDistribuidorModel.CodInvestAdministrador,
                 CodInvestidor = tblInvestidorDistribuidorModel.CodInvestidor,
                 UsuarioModificacao = tblInvestidorDistribuidorModel.UsuarioModificacao
             };
@@ -327,7 +327,7 @@ namespace DUDS.Controllers
                     new {
                             cod_investidor = itensInvestidorDistribuidor.CodInvestidor,
                             cod_distribuidor = itensInvestidorDistribuidor.CodDistribuidor,
-                            cod_custodiante = itensInvestidorDistribuidor.CodCustodiante
+                            cod_administrador = itensInvestidorDistribuidor.CodAdministrador
                         },
                     Ok(itensInvestidorDistribuidor));
             }
@@ -350,9 +350,9 @@ namespace DUDS.Controllers
                 {
                     itensInvestidorDistribuidor = new TblInvestidorDistribuidor
                     {
-                        CodCustodiante = line.CodCustodiante,
+                        CodAdministrador = line.CodAdministrador,
                         CodDistribuidor = line.CodDistribuidor,
-                        CodInvestCustodia = line.CodInvestCustodia,
+                        CodInvestAdministrador = line.CodInvestAdministrador,
                         CodInvestidor = line.CodInvestidor,
                         UsuarioModificacao = line.UsuarioModificacao
                     };
@@ -381,10 +381,10 @@ namespace DUDS.Controllers
 
                 if (registroInvestidorDistribuidor != null)
                 {
-                    registroInvestidorDistribuidor.CodInvestCustodia = investidorDistribuidor.CodInvestCustodia == null ? registroInvestidorDistribuidor.CodInvestCustodia : investidorDistribuidor.CodInvestCustodia;
+                    registroInvestidorDistribuidor.CodInvestAdministrador = investidorDistribuidor.CodInvestAdministrador == null ? registroInvestidorDistribuidor.CodInvestAdministrador : investidorDistribuidor.CodInvestAdministrador;
                     registroInvestidorDistribuidor.CodInvestidor = investidorDistribuidor.CodInvestidor == 0 ? registroInvestidorDistribuidor.CodInvestidor : investidorDistribuidor.CodInvestidor;
                     registroInvestidorDistribuidor.CodDistribuidor = investidorDistribuidor.CodDistribuidor == 0 ? registroInvestidorDistribuidor.CodDistribuidor : investidorDistribuidor.CodDistribuidor;
-                    registroInvestidorDistribuidor.CodCustodiante = investidorDistribuidor.CodCustodiante == 0 ? registroInvestidorDistribuidor.CodCustodiante : investidorDistribuidor.CodCustodiante;
+                    registroInvestidorDistribuidor.CodAdministrador = investidorDistribuidor.CodAdministrador == 0 ? registroInvestidorDistribuidor.CodAdministrador : investidorDistribuidor.CodAdministrador;
                     registroInvestidorDistribuidor.UsuarioModificacao = investidorDistribuidor.UsuarioModificacao == null ? registroInvestidorDistribuidor.UsuarioModificacao : investidorDistribuidor.UsuarioModificacao;
 
                     try

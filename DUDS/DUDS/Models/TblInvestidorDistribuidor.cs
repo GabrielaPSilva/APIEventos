@@ -14,9 +14,9 @@ namespace DUDS.Models
     {
         [Column("id")]
         public int Id { get; set; }
-        [Column("cod_invest_custodia")]
+        [Column("cod_invest_administrador")]
         [StringLength(50)]
-        public string CodInvestCustodia { get; set; }
+        public string CodInvestAdministrador { get; set; }
         [Key]
         [Column("cod_investidor")]
         public int CodInvestidor { get; set; }
@@ -24,8 +24,8 @@ namespace DUDS.Models
         [Column("cod_distribuidor")]
         public int CodDistribuidor { get; set; }
         [Key]
-        [Column("cod_custodiante")]
-        public int CodCustodiante { get; set; }
+        [Column("cod_administrador")]
+        public int CodAdministrador { get; set; }
         [Column("data_modificacao", TypeName = "date")]
         public DateTime DataModificacao { get; set; }
         [Required]
@@ -33,9 +33,9 @@ namespace DUDS.Models
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
 
-        [ForeignKey(nameof(CodCustodiante))]
-        [InverseProperty(nameof(TblCustodiante.TblInvestidorDistribuidor))]
-        public virtual TblCustodiante CodCustodianteNavigation { get; set; }
+        [ForeignKey(nameof(CodAdministrador))]
+        [InverseProperty(nameof(TblAdministrador.TblInvestidorDistribuidor))]
+        public virtual TblAdministrador CodAdministradorNavigation { get; set; }
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblInvestidorDistribuidor))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
