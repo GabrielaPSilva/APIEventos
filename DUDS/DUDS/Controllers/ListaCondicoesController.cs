@@ -11,7 +11,8 @@ using DUDS.Service.Interface;
 
 namespace DUDS.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Route("api/[Controller]/[action]")]
     [ApiController]
     public class ListaCondicoesController : ControllerBase
     {
