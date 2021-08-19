@@ -17,6 +17,7 @@ namespace DUDS.Models
         public TblInvestidor()
         {
             TblAlocador = new HashSet<TblAlocador>();
+            TblContas = new HashSet<TblContas>();
             TblInvestidorDistribuidor = new HashSet<TblInvestidorDistribuidor>();
         }
 
@@ -49,6 +50,8 @@ namespace DUDS.Models
 
         [InverseProperty("CodInvestidorNavigation")]
         public virtual ICollection<TblAlocador> TblAlocador { get; set; }
+        [InverseProperty("CodInvestidorNavigation")]
+        public virtual ICollection<TblContas> TblContas { get; set; }
         [InverseProperty("CodInvestidorNavigation")]
         public virtual ICollection<TblInvestidorDistribuidor> TblInvestidorDistribuidor { get; set; }
     }

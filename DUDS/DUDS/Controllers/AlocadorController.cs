@@ -31,7 +31,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblAlocador> alocadores = await _context.TblAlocador.AsNoTracking().ToListAsync();
+                List<TblAlocador> alocadores = await _context.TblAlocador.OrderBy(c => c.CodSubContrato).AsNoTracking().ToListAsync();
 
                 if (alocadores.Count() == 0)
                 {
@@ -53,11 +53,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Alocador/GetAlocador/cod_investidor/cod_contrato_distribuicao
-        [HttpGet("{cod_investidor}/{cod_contrato_distribuicao}")]
-        public async Task<ActionResult<TblAlocador>> GetAlocador(int cod_investidor, int cod_contrato_distribuicao)
+        // GET: api/Alocador/GetAlocador/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblAlocador>> GetAlocador(int id)
         {
-            TblAlocador tblAlocador = await _context.TblAlocador.FindAsync(cod_investidor, cod_contrato_distribuicao);
+            TblAlocador tblAlocador = await _context.TblAlocador.FindAsync(id);
 
             try
             {
@@ -83,7 +83,8 @@ namespace DUDS.Controllers
             TblAlocador itensAlocador = new TblAlocador
             {
                 CodInvestidor = tblAlocadorModel.CodInvestidor,
-                CodContratoDistribuicao = tblAlocadorModel.CodContratoDistribuicao,
+                CodSubContrato = tblAlocadorModel.CodSubContrato,
+                DirecaoPagamento = tblAlocadorModel.DirecaoPagamento,
                 UsuarioModificacao = tblAlocadorModel.UsuarioModificacao
             };
 
@@ -94,10 +95,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetAlocador),
-                    new {
-                            cod_investidor = itensAlocador.CodInvestidor,
-                            cod_contrato_distribuicao = itensAlocador.CodContratoDistribuicao
-                        },
+                    new { id = itensAlocador.Id },
                     Ok(itensAlocador));
             }
             catch (Exception e)
@@ -117,7 +115,9 @@ namespace DUDS.Controllers
                 if (registroAlocador != null)
                 {
                     registroAlocador.CodInvestidor = alocador.CodInvestidor == 0 ? registroAlocador.CodInvestidor : alocador.CodInvestidor;
-                    registroAlocador.CodContratoDistribuicao = alocador.CodContratoDistribuicao == 0 ? registroAlocador.CodContratoDistribuicao : alocador.CodContratoDistribuicao;
+                    registroAlocador.CodSubContrato = alocador.CodSubContrato == 0 ? registroAlocador.CodSubContrato : alocador.CodSubContrato;
+                    registroAlocador.DirecaoPagamento = alocador.DirecaoPagamento == null ? registroAlocador.DirecaoPagamento : alocador.DirecaoPagamento;
+                    registroAlocador.UsuarioModificacao = alocador.UsuarioModificacao == null ? registroAlocador.UsuarioModificacao : alocador.UsuarioModificacao;
 
                     try
                     {

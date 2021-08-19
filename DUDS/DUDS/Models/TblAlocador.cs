@@ -9,17 +9,20 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_alocador")]
-    [Index(nameof(Id), Name = "IX_tbl_alocador", IsUnique = true)]
+    [Index(nameof(CodInvestidor), nameof(CodSubContrato), Name = "IX_tbl_alocador", IsUnique = true)]
     public partial class TblAlocador
     {
+        [Key]
         [Column("id")]
         public int Id { get; set; }
-        [Key]
         [Column("cod_investidor")]
         public int CodInvestidor { get; set; }
-        [Key]
-        [Column("cod_contrato_distribuicao")]
-        public int CodContratoDistribuicao { get; set; }
+        [Column("cod_sub_contrato")]
+        public int CodSubContrato { get; set; }
+        [Required]
+        [Column("direcao_pagamento")]
+        [StringLength(20)]
+        public string DirecaoPagamento { get; set; }
         [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]
@@ -27,9 +30,9 @@ namespace DUDS.Models
         [Column("data_modificacao", TypeName = "date")]
         public DateTime DataModificacao { get; set; }
 
-        [ForeignKey(nameof(CodContratoDistribuicao))]
-        [InverseProperty(nameof(TblContratoDistribuicao.TblAlocador))]
-        public virtual TblContratoDistribuicao CodContratoDistribuicaoNavigation { get; set; }
+        [ForeignKey(nameof(CodInvestidor))]
+        [InverseProperty(nameof(TblSubContrato.TblAlocador))]
+        public virtual TblSubContrato CodInvestidor1 { get; set; }
         [ForeignKey(nameof(CodInvestidor))]
         [InverseProperty(nameof(TblInvestidor.TblAlocador))]
         public virtual TblInvestidor CodInvestidorNavigation { get; set; }

@@ -115,6 +115,7 @@ namespace DUDS.Controllers
                 {
                     registroCustodiante.NomeCustodiante = custodiante.NomeCustodiante == null ? registroCustodiante.NomeCustodiante : custodiante.NomeCustodiante;
                     registroCustodiante.Cnpj = custodiante.Cnpj == null ? registroCustodiante.Cnpj : custodiante.Cnpj;
+                    registroCustodiante.UsuarioModificacao = custodiante.UsuarioModificacao == null ? registroCustodiante.UsuarioModificacao : custodiante.UsuarioModificacao;
 
                     try
                     {
@@ -141,22 +142,39 @@ namespace DUDS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarCustodiante(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_custodiante");
+            TblCustodiante tblCustodiante = await _context.TblCustodiante.FindAsync(id);
 
-            if (!existeRegistro)
+            if (tblCustodiante == null)
             {
-                TblCustodiante tblCustodiante = await _context.TblCustodiante.FindAsync(id);
+                return NotFound();
+            }
 
-                if (tblCustodiante == null)
-                {
-                    return NotFound();
-                }
+            try
+            {
+                _context.TblCustodiante.Remove(tblCustodiante);
+                await _context.SaveChangesAsync();
+                return Ok(tblCustodiante);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DESATIVA: api/Custodiante/DesativarCustodiante/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarCustodiante(int id)
+        {
+            TblCustodiante registroCustodiante = _context.TblCustodiante.Find(id);
+
+            if (registroCustodiante != null)
+            {
+                registroCustodiante.Ativo = false;
 
                 try
                 {
-                    _context.TblCustodiante.Remove(tblCustodiante);
                     await _context.SaveChangesAsync();
-                    return Ok(tblCustodiante);
+                    return Ok(registroCustodiante);
                 }
                 catch (Exception e)
                 {
@@ -165,42 +183,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest();
-            }
-        }
-
-        // DESATIVA: api/Custodiante/DesativarCustodiante/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarCustodiante(int id)
-        {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_custodiante");
-
-            if (!existeRegistro)
-            {
-                TblCustodiante registroCustodiante = _context.TblCustodiante.Find(id);
-
-                if (registroCustodiante != null)
-                {
-                    registroCustodiante.Ativo = false;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroCustodiante);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
+                return NotFound();
             }
         }
 

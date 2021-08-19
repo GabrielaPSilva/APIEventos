@@ -51,11 +51,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/MovimentacaoNota/GetMovimentacaoNota/cod_fundo
-        [HttpGet("{cod_fundo}")]
-        public async Task<ActionResult<TblMovimentacaoNota>> GetMovimentacaoNota(int cod_fundo, DateTime data_movimentacao)
+        // GET: api/MovimentacaoNota/GetMovimentacaoNota/cod_movimentacao/nota_aplicacao/num_ordem/cod_ordem_mae
+        [HttpGet("{cod_movimentacao}/{nota_aplicacao}/{num_ordem}/{cod_ordem_mae}")]
+        public async Task<ActionResult<TblMovimentacaoNota>> GetMovimentacaoNota(int cod_movimentacao, int nota_aplicacao, int num_ordem, int cod_ordem_mae)
         {
-            TblMovimentacaoNota tblMovimentacaoNota = await _context.TblMovimentacaoNota.FindAsync(cod_fundo, data_movimentacao);
+            TblMovimentacaoNota tblMovimentacaoNota = await _context.TblMovimentacaoNota.FindAsync(cod_movimentacao, nota_aplicacao, num_ordem, cod_ordem_mae);
 
             try
             {

@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +31,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblAcordoRemuneracao> acordosRemuneracao = await _context.TblAcordoRemuneracao.Where(c => c.Ativo == true).AsNoTracking().ToListAsync();
+                List<TblAcordoRemuneracao> acordosRemuneracao = await _context.TblAcordoRemuneracao.Where(c => c.Ativo == true).OrderBy(c => c.CodContratoDistribuicao).AsNoTracking().ToListAsync();
 
                 if (acordosRemuneracao.Count() == 0)
                 {
@@ -54,10 +54,10 @@ namespace DUDS.Controllers
         }
 
         // GET: api/AcordoRemuneracao/GetAcordoRemuneracao/cod_contrato_distribuicao/percentual/tipo_taxa/tipo_range
-        [HttpGet("{cod_contrato_distribuicao}/{percentual}/{tipo_taxa}/{tipo_range}")]
-        public async Task<ActionResult<TblAcordoRemuneracao>> GetAcordoRemuneracao(int cod_contrato_distribuicao, double percentual, string tipo_taxa, string tipo_range)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblAcordoRemuneracao>> GetAcordoRemuneracao(int id)
         {
-            TblAcordoRemuneracao tblAcordoRemuneracao = await _context.TblAcordoRemuneracao.FindAsync(cod_contrato_distribuicao, percentual, tipo_taxa, tipo_range);
+            TblAcordoRemuneracao tblAcordoRemuneracao = await _context.TblAcordoRemuneracao.FindAsync(id);
 
             try
             {
@@ -84,10 +84,6 @@ namespace DUDS.Controllers
             TblAcordoRemuneracao itensAcordoRemuneracao = new TblAcordoRemuneracao
             {
                 CodContratoDistribuicao = tblAcordoRemuneracaoModel.CodContratoDistribuicao,
-                Inicio = tblAcordoRemuneracaoModel.Inicio,
-                Fim = tblAcordoRemuneracaoModel.Fim,
-                Percentual = tblAcordoRemuneracaoModel.Percentual,
-                TipoTaxa = tblAcordoRemuneracaoModel.TipoTaxa,
                 TipoRange = tblAcordoRemuneracaoModel.TipoRange,
                 DataVigenciaInicio = tblAcordoRemuneracaoModel.DataVigenciaInicio,
                 DataVigenciaFim = tblAcordoRemuneracaoModel.DataVigenciaFim,
@@ -101,17 +97,49 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                    nameof(GetAcordoRemuneracao),
-                   new {
-                           cod_contrato_distribuicao = itensAcordoRemuneracao.CodContratoDistribuicao,
-                           percentual = itensAcordoRemuneracao.Percentual,
-                           tipo_taxa = itensAcordoRemuneracao.TipoTaxa,
-                           tipo_range = itensAcordoRemuneracao.TipoRange
-                       },
+                   new { id = itensAcordoRemuneracao.Id },
                    Ok(itensAcordoRemuneracao));
             }
             catch (Exception e)
             {
                 return BadRequest(e);
+            }
+        }
+
+        //PUT: api/AcordoRemuneracao/EditarAcordoRemuneracao/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarAcordoRemuneracao(int id, AcordoRemuneracaoModel acordoRemuneracao)
+        {
+            try
+            {
+                TblAcordoRemuneracao registroAcordoRemuneracao = _context.TblAcordoRemuneracao.Find(id);
+
+                if (registroAcordoRemuneracao != null)
+                {
+                    registroAcordoRemuneracao.CodContratoDistribuicao = acordoRemuneracao.CodContratoDistribuicao == 0 ? registroAcordoRemuneracao.CodContratoDistribuicao : acordoRemuneracao.CodContratoDistribuicao;
+                    registroAcordoRemuneracao.TipoRange = acordoRemuneracao.TipoRange == null ? registroAcordoRemuneracao.TipoRange : acordoRemuneracao.TipoRange;
+                    registroAcordoRemuneracao.DataVigenciaInicio = acordoRemuneracao.DataVigenciaInicio == null ? registroAcordoRemuneracao.DataVigenciaInicio : acordoRemuneracao.DataVigenciaInicio;
+                    registroAcordoRemuneracao.DataVigenciaFim = acordoRemuneracao.DataVigenciaFim == null ? registroAcordoRemuneracao.DataVigenciaFim : acordoRemuneracao.DataVigenciaFim;
+                    registroAcordoRemuneracao.UsuarioModificacao = acordoRemuneracao.UsuarioModificacao == null ? registroAcordoRemuneracao.UsuarioModificacao : acordoRemuneracao.UsuarioModificacao;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroAcordoRemuneracao);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!AcordoRemuneracaoExists(acordoRemuneracao.Id))
+            {
+                return NotFound(e);
             }
         }
 
@@ -123,7 +151,7 @@ namespace DUDS.Controllers
 
             if (!existeRegistro)
             {
-                TblAcordoRemuneracao tblAcordoRemuneracao = _context.TblAcordoRemuneracao.Where(c => c.Id == id).FirstOrDefault();
+                TblAcordoRemuneracao tblAcordoRemuneracao = _context.TblAcordoRemuneracao.Find(id);
 
                 if (tblAcordoRemuneracao == null)
                 {
@@ -147,7 +175,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/AcordoRemuneracao/id
+        // DESATIVA: api/AcordoRemuneracao/DesativarAcordoRemuneracao/id
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarAcordoRemuneracao(int id)
         {
@@ -155,7 +183,7 @@ namespace DUDS.Controllers
 
             if (!existeRegistro)
             {
-                TblAcordoRemuneracao registroAcordoRemuneracao = _context.TblAcordoRemuneracao.Where(c => c.Id == id).FirstOrDefault();
+                TblAcordoRemuneracao registroAcordoRemuneracao = _context.TblAcordoRemuneracao.Find(id);
 
                 if (registroAcordoRemuneracao != null)
                 {

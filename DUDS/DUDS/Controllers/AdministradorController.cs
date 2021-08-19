@@ -115,6 +115,7 @@ namespace DUDS.Controllers
                 {
                     registroAdministrador.NomeAdministrador = administrador.NomeAdministrador == null ? registroAdministrador.NomeAdministrador : administrador.NomeAdministrador;
                     registroAdministrador.Cnpj = administrador.Cnpj == null ? registroAdministrador.Cnpj : administrador.Cnpj;
+                    registroAdministrador.UsuarioModificacao = administrador.UsuarioModificacao == null ? registroAdministrador.UsuarioModificacao : administrador.UsuarioModificacao;
 
                     try
                     {
@@ -141,22 +142,40 @@ namespace DUDS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAdministrador(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_administrador");
+            TblAdministrador tblAdministrador = await _context.TblAdministrador.FindAsync(id);
 
-            if (!existeRegistro)
+            if (tblAdministrador == null)
             {
-                TblAdministrador tblAdministrador = await _context.TblAdministrador.FindAsync(id);
+                return NotFound();
+            }
 
-                if (tblAdministrador == null)
-                {
-                    return NotFound();
-                }
+            try
+            {
+                _context.TblAdministrador.Remove(tblAdministrador);
+                await _context.SaveChangesAsync();
+                return Ok(tblAdministrador);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DESATIVA: api/Administrador/DesativarAdministrador/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarAdministrador(int id)
+        {
+
+            TblAdministrador registroAdministrador = _context.TblAdministrador.Find(id);
+
+            if (registroAdministrador != null)
+            {
+                registroAdministrador.Ativo = false;
 
                 try
                 {
-                    _context.TblAdministrador.Remove(tblAdministrador);
                     await _context.SaveChangesAsync();
-                    return Ok(tblAdministrador);
+                    return Ok(registroAdministrador);
                 }
                 catch (Exception e)
                 {
@@ -165,42 +184,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest();
-            }
-        }
-
-        // DESATIVA: api/Administrador/DesativarAdministrador/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarAdministrador(int id)
-        {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_administrador");
-
-            if (!existeRegistro)
-            {
-                TblAdministrador registroAdministrador = _context.TblAdministrador.Find(id);
-
-                if (registroAdministrador != null)
-                {
-                    registroAdministrador.Ativo = false;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroAdministrador);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
+                return NotFound();
             }
         }
 

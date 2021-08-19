@@ -10,12 +10,16 @@ namespace DUDS.Models
 {
     [Table("tbl_contas")]
     [Index(nameof(Banco), nameof(Agencia), nameof(Conta), Name = "IX_tbl_contas")]
+    [Index(nameof(CodFundo), nameof(CodInvestidor), nameof(CodTipoConta), Name = "IX_tbl_contas_1", IsUnique = true)]
     public partial class TblContas
     {
         [Key]
+        [Column("id")]
+        public int Id { get; set; }
         [Column("cod_fundo")]
-        public int CodFundo { get; set; }
-        [Key]
+        public int? CodFundo { get; set; }
+        [Column("cod_investidor")]
+        public int? CodInvestidor { get; set; }
         [Column("cod_tipo_conta")]
         public int CodTipoConta { get; set; }
         [Required]
@@ -39,9 +43,13 @@ namespace DUDS.Models
         [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
-        [Column("id")]
-        public int Id { get; set; }
 
+        [ForeignKey(nameof(CodFundo))]
+        [InverseProperty(nameof(TblFundo.TblContas))]
+        public virtual TblFundo CodFundoNavigation { get; set; }
+        [ForeignKey(nameof(CodInvestidor))]
+        [InverseProperty(nameof(TblInvestidor.TblContas))]
+        public virtual TblInvestidor CodInvestidorNavigation { get; set; }
         [ForeignKey(nameof(CodTipoConta))]
         [InverseProperty(nameof(TblTipoConta.TblContas))]
         public virtual TblTipoConta CodTipoContaNavigation { get; set; }
