@@ -478,6 +478,7 @@ namespace DUDS.Controllers
             {
                 CodInvestidor = tblContratoAlocadorModel.CodInvestidor,
                 CodSubContrato = tblContratoAlocadorModel.CodSubContrato,
+                DataTransferencia = tblContratoAlocadorModel.DataTransferencia,
                 UsuarioModificacao = tblContratoAlocadorModel.UsuarioModificacao
             };
 
@@ -509,6 +510,7 @@ namespace DUDS.Controllers
                 {
                     registroContratoAlocador.CodInvestidor = contratoAlocador.CodInvestidor == 0 ? registroContratoAlocador.CodInvestidor : contratoAlocador.CodInvestidor;
                     registroContratoAlocador.CodSubContrato = contratoAlocador.CodSubContrato == 0 ? registroContratoAlocador.CodSubContrato : contratoAlocador.CodSubContrato;
+                    registroContratoAlocador.DataTransferencia = contratoAlocador.DataTransferencia == null ? registroContratoAlocador.DataTransferencia : contratoAlocador.DataTransferencia;
                     registroContratoAlocador.UsuarioModificacao = contratoAlocador.UsuarioModificacao == null ? registroContratoAlocador.UsuarioModificacao : contratoAlocador.UsuarioModificacao;
 
                     try

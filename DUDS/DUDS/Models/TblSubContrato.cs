@@ -29,7 +29,7 @@ namespace DUDS.Models
         public string Versao { get; set; }
         [Required]
         [Column("status")]
-        [StringLength(10)]
+        [StringLength(30)]
         public string Status { get; set; }
         [Column("id_docusign")]
         [StringLength(50)]

@@ -19,6 +19,8 @@ namespace DUDS.Models
         public int CodInvestidor { get; set; }
         [Column("cod_sub_contrato")]
         public int CodSubContrato { get; set; }
+        [Column("data_transferencia", TypeName = "date")]
+        public DateTime? DataTransferencia { get; set; }
         [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]

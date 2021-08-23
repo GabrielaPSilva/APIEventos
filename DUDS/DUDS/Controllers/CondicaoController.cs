@@ -11,7 +11,8 @@ using DUDS.Service.Interface;
 
 namespace DUDS.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Route("api/[Controller]/[action]")]
     [ApiController]
     public class CondicaoController : ControllerBase
     {
@@ -223,7 +224,7 @@ namespace DUDS.Controllers
 
         #region Tipo Condição
 
-        // GET: api/ListaCondicoes/TipoCondicao
+        // GET: api/Condicao/TipoCondicao
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblTipoCondicao>>> TipoCondicao()
         {
@@ -251,7 +252,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/ListaCondicoes/GetTipoCondicao/id
+        // GET: api/Condicao/GetTipoCondicao/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblTipoCondicao>> GetTipoCondicao(int id)
         {
@@ -274,7 +275,7 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/ListaCondicoes/CadastrarTipoCondicao/TipoCondicaoModel
+        //POST: api/Condicao/CadastrarTipoCondicao/TipoCondicaoModel
         [HttpPost]
         public async Task<ActionResult<TipoCondicaoModel>> CadastrarTipoCondicao(TipoCondicaoModel tblTipoCondicaoModel)
         {
@@ -300,7 +301,7 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/ListaCondicoes/EditarTipoCondicao/id
+        //PUT: api/Condicao/EditarTipoCondicao/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarTipoCondicao(int id, TipoCondicaoModel tipoCondicao)
         {
@@ -334,7 +335,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/ListarCondicoes/DeletarTipoCondicao/id
+        // DELETE: api/Condicao/DeletarTipoCondicao/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarTipoCondicao(int id)
         {
@@ -357,7 +358,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/ListarCondicoes/DesativaTipoCondicao/id
+        // DESATIVA: api/Condicao/DesativaTipoCondicao/id
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativaTipoCondicao(int id)
         {
