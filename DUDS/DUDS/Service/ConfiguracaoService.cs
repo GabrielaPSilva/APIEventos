@@ -33,10 +33,14 @@ namespace DUDS.Service
             string[] codDistribuidor = _config["RelacaoTabelas:tbl_distribuidor"].Split(',').Select(t => t.Trim()).ToArray();
             string[] codAdministrador = _config["RelacaoTabelas:tbl_administrador"].Split(',').Select(t => t.Trim()).ToArray();
             string[] codGestor = _config["RelacaoTabelas:tbl_gestor"].Split(',').Select(t => t.Trim()).ToArray();
-            string[] codContratoDistribuicao = _config["RelacaoTabelas:tbl_contrato_distribuicao"].Split(',').Select(t => t.Trim()).ToArray();
             string[] codTipoConta = _config["RelacaoTabelas:tbl_tipo_conta"].Split(',').Select(t => t.Trim()).ToArray();
             string[] codContrato = _config["RelacaoTabelas:tbl_contrato"].Split(',').Select(t => t.Trim()).ToArray();
             string[] codCustodiante = _config["RelacaoTabelas:tbl_custodiante"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codContratoRemuneracao = _config["RelacaoTabelas:tbl_contrato_remuneracao"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codSubContrato = _config["RelacaoTabelas:tbl_sub_contrato"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codContratoFundo = _config["RelacaoTabelas:tbl_contrato_fundo"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codInvestidorDistribuidor = _config["RelacaoTabelas:tbl_investidor_distribuidor"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codTipoCondicao = _config["RelacaoTabelas:tbl_tipo_condicao"].Split(',').Select(t => t.Trim()).ToArray();
 
             string[] tableUsed = null;
             string codUsed = string.Empty;
@@ -64,10 +68,6 @@ namespace DUDS.Service
                     tableUsed = codGestor;
                     codUsed = "cod_gestor = ";
                     break;
-                case "tbl_contrato_distribuicao":
-                    tableUsed = codContratoDistribuicao;
-                    codUsed = "cod_contrato_distribuicao = ";
-                    break;
                 case "tbl_tipo_conta":
                     tableUsed = codTipoConta;
                     codUsed = "cod_tipo_conta = ";
@@ -79,6 +79,26 @@ namespace DUDS.Service
                 case "tbl_custodiante":
                     tableUsed = codCustodiante;
                     codUsed = "cod_custodiante = ";
+                    break;
+                case "tbl_contrato_remuneracao":
+                    tableUsed = codContratoRemuneracao;
+                    codUsed = "cod_contrato_remuneracao = ";
+                    break;
+                case "tbl_sub_contrato":
+                    tableUsed = codSubContrato;
+                    codUsed = "cod_sub_contrato = ";
+                    break;
+                case "tbl_contrato_fundo":
+                    tableUsed = codContratoFundo;
+                    codUsed = "cod_contrato_fundo = ";
+                    break;
+                case "tbl_investidor_distribuidor":
+                    tableUsed = codInvestidorDistribuidor;
+                    codUsed = "cod_investidor_distribuidor = ";
+                    break;
+                case "tbl_tipo_condicao":
+                    tableUsed = codTipoCondicao;
+                    codUsed = "cod_tipo_condicao = ";
                     break;
                 default:
                     break;
