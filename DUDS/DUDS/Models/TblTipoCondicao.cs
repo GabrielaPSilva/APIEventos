@@ -13,7 +13,7 @@ namespace DUDS.Models
     {
         public TblTipoCondicao()
         {
-            TblAcordoCondicional = new HashSet<TblAcordoCondicional>();
+            TblContratoFundo = new HashSet<TblContratoFundo>();
         }
 
         [Key]
@@ -34,6 +34,6 @@ namespace DUDS.Models
         public string UsuarioModificacao { get; set; }
 
         [InverseProperty("CodTipoCondicaoNavigation")]
-        public virtual ICollection<TblAcordoCondicional> TblAcordoCondicional { get; set; }
+        public virtual ICollection<TblContratoFundo> TblContratoFundo { get; set; }
     }
 }

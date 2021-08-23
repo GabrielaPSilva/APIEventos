@@ -16,25 +16,29 @@ namespace DUDS.Models
         [StringLength(7)]
         public string Competencia { get; set; }
         [Key]
-        [Column("cod_investidor")]
-        public long CodInvestidor { get; set; }
+        [Column("cod_investidor_distribuidor")]
+        public int CodInvestidorDistribuidor { get; set; }
         [Key]
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
-        [Column("taxa_performance_apropriada", TypeName = "decimal(22, 10)")]
+        [Key]
+        [Column("cod_administrador")]
+        public int CodAdministrador { get; set; }
+        [Column("taxa_performance_apropriada", TypeName = "decimal(27, 15)")]
         public decimal TaxaPerformanceApropriada { get; set; }
-        [Column("taxa_performance_resgate", TypeName = "decimal(22, 10)")]
+        [Column("taxa_performance_resgate", TypeName = "decimal(27, 15)")]
         public decimal TaxaPerformanceResgate { get; set; }
-        [Column("taxa_administracao", TypeName = "decimal(22, 10)")]
+        [Column("taxa_administracao", TypeName = "decimal(27, 15)")]
         public decimal TaxaAdministracao { get; set; }
-        [Column("taxa_gestao", TypeName = "decimal(22, 10)")]
+        [Column("taxa_gestao", TypeName = "decimal(27, 15)")]
         public decimal TaxaGestao { get; set; }
 
+        [ForeignKey(nameof(CodAdministrador))]
+        [InverseProperty(nameof(TblAdministrador.TblPgtoAdmPfee))]
+        public virtual TblAdministrador CodAdministradorNavigation { get; set; }
         [ForeignKey(nameof(CodFundo))]
         [InverseProperty(nameof(TblFundo.TblPgtoAdmPfee))]
         public virtual TblFundo CodFundoNavigation { get; set; }
-        [ForeignKey(nameof(CodInvestidor))]
-        [InverseProperty(nameof(TblCliente.TblPgtoAdmPfee))]
-        public virtual TblCliente CodInvestidorNavigation { get; set; }
+        public virtual TblInvestidorDistribuidor CodInvestidorDistribuidorNavigation { get; set; }
     }
 }

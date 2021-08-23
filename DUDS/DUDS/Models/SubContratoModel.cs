@@ -24,6 +24,10 @@ namespace DUDS.Models
         public bool ClausulaRetroatividade { get; set; }
         public DateTime? DataRetroatividade { get; set; }
         public DateTime? DataAssinatura { get; set; }
+        public DateTime? DataVigenciaInicio { get; set; }
+
+        [StringLength(10)]
+        public string DataVigenciaFim { get; set; }
 
         //[Required]
         [StringLength(100)]
