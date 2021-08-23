@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using DUDS.Service.Interface;
 
 namespace DUDS.Controllers
 {
@@ -15,93 +16,206 @@ namespace DUDS.Controllers
     public class CondicaoController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IConfiguracaoService _configService;
 
-        public CondicaoController(DataContext context)
+        public CondicaoController(DataContext context, IConfiguracaoService configService)
         {
             _context = context;
+            _configService = configService;
         }
 
         #region Condição Remuneração
-        // GET: api/Condicao
+        // GET: api/Condicao/CondicaoRemuneracao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblCondicaoRemuneracao>>> GetTblCondicaoRemuneracao()
+        public async Task<ActionResult<IEnumerable<TblCondicaoRemuneracao>>> CondicaoRemuneracao()
         {
-            return await _context.TblCondicaoRemuneracao.ToListAsync();
-        }
-
-        // GET: api/Condicao/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblCondicaoRemuneracao>> GetTblCondicaoRemuneracao(int id)
-        {
-            var tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
-
-            if (tblCondicaoRemuneracao == null)
-            {
-                return NotFound();
-            }
-
-            return tblCondicaoRemuneracao;
-        }
-
-        // PUT: api/Condicao/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblCondicaoRemuneracao(int id, TblCondicaoRemuneracao tblCondicaoRemuneracao)
-        {
-            if (id != tblCondicaoRemuneracao.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(tblCondicaoRemuneracao).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblCondicaoRemuneracaoExists(id))
+                List<TblCondicaoRemuneracao> condicoesRemuneracao = await _context.TblCondicaoRemuneracao.Where(c => c.Ativo == true).OrderBy(c => c.CodContratoRemuneracao).AsNoTracking().ToListAsync();
+
+                if (condicoesRemuneracao.Count() == 0)
                 {
                     return NotFound();
                 }
+
+                if (condicoesRemuneracao != null)
+                {
+                    return Ok(condicoesRemuneracao);
+                }
                 else
                 {
-                    throw;
+                    return BadRequest();
                 }
             }
-
-            return NoContent();
-        }
-
-        // POST: api/Condicao
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TblCondicaoRemuneracao>> PostTblCondicaoRemuneracao(TblCondicaoRemuneracao tblCondicaoRemuneracao)
-        {
-            _context.TblCondicaoRemuneracao.Add(tblCondicaoRemuneracao);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTblCondicaoRemuneracao", new { id = tblCondicaoRemuneracao.Id }, tblCondicaoRemuneracao);
-        }
-
-        // DELETE: api/Condicao/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblCondicaoRemuneracao(int id)
-        {
-            var tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
-            if (tblCondicaoRemuneracao == null)
+            catch (InvalidOperationException e)
             {
-                return NotFound();
+                return NotFound(e);
             }
-
-            _context.TblCondicaoRemuneracao.Remove(tblCondicaoRemuneracao);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool TblCondicaoRemuneracaoExists(int id)
+        // GET: api/Condicao/GetCondicaoRemuneracao/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblCondicaoRemuneracao>> GetCondicaoRemuneracao(int id)
+        {
+            TblCondicaoRemuneracao tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
+
+            try
+            {
+                if (tblCondicaoRemuneracao != null)
+                {
+                    return Ok(tblCondicaoRemuneracao);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //POST: api/Condicao/CadastrarCondicaoRemuneracao/CondicaoRemuneracaoModel
+        [HttpPost]
+        public async Task<ActionResult<CondicaoRemuneracaoModel>> CadastrarCondicaoRemuneracao(CondicaoRemuneracaoModel tblCondicaoRemuneracaoModel)
+        {
+            TblCondicaoRemuneracao itensCondicaoRemuneracao = new TblCondicaoRemuneracao
+            {
+                CodContratoRemuneracao = tblCondicaoRemuneracaoModel.CodContratoRemuneracao,
+                CodFundo = tblCondicaoRemuneracaoModel.CodFundo,
+                DataInicio = tblCondicaoRemuneracaoModel.DataInicio,
+                DataFim = tblCondicaoRemuneracaoModel.DataFim,
+                ValorPosicaoInicio = tblCondicaoRemuneracaoModel.ValorPosicaoInicio,
+                ValorPosicaoFim = tblCondicaoRemuneracaoModel.ValorPosicaoFim,
+                ValorPgtoFixo = tblCondicaoRemuneracaoModel.ValorPgtoFixo,
+                UsuarioModificacao = tblCondicaoRemuneracaoModel.UsuarioModificacao
+            };
+
+            try
+            {
+                _context.TblCondicaoRemuneracao.Add(itensCondicaoRemuneracao);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(
+                    nameof(GetCondicaoRemuneracao),
+                    new { id = itensCondicaoRemuneracao.Id },
+                    Ok(itensCondicaoRemuneracao));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //PUT: api/Condicao/EditarCondicaoRemuneracao/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarCondicaoRemuneracao(int id, CondicaoRemuneracaoModel condicaoRemuneracao)
+        {
+            try
+            {
+                TblCondicaoRemuneracao registroCondicaoRemuneracao = _context.TblCondicaoRemuneracao.Find(id);
+
+                if (registroCondicaoRemuneracao != null)
+                {
+                    registroCondicaoRemuneracao.CodContratoRemuneracao = condicaoRemuneracao.CodContratoRemuneracao == 0 ? registroCondicaoRemuneracao.CodContratoRemuneracao : condicaoRemuneracao.CodContratoRemuneracao;
+                    registroCondicaoRemuneracao.CodFundo = condicaoRemuneracao.CodFundo == 0 ? registroCondicaoRemuneracao.CodFundo : condicaoRemuneracao.CodFundo;
+                    registroCondicaoRemuneracao.DataInicio = condicaoRemuneracao.DataInicio == null ? registroCondicaoRemuneracao.DataInicio : condicaoRemuneracao.DataInicio;
+                    registroCondicaoRemuneracao.DataFim = condicaoRemuneracao.DataFim == null ? registroCondicaoRemuneracao.DataFim : condicaoRemuneracao.DataFim;
+                    registroCondicaoRemuneracao.ValorPosicaoInicio = (condicaoRemuneracao.ValorPosicaoInicio == null || condicaoRemuneracao.ValorPosicaoInicio == 0) ? registroCondicaoRemuneracao.ValorPosicaoInicio : condicaoRemuneracao.ValorPosicaoInicio;
+                    registroCondicaoRemuneracao.ValorPosicaoFim = (condicaoRemuneracao.ValorPosicaoFim == null || condicaoRemuneracao.ValorPosicaoFim == 0) ? registroCondicaoRemuneracao.ValorPosicaoFim : condicaoRemuneracao.ValorPosicaoFim;
+                    registroCondicaoRemuneracao.ValorPgtoFixo = (condicaoRemuneracao.ValorPgtoFixo == null || condicaoRemuneracao.ValorPgtoFixo == 0) ? registroCondicaoRemuneracao.ValorPgtoFixo : condicaoRemuneracao.ValorPgtoFixo;
+                    registroCondicaoRemuneracao.UsuarioModificacao = condicaoRemuneracao.UsuarioModificacao == null ? registroCondicaoRemuneracao.UsuarioModificacao : condicaoRemuneracao.UsuarioModificacao;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroCondicaoRemuneracao);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!CondicaoRemuneracaoExists(condicaoRemuneracao.Id))
+            {
+                return NotFound(e);
+            }
+        }
+
+        // DELETE: api/Condicao/DeletarCondicaoRemuneracao/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarCondicaoRemuneracao(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_condicao_remuneracao");
+
+            if (!existeRegistro)
+            {
+                TblCondicaoRemuneracao tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
+
+                if (tblCondicaoRemuneracao == null)
+                {
+                    return NotFound();
+                }
+
+                try
+                {
+                    _context.TblCondicaoRemuneracao.Remove(tblCondicaoRemuneracao);
+                    await _context.SaveChangesAsync();
+                    return Ok(tblCondicaoRemuneracao);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        // DESATIVA: api/Condicao/DesativarCondicaoRemuneracao/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarCondicaoRemuneracao(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_condicao_remuneracao");
+
+            if (!existeRegistro)
+            {
+                TblCondicaoRemuneracao registroCondicaoRemuneracao = _context.TblCondicaoRemuneracao.Find(id);
+
+                if (registroCondicaoRemuneracao != null)
+                {
+                    registroCondicaoRemuneracao.Ativo = false;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroCondicaoRemuneracao);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        private bool CondicaoRemuneracaoExists(int id)
         {
             return _context.TblCondicaoRemuneracao.Any(e => e.Id == id);
         }

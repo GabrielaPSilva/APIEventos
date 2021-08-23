@@ -20,10 +20,6 @@ namespace DUDS.Models
         [Column("cod_sub_contrato")]
         public int CodSubContrato { get; set; }
         [Required]
-        [Column("direcao_pagamento")]
-        [StringLength(20)]
-        public string DirecaoPagamento { get; set; }
-        [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }

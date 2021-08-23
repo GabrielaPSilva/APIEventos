@@ -419,258 +419,463 @@ namespace DUDS.Controllers
         #endregion
 
         #region Contrato Alocador
-        // GET: api/ContratoAlocador
+        // GET: api/Contrato/ContratoAlocador
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoAlocador>>> GetTblContratoAlocador()
+        public async Task<ActionResult<IEnumerable<TblContratoAlocador>>> ContratoAlocador()
         {
-            return await _context.TblContratoAlocador.ToListAsync();
-        }
-
-        // GET: api/ContratoAlocador/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoAlocador>> GetTblContratoAlocador(int id)
-        {
-            var tblContratoAlocador = await _context.TblContratoAlocador.FindAsync(id);
-
-            if (tblContratoAlocador == null)
-            {
-                return NotFound();
-            }
-
-            return tblContratoAlocador;
-        }
-
-        // PUT: api/ContratoAlocador/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblContratoAlocador(int id, TblContratoAlocador tblContratoAlocador)
-        {
-            if (id != tblContratoAlocador.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(tblContratoAlocador).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblContratoAlocadorExists(id))
+                List<TblContratoAlocador> contratoAlocadores = await _context.TblContratoAlocador.AsNoTracking().ToListAsync();
+
+                if (contratoAlocadores.Count() == 0)
                 {
                     return NotFound();
                 }
+
+                if (contratoAlocadores != null)
+                {
+                    return Ok(contratoAlocadores);
+                }
                 else
                 {
-                    throw;
+                    return BadRequest();
                 }
             }
-
-            return NoContent();
-        }
-
-        // POST: api/ContratoAlocador
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TblContratoAlocador>> PostTblContratoAlocador(TblContratoAlocador tblContratoAlocador)
-        {
-            _context.TblContratoAlocador.Add(tblContratoAlocador);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTblContratoAlocador", new { id = tblContratoAlocador.Id }, tblContratoAlocador);
-        }
-
-        // DELETE: api/ContratoAlocador/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblContratoAlocador(int id)
-        {
-            var tblContratoAlocador = await _context.TblContratoAlocador.FindAsync(id);
-            if (tblContratoAlocador == null)
+            catch (InvalidOperationException e)
             {
-                return NotFound();
+                return NotFound(e);
             }
-
-            _context.TblContratoAlocador.Remove(tblContratoAlocador);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool TblContratoAlocadorExists(int id)
+        // GET: api/Contrato/GetContratoAlocador/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblContratoAlocador>> GetContratoAlocador(int id)
+        {
+            TblContratoAlocador tblContratoAlocador = await _context.TblContratoAlocador.FindAsync(id);
+
+            try
+            {
+                if (tblContratoAlocador != null)
+                {
+                    return Ok(tblContratoAlocador);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //POST: api/Contrato/CadastrarContratoAlocador/ContratoAlocadorModel
+        [HttpPost]
+        public async Task<ActionResult<ContratoAlocadorModel>> CadastrarContratoAlocador(ContratoAlocadorModel tblContratoAlocadorModel)
+        {
+            TblContratoAlocador itensContratoAlocador = new TblContratoAlocador
+            {
+                CodInvestidor = tblContratoAlocadorModel.CodInvestidor,
+                CodSubContrato = tblContratoAlocadorModel.CodSubContrato,
+                UsuarioModificacao = tblContratoAlocadorModel.UsuarioModificacao
+            };
+
+            try
+            {
+                _context.TblContratoAlocador.Add(itensContratoAlocador);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(
+                    nameof(GetContratoAlocador),
+                    new { id = itensContratoAlocador.Id },
+                     Ok(itensContratoAlocador));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //PUT: api/Contrato/EditarContratoAlocador/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarContratoAlocador(int id, ContratoAlocadorModel contratoAlocador)
+        {
+            try
+            {
+                TblContratoAlocador registroContratoAlocador = _context.TblContratoAlocador.Find(id);
+
+                if (registroContratoAlocador != null)
+                {
+                    registroContratoAlocador.CodInvestidor = contratoAlocador.CodInvestidor == 0 ? registroContratoAlocador.CodInvestidor : contratoAlocador.CodInvestidor;
+                    registroContratoAlocador.CodSubContrato = contratoAlocador.CodSubContrato == 0 ? registroContratoAlocador.CodSubContrato : contratoAlocador.CodSubContrato;
+                    registroContratoAlocador.UsuarioModificacao = contratoAlocador.UsuarioModificacao == null ? registroContratoAlocador.UsuarioModificacao : contratoAlocador.UsuarioModificacao;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroContratoAlocador);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!ContratoAlocadorExists(contratoAlocador.Id))
+            {
+                return BadRequest(e);
+            }
+        }
+
+
+        // DELETE: api/Contrato/DeletarContratoAlocador/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarContratoAlocador(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contrato_alocador");
+
+            if (!existeRegistro)
+            {
+                TblContratoAlocador tblContratoAlocador = await _context.TblContratoAlocador.FindAsync(id);
+
+                if (tblContratoAlocador == null)
+                {
+                    return NotFound();
+                }
+
+                try
+                {
+                    _context.TblContratoAlocador.Remove(tblContratoAlocador);
+                    await _context.SaveChangesAsync();
+                    return Ok(tblContratoAlocador);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        private bool ContratoAlocadorExists(int id)
         {
             return _context.TblContratoAlocador.Any(e => e.Id == id);
         }
         #endregion
 
         #region Contrato Fundo
-        // GET: api/ContratoFundo
+        // GET: api/Contrato/ContratoFundo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoFundo>>> GetTblContratoFundo()
+        public async Task<ActionResult<IEnumerable<TblContratoFundo>>> ContratoFundo()
         {
-            return await _context.TblContratoFundo.ToListAsync();
-        }
-
-        // GET: api/ContratoFundo/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoFundo>> GetTblContratoFundo(int id)
-        {
-            var tblContratoFundo = await _context.TblContratoFundo.FindAsync(id);
-
-            if (tblContratoFundo == null)
-            {
-                return NotFound();
-            }
-
-            return tblContratoFundo;
-        }
-
-        // PUT: api/ContratoFundo/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblContratoFundo(int id, TblContratoFundo tblContratoFundo)
-        {
-            if (id != tblContratoFundo.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(tblContratoFundo).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblContratoFundoExists(id))
+                List<TblContratoFundo> contratoFundos = await _context.TblContratoFundo.OrderBy(c => c.CodSubContrato).AsNoTracking().ToListAsync();
+
+                if (contratoFundos.Count() == 0)
                 {
                     return NotFound();
                 }
+
+                if (contratoFundos != null)
+                {
+                    return Ok(contratoFundos);
+                }
                 else
                 {
-                    throw;
+                    return BadRequest();
                 }
             }
-
-            return NoContent();
-        }
-
-        // POST: api/ContratoFundo
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TblContratoFundo>> PostTblContratoFundo(TblContratoFundo tblContratoFundo)
-        {
-            _context.TblContratoFundo.Add(tblContratoFundo);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTblContratoFundo", new { id = tblContratoFundo.Id }, tblContratoFundo);
-        }
-
-        // DELETE: api/ContratoFundo/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblContratoFundo(int id)
-        {
-            var tblContratoFundo = await _context.TblContratoFundo.FindAsync(id);
-            if (tblContratoFundo == null)
+            catch (InvalidOperationException e)
             {
-                return NotFound();
+                return NotFound(e);
             }
-
-            _context.TblContratoFundo.Remove(tblContratoFundo);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool TblContratoFundoExists(int id)
+        // GET: api/Contrato/GetContratoFundo/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblContratoFundo>> GetContratoFundo(int id)
+        {
+            TblContratoFundo tblContratoFundo = await _context.TblContratoFundo.FindAsync(id);
+
+            try
+            {
+                if (tblContratoFundo != null)
+                {
+                    return Ok(tblContratoFundo);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //POST: api/Contrato/CadastrarContratoFundo/ContratoFundoModel
+        [HttpPost]
+        public async Task<ActionResult<ContratoFundoModel>> CadastrarContratoFundo(ContratoFundoModel tblContratoFundoModel)
+        {
+            TblContratoFundo itensContratoFundo = new TblContratoFundo
+            {
+                CodSubContrato = tblContratoFundoModel.CodSubContrato,
+                CodFundo = tblContratoFundoModel.CodFundo,
+                CodTipoCondicao = tblContratoFundoModel.CodTipoCondicao,
+                UsuarioModificacao = tblContratoFundoModel.UsuarioModificacao
+            };
+
+            try
+            {
+                _context.TblContratoFundo.Add(itensContratoFundo);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(
+                    nameof(GetContratoFundo),
+                    new { id = itensContratoFundo.Id },
+                     Ok(itensContratoFundo));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //PUT: api/Contrato/EditarContratoFundo/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarContratoFundo(int id, ContratoFundoModel contratoFundo)
+        {
+            try
+            {
+                TblContratoFundo registroContratoFundo = _context.TblContratoFundo.Find(id);
+
+                if (registroContratoFundo != null)
+                {
+                    registroContratoFundo.CodSubContrato = contratoFundo.CodSubContrato == 0 ? registroContratoFundo.CodSubContrato : contratoFundo.CodSubContrato;
+                    registroContratoFundo.CodFundo = contratoFundo.CodFundo == 0 ? registroContratoFundo.CodFundo : contratoFundo.CodFundo;
+                    registroContratoFundo.CodTipoCondicao = contratoFundo.CodTipoCondicao == 0 ? registroContratoFundo.CodTipoCondicao : contratoFundo.CodTipoCondicao;
+                    registroContratoFundo.UsuarioModificacao = contratoFundo.UsuarioModificacao == null ? registroContratoFundo.UsuarioModificacao : contratoFundo.UsuarioModificacao;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroContratoFundo);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!ContratoFundoExists(contratoFundo.Id))
+            {
+                return BadRequest(e);
+            }
+        }
+
+
+        // DELETE: api/Contrato/DeletarContratoFundo/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarContratoFundo(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contrato_fundo");
+
+            if (!existeRegistro)
+            {
+                TblContratoFundo tblContratoFundo = await _context.TblContratoFundo.FindAsync(id);
+
+                if (tblContratoFundo == null)
+                {
+                    return NotFound();
+                }
+
+                try
+                {
+                    _context.TblContratoFundo.Remove(tblContratoFundo);
+                    await _context.SaveChangesAsync();
+                    return Ok(tblContratoFundo);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        private bool ContratoFundoExists(int id)
         {
             return _context.TblContratoFundo.Any(e => e.Id == id);
         }
         #endregion
 
         #region Contrato Remuneração
-        // GET: api/ContratoRemuneracao
+        // GET: api/Contrato/ContratoRemuneracao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoRemuneracao>>> GetTblContratoRemuneracao()
+        public async Task<ActionResult<IEnumerable<TblContratoRemuneracao>>> ContratoRemuneracao()
         {
-            return await _context.TblContratoRemuneracao.ToListAsync();
-        }
-
-        // GET: api/ContratoRemuneracao/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoRemuneracao>> GetTblContratoRemuneracao(int id)
-        {
-            var tblContratoRemuneracao = await _context.TblContratoRemuneracao.FindAsync(id);
-
-            if (tblContratoRemuneracao == null)
-            {
-                return NotFound();
-            }
-
-            return tblContratoRemuneracao;
-        }
-
-        // PUT: api/ContratoRemuneracao/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblContratoRemuneracao(int id, TblContratoRemuneracao tblContratoRemuneracao)
-        {
-            if (id != tblContratoRemuneracao.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(tblContratoRemuneracao).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblContratoRemuneracaoExists(id))
+                List<TblContratoRemuneracao> contratoRemuneracao = await _context.TblContratoRemuneracao.OrderBy(c => c.CodContratoFundo).AsNoTracking().ToListAsync();
+
+                if (contratoRemuneracao.Count() == 0)
                 {
                     return NotFound();
                 }
+
+                if (contratoRemuneracao != null)
+                {
+                    return Ok(contratoRemuneracao);
+                }
                 else
                 {
-                    throw;
+                    return BadRequest();
                 }
             }
-
-            return NoContent();
-        }
-
-        // POST: api/ContratoRemuneracao
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TblContratoRemuneracao>> PostTblContratoRemuneracao(TblContratoRemuneracao tblContratoRemuneracao)
-        {
-            _context.TblContratoRemuneracao.Add(tblContratoRemuneracao);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTblContratoRemuneracao", new { id = tblContratoRemuneracao.Id }, tblContratoRemuneracao);
-        }
-
-        // DELETE: api/ContratoRemuneracao/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTblContratoRemuneracao(int id)
-        {
-            var tblContratoRemuneracao = await _context.TblContratoRemuneracao.FindAsync(id);
-            if (tblContratoRemuneracao == null)
+            catch (InvalidOperationException e)
             {
-                return NotFound();
+                return NotFound(e);
             }
-
-            _context.TblContratoRemuneracao.Remove(tblContratoRemuneracao);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool TblContratoRemuneracaoExists(int id)
+        // GET: api/Contrato/GetContratoRemuneracao/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblContratoRemuneracao>> GetContratoRemuneracao(int id)
+        {
+            TblContratoRemuneracao tblContratoRemuneracao = await _context.TblContratoRemuneracao.FindAsync(id);
+
+            try
+            {
+                if (tblContratoRemuneracao != null)
+                {
+                    return Ok(tblContratoRemuneracao);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //POST: api/Contrato/CadastrarContratoRemuneracao/ContratoRemuneracaoModel
+        [HttpPost]
+        public async Task<ActionResult<ContratoRemuneracaoModel>> CadastrarContratoRemuneracao(ContratoRemuneracaoModel tblContratoRemuneracaoModel)
+        {
+            TblContratoRemuneracao itensContratoRemuneracao = new TblContratoRemuneracao
+            {
+                CodContratoFundo = tblContratoRemuneracaoModel.CodContratoFundo,
+                PercentualAdm = tblContratoRemuneracaoModel.PercentualAdm,
+                PercentualPfee = tblContratoRemuneracaoModel.PercentualPfee,
+                UsuarioModificacao = tblContratoRemuneracaoModel.UsuarioModificacao,
+            };
+
+            try
+            {
+                _context.TblContratoRemuneracao.Add(itensContratoRemuneracao);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(
+                    nameof(GetContratoRemuneracao),
+                    new { id = itensContratoRemuneracao.Id },
+                     Ok(itensContratoRemuneracao));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //PUT: api/Contrato/EditarContratoRemuneracao/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarContratoRemuneracao(int id, ContratoRemuneracaoModel contratoRemuneracao)
+        {
+            try
+            {
+                TblContratoRemuneracao registroContratoRemuneracao = _context.TblContratoRemuneracao.Find(id);
+
+                if (registroContratoRemuneracao != null)
+                {
+                    registroContratoRemuneracao.CodContratoFundo = contratoRemuneracao.CodContratoFundo == 0 ? registroContratoRemuneracao.CodContratoFundo : contratoRemuneracao.CodContratoFundo;
+                    registroContratoRemuneracao.PercentualAdm = contratoRemuneracao.PercentualAdm == 0 ? registroContratoRemuneracao.PercentualAdm : contratoRemuneracao.PercentualAdm;
+                    registroContratoRemuneracao.PercentualPfee = contratoRemuneracao.PercentualPfee == 0 ? registroContratoRemuneracao.PercentualPfee : contratoRemuneracao.PercentualPfee;
+                    registroContratoRemuneracao.UsuarioModificacao = contratoRemuneracao.UsuarioModificacao == null ? registroContratoRemuneracao.UsuarioModificacao : contratoRemuneracao.UsuarioModificacao;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroContratoRemuneracao);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!ContratoRemuneracaoExists(contratoRemuneracao.Id))
+            {
+                return BadRequest(e);
+            }
+        }
+
+
+        // DELETE: api/Contrato/DeletarContratoRemuneracao/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarContratoRemuneracao(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contrato_remuneracao");
+
+            if (!existeRegistro)
+            {
+                TblContratoRemuneracao tblContratoRemuneracao = await _context.TblContratoRemuneracao.FindAsync(id);
+
+                if (tblContratoRemuneracao == null)
+                {
+                    return NotFound();
+                }
+
+                try
+                {
+                    _context.TblContratoRemuneracao.Remove(tblContratoRemuneracao);
+                    await _context.SaveChangesAsync();
+                    return Ok(tblContratoRemuneracao);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        private bool ContratoRemuneracaoExists(int id)
         {
             return _context.TblContratoRemuneracao.Any(e => e.Id == id);
         }

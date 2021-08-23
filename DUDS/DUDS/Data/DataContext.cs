@@ -275,8 +275,6 @@ namespace DUDS.Data
             {
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.DirecaoPagamento).IsUnicode(false);
-
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
                 entity.HasOne(d => d.CodInvestidorNavigation)
@@ -479,6 +477,8 @@ namespace DUDS.Data
                 entity.Property(e => e.CodGestor).HasComment("Gestor do fundo investidor");
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.DirecaoPagamento).IsUnicode(false);
 
                 entity.Property(e => e.NomeCliente).IsUnicode(false);
 

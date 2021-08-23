@@ -39,6 +39,9 @@ namespace DUDS.Models
         public int? CodAdministrador { get; set; }
         [Column("cod_gestor")]
         public int? CodGestor { get; set; }
+        [Column("direcao_pagamento")]
+        [StringLength(20)]
+        public string DirecaoPagamento { get; set; }
         [Column("data_modificacao", TypeName = "date")]
         public DateTime DataModificacao { get; set; }
         [Column("usuario_modificacao")]

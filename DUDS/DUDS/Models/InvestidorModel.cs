@@ -24,6 +24,9 @@ namespace DUDS.Models
         public int? CodGestor { get; set; }
         public DateTime DataModificacao { get; set; }
 
+        [StringLength(20)]
+        public string DirecaoPagamento { get; set; }
+
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         public bool? Ativo { get; set; }
