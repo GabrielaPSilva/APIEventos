@@ -118,7 +118,6 @@ namespace DUDS.Controllers
                     registroDistribuidor.NomeDistribuidor = distribuidor.NomeDistribuidor == null ? registroDistribuidor.NomeDistribuidor : distribuidor.NomeDistribuidor;
                     registroDistribuidor.Cnpj = distribuidor.Cnpj == null ? registroDistribuidor.Cnpj : distribuidor.Cnpj;
                     registroDistribuidor.ClassificacaoDistribuidor = distribuidor.ClassificacaoDistribuidor == null ? registroDistribuidor.ClassificacaoDistribuidor : distribuidor.ClassificacaoDistribuidor;
-                    registroDistribuidor.UsuarioModificacao = distribuidor.UsuarioModificacao == null ? registroDistribuidor.UsuarioModificacao : distribuidor.UsuarioModificacao;
 
                     try
                     {
@@ -293,7 +292,6 @@ namespace DUDS.Controllers
                     registroDistribuidorAdministrador.CodAdministrador = distribuidorAdmin.CodAdministrador == 0 ? registroDistribuidorAdministrador.CodAdministrador : distribuidorAdmin.CodAdministrador;
                     registroDistribuidorAdministrador.CodDistribuidor = distribuidorAdmin.CodDistribuidor == 0 ? registroDistribuidorAdministrador.CodDistribuidor : distribuidorAdmin.CodDistribuidor;
                     registroDistribuidorAdministrador.CodDistrAdm = distribuidorAdmin.CodDistrAdm == null ? registroDistribuidorAdministrador.CodDistrAdm : distribuidorAdmin.CodDistrAdm;
-                    registroDistribuidorAdministrador.UsuarioModificacao = distribuidorAdmin.UsuarioModificacao == null ? registroDistribuidorAdministrador.UsuarioModificacao : distribuidorAdmin.UsuarioModificacao;
 
                     try
                     {

@@ -160,7 +160,6 @@ namespace DUDS.Controllers
                     registroInvestidor.CodAdministrador = investidor.CodAdministrador == 0 ? registroInvestidor.CodAdministrador : investidor.CodAdministrador;
                     registroInvestidor.CodGestor = investidor.CodGestor == 0 ? registroInvestidor.CodGestor : investidor.CodGestor;
                     registroInvestidor.DirecaoPagamento = investidor.DirecaoPagamento == null ? registroInvestidor.DirecaoPagamento : investidor.DirecaoPagamento;
-                    registroInvestidor.UsuarioModificacao = investidor.UsuarioModificacao == null ? registroInvestidor.UsuarioModificacao : investidor.UsuarioModificacao;
 
                     try
                     {
@@ -388,7 +387,6 @@ namespace DUDS.Controllers
                     registroInvestidorDistribuidor.CodInvestidor = investidorDistribuidor.CodInvestidor == 0 ? registroInvestidorDistribuidor.CodInvestidor : investidorDistribuidor.CodInvestidor;
                     registroInvestidorDistribuidor.CodDistribuidor = investidorDistribuidor.CodDistribuidor == 0 ? registroInvestidorDistribuidor.CodDistribuidor : investidorDistribuidor.CodDistribuidor;
                     registroInvestidorDistribuidor.CodAdministrador = investidorDistribuidor.CodAdministrador == 0 ? registroInvestidorDistribuidor.CodAdministrador : investidorDistribuidor.CodAdministrador;
-                    registroInvestidorDistribuidor.UsuarioModificacao = investidorDistribuidor.UsuarioModificacao == null ? registroInvestidorDistribuidor.UsuarioModificacao : investidorDistribuidor.UsuarioModificacao;
 
                     try
                     {
