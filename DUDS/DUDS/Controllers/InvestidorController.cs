@@ -323,7 +323,7 @@ namespace DUDS.Controllers
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(
-                    nameof(GetInvestidor),
+                    nameof(GetInvestidorDistribuidor),
                     new {
                             cod_investidor = itensInvestidorDistribuidor.CodInvestidor,
                             cod_distribuidor = itensInvestidorDistribuidor.CodDistribuidor,
