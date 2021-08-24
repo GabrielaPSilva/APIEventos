@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace DUDS.Models
 {
-    public class ContratoDistribuicaoModel
+    public class ContratoAlocadorModel
     {
         public int Id { get; set; }
+        public int CodInvestidor { get; set; }
         public int CodSubContrato { get; set; }
-        public int CodFundo { get; set; }
+        public DateTime? DataTransferencia { get; set; }
 
+        //[Required]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
-        public DateTime? DataModificacao { get; set; }
+        public DateTime DataModificacao { get; set; }
     }
 }

@@ -6,22 +6,16 @@ using System.Threading.Tasks;
 
 namespace DUDS.Models
 {
-    public class AcordoRemuneracaoModel
+    public class ContratoRemuneracaoModel
     {
         public int Id { get; set; }
-        public int CodContratoDistribuicao { get; set; }
-
-        [StringLength(15)]
-        public string TipoRange { get; set; }
-        public DateTime DataVigenciaInicio { get; set; }
-        public DateTime DataVigenciaFim { get; set; }
+        public int CodContratoFundo { get; set; }
+        public double PercentualAdm { get; set; }
+        public double PercentualPfee { get; set; }
 
         //[Required]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         public DateTime DataModificacao { get; set; }
-
-        //[Required]
-        public bool? Ativo { get; set; }
     }
 }

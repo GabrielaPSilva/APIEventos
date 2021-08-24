@@ -12,6 +12,11 @@ namespace DUDS.Models
     [Index(nameof(Id), Name = "IX_tbl_investidor_distribuidor", IsUnique = true)]
     public partial class TblInvestidorDistribuidor
     {
+        public TblInvestidorDistribuidor()
+        {
+            TblPgtoAdmPfee = new HashSet<TblPgtoAdmPfee>();
+        }
+
         [Column("id")]
         public int Id { get; set; }
         [Column("cod_invest_administrador")]
@@ -42,5 +47,6 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodInvestidor))]
         [InverseProperty(nameof(TblInvestidor.TblInvestidorDistribuidor))]
         public virtual TblInvestidor CodInvestidorNavigation { get; set; }
+        public virtual ICollection<TblPgtoAdmPfee> TblPgtoAdmPfee { get; set; }
     }
 }

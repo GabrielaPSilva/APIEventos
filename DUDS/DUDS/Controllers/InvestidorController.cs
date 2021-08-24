@@ -88,6 +88,7 @@ namespace DUDS.Controllers
                 TipoCliente = tblInvestidorModel.TipoCliente,
                 CodAdministrador = tblInvestidorModel.CodAdministrador,
                 CodGestor = tblInvestidorModel.CodGestor,
+                DirecaoPagamento = tblInvestidorModel.DirecaoPagamento,
                 UsuarioModificacao = tblInvestidorModel.UsuarioModificacao
             };
 
@@ -125,6 +126,7 @@ namespace DUDS.Controllers
                         TipoCliente = line.TipoCliente,
                         CodAdministrador = line.CodAdministrador,
                         CodGestor = line.CodGestor,
+                        DirecaoPagamento = line.DirecaoPagamento,
                         UsuarioModificacao = line.UsuarioModificacao
                     };
 
@@ -157,6 +159,7 @@ namespace DUDS.Controllers
                     registroInvestidor.TipoCliente = investidor.TipoCliente == null ? registroInvestidor.TipoCliente : investidor.TipoCliente;
                     registroInvestidor.CodAdministrador = investidor.CodAdministrador == 0 ? registroInvestidor.CodAdministrador : investidor.CodAdministrador;
                     registroInvestidor.CodGestor = investidor.CodGestor == 0 ? registroInvestidor.CodGestor : investidor.CodGestor;
+                    registroInvestidor.DirecaoPagamento = investidor.DirecaoPagamento == null ? registroInvestidor.DirecaoPagamento : investidor.DirecaoPagamento;
                     registroInvestidor.UsuarioModificacao = investidor.UsuarioModificacao == null ? registroInvestidor.UsuarioModificacao : investidor.UsuarioModificacao;
 
                     try

@@ -14,8 +14,8 @@ namespace DUDS.Models
     {
         public TblSubContrato()
         {
-            TblAlocador = new HashSet<TblAlocador>();
-            TblContratoDistribuicao = new HashSet<TblContratoDistribuicao>();
+            TblContratoAlocador = new HashSet<TblContratoAlocador>();
+            TblContratoFundo = new HashSet<TblContratoFundo>();
         }
 
         [Key]
@@ -29,7 +29,7 @@ namespace DUDS.Models
         public string Versao { get; set; }
         [Required]
         [Column("status")]
-        [StringLength(10)]
+        [StringLength(30)]
         public string Status { get; set; }
         [Column("id_docusign")]
         [StringLength(50)]
@@ -40,6 +40,11 @@ namespace DUDS.Models
         public DateTime? DataRetroatividade { get; set; }
         [Column("data_assinatura", TypeName = "date")]
         public DateTime? DataAssinatura { get; set; }
+        [Column("data_vigencia_inicio", TypeName = "date")]
+        public DateTime? DataVigenciaInicio { get; set; }
+        [Column("data_vigencia_fim")]
+        [StringLength(10)]
+        public string DataVigenciaFim { get; set; }
         [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]
@@ -50,9 +55,9 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodContrato))]
         [InverseProperty(nameof(TblContrato.TblSubContrato))]
         public virtual TblContrato CodContratoNavigation { get; set; }
-        [InverseProperty("CodInvestidor1")]
-        public virtual ICollection<TblAlocador> TblAlocador { get; set; }
         [InverseProperty("CodSubContratoNavigation")]
-        public virtual ICollection<TblContratoDistribuicao> TblContratoDistribuicao { get; set; }
+        public virtual ICollection<TblContratoAlocador> TblContratoAlocador { get; set; }
+        [InverseProperty("CodSubContratoNavigation")]
+        public virtual ICollection<TblContratoFundo> TblContratoFundo { get; set; }
     }
 }

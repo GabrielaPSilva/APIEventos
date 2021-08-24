@@ -14,34 +14,34 @@ namespace DUDS.Controllers
     [Produces("application/json")]
     [Route("api/[Controller]/[action]")]
     [ApiController]
-    public class ListaCondicoesController : ControllerBase
+    public class CondicaoController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IConfiguracaoService _configService;
 
-        public ListaCondicoesController(DataContext context, IConfiguracaoService configService)
+        public CondicaoController(DataContext context, IConfiguracaoService configService)
         {
             _context = context;
             _configService = configService;
         }
 
-        #region Lista Condições
-        // GET: api/ListaCondicoes/ListaCondicoes
+        #region Condição Remuneração
+        // GET: api/Condicao/CondicaoRemuneracao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblListaCondicoes>>> ListaCondicoes()
+        public async Task<ActionResult<IEnumerable<TblCondicaoRemuneracao>>> CondicaoRemuneracao()
         {
             try
             {
-                List<TblListaCondicoes> listaCondicoes = await _context.TblListaCondicoes.Where(c => c.Ativo == true).OrderBy(c => c.CodAcordoCondicional).AsNoTracking().ToListAsync();
+                List<TblCondicaoRemuneracao> condicoesRemuneracao = await _context.TblCondicaoRemuneracao.Where(c => c.Ativo == true).OrderBy(c => c.CodContratoRemuneracao).AsNoTracking().ToListAsync();
 
-                if (listaCondicoes.Count() == 0)
+                if (condicoesRemuneracao.Count() == 0)
                 {
                     return NotFound();
                 }
 
-                if (listaCondicoes != null)
+                if (condicoesRemuneracao != null)
                 {
-                    return Ok(listaCondicoes);
+                    return Ok(condicoesRemuneracao);
                 }
                 else
                 {
@@ -54,17 +54,17 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/ListaCondicoes/GetListaCondicoes/id
+        // GET: api/Condicao/GetCondicaoRemuneracao/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblListaCondicoes>> GetListaCondicoes(int id)
+        public async Task<ActionResult<TblCondicaoRemuneracao>> GetCondicaoRemuneracao(int id)
         {
-            TblListaCondicoes tblListaCondicoes = await _context.TblListaCondicoes.FindAsync(id);
+            TblCondicaoRemuneracao tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
 
             try
             {
-                if (tblListaCondicoes != null)
+                if (tblCondicaoRemuneracao != null)
                 {
-                    return Ok(tblListaCondicoes);
+                    return Ok(tblCondicaoRemuneracao);
                 }
                 else
                 {
@@ -77,30 +77,31 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/ListaCondicoes/CadastrarListaCondicoes/ListaCondicoesModel
+        //POST: api/Condicao/CadastrarCondicaoRemuneracao/CondicaoRemuneracaoModel
         [HttpPost]
-        public async Task<ActionResult<ListaCondicoesModel>> CadastrarListaCondicoes(ListaCondicoesModel tblListaCondicoesModel)
+        public async Task<ActionResult<CondicaoRemuneracaoModel>> CadastrarCondicaoRemuneracao(CondicaoRemuneracaoModel tblCondicaoRemuneracaoModel)
         {
-            TblListaCondicoes itensListaCondicoes = new TblListaCondicoes
+            TblCondicaoRemuneracao itensCondicaoRemuneracao = new TblCondicaoRemuneracao
             {
-                CodAcordoCondicional = tblListaCondicoesModel.CodAcordoCondicional,
-                CodFundo = tblListaCondicoesModel.CodFundo,
-                DataInicio = tblListaCondicoesModel.DataInicio,
-                DataFim = tblListaCondicoesModel.DataFim,
-                ValorPosicaoInicio = tblListaCondicoesModel.ValorPosicaoInicio,
-                ValorPosicaoFim = tblListaCondicoesModel.ValorPosicaoFim,
-                UsuarioModificacao = tblListaCondicoesModel.UsuarioModificacao
+                CodContratoRemuneracao = tblCondicaoRemuneracaoModel.CodContratoRemuneracao,
+                CodFundo = tblCondicaoRemuneracaoModel.CodFundo,
+                DataInicio = tblCondicaoRemuneracaoModel.DataInicio,
+                DataFim = tblCondicaoRemuneracaoModel.DataFim,
+                ValorPosicaoInicio = tblCondicaoRemuneracaoModel.ValorPosicaoInicio,
+                ValorPosicaoFim = tblCondicaoRemuneracaoModel.ValorPosicaoFim,
+                ValorPgtoFixo = tblCondicaoRemuneracaoModel.ValorPgtoFixo,
+                UsuarioModificacao = tblCondicaoRemuneracaoModel.UsuarioModificacao
             };
 
             try
             {
-                _context.TblListaCondicoes.Add(itensListaCondicoes);
+                _context.TblCondicaoRemuneracao.Add(itensCondicaoRemuneracao);
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(
-                    nameof(GetListaCondicoes),
-                    new { id = itensListaCondicoes.Id },
-                      Ok(itensListaCondicoes));
+                    nameof(GetCondicaoRemuneracao),
+                    new { id = itensCondicaoRemuneracao.Id },
+                    Ok(itensCondicaoRemuneracao));
             }
             catch (Exception e)
             {
@@ -108,28 +109,29 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/ListaCondicoes/EditarListaCondicoes/id
+        //PUT: api/Condicao/EditarCondicaoRemuneracao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarListaCondicoes(int id, ListaCondicoesModel listaCondicoes)
+        public async Task<IActionResult> EditarCondicaoRemuneracao(int id, CondicaoRemuneracaoModel condicaoRemuneracao)
         {
             try
             {
-                TblListaCondicoes registroListaCondicoes = _context.TblListaCondicoes.Find(id);
+                TblCondicaoRemuneracao registroCondicaoRemuneracao = _context.TblCondicaoRemuneracao.Find(id);
 
-                if (registroListaCondicoes != null)
+                if (registroCondicaoRemuneracao != null)
                 {
-                    registroListaCondicoes.CodAcordoCondicional = listaCondicoes.CodAcordoCondicional == 0 ? registroListaCondicoes.CodAcordoCondicional : listaCondicoes.CodAcordoCondicional;
-                    registroListaCondicoes.CodFundo = listaCondicoes.CodFundo == 0 ? registroListaCondicoes.CodFundo : listaCondicoes.CodFundo;
-                    registroListaCondicoes.DataInicio = listaCondicoes.DataInicio == null ? registroListaCondicoes.DataInicio : listaCondicoes.DataInicio;
-                    registroListaCondicoes.DataFim = listaCondicoes.DataFim == null ? registroListaCondicoes.DataFim : listaCondicoes.DataFim;
-                    registroListaCondicoes.ValorPosicaoInicio = listaCondicoes.ValorPosicaoInicio == 0 ? registroListaCondicoes.ValorPosicaoInicio : listaCondicoes.ValorPosicaoInicio;
-                    registroListaCondicoes.ValorPosicaoFim = listaCondicoes.ValorPosicaoFim == 0 ? registroListaCondicoes.ValorPosicaoFim : listaCondicoes.ValorPosicaoFim;
-                    registroListaCondicoes.UsuarioModificacao = listaCondicoes.UsuarioModificacao == null ? registroListaCondicoes.UsuarioModificacao : listaCondicoes.UsuarioModificacao;
+                    registroCondicaoRemuneracao.CodContratoRemuneracao = condicaoRemuneracao.CodContratoRemuneracao == 0 ? registroCondicaoRemuneracao.CodContratoRemuneracao : condicaoRemuneracao.CodContratoRemuneracao;
+                    registroCondicaoRemuneracao.CodFundo = condicaoRemuneracao.CodFundo == 0 ? registroCondicaoRemuneracao.CodFundo : condicaoRemuneracao.CodFundo;
+                    registroCondicaoRemuneracao.DataInicio = condicaoRemuneracao.DataInicio == null ? registroCondicaoRemuneracao.DataInicio : condicaoRemuneracao.DataInicio;
+                    registroCondicaoRemuneracao.DataFim = condicaoRemuneracao.DataFim == null ? registroCondicaoRemuneracao.DataFim : condicaoRemuneracao.DataFim;
+                    registroCondicaoRemuneracao.ValorPosicaoInicio = (condicaoRemuneracao.ValorPosicaoInicio == null || condicaoRemuneracao.ValorPosicaoInicio == 0) ? registroCondicaoRemuneracao.ValorPosicaoInicio : condicaoRemuneracao.ValorPosicaoInicio;
+                    registroCondicaoRemuneracao.ValorPosicaoFim = (condicaoRemuneracao.ValorPosicaoFim == null || condicaoRemuneracao.ValorPosicaoFim == 0) ? registroCondicaoRemuneracao.ValorPosicaoFim : condicaoRemuneracao.ValorPosicaoFim;
+                    registroCondicaoRemuneracao.ValorPgtoFixo = (condicaoRemuneracao.ValorPgtoFixo == null || condicaoRemuneracao.ValorPgtoFixo == 0) ? registroCondicaoRemuneracao.ValorPgtoFixo : condicaoRemuneracao.ValorPgtoFixo;
+                    registroCondicaoRemuneracao.UsuarioModificacao = condicaoRemuneracao.UsuarioModificacao == null ? registroCondicaoRemuneracao.UsuarioModificacao : condicaoRemuneracao.UsuarioModificacao;
 
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(registroListaCondicoes);
+                        return Ok(registroCondicaoRemuneracao);
                     }
                     catch (Exception e)
                     {
@@ -141,32 +143,32 @@ namespace DUDS.Controllers
                     return BadRequest();
                 }
             }
-            catch (DbUpdateConcurrencyException e) when (!ListaCondicoesExists(listaCondicoes.Id))
+            catch (DbUpdateConcurrencyException e) when (!CondicaoRemuneracaoExists(condicaoRemuneracao.Id))
             {
                 return NotFound(e);
             }
         }
 
-        // DELETE: api/ListaCondicoes/DeletarListaCondicoes/id
+        // DELETE: api/Condicao/DeletarCondicaoRemuneracao/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarListaCondicoes(int id)
+        public async Task<IActionResult> DeletarCondicaoRemuneracao(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_lista_condicoes");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_condicao_remuneracao");
 
             if (!existeRegistro)
             {
-                TblListaCondicoes tblListaCondicoes = await _context.TblListaCondicoes.FindAsync(id);
+                TblCondicaoRemuneracao tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
 
-                if (tblListaCondicoes == null)
+                if (tblCondicaoRemuneracao == null)
                 {
                     return NotFound();
                 }
 
                 try
                 {
-                    _context.TblListaCondicoes.Remove(tblListaCondicoes);
+                    _context.TblCondicaoRemuneracao.Remove(tblCondicaoRemuneracao);
                     await _context.SaveChangesAsync();
-                    return Ok(tblListaCondicoes);
+                    return Ok(tblCondicaoRemuneracao);
                 }
                 catch (Exception e)
                 {
@@ -179,24 +181,24 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/ListaCondicoes/DesativarListaCondicoes/id
+        // DESATIVA: api/Condicao/DesativarCondicaoRemuneracao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarListaCondicoes(int id)
+        public async Task<IActionResult> DesativarCondicaoRemuneracao(int id)
         {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_lista_condicoes");
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_condicao_remuneracao");
 
             if (!existeRegistro)
             {
-                TblListaCondicoes registroListaCondicoes = _context.TblListaCondicoes.Find(id);
+                TblCondicaoRemuneracao registroCondicaoRemuneracao = _context.TblCondicaoRemuneracao.Find(id);
 
-                if (registroListaCondicoes != null)
+                if (registroCondicaoRemuneracao != null)
                 {
-                    registroListaCondicoes.Ativo = false;
+                    registroCondicaoRemuneracao.Ativo = false;
 
                     try
                     {
                         await _context.SaveChangesAsync();
-                        return Ok(registroListaCondicoes);
+                        return Ok(registroCondicaoRemuneracao);
                     }
                     catch (Exception e)
                     {
@@ -214,16 +216,15 @@ namespace DUDS.Controllers
             }
         }
 
-        private bool ListaCondicoesExists(int id)
+        private bool CondicaoRemuneracaoExists(int id)
         {
-            return _context.TblListaCondicoes.Any(e => e.Id == id);
+            return _context.TblCondicaoRemuneracao.Any(e => e.Id == id);
         }
-
         #endregion
 
         #region Tipo Condição
 
-        // GET: api/ListaCondicoes/TipoCondicao
+        // GET: api/Condicao/TipoCondicao
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblTipoCondicao>>> TipoCondicao()
         {
@@ -251,7 +252,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/ListaCondicoes/GetTipoCondicao/id
+        // GET: api/Condicao/GetTipoCondicao/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblTipoCondicao>> GetTipoCondicao(int id)
         {
@@ -274,7 +275,7 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/ListaCondicoes/CadastrarTipoCondicao/TipoCondicaoModel
+        //POST: api/Condicao/CadastrarTipoCondicao/TipoCondicaoModel
         [HttpPost]
         public async Task<ActionResult<TipoCondicaoModel>> CadastrarTipoCondicao(TipoCondicaoModel tblTipoCondicaoModel)
         {
@@ -300,7 +301,7 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/ListaCondicoes/EditarTipoCondicao/id
+        //PUT: api/Condicao/EditarTipoCondicao/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarTipoCondicao(int id, TipoCondicaoModel tipoCondicao)
         {
@@ -334,7 +335,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/ListarCondicoes/DeletarTipoCondicao/id
+        // DELETE: api/Condicao/DeletarTipoCondicao/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarTipoCondicao(int id)
         {
@@ -357,7 +358,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/ListarCondicoes/DesativaTipoCondicao/id
+        // DESATIVA: api/Condicao/DesativaTipoCondicao/id
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativaTipoCondicao(int id)
         {

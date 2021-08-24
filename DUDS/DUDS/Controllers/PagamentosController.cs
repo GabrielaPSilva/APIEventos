@@ -164,11 +164,11 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Pagamentos/GetPgtoAdmPfee/competencia/cod_investidor/cod_fundo
-        [HttpGet("{competencia}/{cod_investidor}/{cod_fundo}")]
-        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfee(string competencia, int cod_investidor, int cod_fundo)
+        // GET: api/Pagamentos/GetPgtoAdmPfee/competencia/cod_investidor_distribuidor/cod_administrador/cod_fundo
+        [HttpGet("{competencia}/{cod_investidor_distribuidor}/{cod_administrador}/{cod_fundo}")]
+        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfee(string competencia, int cod_investidor_distribuidor, int cod_administrador, int cod_fundo)
         {
-            TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(competencia, cod_investidor, cod_fundo);
+            TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(competencia, cod_investidor_distribuidor, cod_administrador, cod_fundo);
             
             try
             {
@@ -201,7 +201,8 @@ namespace DUDS.Controllers
                     itensPagamentoAdminPfee = new TblPgtoAdmPfee
                     {
                         Competencia = line.Competencia,
-                        CodInvestidor = line.CodInvestidor,
+                        CodInvestidorDistribuidor = line.CodInvestidorDistribuidor,
+                        CodAdministrador = line.CodAdministrador,
                         CodFundo = line.CodFundo,
                         TaxaPerformanceApropriada = line.TaxaPerformanceApropriada,
                         TaxaPerformanceResgate = line.TaxaPerformanceResgate,
