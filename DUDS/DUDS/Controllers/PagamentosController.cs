@@ -367,7 +367,7 @@ namespace DUDS.Controllers
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
