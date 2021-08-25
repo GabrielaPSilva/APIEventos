@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 using DUDS.Service.Interface;
+using System.Collections.Concurrent;
 
 namespace DUDS.Controllers
 {
@@ -881,7 +882,7 @@ namespace DUDS.Controllers
         #region Estrutura de Contratos Válidos e Inválidos
         // GET: api/Contrato/GetEstruturaContrato
         [HttpGet]
-        public async Task<ActionResult<EstruturaContratoValidoModel>> GetEstruturaContratoValidos()
+        public async Task<ActionResult<IEnumerable<EstruturaContratoValidoModel>>> GetEstruturaContratoValidos()
         {
 
             var estruturaContrato = await _context.TblContrato
@@ -946,6 +947,34 @@ namespace DUDS.Controllers
                 }
                 ).Where(c => c.Status != "Inativo").AsNoTracking().ToListAsync();
 
+            // Verificando a possibilidade de utilizar funções em paralelo para aumentar a velocidade de processamento.
+            ConcurrentBag<EstruturaContratoValidoModel> estruturaContratoValidoModel = new ConcurrentBag<EstruturaContratoValidoModel>();
+            Parallel.ForEach(
+                estruturaContrato,
+                x =>
+                {
+                    EstruturaContratoValidoModel c = new EstruturaContratoValidoModel
+                    {
+                        ClausulaRetroatividade = x.ClausulaRetroatividade,
+                        CodDistribuidor = x.CodDistribuidor,
+                        CodFundo = x.CodFundo,
+                        CodTipoCondicao = x.CodTipoCondicao,
+                        DataRetroatividade = x.DataRetroatividade,
+                        DataVigenciaFim = x.DataVigenciaFim,
+                        DataVigenciaInicio = x.DataVigenciaInicio,
+                        IdInvestidor = x.IdInvestidor,
+                        Parceiro = x.Parceiro,
+                        PercentualAdm = x.PercentualAdm,
+                        PercentualPfee = x.PercentualPfee,
+                        Status = x.Status,
+                        TipoContrato = x.TipoContrato,
+                        Versao = x.Versao
+                    };
+                    estruturaContratoValidoModel.Add(c);
+                }
+
+            );
+            /*
             List<EstruturaContratoValidoModel> estruturaContratoValidoModel = estruturaContrato
                     .ConvertAll(
                     x => new EstruturaContratoValidoModel
@@ -966,7 +995,7 @@ namespace DUDS.Controllers
                         Versao = x.Versao
                     }
                     );
-
+            */
             try
             {
                 if (estruturaContratoValidoModel.Count == 0)

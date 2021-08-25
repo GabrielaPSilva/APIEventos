@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 using EFCore.BulkExtensions;
+using System.Collections.Concurrent;
 
 namespace DUDS.Controllers
 {
@@ -298,7 +299,35 @@ namespace DUDS.Controllers
                         }
                     ).Where(c => c.Competencia == competencia).AsNoTracking().ToListAsync();
 
-
+                // Verificando a possibilidade de utilizar funções em paralelo para aumentar a velocidade de processamento.
+                ConcurrentBag<PagamentoAdmPfeeInvestidorModel> pagamentoAdmPfeeInvestidor = new ConcurrentBag<PagamentoAdmPfeeInvestidorModel>();
+                Parallel.ForEach(
+                    pgtosAdmPfee,
+                    x => 
+                    {
+                        PagamentoAdmPfeeInvestidorModel c = new PagamentoAdmPfeeInvestidorModel
+                        {
+                            Cnpj = x.Cnpj,
+                            CodFundo = x.CodFundo,
+                            CodigoAdministradorCodigoInvestidor = x.CodigoAdministradorCodigoInvestidor,
+                            CodigoAdministradorInvestidor = x.CodigoAdministradorInvestidor,
+                            CodigoDistribuidorInvestidor = x.CodigoDistribuidorInvestidor,
+                            CodigoGestorInvestidor = x.CodigoGestorInvestidor,
+                            CodigoInvestidor = x.CodigoInvestidor,
+                            CodigoInvestidorAdministrador = x.CodigoInvestidorAdministrador,
+                            Competencia = x.Competencia,
+                            DirecaoPagamento = x.DirecaoPagamento,
+                            NomeInvestidor = x.NomeInvestidor,
+                            SourceAdministrador = x.SourceAdministrador,
+                            TaxaAdministracao = x.TaxaAdministracao,
+                            TaxaPerformanceApropriada = x.TaxaPerformanceApropriada,
+                            TaxaPerformanceResgate = x.TaxaPerformanceResgate,
+                            TipoCliente = x.TipoCliente
+                        };
+                        pagamentoAdmPfeeInvestidor.Add(c);
+                    }
+                );
+                /*
                 List<PagamentoAdmPfeeInvestidorModel> pagamentoAdmPfeeInvestidor = pgtosAdmPfee
                     .ConvertAll(
                     x => new PagamentoAdmPfeeInvestidorModel
@@ -321,7 +350,7 @@ namespace DUDS.Controllers
                         TipoCliente = x.TipoCliente
                     }
                     );
-
+                */
                 if (pagamentoAdmPfeeInvestidor.Count == 0)
                 {
                     return NotFound();
