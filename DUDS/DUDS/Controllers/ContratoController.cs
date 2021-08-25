@@ -882,5 +882,117 @@ namespace DUDS.Controllers
             return _context.TblContratoRemuneracao.Any(e => e.Id == id);
         }
         #endregion
+
+        #region Estrutura de Contratos Válidos e Inválidos
+        // GET: api/Contrato/GetEstruturaContrato
+        [HttpGet]
+        public async Task<ActionResult<EstruturaContratoValidoModel>> GetEstruturaContratoValidos()
+        {
+
+            var estruturaContrato = await _context.TblContrato
+                .Join(_context.TblSubContrato,
+                contrato => contrato.Id,
+                subContrato => subContrato.CodContrato,
+                (contrato, subContrato) => new
+                {
+                    contrato.TipoContrato,
+                    contrato.Parceiro,
+                    contrato.CodDistribuidor,
+                    subContrato.Versao,
+                    subContrato.Status,
+                    subContrato.ClausulaRetroatividade,
+                    subContrato.DataRetroatividade,
+                    subContrato.DataVigenciaInicio,
+                    subContrato.DataVigenciaFim,
+                    IdSubContrato = subContrato.Id,
+                    IdContrato = contrato.Id
+                }
+                )
+                .Join(_context.TblContratoAlocador,
+                contratoSubContrato => contratoSubContrato.IdSubContrato,
+                contratoAlocador => contratoAlocador.CodSubContrato,
+                (contratoSubContrato, contratoAlocador) => new
+                {
+                    IdInvestidor = contratoAlocador.CodInvestidor,
+                    IdContratoAlocacor = contratoAlocador.Id,
+                    contratoSubContrato
+                }
+                )
+                .Join(_context.TblContratoFundo,
+                contratoSubContratoAlocador => contratoSubContratoAlocador.contratoSubContrato.IdSubContrato,
+                contratoFundo => contratoFundo.CodSubContrato,
+                (contratoSubContratoAlocador, contratoFundo) => new
+                {
+                    IdContratoFundo = contratoFundo.Id,
+                    contratoFundo.CodFundo,
+                    contratoFundo.CodTipoCondicao,
+                    contratoSubContratoAlocador
+                }
+                )
+                .Join(_context.TblContratoRemuneracao,
+                contratoSubContratoAlocadorFundo => contratoSubContratoAlocadorFundo.IdContratoFundo,
+                contratoRemuneracao => contratoRemuneracao.CodContratoFundo,
+                (contratoSubContratoAlocadorFundo, contratoRemuneracao) => new
+                {
+                    contratoRemuneracao.PercentualAdm,
+                    contratoRemuneracao.PercentualPfee,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.TipoContrato,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.Parceiro,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.CodDistribuidor,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.Versao,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.Status,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.ClausulaRetroatividade,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.DataRetroatividade,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.DataVigenciaInicio,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.DataVigenciaFim,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.IdInvestidor,
+                    contratoSubContratoAlocadorFundo.CodFundo,
+                    contratoSubContratoAlocadorFundo.CodTipoCondicao
+                }
+                ).Where(c => c.Status != "Inativo").AsNoTracking().ToListAsync();
+
+            List<EstruturaContratoValidoModel> estruturaContratoValidoModel = estruturaContrato
+                    .ConvertAll(
+                    x => new EstruturaContratoValidoModel
+                    {
+                        ClausulaRetroatividade = x.ClausulaRetroatividade,
+                        CodDistribuidor = x.CodDistribuidor,
+                        CodFundo = x.CodFundo,
+                        CodTipoCondicao = x.CodTipoCondicao,
+                        DataRetroatividade = x.DataRetroatividade,
+                        DataVigenciaFim = x.DataVigenciaFim,
+                        DataVigenciaInicio = x.DataVigenciaInicio,
+                        IdInvestidor = x.IdInvestidor,
+                        Parceiro = x.Parceiro,
+                        PercentualAdm = x.PercentualAdm,
+                        PercentualPfee = x.PercentualPfee,
+                        Status = x.Status,
+                        TipoContrato = x.TipoContrato,
+                        Versao = x.Versao
+                    }
+                    );
+
+            try
+            {
+                if (estruturaContratoValidoModel.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                if (estruturaContratoValidoModel != null)
+                {
+                    return Ok(estruturaContratoValidoModel);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+        #endregion
     }
 }
