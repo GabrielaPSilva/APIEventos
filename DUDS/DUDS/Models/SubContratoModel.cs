@@ -16,18 +16,17 @@ namespace DUDS.Models
         public string Versao { get; set; }
 
         //[Required]
-        [StringLength(10)]
+        [StringLength(30)]
         public string Status { get; set; }
 
         [StringLength(50)]
         public string IdDocusign { get; set; }
+        public DateTime DataInclusaoContrato { get; set; }
         public bool ClausulaRetroatividade { get; set; }
         public DateTime? DataRetroatividade { get; set; }
         public DateTime? DataAssinatura { get; set; }
         public DateTime? DataVigenciaInicio { get; set; }
-
-        [StringLength(10)]
-        public string DataVigenciaFim { get; set; }
+        public DateTime? DataVigenciaFim { get; set; }
 
         //[Required]
         [StringLength(100)]

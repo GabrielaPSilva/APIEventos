@@ -34,6 +34,8 @@ namespace DUDS.Models
         [Column("id_docusign")]
         [StringLength(50)]
         public string IdDocusign { get; set; }
+        [Column("data_inclusao_contrato", TypeName = "date")]
+        public DateTime DataInclusaoContrato { get; set; }
         [Column("clausula_retroatividade")]
         public bool ClausulaRetroatividade { get; set; }
         [Column("data_retroatividade", TypeName = "date")]
@@ -42,9 +44,8 @@ namespace DUDS.Models
         public DateTime? DataAssinatura { get; set; }
         [Column("data_vigencia_inicio", TypeName = "date")]
         public DateTime? DataVigenciaInicio { get; set; }
-        [Column("data_vigencia_fim")]
-        [StringLength(10)]
-        public string DataVigenciaFim { get; set; }
+        [Column("data_vigencia_fim", TypeName = "date")]
+        public DateTime? DataVigenciaFim { get; set; }
         [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]
