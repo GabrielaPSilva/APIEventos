@@ -127,7 +127,7 @@ namespace DUDS.Controllers
                 _context.TblPagamentoServico.RemoveRange(tblPagamentoServico);
                 await _context.SaveChangesAsync();
                 return Ok(tblPagamentoServico);
-            } 
+            }
             catch (Exception e)
             {
                 return BadRequest(e);
@@ -169,7 +169,7 @@ namespace DUDS.Controllers
         public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfee(string competencia, int cod_investidor_distribuidor, int cod_administrador, int cod_fundo)
         {
             TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(competencia, cod_investidor_distribuidor, cod_administrador, cod_fundo);
-            
+
             try
             {
                 if (tblPgtoAdmPfee != null)
@@ -246,6 +246,102 @@ namespace DUDS.Controllers
                 return BadRequest(e);
             }
         }
+
+        // GET: api/Pagamentos/PgtoAdmPfeeInvestidor
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<PagamentoAdmPfeeInvestidorModel>>> PgtoAdmPfeeInvestidor(string competencia)
+        {
+            try
+            {
+                var pgtosAdmPfee = await _context.TblPgtoAdmPfee
+                    .Join(
+                        _context.TblInvestidorDistribuidor,
+                        pgtoAdmPfee => pgtoAdmPfee.CodInvestidorDistribuidor,
+                        investidorDistribuidor => investidorDistribuidor.Id,
+                        (pgtoAdmPfee, investidorDistribuidor) => new
+                        {
+                            pgtoAdmPfee.Competencia,
+                            pgtoAdmPfee.CodFundo,
+                            SourceAdministrador = pgtoAdmPfee.CodAdministrador,
+                            pgtoAdmPfee.TaxaAdministracao,
+                            pgtoAdmPfee.TaxaPerformanceApropriada,
+                            pgtoAdmPfee.TaxaPerformanceResgate,
+                            CodigoInvestidorAdministrador = investidorDistribuidor.CodInvestAdministrador,
+                            CodigoInvestidor = investidorDistribuidor.CodInvestidor,
+                            CodigoDistribuidorInvestidor = investidorDistribuidor.CodDistribuidor,
+                            CodigoAdministradorCodigoInvestidor = investidorDistribuidor.CodAdministrador
+
+                        }
+                        )
+                    .Join(
+                        _context.TblInvestidor,
+                        pgtoAdmPfeeInvestidorDistribuidor => pgtoAdmPfeeInvestidorDistribuidor.CodigoInvestidor,
+                        investidor => investidor.Id,
+                        (pgtoAdmPfeeInvestidorDistribuidor, investidor) => new
+                        {
+                            pgtoAdmPfeeInvestidorDistribuidor.Competencia,
+                            pgtoAdmPfeeInvestidorDistribuidor.CodFundo,
+                            pgtoAdmPfeeInvestidorDistribuidor.SourceAdministrador,
+                            pgtoAdmPfeeInvestidorDistribuidor.TaxaAdministracao,
+                            pgtoAdmPfeeInvestidorDistribuidor.TaxaPerformanceApropriada,
+                            pgtoAdmPfeeInvestidorDistribuidor.TaxaPerformanceResgate,
+                            pgtoAdmPfeeInvestidorDistribuidor.CodigoInvestidorAdministrador,
+                            pgtoAdmPfeeInvestidorDistribuidor.CodigoInvestidor,
+                            pgtoAdmPfeeInvestidorDistribuidor.CodigoDistribuidorInvestidor,
+                            pgtoAdmPfeeInvestidorDistribuidor.CodigoAdministradorCodigoInvestidor,
+                            NomeInvestidor = investidor.NomeCliente,
+                            investidor.Cnpj,
+                            investidor.TipoCliente,
+                            investidor.DirecaoPagamento,
+                            CodigoAdministradorInvestidor = investidor.CodAdministrador,
+                            CodigoGestorInvestidor = investidor.CodGestor
+                        }
+                    ).Where(c => c.Competencia == competencia).AsNoTracking().ToListAsync();
+
+
+                List<PagamentoAdmPfeeInvestidorModel> pagamentoAdmPfeeInvestidor = pgtosAdmPfee
+                    .ConvertAll(
+                    x => new PagamentoAdmPfeeInvestidorModel
+                    {
+                        Cnpj = x.Cnpj,
+                        CodFundo = x.CodFundo,
+                        CodigoAdministradorCodigoInvestidor = x.CodigoAdministradorCodigoInvestidor,
+                        CodigoAdministradorInvestidor = x.CodigoAdministradorInvestidor,
+                        CodigoDistribuidorInvestidor = x.CodigoDistribuidorInvestidor,
+                        CodigoGestorInvestidor = x.CodigoGestorInvestidor,
+                        CodigoInvestidor = x.CodigoInvestidor,
+                        CodigoInvestidorAdministrador = x.CodigoInvestidorAdministrador,
+                        Competencia = x.Competencia,
+                        DirecaoPagamento = x.DirecaoPagamento,
+                        NomeInvestidor = x.NomeInvestidor,
+                        SourceAdministrador = x.SourceAdministrador,
+                        TaxaAdministracao = x.TaxaAdministracao,
+                        TaxaPerformanceApropriada = x.TaxaPerformanceApropriada,
+                        TaxaPerformanceResgate = x.TaxaPerformanceResgate,
+                        TipoCliente = x.TipoCliente
+                    }
+                    );
+
+                if (pagamentoAdmPfeeInvestidor.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                if (pagamentoAdmPfeeInvestidor != null)
+                {
+                    return Ok(pagamentoAdmPfeeInvestidor);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                return NotFound(e);
+            }
+        }
+
         #endregion
     }
 }
