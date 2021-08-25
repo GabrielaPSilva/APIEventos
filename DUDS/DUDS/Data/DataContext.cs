@@ -746,9 +746,9 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblSubContrato>(entity =>
             {
-                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.DataInclusaoContrato).HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.DataVigenciaFim).IsFixedLength(true);
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.IdDocusign).IsUnicode(false);
 

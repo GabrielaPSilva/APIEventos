@@ -277,6 +277,7 @@ namespace DUDS.Controllers
                 Versao = tblSubContratoModel.Versao,
                 Status = tblSubContratoModel.Status,
                 IdDocusign = tblSubContratoModel.IdDocusign,
+                DataInclusaoContrato = tblSubContratoModel.DataInclusaoContrato,
                 ClausulaRetroatividade = tblSubContratoModel.ClausulaRetroatividade,
                 DataRetroatividade = tblSubContratoModel.DataRetroatividade,
                 DataAssinatura = tblSubContratoModel.DataAssinatura,
@@ -315,6 +316,7 @@ namespace DUDS.Controllers
                     registroSubContrato.Versao = subContrato.Versao == null ? registroSubContrato.Versao : subContrato.Versao;
                     registroSubContrato.Status = subContrato.Status == null ? registroSubContrato.Status : subContrato.Status;
                     registroSubContrato.IdDocusign = subContrato.IdDocusign == null ? registroSubContrato.IdDocusign : subContrato.IdDocusign;
+                    registroSubContrato.DataInclusaoContrato = subContrato.DataInclusaoContrato == null ? registroSubContrato.DataInclusaoContrato : subContrato.DataInclusaoContrato;
                     registroSubContrato.ClausulaRetroatividade = subContrato.ClausulaRetroatividade == false ? registroSubContrato.ClausulaRetroatividade : subContrato.ClausulaRetroatividade;
                     registroSubContrato.DataRetroatividade = subContrato.DataRetroatividade == null ? registroSubContrato.DataRetroatividade : subContrato.DataRetroatividade;
                     registroSubContrato.DataAssinatura = subContrato.DataAssinatura == null ? registroSubContrato.DataAssinatura : subContrato.DataAssinatura;
