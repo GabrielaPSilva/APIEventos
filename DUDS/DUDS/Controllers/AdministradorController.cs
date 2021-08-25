@@ -115,7 +115,6 @@ namespace DUDS.Controllers
                 {
                     registroAdministrador.NomeAdministrador = administrador.NomeAdministrador == null ? registroAdministrador.NomeAdministrador : administrador.NomeAdministrador;
                     registroAdministrador.Cnpj = administrador.Cnpj == null ? registroAdministrador.Cnpj : administrador.Cnpj;
-                    registroAdministrador.UsuarioModificacao = administrador.UsuarioModificacao == null ? registroAdministrador.UsuarioModificacao : administrador.UsuarioModificacao;
 
                     try
                     {

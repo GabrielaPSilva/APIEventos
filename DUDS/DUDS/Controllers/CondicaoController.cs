@@ -126,7 +126,6 @@ namespace DUDS.Controllers
                     registroCondicaoRemuneracao.ValorPosicaoInicio = (condicaoRemuneracao.ValorPosicaoInicio == null || condicaoRemuneracao.ValorPosicaoInicio == 0) ? registroCondicaoRemuneracao.ValorPosicaoInicio : condicaoRemuneracao.ValorPosicaoInicio;
                     registroCondicaoRemuneracao.ValorPosicaoFim = (condicaoRemuneracao.ValorPosicaoFim == null || condicaoRemuneracao.ValorPosicaoFim == 0) ? registroCondicaoRemuneracao.ValorPosicaoFim : condicaoRemuneracao.ValorPosicaoFim;
                     registroCondicaoRemuneracao.ValorPgtoFixo = (condicaoRemuneracao.ValorPgtoFixo == null || condicaoRemuneracao.ValorPgtoFixo == 0) ? registroCondicaoRemuneracao.ValorPgtoFixo : condicaoRemuneracao.ValorPgtoFixo;
-                    registroCondicaoRemuneracao.UsuarioModificacao = condicaoRemuneracao.UsuarioModificacao == null ? registroCondicaoRemuneracao.UsuarioModificacao : condicaoRemuneracao.UsuarioModificacao;
 
                     try
                     {
@@ -312,7 +311,6 @@ namespace DUDS.Controllers
                 if (registroTipoCondicao != null)
                 {
                     registroTipoCondicao.TipoCondicao = tipoCondicao.TipoCondicao == null ? registroTipoCondicao.TipoCondicao : tipoCondicao.TipoCondicao;
-                    registroTipoCondicao.UsuarioModificacao = tipoCondicao.UsuarioModificacao == null ? registroTipoCondicao.UsuarioModificacao : tipoCondicao.UsuarioModificacao;
 
                     try
                     {

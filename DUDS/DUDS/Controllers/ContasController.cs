@@ -125,7 +125,6 @@ namespace DUDS.Controllers
                     registroConta.Banco = conta.Banco == null ? registroConta.Banco : conta.Banco;
                     registroConta.Agencia = conta.Agencia == null ? registroConta.Agencia : conta.Agencia;
                     registroConta.Conta = conta.Conta == null ? registroConta.Conta : conta.Conta;
-                    registroConta.UsuarioModificacao = conta.UsuarioModificacao == null ? registroConta.UsuarioModificacao : conta.UsuarioModificacao;
 
                     try
                     {
@@ -316,7 +315,6 @@ namespace DUDS.Controllers
                 {
                     registroTipoConta.TipoConta = tipoConta.TipoConta == null ? registroTipoConta.TipoConta : tipoConta.TipoConta;
                     registroTipoConta.DescricaoConta = tipoConta.DescricaoConta == null ? registroTipoConta.DescricaoConta : tipoConta.DescricaoConta;
-                    registroTipoConta.UsuarioModificacao = tipoConta.UsuarioModificacao == null ? registroTipoConta.UsuarioModificacao : tipoConta.UsuarioModificacao;
 
                     try
                     {

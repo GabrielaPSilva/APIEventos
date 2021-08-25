@@ -118,7 +118,6 @@ namespace DUDS.Controllers
                     registroContrato.CodDistribuidor = contrato.CodDistribuidor == 0 ? registroContrato.CodDistribuidor : contrato.CodDistribuidor;
                     registroContrato.TipoContrato = contrato.TipoContrato == null ? registroContrato.TipoContrato : contrato.TipoContrato;
                     registroContrato.Parceiro = contrato.Parceiro == null ? registroContrato.Parceiro : contrato.Parceiro;
-                    registroContrato.UsuarioModificacao = contrato.UsuarioModificacao == null ? registroContrato.UsuarioModificacao : contrato.UsuarioModificacao;
 
                     try
                     {
@@ -320,7 +319,6 @@ namespace DUDS.Controllers
                     registroSubContrato.DataAssinatura = subContrato.DataAssinatura == null ? registroSubContrato.DataAssinatura : subContrato.DataAssinatura;
                     registroSubContrato.DataVigenciaInicio = subContrato.DataVigenciaInicio == null ? registroSubContrato.DataVigenciaInicio : subContrato.DataVigenciaInicio;
                     registroSubContrato.DataVigenciaFim = subContrato.DataVigenciaFim == null ? registroSubContrato.DataVigenciaFim : subContrato.DataVigenciaFim;
-                    registroSubContrato.UsuarioModificacao = subContrato.UsuarioModificacao == null ? registroSubContrato.UsuarioModificacao : subContrato.UsuarioModificacao;
 
                     try
                     {
@@ -511,7 +509,6 @@ namespace DUDS.Controllers
                     registroContratoAlocador.CodInvestidor = contratoAlocador.CodInvestidor == 0 ? registroContratoAlocador.CodInvestidor : contratoAlocador.CodInvestidor;
                     registroContratoAlocador.CodSubContrato = contratoAlocador.CodSubContrato == 0 ? registroContratoAlocador.CodSubContrato : contratoAlocador.CodSubContrato;
                     registroContratoAlocador.DataTransferencia = contratoAlocador.DataTransferencia == null ? registroContratoAlocador.DataTransferencia : contratoAlocador.DataTransferencia;
-                    registroContratoAlocador.UsuarioModificacao = contratoAlocador.UsuarioModificacao == null ? registroContratoAlocador.UsuarioModificacao : contratoAlocador.UsuarioModificacao;
 
                     try
                     {
@@ -666,7 +663,6 @@ namespace DUDS.Controllers
                     registroContratoFundo.CodSubContrato = contratoFundo.CodSubContrato == 0 ? registroContratoFundo.CodSubContrato : contratoFundo.CodSubContrato;
                     registroContratoFundo.CodFundo = contratoFundo.CodFundo == 0 ? registroContratoFundo.CodFundo : contratoFundo.CodFundo;
                     registroContratoFundo.CodTipoCondicao = contratoFundo.CodTipoCondicao == 0 ? registroContratoFundo.CodTipoCondicao : contratoFundo.CodTipoCondicao;
-                    registroContratoFundo.UsuarioModificacao = contratoFundo.UsuarioModificacao == null ? registroContratoFundo.UsuarioModificacao : contratoFundo.UsuarioModificacao;
 
                     try
                     {
@@ -821,7 +817,6 @@ namespace DUDS.Controllers
                     registroContratoRemuneracao.CodContratoFundo = contratoRemuneracao.CodContratoFundo == 0 ? registroContratoRemuneracao.CodContratoFundo : contratoRemuneracao.CodContratoFundo;
                     registroContratoRemuneracao.PercentualAdm = contratoRemuneracao.PercentualAdm == 0 ? registroContratoRemuneracao.PercentualAdm : contratoRemuneracao.PercentualAdm;
                     registroContratoRemuneracao.PercentualPfee = contratoRemuneracao.PercentualPfee == 0 ? registroContratoRemuneracao.PercentualPfee : contratoRemuneracao.PercentualPfee;
-                    registroContratoRemuneracao.UsuarioModificacao = contratoRemuneracao.UsuarioModificacao == null ? registroContratoRemuneracao.UsuarioModificacao : contratoRemuneracao.UsuarioModificacao;
 
                     try
                     {
