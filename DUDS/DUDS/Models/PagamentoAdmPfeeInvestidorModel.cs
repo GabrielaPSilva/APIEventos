@@ -34,7 +34,7 @@ namespace DUDS.Models
         
         public string TipoCliente { get; set; }
         
-        public string DirecaoPagamento { get; set; }
+        public int CodTipoContrato { get; set; }
         
         public int? CodigoAdministradorInvestidor { get; set; }
         
