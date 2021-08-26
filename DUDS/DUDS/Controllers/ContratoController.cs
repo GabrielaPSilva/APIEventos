@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 using DUDS.Service.Interface;
+using System.Collections.Concurrent;
 
 namespace DUDS.Controllers
 {
@@ -883,9 +884,36 @@ namespace DUDS.Controllers
         #region Estrutura de Contratos Válidos e Inválidos
         // GET: api/Contrato/GetEstruturaContrato
         [HttpGet]
-        public async Task<ActionResult<EstruturaContratoValidoModel>> GetEstruturaContratoValidos()
+        public async Task<ActionResult<IEnumerable<EstruturaContratoValidoModel>>> GetEstruturaContratoValidos()
         {
+            // Left Join utilizando LINQ - para Gabriela
+            var estruturaContrato = await (from contrato in _context.TblContrato
+                                           join subContrato in _context.TblSubContrato on contrato.Id equals subContrato.CodContrato
+                                           join contratoAlocador in _context.TblContratoAlocador on subContrato.Id equals (int?)contratoAlocador.CodSubContrato into contratoSubContratoAlocador
+                                           from contratoSubcontratoAlocadorNull in contratoSubContratoAlocador.DefaultIfEmpty()
+                                           join contratoFundo in _context.TblContratoFundo on subContrato.Id equals contratoFundo.CodSubContrato
+                                           join contratoRemuneracao in _context.TblContratoRemuneracao on contratoFundo.Id equals contratoRemuneracao.CodContratoFundo
+                                           where subContrato.Status != "Inativo"
+                                           select new
+                                           {
+                                               contratoRemuneracao.PercentualAdm,
+                                               contratoRemuneracao.PercentualPfee,
+                                               contrato.CodTipoContrato,
+                                               contrato.Parceiro,
+                                               contrato.CodDistribuidor,
+                                               subContrato.Versao,
+                                               subContrato.Status,
+                                               subContrato.ClausulaRetroatividade,
+                                               subContrato.DataRetroatividade,
+                                               subContrato.DataVigenciaInicio,
+                                               subContrato.DataVigenciaFim,
+                                               CodInvestidor = (contratoSubcontratoAlocadorNull == null? (int?)null : contratoSubcontratoAlocadorNull.CodInvestidor),
+                                               contratoFundo.CodFundo,
+                                               contratoFundo.CodTipoCondicao
+                                           }).AsNoTracking().ToListAsync();
 
+
+            /*
             var estruturaContrato = await _context.TblContrato
                 .Join(_context.TblSubContrato,
                 contrato => contrato.Id,
@@ -947,7 +975,35 @@ namespace DUDS.Controllers
                     contratoSubContratoAlocadorFundo.CodTipoCondicao
                 }
                 ).Where(c => c.Status != "Inativo").AsNoTracking().ToListAsync();
+            */
+            // Verificando a possibilidade de utilizar funções em paralelo para aumentar a velocidade de processamento.
+            ConcurrentBag < EstruturaContratoValidoModel > estruturaContratoValidoModel = new ConcurrentBag<EstruturaContratoValidoModel>();
+            Parallel.ForEach(
+                estruturaContrato,
+                x =>
+                {
+                    EstruturaContratoValidoModel c = new EstruturaContratoValidoModel
+                    {
+                        ClausulaRetroatividade = x.ClausulaRetroatividade,
+                        CodDistribuidor = x.CodDistribuidor,
+                        CodFundo = x.CodFundo,
+                        CodTipoCondicao = x.CodTipoCondicao,
+                        DataRetroatividade = x.DataRetroatividade,
+                        DataVigenciaFim = x.DataVigenciaFim,
+                        DataVigenciaInicio = x.DataVigenciaInicio,
+                        IdInvestidor = x.CodInvestidor,
+                        Parceiro = x.Parceiro,
+                        PercentualAdm = x.PercentualAdm,
+                        PercentualPfee = x.PercentualPfee,
+                        Status = x.Status,
+                        TipoContrato = x.TipoContrato,
+                        Versao = x.Versao
+                    };
+                    estruturaContratoValidoModel.Add(c);
+                }
 
+            );
+            /*
             List<EstruturaContratoValidoModel> estruturaContratoValidoModel = estruturaContrato
                     .ConvertAll(
                     x => new EstruturaContratoValidoModel
@@ -968,7 +1024,7 @@ namespace DUDS.Controllers
                         Versao = x.Versao
                     }
                     );
-
+            */
             try
             {
                 if (estruturaContratoValidoModel.Count == 0)

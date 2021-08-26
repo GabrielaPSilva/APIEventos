@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 using EFCore.BulkExtensions;
+using System.Collections.Concurrent;
 
 namespace DUDS.Controllers
 {
@@ -253,6 +254,30 @@ namespace DUDS.Controllers
         {
             try
             {
+                var pgtosAdmPfee = await (from pgtoAdmPfee in _context.TblPgtoAdmPfee
+                                          join investidorDistribuidor in _context.TblInvestidorDistribuidor on pgtoAdmPfee.CodInvestidorDistribuidor equals investidorDistribuidor.Id
+                                          join investidor in _context.TblInvestidor on investidorDistribuidor.CodInvestidor equals investidor.Id
+                                          where pgtoAdmPfee.Competencia == competencia
+                                          select new
+                                          {
+                                              pgtoAdmPfee.Competencia,
+                                              pgtoAdmPfee.CodFundo,
+                                              SourceAdministrador = pgtoAdmPfee.CodAdministrador,
+                                              pgtoAdmPfee.TaxaAdministracao,
+                                              pgtoAdmPfee.TaxaPerformanceApropriada,
+                                              pgtoAdmPfee.TaxaPerformanceResgate,
+                                              CodigoInvestidorAdministrador = investidorDistribuidor.CodInvestAdministrador,
+                                              CodigoInvestidor = investidorDistribuidor.CodInvestidor,
+                                              CodigoDistribuidorInvestidor = investidorDistribuidor.CodDistribuidor,
+                                              CodigoAdministradorCodigoInvestidor = investidorDistribuidor.CodAdministrador,
+                                              NomeInvestidor = investidor.NomeCliente,
+                                              investidor.Cnpj,
+                                              investidor.TipoCliente,
+                                              investidor.CodTipoContrato,
+                                              CodigoAdministradorInvestidor = investidor.CodAdministrador,
+                                              CodigoGestorInvestidor = investidor.CodGestor
+                                          }).AsNoTracking().ToListAsync();
+                /*
                 var pgtosAdmPfee = await _context.TblPgtoAdmPfee
                     .Join(
                         _context.TblInvestidorDistribuidor,
@@ -297,8 +322,36 @@ namespace DUDS.Controllers
                             CodigoGestorInvestidor = investidor.CodGestor
                         }
                     ).Where(c => c.Competencia == competencia).AsNoTracking().ToListAsync();
-
-
+                */
+                // Verificando a possibilidade de utilizar funções em paralelo para aumentar a velocidade de processamento.
+                ConcurrentBag<PagamentoAdmPfeeInvestidorModel> pagamentoAdmPfeeInvestidor = new ConcurrentBag<PagamentoAdmPfeeInvestidorModel>();
+                Parallel.ForEach(
+                    pgtosAdmPfee,
+                    x =>
+                    {
+                        PagamentoAdmPfeeInvestidorModel c = new PagamentoAdmPfeeInvestidorModel
+                        {
+                            Cnpj = x.Cnpj,
+                            CodFundo = x.CodFundo,
+                            CodigoAdministradorCodigoInvestidor = x.CodigoAdministradorCodigoInvestidor,
+                            CodigoAdministradorInvestidor = x.CodigoAdministradorInvestidor,
+                            CodigoDistribuidorInvestidor = x.CodigoDistribuidorInvestidor,
+                            CodigoGestorInvestidor = x.CodigoGestorInvestidor,
+                            CodigoInvestidor = x.CodigoInvestidor,
+                            CodigoInvestidorAdministrador = x.CodigoInvestidorAdministrador,
+                            Competencia = x.Competencia,
+                            DirecaoPagamento = x.DirecaoPagamento,
+                            NomeInvestidor = x.NomeInvestidor,
+                            SourceAdministrador = x.SourceAdministrador,
+                            TaxaAdministracao = x.TaxaAdministracao,
+                            TaxaPerformanceApropriada = x.TaxaPerformanceApropriada,
+                            TaxaPerformanceResgate = x.TaxaPerformanceResgate,
+                            TipoCliente = x.TipoCliente
+                        };
+                        pagamentoAdmPfeeInvestidor.Add(c);
+                    }
+                );
+                /*
                 List<PagamentoAdmPfeeInvestidorModel> pagamentoAdmPfeeInvestidor = pgtosAdmPfee
                     .ConvertAll(
                     x => new PagamentoAdmPfeeInvestidorModel
@@ -321,8 +374,8 @@ namespace DUDS.Controllers
                         TipoCliente = x.TipoCliente
                     }
                     );
-
-                if (pagamentoAdmPfeeInvestidor.Count == 0)
+                */
+                if (pagamentoAdmPfeeInvestidor.IsEmpty)
                 {
                     return NotFound();
                 }
@@ -338,7 +391,7 @@ namespace DUDS.Controllers
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
