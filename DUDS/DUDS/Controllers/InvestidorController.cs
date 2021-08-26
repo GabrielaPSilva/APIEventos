@@ -68,7 +68,30 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Investidor/GetInvestidorInativo/cnpj
+        [HttpGet("{cnpj}")]
+        public async Task<ActionResult<TblInvestidor>> GetInvestidorInativo(string cnpj)
+        {
+            TblInvestidor tblInvestidor = _context.TblInvestidor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+
+            try
+            {
+                if (tblInvestidor != null)
+                {
+                    return Ok(tblInvestidor);
+                }
+                else
+                {
+                    return NotFound();
                 }
             }
             catch (Exception e)
@@ -88,7 +111,7 @@ namespace DUDS.Controllers
                 TipoCliente = tblInvestidorModel.TipoCliente,
                 CodAdministrador = tblInvestidorModel.CodAdministrador,
                 CodGestor = tblInvestidorModel.CodGestor,
-                DirecaoPagamento = tblInvestidorModel.DirecaoPagamento,
+                CodTipoContrato = tblInvestidorModel.CodTipoContrato,
                 UsuarioModificacao = tblInvestidorModel.UsuarioModificacao
             };
 
@@ -126,7 +149,7 @@ namespace DUDS.Controllers
                         TipoCliente = line.TipoCliente,
                         CodAdministrador = line.CodAdministrador,
                         CodGestor = line.CodGestor,
-                        DirecaoPagamento = line.DirecaoPagamento,
+                        CodTipoContrato = line.CodTipoContrato,
                         UsuarioModificacao = line.UsuarioModificacao
                     };
 
@@ -159,7 +182,7 @@ namespace DUDS.Controllers
                     registroInvestidor.TipoCliente = investidor.TipoCliente == null ? registroInvestidor.TipoCliente : investidor.TipoCliente;
                     registroInvestidor.CodAdministrador = investidor.CodAdministrador == 0 ? registroInvestidor.CodAdministrador : investidor.CodAdministrador;
                     registroInvestidor.CodGestor = investidor.CodGestor == 0 ? registroInvestidor.CodGestor : investidor.CodGestor;
-                    registroInvestidor.DirecaoPagamento = investidor.DirecaoPagamento == null ? registroInvestidor.DirecaoPagamento : investidor.DirecaoPagamento;
+                    registroInvestidor.CodTipoContrato = investidor.CodTipoContrato == 0 ? registroInvestidor.CodTipoContrato : investidor.CodTipoContrato;
 
                     try
                     {
@@ -297,7 +320,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (Exception e)

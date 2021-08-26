@@ -10,10 +10,8 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
         public int? CodDistribuidor { get; set; }
-
-        //[Required]
-        [StringLength(20)]
-        public string TipoContrato { get; set; }
+        public int? Parceiro { get; set; }
+        public int CodTipoContrato { get; set; }
 
         //[Required]
         public bool? Ativo { get; set; }
@@ -21,6 +19,5 @@ namespace DUDS.Models
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         public DateTime? DataModificacao { get; set; }
-        public int? Parceiro { get; set; }
     }
 }

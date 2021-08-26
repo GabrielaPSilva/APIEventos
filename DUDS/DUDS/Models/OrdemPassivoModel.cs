@@ -24,7 +24,6 @@ namespace DUDS.Models
         public DateTime DtCompensacao { get; set; }
         public DateTime DtAgendamento { get; set; }
         public DateTime DtCotizacao { get; set; }
-        public int CodDistribuidor { get; set; }
         public int OrdemMae { get; set; }
         public int CodAdministrador { get; set; }
     }

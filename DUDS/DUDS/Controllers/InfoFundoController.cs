@@ -81,7 +81,30 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Fundo/GetFundoInativo/cnpj
+        [HttpGet("{cnpj}")]
+        public async Task<ActionResult<TblFundo>> GetFundoInativo(string cnpj)
+        {
+            TblFundo tblFundo = _context.TblFundo.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+
+            try
+            {
+                if (tblFundo != null)
+                {
+                    return Ok(tblFundo);
+                }
+                else
+                {
+                    return NotFound();
                 }
             }
             catch (Exception e)

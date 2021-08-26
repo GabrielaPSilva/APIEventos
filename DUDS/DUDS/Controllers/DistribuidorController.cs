@@ -68,7 +68,30 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Distribuidor/GetDistribuidorInativo/cnpj
+        [HttpGet("{cnpj}")]
+        public async Task<ActionResult<TblDistribuidor>> GetDistribuidorInativo(string cnpj)
+        {
+            TblDistribuidor tblDistribuidor = _context.TblDistribuidor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+
+            try
+            {
+                if (tblDistribuidor != null)
+                {
+                    return Ok(tblDistribuidor);
+                }
+                else
+                {
+                    return NotFound();
                 }
             }
             catch (Exception e)
@@ -238,7 +261,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (Exception e)

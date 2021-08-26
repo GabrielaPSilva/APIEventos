@@ -67,7 +67,30 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Gestor/GetGestorInativo/cnpj
+        [HttpGet("{cnpj}")]
+        public async Task<ActionResult<TblGestor>> GetGestorInativo(string cnpj)
+        {
+            TblGestor tblGestor = _context.TblGestor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+
+            try
+            {
+                if (tblGestor != null)
+                {
+                    return Ok(tblGestor);
+                }
+                else
+                {
+                    return NotFound();
                 }
             }
             catch (Exception e)
@@ -83,6 +106,7 @@ namespace DUDS.Controllers
             TblGestor itensGestor = new TblGestor
             {
                 NomeGestor = tblGestorModel.NomeGestor,
+                ClassificacaoGestor = tblGestorModel.ClassificacaoGestor,
                 Cnpj = tblGestorModel.Cnpj,
                 UsuarioModificacao = tblGestorModel.UsuarioModificacao
             };
@@ -114,6 +138,7 @@ namespace DUDS.Controllers
                 if (registroGestor != null)
                 {
                     registroGestor.NomeGestor = gestor.NomeGestor == null ? registroGestor.NomeGestor : gestor.NomeGestor;
+                    registroGestor.ClassificacaoGestor = gestor.ClassificacaoGestor == null ? registroGestor.ClassificacaoGestor : gestor.ClassificacaoGestor;
                     registroGestor.Cnpj = gestor.Cnpj == null ? registroGestor.Cnpj : gestor.Cnpj;
 
                     try

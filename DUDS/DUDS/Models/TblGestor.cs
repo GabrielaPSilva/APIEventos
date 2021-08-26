@@ -29,6 +29,9 @@ namespace DUDS.Models
         [Column("cnpj")]
         [StringLength(14)]
         public string Cnpj { get; set; }
+        [Column("classificacao_gestor")]
+        [StringLength(50)]
+        public string ClassificacaoGestor { get; set; }
         [Column("data_modificacao", TypeName = "smalldatetime")]
         public DateTime DataModificacao { get; set; }
         [Required]

@@ -67,7 +67,30 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Custodiante/GetCustodianteInativo/cnpj
+        [HttpGet("{cnpj}")]
+        public async Task<ActionResult<TblCustodiante>> GetCustodianteInativo(string cnpj)
+        {
+            TblCustodiante tblCustodiante = _context.TblCustodiante.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+
+            try
+            {
+                if (tblCustodiante != null)
+                {
+                    return Ok(tblCustodiante);
+                }
+                else
+                {
+                    return NotFound();
                 }
             }
             catch (Exception e)
