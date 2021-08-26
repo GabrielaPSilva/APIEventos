@@ -12,7 +12,7 @@ namespace DUDS.Models
         
         public double PercentualPfee { get; set; }
 
-        public string TipoContrato { get; set; }
+        public int CodTipoContrato { get; set; }
         
         public int? Parceiro { get; set; }
 

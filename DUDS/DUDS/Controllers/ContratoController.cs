@@ -898,7 +898,7 @@ namespace DUDS.Controllers
                                            {
                                                contratoRemuneracao.PercentualAdm,
                                                contratoRemuneracao.PercentualPfee,
-                                               contrato.CodTipoContrato,
+                                               //contrato.CodTipoContrato,
                                                contrato.Parceiro,
                                                contrato.CodDistribuidor,
                                                subContrato.Versao,
@@ -996,7 +996,7 @@ namespace DUDS.Controllers
                         PercentualAdm = x.PercentualAdm,
                         PercentualPfee = x.PercentualPfee,
                         Status = x.Status,
-                        TipoContrato = x.TipoContrato,
+                        //CodTipoContrato = x.CodTipoContrato,
                         Versao = x.Versao
                     };
                     estruturaContratoValidoModel.Add(c);
