@@ -996,7 +996,7 @@ namespace DUDS.Controllers
                         PercentualAdm = x.PercentualAdm,
                         PercentualPfee = x.PercentualPfee,
                         Status = x.Status,
-                        TipoContrato = x.TipoContrato,
+                        //TipoContrato = x.TipoContrato,
                         Versao = x.Versao
                     };
                     estruturaContratoValidoModel.Add(c);

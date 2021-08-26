@@ -340,7 +340,7 @@ namespace DUDS.Controllers
                             CodigoInvestidor = x.CodigoInvestidor,
                             CodigoInvestidorAdministrador = x.CodigoInvestidorAdministrador,
                             Competencia = x.Competencia,
-                            DirecaoPagamento = x.DirecaoPagamento,
+                            //DirecaoPagamento = x.DirecaoPagamento,
                             NomeInvestidor = x.NomeInvestidor,
                             SourceAdministrador = x.SourceAdministrador,
                             TaxaAdministracao = x.TaxaAdministracao,
