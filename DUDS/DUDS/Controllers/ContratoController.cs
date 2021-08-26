@@ -898,7 +898,7 @@ namespace DUDS.Controllers
                                            {
                                                contratoRemuneracao.PercentualAdm,
                                                contratoRemuneracao.PercentualPfee,
-                                               contrato.TipoContrato,
+                                               contrato.CodTipoContrato,
                                                contrato.Parceiro,
                                                contrato.CodDistribuidor,
                                                subContrato.Versao,
@@ -910,8 +910,6 @@ namespace DUDS.Controllers
                                                CodInvestidor = (contratoSubcontratoAlocadorNull == null? (int?)null : contratoSubcontratoAlocadorNull.CodInvestidor),
                                                contratoFundo.CodFundo,
                                                contratoFundo.CodTipoCondicao
-
-
                                            }).AsNoTracking().ToListAsync();
 
 
