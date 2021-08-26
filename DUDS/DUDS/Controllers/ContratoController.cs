@@ -68,7 +68,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (Exception e)
@@ -85,7 +85,7 @@ namespace DUDS.Controllers
             {
                 CodDistribuidor = tblContratoModel.CodDistribuidor,
                 Parceiro = tblContratoModel.Parceiro,
-                TipoContrato = tblContratoModel.TipoContrato,
+                CodTipoContrato = tblContratoModel.CodTipoContrato,
                 UsuarioModificacao = tblContratoModel.UsuarioModificacao
             };
 
@@ -116,7 +116,7 @@ namespace DUDS.Controllers
                 if (registroContrato != null)
                 {
                     registroContrato.CodDistribuidor = contrato.CodDistribuidor == 0 ? registroContrato.CodDistribuidor : contrato.CodDistribuidor;
-                    registroContrato.TipoContrato = contrato.TipoContrato == null ? registroContrato.TipoContrato : contrato.TipoContrato;
+                    registroContrato.CodTipoContrato = contrato.CodTipoContrato == 0 ? registroContrato.CodTipoContrato : contrato.CodTipoContrato;
                     registroContrato.Parceiro = contrato.Parceiro == null ? registroContrato.Parceiro : contrato.Parceiro;
 
                     try
@@ -257,7 +257,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (Exception e)
@@ -461,7 +461,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (Exception e)
@@ -615,7 +615,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (Exception e)
@@ -769,7 +769,7 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (Exception e)
@@ -892,7 +892,7 @@ namespace DUDS.Controllers
                 subContrato => subContrato.CodContrato,
                 (contrato, subContrato) => new
                 {
-                    contrato.TipoContrato,
+                    contrato.CodTipoContrato,
                     contrato.Parceiro,
                     contrato.CodDistribuidor,
                     subContrato.Versao,
@@ -933,7 +933,7 @@ namespace DUDS.Controllers
                 {
                     contratoRemuneracao.PercentualAdm,
                     contratoRemuneracao.PercentualPfee,
-                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.TipoContrato,
+                    contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.CodTipoContrato,
                     contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.Parceiro,
                     contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.CodDistribuidor,
                     contratoSubContratoAlocadorFundo.contratoSubContratoAlocador.contratoSubContrato.Versao,
@@ -964,7 +964,7 @@ namespace DUDS.Controllers
                         PercentualAdm = x.PercentualAdm,
                         PercentualPfee = x.PercentualPfee,
                         Status = x.Status,
-                        TipoContrato = x.TipoContrato,
+                        //TipoContrato = x.CodTipoContrato,
                         Versao = x.Versao
                     }
                     );

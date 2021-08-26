@@ -25,10 +25,8 @@ namespace DUDS.Models
         public int? CodDistribuidor { get; set; }
         [Column("parceiro")]
         public int? Parceiro { get; set; }
-        [Required]
-        [Column("tipo_contrato")]
-        [StringLength(20)]
-        public string TipoContrato { get; set; }
+        [Column("cod_tipo_contrato")]
+        public int CodTipoContrato { get; set; }
         [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
@@ -42,6 +40,9 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodDistribuidor))]
         [InverseProperty(nameof(TblDistribuidor.TblContrato))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
+        [ForeignKey(nameof(CodTipoContrato))]
+        [InverseProperty(nameof(TblTipoContrato.TblContrato))]
+        public virtual TblTipoContrato CodTipoContratoNavigation { get; set; }
         [ForeignKey(nameof(Parceiro))]
         [InverseProperty(nameof(TblGestor.TblContrato))]
         public virtual TblGestor ParceiroNavigation { get; set; }

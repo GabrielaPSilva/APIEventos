@@ -8,37 +8,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DUDS.Models
 {
-    [Table("tbl_custodiante")]
-    [Index(nameof(Cnpj), Name = "cnpj_tbl_custodiante", IsUnique = true)]
-    public partial class TblCustodiante
+    [Table("tbl_tipo_contrato")]
+    public partial class TblTipoContrato
     {
-        public TblCustodiante()
+        public TblTipoContrato()
         {
-            TblFundo = new HashSet<TblFundo>();
+            TblContrato = new HashSet<TblContrato>();
+            TblInvestidor = new HashSet<TblInvestidor>();
         }
 
         [Key]
         [Column("id")]
         public int Id { get; set; }
         [Required]
-        [Column("nome_custodiante")]
+        [Column("tipo_contrato")]
         [StringLength(50)]
-        public string NomeCustodiante { get; set; }
+        public string TipoContrato { get; set; }
         [Required]
-        [Column("cnpj")]
-        [StringLength(14)]
-        public string Cnpj { get; set; }
+        [Column("ativo")]
+        public bool? Ativo { get; set; }
         [Column("data_modificacao", TypeName = "smalldatetime")]
         public DateTime DataModificacao { get; set; }
         [Required]
         [Column("usuario_modificacao")]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
-        [Required]
-        [Column("ativo")]
-        public bool? Ativo { get; set; }
 
-        [InverseProperty("CodCustodianteNavigation")]
-        public virtual ICollection<TblFundo> TblFundo { get; set; }
+        [InverseProperty("CodTipoContratoNavigation")]
+        public virtual ICollection<TblContrato> TblContrato { get; set; }
+        [InverseProperty("CodTipoContratoNavigation")]
+        public virtual ICollection<TblInvestidor> TblInvestidor { get; set; }
     }
 }

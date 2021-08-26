@@ -99,7 +99,6 @@ namespace DUDS.Controllers
                         DtCompensacao = line.DtCompensacao,
                         DtAgendamento = line.DtAgendamento,
                         DtCotizacao = line.DtCotizacao,
-                        CodDistribuidor = line.CodDistribuidor,
                         OrdemMae = line.OrdemMae,
                         CodAdministrador = line.CodAdministrador
                     };

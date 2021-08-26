@@ -10,7 +10,6 @@ namespace DUDS.Models
 {
     [Table("tbl_ordem_passivo")]
     [Index(nameof(CodInvestidor), Name = "cd_cotista_tbl_ordem_passivo")]
-    [Index(nameof(CodDistribuidor), Name = "cod_distr_tbl_ordem_passivo")]
     [Index(nameof(CodFundo), Name = "cod_fundo_tbl_ordem_passivo")]
     [Index(nameof(DtAgendamento), Name = "dt_agend_tbl_ordem_passivo")]
     [Index(nameof(DtCompensacao), Name = "dt_comp_tbl_ordem_passivo")]
@@ -48,8 +47,6 @@ namespace DUDS.Models
         public DateTime DtAgendamento { get; set; }
         [Column("dt_cotizacao", TypeName = "date")]
         public DateTime DtCotizacao { get; set; }
-        [Column("cod_distribuidor")]
-        public int CodDistribuidor { get; set; }
         [Column("ordem_mae")]
         public int OrdemMae { get; set; }
         [Column("cod_administrador")]
@@ -58,9 +55,6 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodAdministrador))]
         [InverseProperty(nameof(TblAdministrador.TblOrdemPassivo))]
         public virtual TblAdministrador CodAdministradorNavigation { get; set; }
-        [ForeignKey(nameof(CodDistribuidor))]
-        [InverseProperty(nameof(TblDistribuidor.TblOrdemPassivo))]
-        public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
         [ForeignKey(nameof(CodFundo))]
         [InverseProperty(nameof(TblFundo.TblOrdemPassivo))]
         public virtual TblFundo CodFundoNavigation { get; set; }

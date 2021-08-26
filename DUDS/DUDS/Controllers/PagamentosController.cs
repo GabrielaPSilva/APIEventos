@@ -292,7 +292,7 @@ namespace DUDS.Controllers
                             NomeInvestidor = investidor.NomeCliente,
                             investidor.Cnpj,
                             investidor.TipoCliente,
-                            investidor.DirecaoPagamento,
+                            //investidor.DirecaoPagamento,
                             CodigoAdministradorInvestidor = investidor.CodAdministrador,
                             CodigoGestorInvestidor = investidor.CodGestor
                         }
@@ -312,7 +312,7 @@ namespace DUDS.Controllers
                         CodigoInvestidor = x.CodigoInvestidor,
                         CodigoInvestidorAdministrador = x.CodigoInvestidorAdministrador,
                         Competencia = x.Competencia,
-                        DirecaoPagamento = x.DirecaoPagamento,
+                        //DirecaoPagamento = x.DirecaoPagamento,
                         NomeInvestidor = x.NomeInvestidor,
                         SourceAdministrador = x.SourceAdministrador,
                         TaxaAdministracao = x.TaxaAdministracao,
