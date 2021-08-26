@@ -196,7 +196,6 @@ namespace DUDS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarAdministrador(int id)
         {
-
             TblAdministrador registroAdministrador = await _context.TblAdministrador.FindAsync(id);
 
             if (registroAdministrador != null)
@@ -223,7 +222,6 @@ namespace DUDS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> AtivarAdministrador(int id)
         {
-
             TblAdministrador registroAdministrador = await _context.TblAdministrador.FindAsync(id);
 
             if (registroAdministrador != null)

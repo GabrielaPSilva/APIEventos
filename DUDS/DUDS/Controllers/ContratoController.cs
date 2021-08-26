@@ -881,6 +881,190 @@ namespace DUDS.Controllers
         }
         #endregion
 
+        #region Tipo Contrato
+        // GET: api/Contrato/TipoContrato
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TblTipoContrato>>> TipoContrato()
+        {
+            try
+            {
+                List<TblTipoContrato> tipoContratos = await _context.TblTipoContrato.Where(c => c.Ativo == true).OrderBy(c => c.TipoContrato).AsNoTracking().ToListAsync();
+
+                if (tipoContratos.Count() == 0)
+                {
+                    return NotFound();
+                }
+
+                if (tipoContratos != null)
+                {
+                    return Ok(tipoContratos);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException.Message);
+            }
+        }
+
+        // GET: api/Contrato/GetTipoContrato/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblTipoContrato>> GetTipoContrato(int id)
+        {
+            TblTipoContrato tblTipoContrato = await _context.TblTipoContrato.FindAsync(id);
+
+            try
+            {
+                if (tblTipoContrato != null)
+                {
+                    return Ok(tblTipoContrato);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException.Message);
+            }
+        }
+
+        //POST: api/Contrato/CadastrarTipoContrato/TipoContratoModel
+        [HttpPost]
+        public async Task<ActionResult<TipoContratoModel>> CadastrarTipoContrato(TipoContratoModel tblTipoContratoModel)
+        {
+            TblTipoContrato itensTipoContrato = new TblTipoContrato
+            {
+                TipoContrato = tblTipoContratoModel.TipoContrato,
+                UsuarioModificacao = tblTipoContratoModel.UsuarioModificacao
+            };
+
+            try
+            {
+                _context.TblTipoContrato.Add(itensTipoContrato);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(
+                   nameof(GetTipoContrato),
+                   new { id = itensTipoContrato.Id },
+                   Ok(itensTipoContrato));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //PUT: api/Contrato/EditarTipoContrato/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarTipoContrato(int id, TipoContratoModel tipoContrato)
+        {
+            try
+            {
+                TblTipoContrato registroTipoContrato = await _context.TblTipoContrato.FindAsync(id);
+
+                if (registroTipoContrato != null)
+                {
+                    registroTipoContrato.TipoContrato = tipoContrato.TipoContrato == null ? registroTipoContrato.TipoContrato : tipoContrato.TipoContrato;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroTipoContrato);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e.InnerException.Message);
+                    }
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!TipoContratoExists(tipoContrato.Id))
+            {
+                return BadRequest(e.InnerException.Message);
+            }
+        }
+
+        // DELETE: api/Administrador/DeletarAdministrador/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarAdministrador(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_contrato");
+
+            if (!existeRegistro)
+            {
+                TblTipoContrato tblTipoContrato = await _context.TblTipoContrato.FindAsync(id);
+
+                if (tblTipoContrato == null)
+                {
+                    return NotFound();
+                }
+
+                try
+                {
+                    _context.TblTipoContrato.Remove(tblTipoContrato);
+                    await _context.SaveChangesAsync();
+                    return Ok(tblTipoContrato);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        // DESATIVA: api/Contrato/DesativarTipoContrato/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarTipoContrato(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_contrato");
+
+            if (!existeRegistro)
+            {
+                TblTipoContrato registroTipoContrato = await _context.TblTipoContrato.FindAsync(id);
+
+                if (registroTipoContrato != null)
+                {
+                    registroTipoContrato.Ativo = false;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroTipoContrato);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e.InnerException.Message);
+                    }
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        private bool TipoContratoExists(int id)
+        {
+            return _context.TblTipoContrato.Any(e => e.Id == id);
+        }
+        #endregion
+
         #region Estrutura de Contratos Válidos e Inválidos
         // GET: api/Contrato/GetEstruturaContrato
         [HttpGet]
@@ -907,7 +1091,7 @@ namespace DUDS.Controllers
                                                subContrato.DataRetroatividade,
                                                subContrato.DataVigenciaInicio,
                                                subContrato.DataVigenciaFim,
-                                               CodInvestidor = (contratoSubcontratoAlocadorNull == null? (int?)null : contratoSubcontratoAlocadorNull.CodInvestidor),
+                                               CodInvestidor = (contratoSubcontratoAlocadorNull == null ? (int?)null : contratoSubcontratoAlocadorNull.CodInvestidor),
                                                contratoFundo.CodFundo,
                                                contratoFundo.CodTipoCondicao
                                            }).AsNoTracking().ToListAsync();
@@ -977,7 +1161,7 @@ namespace DUDS.Controllers
                 ).Where(c => c.Status != "Inativo").AsNoTracking().ToListAsync();
             */
             // Verificando a possibilidade de utilizar funções em paralelo para aumentar a velocidade de processamento.
-            ConcurrentBag < EstruturaContratoValidoModel > estruturaContratoValidoModel = new ConcurrentBag<EstruturaContratoValidoModel>();
+            ConcurrentBag<EstruturaContratoValidoModel> estruturaContratoValidoModel = new ConcurrentBag<EstruturaContratoValidoModel>();
             Parallel.ForEach(
                 estruturaContrato,
                 x =>
