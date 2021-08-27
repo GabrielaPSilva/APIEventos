@@ -127,7 +127,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 

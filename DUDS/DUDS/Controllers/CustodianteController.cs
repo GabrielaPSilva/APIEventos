@@ -44,12 +44,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -72,18 +72,26 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
-        // GET: api/Custodiante/GetCustodianteInativo/cnpj
+        // GET: api/Custodiante/GetCustodianteExiste/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblCustodiante>> GetCustodianteInativo(string cnpj)
+        public async Task<ActionResult<TblCustodiante>> GetCustodianteExiste(string cnpj)
         {
-            TblCustodiante tblCustodiante = _context.TblCustodiante.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+            TblCustodiante tblCustodiante = new TblCustodiante();
 
-            try
+            tblCustodiante = await _context.TblCustodiante.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
+
+            if (tblCustodiante != null)
             {
+                return Ok(tblCustodiante);
+            }
+            else
+            {
+                tblCustodiante = await _context.TblCustodiante.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+
                 if (tblCustodiante != null)
                 {
                     return Ok(tblCustodiante);
@@ -92,10 +100,6 @@ namespace DUDS.Controllers
                 {
                     return NotFound();
                 }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
             }
         }
 
@@ -122,7 +126,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -146,7 +150,7 @@ namespace DUDS.Controllers
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(e);
+                        return BadRequest(e.InnerException.Message);
                     }
                 }
                 else
@@ -156,7 +160,7 @@ namespace DUDS.Controllers
             }
             catch (DbUpdateConcurrencyException e) when (!CustodianteExists(custodiante.Id))
             {
-                return NotFound(e);
+                return NotFound(e.InnerException.Message);
             }
         }
 
@@ -179,7 +183,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -200,7 +204,33 @@ namespace DUDS.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        // ATIVAR: api/Custodiante/AtivarCustodiante/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AtivarCustodiante(int id)
+        {
+            TblCustodiante registroCustodiante = await _context.TblCustodiante.FindAsync(id);
+
+            if (registroCustodiante != null)
+            {
+                registroCustodiante.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroCustodiante);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else
