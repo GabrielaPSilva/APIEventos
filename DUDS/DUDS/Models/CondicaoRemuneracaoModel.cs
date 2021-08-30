@@ -18,11 +18,9 @@ namespace DUDS.Models
         public double? ValorPgtoFixo { get; set; }
         public DateTime DataModificacao { get; set; }
 
-        //[Required]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
 
-        //[Required]
         public bool? Ativo { get; set; }
     }
 }

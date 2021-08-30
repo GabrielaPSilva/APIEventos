@@ -17,7 +17,6 @@ namespace DUDS.Models
         public int CodAdministrador { get; set; }
         public DateTime DataModificacao { get; set; }
 
-        //[Required]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
     }

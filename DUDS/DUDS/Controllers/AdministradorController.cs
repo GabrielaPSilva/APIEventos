@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 using DUDS.Service.Interface;
+using Newtonsoft.Json;
 
 namespace DUDS.Controllers
 {
@@ -76,14 +77,22 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Administrador/GetAdministradorInativo/cnpj
+        // GET: api/Administrador/GetAdministradorExiste/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblAdministrador>> GetAdministradorInativo(string cnpj)
+        public async Task<ActionResult<TblAdministrador>> GetAdministradorExiste(string cnpj)
         {
-            TblAdministrador tblAdministrador = await _context.TblAdministrador.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
+            TblAdministrador tblAdministrador = new TblAdministrador();
 
-            try
+            tblAdministrador = await _context.TblAdministrador.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
+
+            if (tblAdministrador != null)
             {
+                return Ok(tblAdministrador);
+            }
+            else
+            {
+                tblAdministrador = await _context.TblAdministrador.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+
                 if (tblAdministrador != null)
                 {
                     return Ok(tblAdministrador);
@@ -92,10 +101,6 @@ namespace DUDS.Controllers
                 {
                     return NotFound();
                 }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -120,18 +125,9 @@ namespace DUDS.Controllers
                    new { id = itensAdministrador.Id },
                    Ok(itensAdministrador));
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
-                TblAdministrador tblAdministrador = await _context.TblAdministrador.Where(c => c.Cnpj == itensAdministrador.Cnpj).FirstOrDefaultAsync();
-
-                if (tblAdministrador != null)
-                {
-                    return BadRequest(e.InnerException.Message);
-                }
-                else
-                {
-                    return NotFound(e.InnerException.Message);
-                }
+                return BadRequest(e.InnerException.Message);
             }
         }
 

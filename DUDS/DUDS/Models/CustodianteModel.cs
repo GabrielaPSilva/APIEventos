@@ -10,20 +10,16 @@ namespace DUDS.Models
     {
         public int Id { get; set; }
 
-        //[Required]
         [StringLength(50)]
         public string NomeCustodiante { get; set; }
 
-        //[Required]
         [StringLength(14)]
         public string Cnpj { get; set; }
         public DateTime DataModificacao { get; set; }
 
-        //[Required]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
 
-        //[Required]
         public bool? Ativo { get; set; }
     }
 }

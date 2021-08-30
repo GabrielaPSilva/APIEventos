@@ -12,8 +12,6 @@ namespace DUDS.Models
         public int? CodDistribuidor { get; set; }
         public int? Parceiro { get; set; }
         public int CodTipoContrato { get; set; }
-
-        //[Required]
         public bool? Ativo { get; set; }
 
         [StringLength(100)]

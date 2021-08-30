@@ -44,12 +44,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -72,18 +72,26 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
-        // GET: api/Gestor/GetGestorInativo/cnpj
+        // GET: api/Gestor/GetGestorExiste/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblGestor>> GetGestorInativo(string cnpj)
+        public async Task<ActionResult<TblCustodiante>> GetGestorExiste(string cnpj)
         {
-            TblGestor tblGestor = _context.TblGestor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+            TblGestor tblGestor = new TblGestor();
 
-            try
+            tblGestor = await _context.TblGestor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
+
+            if (tblGestor != null)
             {
+                return Ok(tblGestor);
+            }
+            else
+            {
+                tblGestor = await _context.TblGestor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+
                 if (tblGestor != null)
                 {
                     return Ok(tblGestor);
@@ -92,10 +100,6 @@ namespace DUDS.Controllers
                 {
                     return NotFound();
                 }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
             }
         }
 
@@ -123,7 +127,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -148,7 +152,7 @@ namespace DUDS.Controllers
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(e);
+                        return BadRequest(e.InnerException.Message);
                     }
                 }
                 else
@@ -158,7 +162,7 @@ namespace DUDS.Controllers
             }
             catch (DbUpdateConcurrencyException e) when (!GestorExists(gestor.Id))
             {
-                return NotFound(e);
+                return NotFound(e.InnerException.Message);
             }
         }
 
@@ -181,7 +185,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -202,7 +206,7 @@ namespace DUDS.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else
@@ -210,7 +214,33 @@ namespace DUDS.Controllers
                 return NotFound();
             }
         }
-        
+
+        // ATIVAR: api/Gestor/AtivarGestor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AtivarGestor(int id)
+        {
+            TblGestor registroGestor = await _context.TblGestor.FindAsync(id);
+
+            if (registroGestor != null)
+            {
+                registroGestor.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroGestor);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         private bool GestorExists(int id)
         {
             return _context.TblGestor.Any(e => e.Id == id);

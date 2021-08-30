@@ -992,9 +992,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Administrador/DeletarAdministrador/id
+        // DELETE: api/Contrato/DeletarTipoContrato/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarAdministrador(int id)
+        public async Task<IActionResult> DeletarTipoContrato(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_contrato");
 

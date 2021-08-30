@@ -14,7 +14,6 @@ namespace DUDS.Models
         public long CodInvestidor { get; set; }
         public int CodMovimentacao { get; set; }
 
-        [Required]
         [StringLength(2)]
         public string TipoMovimentacao { get; set; }
         public decimal QtdeCotas { get; set; }
@@ -28,23 +27,19 @@ namespace DUDS.Models
         public decimal ValorPerformance { get; set; }
         public int NumOrdem { get; set; }
 
-        [Required]
         [StringLength(15)]
         public string TipoTransferencia { get; set; }
         public int CodDistribuidor { get; set; }
 
-        [Required]
         [StringLength(10)]
         public string Operador { get; set; }
         public int CodGestor { get; set; }
         public int CodOrdemMae { get; set; }
 
-        [Required]
         [StringLength(1)]
         public string Penalty { get; set; }
         public int CodAdm { get; set; }
 
-        [Required]
         [StringLength(100)]
         public string ClassTributaria { get; set; }
         public int CodCustodiante { get; set; }
