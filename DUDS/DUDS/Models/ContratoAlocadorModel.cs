@@ -13,7 +13,6 @@ namespace DUDS.Models
         public int CodSubContrato { get; set; }
         public DateTime? DataTransferencia { get; set; }
 
-        //[Required]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         public DateTime DataModificacao { get; set; }

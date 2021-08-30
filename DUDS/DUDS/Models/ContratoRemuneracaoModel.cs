@@ -13,7 +13,6 @@ namespace DUDS.Models
         public double PercentualAdm { get; set; }
         public double PercentualPfee { get; set; }
 
-        //[Required]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         public DateTime DataModificacao { get; set; }

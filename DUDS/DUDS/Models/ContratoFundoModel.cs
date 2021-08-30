@@ -13,7 +13,6 @@ namespace DUDS.Models
         public int CodFundo { get; set; }
         public int CodTipoCondicao { get; set; }
 
-        //[Required]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         public DateTime DataModificacao { get; set; }

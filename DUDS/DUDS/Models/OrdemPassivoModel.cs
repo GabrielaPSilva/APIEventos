@@ -13,7 +13,6 @@ namespace DUDS.Models
         public long CodInvestidor { get; set; }
         public int CodFundo { get; set; }
 
-        [Required]
         [StringLength(2)]
         public string DsOperacao { get; set; }
         public decimal VlValor { get; set; }

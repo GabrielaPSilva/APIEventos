@@ -13,24 +13,19 @@ namespace DUDS.Models
         public int? CodInvestidor { get; set; }
         public int CodTipoConta { get; set; }
 
-        //[Required]
         [StringLength(4)]
         public string Banco { get; set; }
 
-        //[Required]
         [StringLength(10)]
         public string Agencia { get; set; }
 
-        //[Required]
         [StringLength(15)]
         public string Conta { get; set; }
         public DateTime DataModificacao { get; set; }
 
-        //[Required]
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
 
-        //[Required]
         public bool? Ativo { get; set; }
     }
 }

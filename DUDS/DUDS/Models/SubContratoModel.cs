@@ -11,11 +11,9 @@ namespace DUDS.Models
         public int Id { get; set; }
         public int CodContrato { get; set; }
 
-        //[Required]
         [StringLength(20)]
         public string Versao { get; set; }
 
-        //[Required]
         [StringLength(30)]
         public string Status { get; set; }
 
@@ -28,7 +26,6 @@ namespace DUDS.Models
         public DateTime? DataVigenciaInicio { get; set; }
         public DateTime? DataVigenciaFim { get; set; }
 
-        //[Required]
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         public DateTime DataModificacao { get; set; }
