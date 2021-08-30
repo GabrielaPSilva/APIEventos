@@ -36,5 +36,11 @@ namespace DUDS.Models
         
         public int CodTipoCondicao { get; set; }
 
+        public string CodigoInvestidorDistribuidor { get; set; }
+
+        public int? AdministradorCodigoInvestidor { get; set; }
+
+        public int? DistribuidorCodigoInvestidor { get; set; }
+
     }
 }

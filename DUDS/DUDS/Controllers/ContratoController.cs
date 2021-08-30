@@ -1071,10 +1071,12 @@ namespace DUDS.Controllers
         public async Task<ActionResult<IEnumerable<EstruturaContratoValidoModel>>> GetEstruturaContratoValidos()
         {
             // Left Join utilizando LINQ - para Gabriela
-            var estruturaContrato = await (from contrato in _context.TblContrato
+            var estruturaContrato = await (/*from contrato in _context.TblContrato
                                            join subContrato in _context.TblSubContrato on contrato.Id equals subContrato.CodContrato
-                                           join contratoAlocador in _context.TblContratoAlocador on subContrato.Id equals (int?)contratoAlocador.CodSubContrato into contratoSubContratoAlocador
+                                           join contratoAlocador in _context.TblContratoAlocador on subContrato.Id equals contratoAlocador.CodSubContrato into contratoSubContratoAlocador
                                            from contratoSubcontratoAlocadorNull in contratoSubContratoAlocador.DefaultIfEmpty()
+                                           join investidorDistribuidor in _context.TblInvestidorDistribuidor on contratoSubcontratoAlocadorNull.CodInvestidor equals investidorDistribuidor.CodInvestidor into investidorDistribuidorContratoAlocador
+                                           from investidorDistribuidorNull in investidorDistribuidorContratoAlocador.DefaultIfEmpty()
                                            join contratoFundo in _context.TblContratoFundo on subContrato.Id equals contratoFundo.CodSubContrato
                                            join contratoRemuneracao in _context.TblContratoRemuneracao on contratoFundo.Id equals contratoRemuneracao.CodContratoFundo
                                            where subContrato.Status != "Inativo"
@@ -1093,8 +1095,42 @@ namespace DUDS.Controllers
                                                subContrato.DataVigenciaFim,
                                                CodInvestidor = (contratoSubcontratoAlocadorNull == null ? (int?)null : contratoSubcontratoAlocadorNull.CodInvestidor),
                                                contratoFundo.CodFundo,
-                                               contratoFundo.CodTipoCondicao
-                                           }).AsNoTracking().ToListAsync();
+                                               contratoFundo.CodTipoCondicao,
+                                               CodigoInvestidorDistribuidor = (investidorDistribuidorNull == null ? String.Empty : investidorDistribuidorNull.CodInvestAdministrador),
+                                               AdministradorCodigoInvestidor = (investidorDistribuidorNull == null ? (int?)null : investidorDistribuidorNull.CodAdministrador),
+                                               DistribuidorCodigoInvestidor = (investidorDistribuidorNull == null ? (int?)null : investidorDistribuidorNull.CodDistribuidor)*/
+                                            from contrato in _context.TblContrato
+                                            from subContrato in _context.TblSubContrato.Where(sC => sC.CodContrato == contrato.Id)
+                                            from contratoFundo in _context.TblContratoFundo.Where(cF => cF.CodSubContrato == subContrato.Id)
+                                            from contratoRemuneracao in _context.TblContratoRemuneracao.Where(cR => cR.CodContratoFundo == contratoFundo.Id)
+                                            from contratoAlocador in _context.TblContratoAlocador.Where(cA => cA.CodSubContrato == subContrato.Id).DefaultIfEmpty()
+                                            from investidorDistribuidor in _context.TblInvestidorDistribuidor.Where(iD => iD.CodInvestidor == contratoAlocador.CodInvestidor).DefaultIfEmpty()
+                                            where subContrato.Status != "Inativo"
+                                            select new
+                                            {
+                                                contratoRemuneracao.PercentualAdm,
+                                                contratoRemuneracao.PercentualPfee,
+                                                contrato.CodTipoContrato,
+                                                contrato.Parceiro,
+                                                contrato.CodDistribuidor,
+                                                subContrato.Versao,
+                                                subContrato.Status,
+                                                subContrato.ClausulaRetroatividade,
+                                                subContrato.DataRetroatividade,
+                                                subContrato.DataVigenciaInicio,
+                                                subContrato.DataVigenciaFim,
+                                                CodInvestidor = contratoAlocador == null ? (int?)null : contratoAlocador.CodInvestidor,
+                                                //contratoAlocador.CodInvestidor,
+                                                contratoFundo.CodFundo,
+                                                contratoFundo.CodTipoCondicao,
+                                                CodigoInvestidorDistribuidor = investidorDistribuidor == null ? String.Empty : investidorDistribuidor.CodInvestAdministrador,
+                                                //CodigoInvestidorDistribuidor = investidorDistribuidor.CodInvestAdministrador,
+                                                AdministradorCodigoInvestidor = investidorDistribuidor == null ? (int?)null : investidorDistribuidor.CodAdministrador,
+                                                //AdministradorCodigoInvestidor = investidorDistribuidor.CodAdministrador,
+                                                DistribuidorCodigoInvestidor = investidorDistribuidor == null ? (int?)null : investidorDistribuidor.CodDistribuidor
+                                                //DistribuidorCodigoInvestidor = investidorDistribuidor.CodDistribuidor
+
+                                            }).AsNoTracking().ToListAsync();
 
 
             /*
