@@ -1108,11 +1108,14 @@ namespace DUDS.Controllers
                                             where subContrato.Status != "Inativo"
                                             select new
                                             {
+                                                CodContratoRemuneracao = contratoRemuneracao.Id,
                                                 contratoRemuneracao.PercentualAdm,
                                                 contratoRemuneracao.PercentualPfee,
+                                                CodContrato = contrato.Id,
                                                 contrato.CodTipoContrato,
                                                 contrato.Parceiro,
                                                 contrato.CodDistribuidor,
+                                                CodSubContrato = subContrato.Id,
                                                 subContrato.Versao,
                                                 subContrato.Status,
                                                 subContrato.ClausulaRetroatividade,
@@ -1120,16 +1123,12 @@ namespace DUDS.Controllers
                                                 subContrato.DataVigenciaInicio,
                                                 subContrato.DataVigenciaFim,
                                                 CodInvestidor = contratoAlocador == null ? (int?)null : contratoAlocador.CodInvestidor,
-                                                //contratoAlocador.CodInvestidor,
+                                                CodContratoFundo = contratoFundo.Id,
                                                 contratoFundo.CodFundo,
                                                 contratoFundo.CodTipoCondicao,
                                                 CodigoInvestidorDistribuidor = investidorDistribuidor == null ? String.Empty : investidorDistribuidor.CodInvestAdministrador,
-                                                //CodigoInvestidorDistribuidor = investidorDistribuidor.CodInvestAdministrador,
                                                 AdministradorCodigoInvestidor = investidorDistribuidor == null ? (int?)null : investidorDistribuidor.CodAdministrador,
-                                                //AdministradorCodigoInvestidor = investidorDistribuidor.CodAdministrador,
                                                 DistribuidorCodigoInvestidor = investidorDistribuidor == null ? (int?)null : investidorDistribuidor.CodDistribuidor
-                                                //DistribuidorCodigoInvestidor = investidorDistribuidor.CodDistribuidor
-
                                             }).AsNoTracking().ToListAsync();
 
 
@@ -1217,7 +1216,13 @@ namespace DUDS.Controllers
                         PercentualPfee = x.PercentualPfee,
                         Status = x.Status,
                         CodTipoContrato = x.CodTipoContrato,
-                        Versao = x.Versao
+                        Versao = x.Versao,
+                        AdministradorCodigoInvestidor = x.AdministradorCodigoInvestidor,
+                        CodigoInvestidorDistribuidor = x.CodigoInvestidorDistribuidor,
+                        DistribuidorCodigoInvestidor = x.DistribuidorCodigoInvestidor,
+                        CodContrato = x.CodContrato,
+                        CodContratoFundo = x.CodContratoFundo,
+                        CodSubContrato = x.CodSubContrato
                     };
                     estruturaContratoValidoModel.Add(c);
                 }
