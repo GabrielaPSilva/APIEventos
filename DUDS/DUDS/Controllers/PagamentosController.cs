@@ -33,7 +33,7 @@ namespace DUDS.Controllers
             {
                 List<TblPagamentoServico> pgtosServico = await _context.TblPagamentoServico.OrderByDescending(c => c.Competencia).AsNoTracking().ToListAsync();
 
-                if (pgtosServico.Count() == 0)
+                if (pgtosServico.Count == 0)
                 {
                     return NotFound();
                 }
@@ -145,7 +145,7 @@ namespace DUDS.Controllers
             {
                 List<TblPgtoAdmPfee> pgtosAdmPfee = await _context.TblPgtoAdmPfee.OrderByDescending(c => c.Competencia).AsNoTracking().ToListAsync();
 
-                if (pgtosAdmPfee.Count() == 0)
+                if (pgtosAdmPfee.Count == 0)
                 {
                     return NotFound();
                 }
@@ -190,16 +190,16 @@ namespace DUDS.Controllers
 
         //POST: api/Pagamentos/CadastrarPagamentoAdminPfee/List<PagamentoAdminPfeeModel>
         [HttpPost]
-        public async Task<ActionResult<PagamentoAdminPfeeModel>> CadastrarPagamentoAdminPfee(List<PagamentoAdminPfeeModel> tblPagamentoAdminPfeeModel)
+        public async Task<ActionResult<IEnumerable<PagamentoAdminPfeeModel>>> CadastrarPagamentoAdminPfee(List<PagamentoAdminPfeeModel> tblPagamentoAdminPfeeModel)
         {
             List<TblPgtoAdmPfee> listaPagamentosAdminPfee = new List<TblPgtoAdmPfee>();
-            TblPgtoAdmPfee itensPagamentoAdminPfee = new TblPgtoAdmPfee();
+            // TblPgtoAdmPfee itensPagamentoAdminPfee = new TblPgtoAdmPfee();
 
             try
             {
                 foreach (var line in tblPagamentoAdminPfeeModel)
                 {
-                    itensPagamentoAdminPfee = new TblPgtoAdmPfee
+                    TblPgtoAdmPfee itensPagamentoAdminPfee = new TblPgtoAdmPfee
                     {
                         Competencia = line.Competencia,
                         CodInvestidorDistribuidor = line.CodInvestidorDistribuidor,
@@ -217,7 +217,7 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaPagamentosAdminPfee);
                 await _context.SaveChangesAsync();
 
-                return Ok(itensPagamentoAdminPfee);
+                return Ok(listaPagamentosAdminPfee);
             }
             catch (Exception e)
             {

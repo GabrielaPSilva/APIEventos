@@ -35,7 +35,7 @@ namespace DUDS.Controllers
             {
                 List<TblContrato> contratos = await _context.TblContrato.Where(c => c.Ativo == true).OrderBy(c => c.CodDistribuidor).AsNoTracking().ToListAsync();
 
-                if (contratos.Count() == 0)
+                if (contratos.Count == 0)
                 {
                     return NotFound();
                 }
@@ -224,7 +224,7 @@ namespace DUDS.Controllers
             {
                 List<TblSubContrato> subContratos = await _context.TblSubContrato.Where(c => c.Status == "Ativo").OrderBy(c => c.CodContrato).AsNoTracking().ToListAsync();
 
-                if (subContratos.Count() == 0)
+                if (subContratos.Count == 0)
                 {
                     return NotFound();
                 }
@@ -428,7 +428,7 @@ namespace DUDS.Controllers
             {
                 List<TblContratoAlocador> contratoAlocadores = await _context.TblContratoAlocador.AsNoTracking().ToListAsync();
 
-                if (contratoAlocadores.Count() == 0)
+                if (contratoAlocadores.Count == 0)
                 {
                     return NotFound();
                 }
@@ -582,7 +582,7 @@ namespace DUDS.Controllers
             {
                 List<TblContratoFundo> contratoFundos = await _context.TblContratoFundo.OrderBy(c => c.CodSubContrato).AsNoTracking().ToListAsync();
 
-                if (contratoFundos.Count() == 0)
+                if (contratoFundos.Count == 0)
                 {
                     return NotFound();
                 }
@@ -736,7 +736,7 @@ namespace DUDS.Controllers
             {
                 List<TblContratoRemuneracao> contratoRemuneracao = await _context.TblContratoRemuneracao.OrderBy(c => c.CodContratoFundo).AsNoTracking().ToListAsync();
 
-                if (contratoRemuneracao.Count() == 0)
+                if (contratoRemuneracao.Count == 0)
                 {
                     return NotFound();
                 }
@@ -890,7 +890,7 @@ namespace DUDS.Controllers
             {
                 List<TblTipoContrato> tipoContratos = await _context.TblTipoContrato.Where(c => c.Ativo == true).OrderBy(c => c.TipoContrato).AsNoTracking().ToListAsync();
 
-                if (tipoContratos.Count() == 0)
+                if (tipoContratos.Count == 0)
                 {
                     return NotFound();
                 }
@@ -1222,7 +1222,8 @@ namespace DUDS.Controllers
                         DistribuidorCodigoInvestidor = x.DistribuidorCodigoInvestidor,
                         CodContrato = x.CodContrato,
                         CodContratoFundo = x.CodContratoFundo,
-                        CodSubContrato = x.CodSubContrato
+                        CodSubContrato = x.CodSubContrato,
+                        CodContratoRemuneracao = x.CodContratoRemuneracao
                     };
                     estruturaContratoValidoModel.Add(c);
                 }
@@ -1252,7 +1253,7 @@ namespace DUDS.Controllers
             */
             try
             {
-                if (estruturaContratoValidoModel.Count == 0)
+                if (estruturaContratoValidoModel.IsEmpty)
                 {
                     return NotFound();
                 }

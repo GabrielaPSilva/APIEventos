@@ -48,6 +48,10 @@ namespace DUDS.Models
 
         public int CodContratoFundo { get; set; }
 
+        public int CodContratoRemuneracao { get; set; }
+
+
+
 
     }
 }
