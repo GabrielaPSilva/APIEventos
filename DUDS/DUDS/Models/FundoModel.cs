@@ -57,9 +57,7 @@ namespace DUDS.Models
         [StringLength(3)]
         public string MoedaFundo { get; set; }
         public int? CdFundoAdm { get; set; }
-
-        [StringLength(10)]
-        public string Estrategia { get; set; }
+        public int? CodTipoEstrategia { get; set; }
         public int? DiasCotizacaoAplicacao { get; set; }
 
         [StringLength(2)]

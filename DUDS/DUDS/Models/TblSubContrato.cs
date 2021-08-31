@@ -14,6 +14,7 @@ namespace DUDS.Models
     {
         public TblSubContrato()
         {
+            TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
             TblContratoAlocador = new HashSet<TblContratoAlocador>();
             TblContratoFundo = new HashSet<TblContratoFundo>();
         }
@@ -56,6 +57,8 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodContrato))]
         [InverseProperty(nameof(TblContrato.TblSubContrato))]
         public virtual TblContrato CodContratoNavigation { get; set; }
+        [InverseProperty("CodSubContratoNavigation")]
+        public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         [InverseProperty("CodSubContratoNavigation")]
         public virtual ICollection<TblContratoAlocador> TblContratoAlocador { get; set; }
         [InverseProperty("CodSubContratoNavigation")]

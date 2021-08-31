@@ -12,6 +12,11 @@ namespace DUDS.Models
     [Index(nameof(CodFundo), nameof(CodContratoRemuneracao), Name = "IX_tbl_lista_condicoes", IsUnique = true)]
     public partial class TblCondicaoRemuneracao
     {
+        public TblCondicaoRemuneracao()
+        {
+            TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
+        }
+
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -45,5 +50,7 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodFundo))]
         [InverseProperty(nameof(TblFundo.TblCondicaoRemuneracao))]
         public virtual TblFundo CodFundoNavigation { get; set; }
+        [InverseProperty("CodCondicaoRemuneracaoNavigation")]
+        public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
     }
 }

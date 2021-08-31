@@ -42,6 +42,8 @@ namespace DUDS.Service
             string[] codInvestidorDistribuidor = _config["RelacaoTabelas:tbl_investidor_distribuidor"].Split(',').Select(t => t.Trim()).ToArray();
             string[] codTipoCondicao = _config["RelacaoTabelas:tbl_tipo_condicao"].Split(',').Select(t => t.Trim()).ToArray();
             string[] codTipoContrato = _config["RelacaoTabelas:tbl_tipo_contrato"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codTipoClassificacaoGestor = _config["RelacaoTabelas:tbl_tipo_classificacao_gestor"].Split(',').Select(t => t.Trim()).ToArray();
+            string[] codTipoEstrategia = _config["RelacaoTabelas:tbl_tipo_estrategia"].Split(',').Select(t => t.Trim()).ToArray();
 
             string[] tableUsed = null;
             string codUsed = string.Empty;
@@ -104,6 +106,14 @@ namespace DUDS.Service
                 case "tbl_tipo_contrato":
                     tableUsed = codTipoContrato;
                     codUsed = "cod_tipo_contrato = ";
+                    break;
+                case "tbl_tipo_classificacao_gestor":
+                    tableUsed = codTipoClassificacaoGestor;
+                    codUsed = "cod_tipo_classificacao_gestor = ";
+                    break;
+                case "tbl_tipo_estrategia":
+                    tableUsed = codTipoEstrategia;
+                    codUsed = "cod_tipo_estrategia = ";
                     break;
                 default:
                     break;

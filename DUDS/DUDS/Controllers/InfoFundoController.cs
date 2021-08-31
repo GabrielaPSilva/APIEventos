@@ -130,7 +130,7 @@ namespace DUDS.Controllers
                 CodCustodiante = tblFundoModel.CodCustodiante,
                 CodGestor = tblFundoModel.CodGestor,
                 MoedaFundo = tblFundoModel.MoedaFundo,
-                Estrategia = tblFundoModel.Estrategia,
+                CodTipoEstrategia = tblFundoModel.CodTipoEstrategia,
                 DiasCotizacaoAplicacao = tblFundoModel.DiasCotizacaoAplicacao,
                 ContagemDiasCotizacaoAplicacao = tblFundoModel.ContagemDiasCotizacaoAplicacao,
                 DiasCotizacaoResgate = tblFundoModel.DiasCotizacaoResgate,
@@ -192,7 +192,7 @@ namespace DUDS.Controllers
                     registroFundo.CodCustodiante = fundo.CodCustodiante == 0 ? registroFundo.CodCustodiante : fundo.CodCustodiante;
                     registroFundo.CodGestor = fundo.CodGestor == 0 ? registroFundo.CodGestor : fundo.CodGestor;
                     registroFundo.MoedaFundo = fundo.MoedaFundo == null ? registroFundo.MoedaFundo : fundo.MoedaFundo;
-                    registroFundo.Estrategia = fundo.Estrategia == null ? registroFundo.Estrategia : fundo.Estrategia;
+                    registroFundo.CodTipoEstrategia = fundo.CodTipoEstrategia == 0 ? registroFundo.CodTipoEstrategia : fundo.CodTipoEstrategia;
                     registroFundo.DiasCotizacaoAplicacao = fundo.DiasCotizacaoAplicacao == 0 ? registroFundo.DiasCotizacaoAplicacao : fundo.DiasCotizacaoAplicacao;
                     registroFundo.ContagemDiasCotizacaoAplicacao = fundo.ContagemDiasCotizacaoAplicacao == null ? registroFundo.ContagemDiasCotizacaoAplicacao : fundo.ContagemDiasCotizacaoAplicacao;
                     registroFundo.DiasCotizacaoResgate = fundo.DiasCotizacaoResgate == 0 ? registroFundo.DiasCotizacaoResgate : fundo.DiasCotizacaoResgate;
@@ -307,6 +307,176 @@ namespace DUDS.Controllers
         private bool FundoExists(int id)
         {
             return _context.TblFundo.Any(e => e.Id == id);
+        }
+        #endregion
+
+        #region Tipo Estrategia
+        // GET: api/InfoFundo/TipoEstrategia
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TblTipoEstrategia>>> TipoEstrategia()
+        {
+            try
+            {
+                var tiposEstrategia = await _context.TblTipoEstrategia.Where(c => c.Ativo == true).OrderBy(c => c.Estrategia).ToListAsync();
+
+                if (tiposEstrategia.Count() == 0)
+                {
+                    return NotFound();
+                }
+
+                if (tiposEstrategia != null)
+                {
+                    return Ok(tiposEstrategia);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                return NotFound(e);
+            }
+        }
+
+        // GET: api/InfoFundo/GetTipoEstrategia/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblTipoEstrategia>> GetTipoEstrategia(int id)
+        {
+            TblTipoEstrategia tblTipoEstrategia = await _context.TblTipoEstrategia.FindAsync(id);
+
+            try
+            {
+                if (tblTipoEstrategia != null)
+                {
+                    return Ok(tblTipoEstrategia);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //POST: api/InfoFundo/CadastrarTipoEstrategia/TipoContaModel
+        [HttpPost]
+        public async Task<ActionResult<TipoEstrategiaModel>> CadastrarTipoEstrategia(TipoEstrategiaModel tblTipoEstrategiaModel)
+        {
+            TblTipoEstrategia itensTipoEstrategia = new TblTipoEstrategia
+            {
+                Id = tblTipoEstrategiaModel.Id,
+                Estrategia = tblTipoEstrategiaModel.Estrategia,
+                UsuarioModificacao = tblTipoEstrategiaModel.UsuarioModificacao
+            };
+
+            try
+            {
+                _context.TblTipoEstrategia.Add(itensTipoEstrategia);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(
+                    nameof(GetTipoEstrategia),
+                    new
+                    {
+                        Id = itensTipoEstrategia.Id,
+                    },
+                     Ok(itensTipoEstrategia));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //PUT: api/InfoFundo/EditarTipoEstrategia/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarTipoEstrategia(int id, TipoEstrategiaModel tipoEstrategia)
+        {
+            try
+            {
+                TblTipoEstrategia registroTipoEstrategia = _context.TblTipoEstrategia.Find(id);
+
+                if (registroTipoEstrategia != null)
+                {
+                    registroTipoEstrategia.Estrategia = tipoEstrategia.Estrategia == null ? registroTipoEstrategia.Estrategia : tipoEstrategia.Estrategia;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroTipoEstrategia);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!TipoEstrategiaExists(tipoEstrategia.Id))
+            {
+                return NotFound(e);
+            }
+        }
+
+        // DELETE: api/InfoFundo/DeletarTipoEstrategia/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarTipoEstrategia(int id)
+        {
+            TblTipoEstrategia tblTipoEstrategia = await _context.TblTipoEstrategia.FindAsync(id);
+
+            if (tblTipoEstrategia == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _context.TblTipoEstrategia.Remove(tblTipoEstrategia);
+                await _context.SaveChangesAsync();
+                return Ok(tblTipoEstrategia);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DESATIVA: api/InfoFundo/DesativarTipoEstrategia/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarTipoEstrategia(int id)
+        {
+            TblTipoEstrategia registroTipoEstrategia = _context.TblTipoEstrategia.Find(id);
+
+            if (registroTipoEstrategia != null)
+            {
+                registroTipoEstrategia.Ativo = false;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroTipoEstrategia);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        private bool TipoEstrategiaExists(int id)
+        {
+            return _context.TblTipoEstrategia.Any(e => e.Id == id);
         }
         #endregion
     }

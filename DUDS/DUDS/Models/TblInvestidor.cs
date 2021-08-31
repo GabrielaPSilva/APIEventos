@@ -16,6 +16,7 @@ namespace DUDS.Models
     {
         public TblInvestidor()
         {
+            TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
             TblContas = new HashSet<TblContas>();
             TblContratoAlocador = new HashSet<TblContratoAlocador>();
             TblInvestidorDistribuidor = new HashSet<TblInvestidorDistribuidor>();
@@ -53,6 +54,8 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodTipoContrato))]
         [InverseProperty(nameof(TblTipoContrato.TblInvestidor))]
         public virtual TblTipoContrato CodTipoContratoNavigation { get; set; }
+        [InverseProperty("CodInvestidorNavigation")]
+        public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         [InverseProperty("CodInvestidorNavigation")]
         public virtual ICollection<TblContas> TblContas { get; set; }
         [InverseProperty("CodInvestidorNavigation")]

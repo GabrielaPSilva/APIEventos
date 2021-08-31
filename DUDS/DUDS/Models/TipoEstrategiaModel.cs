@@ -6,20 +6,16 @@ using System.Threading.Tasks;
 
 namespace DUDS.Models
 {
-    public class GestorModel
+    public class TipoEstrategiaModel
     {
         public int Id { get; set; }
 
-        [StringLength(100)]
-        public string NomeGestor { get; set; }
-
-        [StringLength(14)]
-        public string Cnpj { get; set; }
-        public int? CodTipoClassificacaoGestor { get; set; }
+        [StringLength(20)]
+        public string Estrategia { get; set; }
+        public bool? Ativo { get; set; }
         public DateTime DataModificacao { get; set; }
 
-        [StringLength(50)]
+        [StringLength(100)]
         public string UsuarioModificacao { get; set; }
-        public bool? Ativo { get; set; }
     }
 }

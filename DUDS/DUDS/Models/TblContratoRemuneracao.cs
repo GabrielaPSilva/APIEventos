@@ -14,6 +14,7 @@ namespace DUDS.Models
     {
         public TblContratoRemuneracao()
         {
+            TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
             TblCondicaoRemuneracao = new HashSet<TblCondicaoRemuneracao>();
         }
 
@@ -36,6 +37,8 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodContratoFundo))]
         [InverseProperty(nameof(TblContratoFundo.TblContratoRemuneracao))]
         public virtual TblContratoFundo CodContratoFundoNavigation { get; set; }
+        [InverseProperty("CodContratoRemuneracaoNavigation")]
+        public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         [InverseProperty("CodContratoRemuneracaoNavigation")]
         public virtual ICollection<TblCondicaoRemuneracao> TblCondicaoRemuneracao { get; set; }
     }

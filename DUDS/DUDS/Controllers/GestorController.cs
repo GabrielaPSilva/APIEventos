@@ -25,6 +25,7 @@ namespace DUDS.Controllers
             _configService = configService;
         }
 
+        #region Gestor
         // GET: api/Gestor/Gestor
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblGestor>>> Gestor()
@@ -110,7 +111,7 @@ namespace DUDS.Controllers
             TblGestor itensGestor = new TblGestor
             {
                 NomeGestor = tblGestorModel.NomeGestor,
-                ClassificacaoGestor = tblGestorModel.ClassificacaoGestor,
+                CodTipoClassificacaoGestor = tblGestorModel.CodTipoClassificacaoGestor,
                 Cnpj = tblGestorModel.Cnpj,
                 UsuarioModificacao = tblGestorModel.UsuarioModificacao
             };
@@ -142,7 +143,7 @@ namespace DUDS.Controllers
                 if (registroGestor != null)
                 {
                     registroGestor.NomeGestor = gestor.NomeGestor == null ? registroGestor.NomeGestor : gestor.NomeGestor;
-                    registroGestor.ClassificacaoGestor = gestor.ClassificacaoGestor == null ? registroGestor.ClassificacaoGestor : gestor.ClassificacaoGestor;
+                    registroGestor.CodTipoClassificacaoGestor = gestor.CodTipoClassificacaoGestor == 0 ? registroGestor.CodTipoClassificacaoGestor : gestor.CodTipoClassificacaoGestor;
                     registroGestor.Cnpj = gestor.Cnpj == null ? registroGestor.Cnpj : gestor.Cnpj;
 
                     try
@@ -245,5 +246,176 @@ namespace DUDS.Controllers
         {
             return _context.TblGestor.Any(e => e.Id == id);
         }
+        #endregion
+
+        #region Tipo Classificação
+        // GET: api/Gestor/TipoClassificacaoGestor
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TblTipoClassificacaoGestor>>> TipoClassificacaoGestor()
+        {
+            try
+            {
+                var tiposClassificacaoGestor = await _context.TblTipoClassificacaoGestor.Where(c => c.Ativo == true).OrderBy(c => c.ClassificacaoGestor).ToListAsync();
+
+                if (tiposClassificacaoGestor.Count() == 0)
+                {
+                    return NotFound();
+                }
+
+                if (tiposClassificacaoGestor != null)
+                {
+                    return Ok(tiposClassificacaoGestor);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                return NotFound(e);
+            }
+        }
+
+        // GET: api/Gestor/GetTipoClassificacaoGestor/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblTipoClassificacaoGestor>> GetTipoClassificacaoGestor(int id)
+        {
+            TblTipoClassificacaoGestor tblTipoClassificacaoGestor = await _context.TblTipoClassificacaoGestor.FindAsync(id);
+
+            try
+            {
+                if (tblTipoClassificacaoGestor != null)
+                {
+                    return Ok(tblTipoClassificacaoGestor);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //POST: api/Gestor/CadastrarTipoClassificacaoGestor/TipoContaModel
+        [HttpPost]
+        public async Task<ActionResult<TipoClassificacaoGestorModel>> CadastrarTipoClassificacaoGestor(TipoClassificacaoGestorModel tblTipoClassificacaoModel)
+        {
+            TblTipoClassificacaoGestor itensTipoClassificacao = new TblTipoClassificacaoGestor
+            {
+                Id = tblTipoClassificacaoModel.Id,
+                ClassificacaoGestor = tblTipoClassificacaoModel.ClassificacaoGestor,
+                UsuarioModificacao = tblTipoClassificacaoModel.UsuarioModificacao
+            };
+
+            try
+            {
+                _context.TblTipoClassificacaoGestor.Add(itensTipoClassificacao);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(
+                    nameof(GetTipoClassificacaoGestor),
+                    new
+                    {
+                        Id = itensTipoClassificacao.Id,
+                    },
+                     Ok(itensTipoClassificacao));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //PUT: api/Gestor/EditarTipoClassificacaoGestor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarTipoClassificacaoGestor(int id, TipoClassificacaoGestorModel tipoClassificacao)
+        {
+            try
+            {
+                TblTipoClassificacaoGestor registroTipoClassificacao = _context.TblTipoClassificacaoGestor.Find(id);
+
+                if (registroTipoClassificacao != null)
+                {
+                    registroTipoClassificacao.ClassificacaoGestor = tipoClassificacao.ClassificacaoGestor == null ? registroTipoClassificacao.ClassificacaoGestor : tipoClassificacao.ClassificacaoGestor;
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(registroTipoClassificacao);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException e) when (!TipoClassificacaoGestorExists(tipoClassificacao.Id))
+            {
+                return NotFound(e);
+            }
+        }
+
+        // DELETE: api/Gestor/DeletarTipoClassificacaoGestor/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarTipoClassificacaoGestor(int id)
+        {
+            TblTipoClassificacaoGestor tblTipoClassificacao = await _context.TblTipoClassificacaoGestor.FindAsync(id);
+
+            if (tblTipoClassificacao == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _context.TblTipoClassificacaoGestor.Remove(tblTipoClassificacao);
+                await _context.SaveChangesAsync();
+                return Ok(tblTipoClassificacao);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DESATIVA: api/Gestor/DesativarTipoClassificacaoGestor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarTipoClassificacaoGestor(int id)
+        {
+            TblTipoClassificacaoGestor registroTipoClassificacao = _context.TblTipoClassificacaoGestor.Find(id);
+
+            if (registroTipoClassificacao != null)
+            {
+                registroTipoClassificacao.Ativo = false;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroTipoClassificacao);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        private bool TipoClassificacaoGestorExists(int id)
+        {
+            return _context.TblTipoClassificacaoGestor.Any(e => e.Id == id);
+        }
+        #endregion
     }
 }

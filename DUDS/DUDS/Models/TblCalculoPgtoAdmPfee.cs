@@ -17,10 +17,28 @@ namespace DUDS.Models
         public string Competencia { get; set; }
         [Key]
         [Column("cod_investidor")]
-        public long CodInvestidor { get; set; }
+        public int CodInvestidor { get; set; }
         [Key]
         [Column("cod_fundo")]
         public int CodFundo { get; set; }
+        [Column("cod_contrato")]
+        public int CodContrato { get; set; }
+        [Column("cod_sub_contrato")]
+        public int CodSubContrato { get; set; }
+        [Column("cod_contrato_fundo")]
+        public int CodContratoFundo { get; set; }
+        [Column("cod_contrato_remuneracao")]
+        public int CodContratoRemuneracao { get; set; }
+        [Column("cod_condicao_remuneracao")]
+        public int? CodCondicaoRemuneracao { get; set; }
+        [Column("cod_administrador")]
+        public int CodAdministrador { get; set; }
+        [Column("valor_adm_original", TypeName = "decimal(22, 10)")]
+        public decimal ValorAdmOriginal { get; set; }
+        [Column("valor_pfee_resgate_original", TypeName = "decimal(22, 10)")]
+        public decimal ValorPfeeResgateOriginal { get; set; }
+        [Column("valor_pfee_sementre_original", TypeName = "decimal(22, 10)")]
+        public decimal ValorPfeeSementreOriginal { get; set; }
         [Column("valor_adm", TypeName = "decimal(22, 10)")]
         public decimal ValorAdm { get; set; }
         [Column("valor_pfee_resgate", TypeName = "decimal(22, 10)")]
@@ -28,8 +46,29 @@ namespace DUDS.Models
         [Column("valor_pfee_sementre", TypeName = "decimal(22, 10)")]
         public decimal ValorPfeeSementre { get; set; }
 
+        [ForeignKey(nameof(CodAdministrador))]
+        [InverseProperty(nameof(TblAdministrador.TblCalculoPgtoAdmPfee))]
+        public virtual TblAdministrador CodAdministradorNavigation { get; set; }
+        [ForeignKey(nameof(CodCondicaoRemuneracao))]
+        [InverseProperty(nameof(TblCondicaoRemuneracao.TblCalculoPgtoAdmPfee))]
+        public virtual TblCondicaoRemuneracao CodCondicaoRemuneracaoNavigation { get; set; }
+        [ForeignKey(nameof(CodContratoFundo))]
+        [InverseProperty(nameof(TblContratoFundo.TblCalculoPgtoAdmPfee))]
+        public virtual TblContratoFundo CodContratoFundoNavigation { get; set; }
+        [ForeignKey(nameof(CodContrato))]
+        [InverseProperty(nameof(TblContrato.TblCalculoPgtoAdmPfee))]
+        public virtual TblContrato CodContratoNavigation { get; set; }
+        [ForeignKey(nameof(CodContratoRemuneracao))]
+        [InverseProperty(nameof(TblContratoRemuneracao.TblCalculoPgtoAdmPfee))]
+        public virtual TblContratoRemuneracao CodContratoRemuneracaoNavigation { get; set; }
+        [ForeignKey(nameof(CodFundo))]
+        [InverseProperty(nameof(TblFundo.TblCalculoPgtoAdmPfee))]
+        public virtual TblFundo CodFundoNavigation { get; set; }
         [ForeignKey(nameof(CodInvestidor))]
-        [InverseProperty(nameof(TblCliente.TblCalculoPgtoAdmPfee))]
-        public virtual TblCliente CodInvestidorNavigation { get; set; }
+        [InverseProperty(nameof(TblInvestidor.TblCalculoPgtoAdmPfee))]
+        public virtual TblInvestidor CodInvestidorNavigation { get; set; }
+        [ForeignKey(nameof(CodSubContrato))]
+        [InverseProperty(nameof(TblSubContrato.TblCalculoPgtoAdmPfee))]
+        public virtual TblSubContrato CodSubContratoNavigation { get; set; }
     }
 }

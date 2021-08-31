@@ -18,6 +18,7 @@ namespace DUDS.Models
         public TblFundo()
         {
             InverseMaster = new HashSet<TblFundo>();
+            TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
             TblCondicaoRemuneracao = new HashSet<TblCondicaoRemuneracao>();
             TblContas = new HashSet<TblContas>();
             TblContratoFundo = new HashSet<TblContratoFundo>();
@@ -95,9 +96,6 @@ namespace DUDS.Models
         public string MoedaFundo { get; set; }
         [Column("cd_fundo_adm")]
         public int? CdFundoAdm { get; set; }
-        [Column("estrategia")]
-        [StringLength(10)]
-        public string Estrategia { get; set; }
         [Column("dias_cotizacao_aplicacao")]
         public int? DiasCotizacaoAplicacao { get; set; }
         [Column("contagem_dias_cotizacao_aplicacao")]
@@ -127,6 +125,8 @@ namespace DUDS.Models
         [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
+        [Column("cod_tipo_estrategia")]
+        public int? CodTipoEstrategia { get; set; }
 
         [ForeignKey(nameof(CodAdministrador))]
         [InverseProperty(nameof(TblAdministrador.TblFundo))]
@@ -137,11 +137,16 @@ namespace DUDS.Models
         [ForeignKey(nameof(CodGestor))]
         [InverseProperty(nameof(TblGestor.TblFundo))]
         public virtual TblGestor CodGestorNavigation { get; set; }
+        [ForeignKey(nameof(CodTipoEstrategia))]
+        [InverseProperty(nameof(TblTipoEstrategia.TblFundo))]
+        public virtual TblTipoEstrategia CodTipoEstrategiaNavigation { get; set; }
         [ForeignKey(nameof(MasterId))]
         [InverseProperty(nameof(TblFundo.InverseMaster))]
         public virtual TblFundo Master { get; set; }
         [InverseProperty(nameof(TblFundo.Master))]
         public virtual ICollection<TblFundo> InverseMaster { get; set; }
+        [InverseProperty("CodFundoNavigation")]
+        public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblCondicaoRemuneracao> TblCondicaoRemuneracao { get; set; }
         [InverseProperty("CodFundoNavigation")]

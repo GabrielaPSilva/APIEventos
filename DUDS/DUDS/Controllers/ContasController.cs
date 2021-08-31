@@ -303,7 +303,7 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Contas/TipoConta/id
+        //PUT: api/Contas/EditarTipoConta/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarTipoConta(int id, TipoContaModel tipoConta)
         {
@@ -360,7 +360,7 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/DesativarTipoConta/id
+        // DESATIVA: api/Conta/DesativarTipoConta/id
         [HttpPut("{id}")]
         public async Task<IActionResult> DesativarTipoConta(int id)
         {

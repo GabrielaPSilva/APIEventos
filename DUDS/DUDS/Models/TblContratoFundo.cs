@@ -12,6 +12,11 @@ namespace DUDS.Models
     [Index(nameof(CodFundo), nameof(CodSubContrato), Name = "IX_tbl_contrato_distribuicao", IsUnique = true)]
     public partial class TblContratoFundo
     {
+        public TblContratoFundo()
+        {
+            TblCalculoPgtoAdmPfee = new HashSet<TblCalculoPgtoAdmPfee>();
+        }
+
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -39,5 +44,7 @@ namespace DUDS.Models
         public virtual TblTipoCondicao CodTipoCondicaoNavigation { get; set; }
         [InverseProperty("CodContratoFundoNavigation")]
         public virtual TblContratoRemuneracao TblContratoRemuneracao { get; set; }
+        [InverseProperty("CodContratoFundoNavigation")]
+        public virtual ICollection<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
     }
 }
