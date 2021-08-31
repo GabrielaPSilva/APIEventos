@@ -42,5 +42,12 @@ namespace DUDS.Models
 
         public int? DistribuidorCodigoInvestidor { get; set; }
 
+        public int CodContrato { get; set; }
+
+        public int CodSubContrato { get; set; }
+
+        public int CodContratoFundo { get; set; }
+
+
     }
 }
