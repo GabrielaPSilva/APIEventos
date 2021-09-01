@@ -15,7 +15,7 @@ namespace DUDS.Models
 
         [StringLength(14)]
         public string Cnpj { get; set; }
-        public int? CodTipoClassificacaoGestor { get; set; }
+        public int? CodTipoClassificacao { get; set; }
         public DateTime DataModificacao { get; set; }
 
         [StringLength(50)]

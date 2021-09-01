@@ -29,8 +29,6 @@ namespace DUDS.Models
         [Column("cnpj")]
         [StringLength(14)]
         public string Cnpj { get; set; }
-        [Column("cod_tipo_classificacao_gestor")]
-        public int? CodTipoClassificacaoGestor { get; set; }
         [Column("data_modificacao", TypeName = "smalldatetime")]
         public DateTime DataModificacao { get; set; }
         [Required]
@@ -40,10 +38,12 @@ namespace DUDS.Models
         [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
+        [Column("cod_tipo_classificacao")]
+        public int? CodTipoClassificacao { get; set; }
 
-        [ForeignKey(nameof(CodTipoClassificacaoGestor))]
-        [InverseProperty(nameof(TblTipoClassificacaoGestor.TblGestor))]
-        public virtual TblTipoClassificacaoGestor CodTipoClassificacaoGestorNavigation { get; set; }
+        [ForeignKey(nameof(CodTipoClassificacao))]
+        [InverseProperty(nameof(TblTipoClassificacao.TblGestor))]
+        public virtual TblTipoClassificacao CodTipoClassificacaoNavigation { get; set; }
         [InverseProperty("ParceiroNavigation")]
         public virtual ICollection<TblContrato> TblContrato { get; set; }
         [InverseProperty("CodGestorNavigation")]

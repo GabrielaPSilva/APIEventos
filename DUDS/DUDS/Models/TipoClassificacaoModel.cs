@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace DUDS.Models
 {
-    public class TipoClassificacaoGestorModel
+    public class TipoClassificacaoModel
     {
         public int Id { get; set; }
 
         [StringLength(50)]
-        public string ClassificacaoGestor { get; set; }
+        public string Classificacao { get; set; }
         public bool? Ativo { get; set; }
         public DateTime DataModificacao { get; set; }
 

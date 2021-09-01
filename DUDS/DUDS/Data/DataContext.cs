@@ -62,7 +62,7 @@ namespace DUDS.Data
         public virtual DbSet<TblPosicaoRentabilidade> TblPosicaoRentabilidade { get; set; }
         public virtual DbSet<TblPosicaoTesouraria> TblPosicaoTesouraria { get; set; }
         public virtual DbSet<TblSubContrato> TblSubContrato { get; set; }
-        public virtual DbSet<TblTipoClassificacaoGestor> TblTipoClassificacaoGestor { get; set; }
+        public virtual DbSet<TblTipoClassificacao> TblTipoClassificacao { get; set; }
         public virtual DbSet<TblTipoCondicao> TblTipoCondicao { get; set; }
         public virtual DbSet<TblTipoConta> TblTipoConta { get; set; }
         public virtual DbSet<TblTipoContrato> TblTipoContrato { get; set; }
@@ -182,6 +182,12 @@ namespace DUDS.Data
                 entity.HasKey(e => new { e.Competencia, e.CodInvestidor, e.CodFundo });
 
                 entity.Property(e => e.Competencia).IsFixedLength(true);
+
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
                 entity.HasOne(d => d.CodAdministradorNavigation)
                     .WithMany(p => p.TblCalculoPgtoAdmPfee)
@@ -518,10 +524,10 @@ namespace DUDS.Data
 
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
 
-                entity.HasOne(d => d.CodTipoClassificacaoGestorNavigation)
+                entity.HasOne(d => d.CodTipoClassificacaoNavigation)
                     .WithMany(p => p.TblGestor)
-                    .HasForeignKey(d => d.CodTipoClassificacaoGestor)
-                    .HasConstraintName("FK_Gestor_TipoClassificacaoGestor");
+                    .HasForeignKey(d => d.CodTipoClassificacao)
+                    .HasConstraintName("FK_Gestor_TipoClassificacao_Gestor");
             });
 
             modelBuilder.Entity<TblInvestidor>(entity =>
@@ -821,11 +827,11 @@ namespace DUDS.Data
                     .HasConstraintName("FK_SubContrato_Contrato");
             });
 
-            modelBuilder.Entity<TblTipoClassificacaoGestor>(entity =>
+            modelBuilder.Entity<TblTipoClassificacao>(entity =>
             {
                 entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.ClassificacaoGestor).IsUnicode(false);
+                entity.Property(e => e.Classificacao).IsUnicode(false);
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
 

@@ -33,18 +33,26 @@ namespace DUDS.Models
         public int? CodCondicaoRemuneracao { get; set; }
         [Column("cod_administrador")]
         public int CodAdministrador { get; set; }
-        [Column("valor_adm_original", TypeName = "decimal(22, 10)")]
-        public decimal ValorAdmOriginal { get; set; }
-        [Column("valor_pfee_resgate_original", TypeName = "decimal(22, 10)")]
-        public decimal ValorPfeeResgateOriginal { get; set; }
-        [Column("valor_pfee_sementre_original", TypeName = "decimal(22, 10)")]
-        public decimal ValorPfeeSementreOriginal { get; set; }
         [Column("valor_adm", TypeName = "decimal(22, 10)")]
         public decimal ValorAdm { get; set; }
         [Column("valor_pfee_resgate", TypeName = "decimal(22, 10)")]
         public decimal ValorPfeeResgate { get; set; }
         [Column("valor_pfee_sementre", TypeName = "decimal(22, 10)")]
         public decimal ValorPfeeSementre { get; set; }
+        [Column("rebate_adm", TypeName = "decimal(22, 10)")]
+        public decimal RebateAdm { get; set; }
+        [Column("rebate_pfee_resgate", TypeName = "decimal(22, 10)")]
+        public decimal RebatePfeeResgate { get; set; }
+        [Column("rebate_pfee_sementre", TypeName = "decimal(22, 10)")]
+        public decimal RebatePfeeSementre { get; set; }
+        [Column("data_modificacao", TypeName = "date")]
+        public DateTime DataModificacao { get; set; }
+        [Required]
+        [Column("usuario_modificacao")]
+        [StringLength(50)]
+        public string UsuarioModificacao { get; set; }
+        [Column("ativo")]
+        public int Ativo { get; set; }
 
         [ForeignKey(nameof(CodAdministrador))]
         [InverseProperty(nameof(TblAdministrador.TblCalculoPgtoAdmPfee))]

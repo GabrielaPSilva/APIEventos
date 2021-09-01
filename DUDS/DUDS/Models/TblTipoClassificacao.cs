@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DUDS.Models
 {
-    [Table("tbl_tipo_classificacao_gestor")]
-    public partial class TblTipoClassificacaoGestor
+    [Table("tbl_tipo_classificacao")]
+    public partial class TblTipoClassificacao
     {
-        public TblTipoClassificacaoGestor()
+        public TblTipoClassificacao()
         {
             TblGestor = new HashSet<TblGestor>();
         }
@@ -20,9 +20,9 @@ namespace DUDS.Models
         [Column("id")]
         public int Id { get; set; }
         [Required]
-        [Column("classificacao_gestor")]
+        [Column("classificacao")]
         [StringLength(50)]
-        public string ClassificacaoGestor { get; set; }
+        public string Classificacao { get; set; }
         [Required]
         [Column("ativo")]
         public bool? Ativo { get; set; }
@@ -33,7 +33,7 @@ namespace DUDS.Models
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
 
-        [InverseProperty("CodTipoClassificacaoGestorNavigation")]
+        [InverseProperty("CodTipoClassificacaoNavigation")]
         public virtual ICollection<TblGestor> TblGestor { get; set; }
     }
 }
