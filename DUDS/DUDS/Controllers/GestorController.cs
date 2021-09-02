@@ -83,15 +83,9 @@ namespace DUDS.Controllers
         {
             TblGestor tblGestor = new TblGestor();
 
-            tblGestor = await _context.TblGestor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
-
-            if (tblGestor != null)
+            try
             {
-                return Ok(tblGestor);
-            }
-            else
-            {
-                tblGestor = await _context.TblGestor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+                tblGestor = await _context.TblGestor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
 
                 if (tblGestor != null)
                 {
@@ -99,8 +93,21 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    tblGestor = await _context.TblGestor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+
+                    if (tblGestor != null)
+                    {
+                        return Ok(tblGestor);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -158,12 +165,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!GestorExists(gestor.Id))
             {
-                return NotFound(e.InnerException.Message);
+                return BadRequest(e.InnerException.Message);
             }
         }
 

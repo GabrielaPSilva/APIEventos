@@ -82,15 +82,9 @@ namespace DUDS.Controllers
         {
             TblCustodiante tblCustodiante = new TblCustodiante();
 
-            tblCustodiante = await _context.TblCustodiante.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
-
-            if (tblCustodiante != null)
+            try
             {
-                return Ok(tblCustodiante);
-            }
-            else
-            {
-                tblCustodiante = await _context.TblCustodiante.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+                tblCustodiante = await _context.TblCustodiante.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
 
                 if (tblCustodiante != null)
                 {
@@ -98,8 +92,21 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    tblCustodiante = await _context.TblCustodiante.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+
+                    if (tblCustodiante != null)
+                    {
+                        return Ok(tblCustodiante);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -155,12 +162,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!CustodianteExists(custodiante.Id))
             {
-                return NotFound(e.InnerException.Message);
+                return BadRequest(e.InnerException.Message);
             }
         }
 

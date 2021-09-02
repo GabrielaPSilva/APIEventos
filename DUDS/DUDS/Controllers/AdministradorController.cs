@@ -83,15 +83,9 @@ namespace DUDS.Controllers
         {
             TblAdministrador tblAdministrador = new TblAdministrador();
 
-            tblAdministrador = await _context.TblAdministrador.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
-
-            if (tblAdministrador != null)
+            try
             {
-                return Ok(tblAdministrador);
-            }
-            else
-            {
-                tblAdministrador = await _context.TblAdministrador.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+                tblAdministrador = await _context.TblAdministrador.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
 
                 if (tblAdministrador != null)
                 {
@@ -99,8 +93,21 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    tblAdministrador = await _context.TblAdministrador.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+
+                    if (tblAdministrador != null)
+                    {
+                        return Ok(tblAdministrador);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException.Message);
             }
         }
 

@@ -45,12 +45,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -73,18 +73,26 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
-        // GET: api/Distribuidor/GetDistribuidorInativo/cnpj
+        // GET: api/Distribuidor/GetDistribuidorExiste/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblDistribuidor>> GetDistribuidorInativo(string cnpj)
+        public async Task<ActionResult<TblDistribuidor>> GetDistribuidorExiste(string cnpj)
         {
-            TblDistribuidor tblDistribuidor = _context.TblDistribuidor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+            TblDistribuidor tblDistribuidor = new TblDistribuidor();
 
-            try
+            tblDistribuidor = await _context.TblDistribuidor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
+
+            if (tblDistribuidor != null)
             {
+                return Ok(tblDistribuidor);
+            }
+            else
+            {
+                tblDistribuidor = await _context.TblDistribuidor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+
                 if (tblDistribuidor != null)
                 {
                     return Ok(tblDistribuidor);
@@ -93,10 +101,6 @@ namespace DUDS.Controllers
                 {
                     return NotFound();
                 }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
             }
         }
 
@@ -124,7 +128,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -149,7 +153,7 @@ namespace DUDS.Controllers
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(e);
+                        return BadRequest(e.InnerException.Message);
                     }
                 }
                 else
@@ -159,7 +163,7 @@ namespace DUDS.Controllers
             }
             catch (DbUpdateConcurrencyException e) when (!DistribuidorExists(distribuidor.Id))
             {
-                return NotFound(e);
+                return NotFound(e.InnerException.Message);
             }
         }
 
