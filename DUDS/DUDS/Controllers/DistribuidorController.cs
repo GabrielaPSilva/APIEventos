@@ -108,7 +108,7 @@ namespace DUDS.Controllers
             {
                 NomeDistribuidor = tblDistribuidorModel.NomeDistribuidor,
                 Cnpj = tblDistribuidorModel.Cnpj,
-                ClassificacaoDistribuidor = tblDistribuidorModel.ClassificacaoDistribuidor,
+                CodTipoClassificacao = tblDistribuidorModel.CodTipoClassificacao,
                 UsuarioModificacao = tblDistribuidorModel.UsuarioModificacao
             };
 
@@ -140,7 +140,7 @@ namespace DUDS.Controllers
                 {
                     registroDistribuidor.NomeDistribuidor = distribuidor.NomeDistribuidor == null ? registroDistribuidor.NomeDistribuidor : distribuidor.NomeDistribuidor;
                     registroDistribuidor.Cnpj = distribuidor.Cnpj == null ? registroDistribuidor.Cnpj : distribuidor.Cnpj;
-                    registroDistribuidor.ClassificacaoDistribuidor = distribuidor.ClassificacaoDistribuidor == null ? registroDistribuidor.ClassificacaoDistribuidor : distribuidor.ClassificacaoDistribuidor;
+                    registroDistribuidor.CodTipoClassificacao = distribuidor.CodTipoClassificacao == 0 ? registroDistribuidor.CodTipoClassificacao : distribuidor.CodTipoClassificacao;
 
                     try
                     {

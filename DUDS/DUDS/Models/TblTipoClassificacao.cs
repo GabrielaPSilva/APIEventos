@@ -13,6 +13,7 @@ namespace DUDS.Models
     {
         public TblTipoClassificacao()
         {
+            TblDistribuidor = new HashSet<TblDistribuidor>();
             TblGestor = new HashSet<TblGestor>();
         }
 
@@ -33,6 +34,8 @@ namespace DUDS.Models
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
 
+        [InverseProperty("CodTipoClassificacaoNavigation")]
+        public virtual ICollection<TblDistribuidor> TblDistribuidor { get; set; }
         [InverseProperty("CodTipoClassificacaoNavigation")]
         public virtual ICollection<TblGestor> TblGestor { get; set; }
     }

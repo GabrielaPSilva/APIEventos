@@ -410,6 +410,11 @@ namespace DUDS.Data
                 entity.Property(e => e.Cnpj).IsFixedLength(true);
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.CodTipoClassificacaoNavigation)
+                    .WithMany(p => p.TblDistribuidor)
+                    .HasForeignKey(d => d.CodTipoClassificacao)
+                    .HasConstraintName("FK_Distribuidor_TipoClassificacao");
             });
 
             modelBuilder.Entity<TblDistribuidorAdministrador>(entity =>
