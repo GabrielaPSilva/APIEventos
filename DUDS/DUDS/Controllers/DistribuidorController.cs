@@ -158,12 +158,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!DistribuidorExists(distribuidor.Id))
             {
-                return NotFound(e.InnerException.Message);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -186,7 +186,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -207,7 +207,7 @@ namespace DUDS.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else
@@ -242,12 +242,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -270,7 +270,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -302,7 +302,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -327,17 +327,17 @@ namespace DUDS.Controllers
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(e);
+                        return BadRequest(e.InnerException.Message);
                     }
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!DistribuidorAdministradorExists(distribuidorAdmin.Id))
             {
-                return NotFound(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -364,12 +364,12 @@ namespace DUDS.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 

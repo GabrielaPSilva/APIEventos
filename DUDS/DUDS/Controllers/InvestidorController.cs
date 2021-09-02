@@ -45,12 +45,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -73,18 +73,26 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
-        // GET: api/Investidor/GetInvestidorInativo/cnpj
+        // GET: api/Investidor/GetInvestidorExiste/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblInvestidor>> GetInvestidorInativo(string cnpj)
+        public async Task<ActionResult<TblInvestidor>> GetInvestidorExiste(int cod_administrador, int cod_distribuidor)
         {
-            TblInvestidor tblInvestidor = _context.TblInvestidor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+            TblInvestidor tblInvestidor = new TblInvestidor();
 
-            try
+            tblInvestidor = await _context.TblInvestidor.Where(c => c.Ativo == false && c.CodAdministrador == cod_administrador).FirstOrDefaultAsync();
+
+            if (tblInvestidor != null)
             {
+                return Ok(tblInvestidor);
+            }
+            else
+            {
+                tblInvestidor = await _context.TblInvestidor.Where(c => c.CodAdministrador == cod_administrador).FirstOrDefaultAsync();
+
                 if (tblInvestidor != null)
                 {
                     return Ok(tblInvestidor);
@@ -93,10 +101,6 @@ namespace DUDS.Controllers
                 {
                     return NotFound();
                 }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
             }
         }
 
@@ -127,7 +131,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -163,7 +167,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -191,7 +195,7 @@ namespace DUDS.Controllers
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(e);
+                        return BadRequest(e.InnerException.Message);
                     }
                 }
                 else
@@ -201,7 +205,7 @@ namespace DUDS.Controllers
             }
             catch (DbUpdateConcurrencyException e) when (!InvestidorExists(investidor.Id))
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -228,12 +232,12 @@ namespace DUDS.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -258,7 +262,7 @@ namespace DUDS.Controllers
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(e);
+                        return BadRequest(e.InnerException.Message);
                     }
                 }
                 else
@@ -268,7 +272,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -302,7 +306,7 @@ namespace DUDS.Controllers
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return NotFound(e.InnerException.Message);
             }
         }
 
@@ -325,7 +329,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -358,7 +362,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -392,7 +396,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -418,7 +422,7 @@ namespace DUDS.Controllers
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(e);
+                        return BadRequest(e.InnerException.Message);
                     }
                 }
                 else
@@ -428,7 +432,7 @@ namespace DUDS.Controllers
             }
             catch (DbUpdateConcurrencyException e) when (!InvestidorDistribuidorExists(investidorDistribuidor.Id))
             {
-                return NotFound(e);
+                return NotFound(e.InnerException.Message);
             }
         }
 
@@ -455,7 +459,7 @@ namespace DUDS.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else
