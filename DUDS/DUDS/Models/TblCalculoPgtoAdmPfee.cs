@@ -13,7 +13,7 @@ namespace DUDS.Models
     {
         [Key]
         [Column("competencia")]
-        [StringLength(6)]
+        [StringLength(7)]
         public string Competencia { get; set; }
         [Key]
         [Column("cod_investidor")]

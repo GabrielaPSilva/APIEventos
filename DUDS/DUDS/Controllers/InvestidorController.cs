@@ -79,11 +79,11 @@ namespace DUDS.Controllers
 
         // GET: api/Investidor/GetInvestidorExiste/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblInvestidor>> GetInvestidorExiste(int cod_administrador, int cod_distribuidor)
+        public async Task<ActionResult<TblInvestidor>> GetInvestidorExiste(string cnpj)
         {
             TblInvestidor tblInvestidor = new TblInvestidor();
 
-            tblInvestidor = await _context.TblInvestidor.Where(c => c.Ativo == false && c.CodAdministrador == cod_administrador).FirstOrDefaultAsync();
+            tblInvestidor = await _context.TblInvestidor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
 
             if (tblInvestidor != null)
             {
@@ -91,7 +91,7 @@ namespace DUDS.Controllers
             }
             else
             {
-                tblInvestidor = await _context.TblInvestidor.Where(c => c.CodAdministrador == cod_administrador).FirstOrDefaultAsync();
+                tblInvestidor = await _context.TblInvestidor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
 
                 if (tblInvestidor != null)
                 {
