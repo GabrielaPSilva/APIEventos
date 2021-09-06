@@ -45,12 +45,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -73,9 +73,50 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
+
+        //// GET: api/Contas/GetContasExiste/cnpj
+        //[HttpGet()]
+        //public async Task<ActionResult<TblContas>> GetContasExiste(int? cod_fundo, int? cod_investidor, int cod_tipo_conta)
+        //{
+        //    TblContas tblContas = new TblContas();
+
+        //    try
+        //    {
+        //        if(cod_fundo != 0)
+        //        {
+        //            tblContas = await _context.TblContas.Where(c => c.Ativo == false && c.CodFundo == cod_fundo && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
+
+        //            if (tblContas != null)
+        //            {
+        //                return Ok(tblContas);
+        //            }
+        //            else
+        //            {
+        //                tblContas = await _context.TblContas.Where(c => c.CodFundo == cod_fundo && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
+        //            }
+        //        }
+        //        else if(cod_investidor != 0)
+        //        {
+        //            tblContas = await _context.TblContas.Where(c => c.Ativo == false && c.CodInvestidor == cod_investidor && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
+
+        //            if (tblContas != null)
+        //            {
+        //                return Ok(tblContas);
+        //            }
+        //            else
+        //            {
+        //                tblContas = await _context.TblContas.Where(c => c.CodInvestidor == cod_investidor && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.InnerException.Message);
+        //    }
+        //}
 
         //POST: api/Contas/CadastrarConta/ContaModel
         [HttpPost]
@@ -105,7 +146,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -138,12 +179,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!ContasExists(conta.Id))
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -170,12 +211,12 @@ namespace DUDS.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -214,6 +255,32 @@ namespace DUDS.Controllers
             }
         }
 
+        // ATIVAR: api/Contas/DesativarContas/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DesativarContas(int id)
+        {
+            TblContas registroContas = await _context.TblContas.FindAsync(id);
+
+            if (registroContas != null)
+            {
+                registroContas.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroContas);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         private bool ContasExists(int id)
         {
             return _context.TblContas.Any(e => e.Id == id);
@@ -240,12 +307,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -268,7 +335,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -299,7 +366,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -328,12 +395,12 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             catch (DbUpdateConcurrencyException e) when (!TipoContasExists(tipoConta.Id))
             {
-                return NotFound(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -356,7 +423,7 @@ namespace DUDS.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -377,7 +444,33 @@ namespace DUDS.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        // ATIVAR: api/Conta/AtivarTipoConta/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AtivarTipoConta(int id)
+        {
+            TblTipoConta registroTipoConta = await _context.TblTipoConta.FindAsync(id);
+
+            if (registroTipoConta != null)
+            {
+                registroTipoConta.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroTipoConta);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else
