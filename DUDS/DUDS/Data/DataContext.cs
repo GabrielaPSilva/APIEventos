@@ -82,6 +82,7 @@ namespace DUDS.Data
         public virtual DbSet<TblXmlAnbimaTitprivado> TblXmlAnbimaTitprivado { get; set; }
         public virtual DbSet<TblXmlAnbimaTitpublico> TblXmlAnbimaTitpublico { get; set; }
 
+        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -90,7 +91,7 @@ namespace DUDS.Data
                 optionsBuilder.UseSqlServer("Server=tcp:srvdbdahlia02.database.windows.net;Database=db_dahlia_dev;User ID=sadb;Password=S@$NHujY&jkmjkl;");
             }
         }
-
+        */
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
