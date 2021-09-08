@@ -396,5 +396,50 @@ namespace DUDS.Controllers
         }
 
         #endregion
+
+        #region Calculo Pagamento Adm Pfee
+        //POST: api/Pagamentos/CadastrarCalculoPagamentoAdminPfee/List<CalculoPgtoAdmPfeeModel>
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<CalculoPgtoAdmPfeeModel>>> CadastrarCalculoPagamentoAdminPfee(List<CalculoPgtoAdmPfeeModel> tblCalculoPgtoAdmPfeeModel)
+        {
+            List<TblCalculoPgtoAdmPfee> listaCalculoPagamentosAdminPfee = new List<TblCalculoPgtoAdmPfee>();
+
+            try
+            {
+                foreach (var line in tblCalculoPgtoAdmPfeeModel)
+                {
+                    TblCalculoPgtoAdmPfee itensCalculoPagamentoAdminPfee = new TblCalculoPgtoAdmPfee
+                    {
+                        CodAdministrador = line.CodAdministrador,
+                        CodCondicaoRemuneracao = line.CodCondicaoRemuneracao,
+                        CodContrato = line.CodContrato,
+                        CodContratoFundo = line.CodContratoFundo,
+                        CodContratoRemuneracao = line.CodContratoRemuneracao,
+                        CodFundo = line.CodFundo,
+                        CodInvestidor = line.CodInvestidor,
+                        CodSubContrato = line.CodSubContrato,
+                        Competencia = line.Competencia,
+                        RebateAdm = line.RebateAdm,
+                        RebatePfeeResgate = line.RebatePfeeResgate,
+                        RebatePfeeSementre = line.RebatePfeeSementre,
+                        ValorAdm = line.ValorAdm,
+                        ValorPfeeResgate = line.ValorPfeeResgate,
+                        ValorPfeeSementre = line.ValorPfeeSementre
+                    };
+
+                    listaCalculoPagamentosAdminPfee.Add(itensCalculoPagamentoAdminPfee);
+                }
+
+                await _context.BulkInsertAsync(listaCalculoPagamentosAdminPfee);
+                await _context.SaveChangesAsync();
+
+                return Ok(listaCalculoPagamentosAdminPfee);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+        #endregion
     }
 }
