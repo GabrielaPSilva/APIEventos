@@ -29,15 +29,6 @@ namespace DUDS.Controllers
             _configService = configService;
         }
 
-        #region De Para Fundo
-        // GET: api/InfoFundo/DeparaFundoProduto
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblDeparaFundoproduto>>> DeparaFundoProduto()
-        {
-            return await _context.TblDeparaFundoproduto.ToListAsync();
-        }
-        #endregion
-
         #region Fundo
         // GET: api/InfoFundo/Fundo
         [HttpGet]

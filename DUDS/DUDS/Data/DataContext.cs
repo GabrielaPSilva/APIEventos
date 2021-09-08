@@ -18,7 +18,6 @@ namespace DUDS.Data
         {
         }
 
-        public virtual DbSet<Auditoria> Auditoria { get; set; }
         public virtual DbSet<TblAdministrador> TblAdministrador { get; set; }
         public virtual DbSet<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         public virtual DbSet<TblCliente> TblCliente { get; set; }
@@ -29,56 +28,22 @@ namespace DUDS.Data
         public virtual DbSet<TblContratoFundo> TblContratoFundo { get; set; }
         public virtual DbSet<TblContratoRemuneracao> TblContratoRemuneracao { get; set; }
         public virtual DbSet<TblCustodiante> TblCustodiante { get; set; }
-        public virtual DbSet<TblDeparaFundoproduto> TblDeparaFundoproduto { get; set; }
         public virtual DbSet<TblDistribuidor> TblDistribuidor { get; set; }
         public virtual DbSet<TblDistribuidorAdministrador> TblDistribuidorAdministrador { get; set; }
         public virtual DbSet<TblErrosPagamento> TblErrosPagamento { get; set; }
-        public virtual DbSet<TblFeriadosAnbima> TblFeriadosAnbima { get; set; }
         public virtual DbSet<TblFundo> TblFundo { get; set; }
         public virtual DbSet<TblGestor> TblGestor { get; set; }
         public virtual DbSet<TblInvestidor> TblInvestidor { get; set; }
         public virtual DbSet<TblInvestidorDistribuidor> TblInvestidorDistribuidor { get; set; }
         public virtual DbSet<TblLogErros> TblLogErros { get; set; }
-        public virtual DbSet<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
-        public virtual DbSet<TblOrdemPassivo> TblOrdemPassivo { get; set; }
         public virtual DbSet<TblPagamentoServico> TblPagamentoServico { get; set; }
         public virtual DbSet<TblPgtoAdmPfee> TblPgtoAdmPfee { get; set; }
-        public virtual DbSet<TblPosicaoAcao> TblPosicaoAcao { get; set; }
-        public virtual DbSet<TblPosicaoAdr> TblPosicaoAdr { get; set; }
-        public virtual DbSet<TblPosicaoBdr> TblPosicaoBdr { get; set; }
-        public virtual DbSet<TblPosicaoCambio> TblPosicaoCambio { get; set; }
-        public virtual DbSet<TblPosicaoCliente> TblPosicaoCliente { get; set; }
-        public virtual DbSet<TblPosicaoContacorrente> TblPosicaoContacorrente { get; set; }
-        public virtual DbSet<TblPosicaoCotaFundo> TblPosicaoCotaFundo { get; set; }
-        public virtual DbSet<TblPosicaoCpr> TblPosicaoCpr { get; set; }
-        public virtual DbSet<TblPosicaoEmprAcao> TblPosicaoEmprAcao { get; set; }
-        public virtual DbSet<TblPosicaoFuturo> TblPosicaoFuturo { get; set; }
-        public virtual DbSet<TblPosicaoOpcaoAcao> TblPosicaoOpcaoAcao { get; set; }
-        public virtual DbSet<TblPosicaoOpcaoFuturo> TblPosicaoOpcaoFuturo { get; set; }
-        public virtual DbSet<TblPosicaoPatrimonio> TblPosicaoPatrimonio { get; set; }
-        public virtual DbSet<TblPosicaoRendafixa> TblPosicaoRendafixa { get; set; }
-        public virtual DbSet<TblPosicaoRentabilidade> TblPosicaoRentabilidade { get; set; }
-        public virtual DbSet<TblPosicaoTesouraria> TblPosicaoTesouraria { get; set; }
         public virtual DbSet<TblSubContrato> TblSubContrato { get; set; }
         public virtual DbSet<TblTipoClassificacao> TblTipoClassificacao { get; set; }
         public virtual DbSet<TblTipoCondicao> TblTipoCondicao { get; set; }
         public virtual DbSet<TblTipoConta> TblTipoConta { get; set; }
         public virtual DbSet<TblTipoContrato> TblTipoContrato { get; set; }
         public virtual DbSet<TblTipoEstrategia> TblTipoEstrategia { get; set; }
-        public virtual DbSet<TblXmlAnbimaAcoes> TblXmlAnbimaAcoes { get; set; }
-        public virtual DbSet<TblXmlAnbimaCaixa> TblXmlAnbimaCaixa { get; set; }
-        public virtual DbSet<TblXmlAnbimaCorretagem> TblXmlAnbimaCorretagem { get; set; }
-        public virtual DbSet<TblXmlAnbimaCotas> TblXmlAnbimaCotas { get; set; }
-        public virtual DbSet<TblXmlAnbimaDebenture> TblXmlAnbimaDebenture { get; set; }
-        public virtual DbSet<TblXmlAnbimaDespesas> TblXmlAnbimaDespesas { get; set; }
-        public virtual DbSet<TblXmlAnbimaForwardsmoedas> TblXmlAnbimaForwardsmoedas { get; set; }
-        public virtual DbSet<TblXmlAnbimaFuturos> TblXmlAnbimaFuturos { get; set; }
-        public virtual DbSet<TblXmlAnbimaHeader> TblXmlAnbimaHeader { get; set; }
-        public virtual DbSet<TblXmlAnbimaOpcoesacoes> TblXmlAnbimaOpcoesacoes { get; set; }
-        public virtual DbSet<TblXmlAnbimaOutrasdespesas> TblXmlAnbimaOutrasdespesas { get; set; }
-        public virtual DbSet<TblXmlAnbimaProvisao> TblXmlAnbimaProvisao { get; set; }
-        public virtual DbSet<TblXmlAnbimaTitprivado> TblXmlAnbimaTitprivado { get; set; }
-        public virtual DbSet<TblXmlAnbimaTitpublico> TblXmlAnbimaTitpublico { get; set; }
 
         /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -93,23 +58,6 @@ namespace DUDS.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
-            modelBuilder.Entity<Auditoria>(entity =>
-            {
-                entity.Property(e => e.Acao)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.Campo).IsUnicode(false);
-
-                entity.Property(e => e.Conteudoanterior).IsUnicode(false);
-
-                entity.Property(e => e.Conteudoatual).IsUnicode(false);
-
-                entity.Property(e => e.Tabela).IsUnicode(false);
-
-                entity.Property(e => e.Usuario).IsUnicode(false);
-            });
 
             modelBuilder.Entity<TblAdministrador>(entity =>
             {
@@ -338,16 +286,6 @@ namespace DUDS.Data
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
             });
 
-            modelBuilder.Entity<TblDeparaFundoproduto>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.CodCustodianteNavigation)
-                    .WithMany()
-                    .HasForeignKey(d => d.CodCustodiante)
-                    .HasConstraintName("FK_tbl_depara_fundoproduto_tbl_custodiante");
-            });
-
             modelBuilder.Entity<TblDistribuidor>(entity =>
             {
                 entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
@@ -545,61 +483,6 @@ namespace DUDS.Data
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
             });
 
-            modelBuilder.Entity<TblMovimentacaoNota>(entity =>
-            {
-                entity.HasKey(e => new { e.CodMovimentacao, e.NotaAplicacao, e.NumOrdem, e.CodOrdemMae })
-                    .HasName("PK_tbl_movimentacao_nota_1");
-
-                entity.Property(e => e.Operador).IsFixedLength(true);
-
-                entity.Property(e => e.Penalty).IsFixedLength(true);
-
-                entity.Property(e => e.TipoMovimentacao).IsFixedLength(true);
-
-                entity.HasOne(d => d.CodDistribuidorNavigation)
-                    .WithMany(p => p.TblMovimentacaoNota)
-                    .HasForeignKey(d => d.CodDistribuidor)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_movimentacao_nota_tbl_distribuidor");
-
-                entity.HasOne(d => d.CodGestorNavigation)
-                    .WithMany(p => p.TblMovimentacaoNota)
-                    .HasForeignKey(d => d.CodGestor)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_movimentacao_nota_tbl_gestor");
-
-                entity.HasOne(d => d.CodInvestidorNavigation)
-                    .WithMany(p => p.TblMovimentacaoNota)
-                    .HasForeignKey(d => d.CodInvestidor)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_movimentacao_nota_tbl_cliente");
-            });
-
-            modelBuilder.Entity<TblOrdemPassivo>(entity =>
-            {
-                entity.HasKey(e => new { e.NumOrdem, e.CodInvestidor });
-
-                entity.Property(e => e.DsOperacao).IsFixedLength(true);
-
-                entity.HasOne(d => d.CodAdministradorNavigation)
-                    .WithMany(p => p.TblOrdemPassivo)
-                    .HasForeignKey(d => d.CodAdministrador)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_ordem_passivo_tbl_administrador");
-
-                entity.HasOne(d => d.CodFundoNavigation)
-                    .WithMany(p => p.TblOrdemPassivo)
-                    .HasForeignKey(d => d.CodFundo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_ordem_passivo_tbl_fundo");
-
-                entity.HasOne(d => d.CodInvestidorNavigation)
-                    .WithMany(p => p.TblOrdemPassivo)
-                    .HasForeignKey(d => d.CodInvestidor)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_ordem_passivo_tbl_cliente");
-            });
-
             modelBuilder.Entity<TblPagamentoServico>(entity =>
             {
                 entity.HasKey(e => new { e.Competencia, e.CodFundo });
@@ -642,118 +525,6 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodInvestidorDistribuidor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_pgto_adm_pfee_tbl_investidor_distribuidor");
-            });
-
-            modelBuilder.Entity<TblPosicaoAcao>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
-                    .HasName("PK_tbl_posicao_acao_1");
-            });
-
-            modelBuilder.Entity<TblPosicaoAdr>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
-                    .HasName("PK_tbl_posicao_adr_1");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-            });
-
-            modelBuilder.Entity<TblPosicaoBdr>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
-                    .HasName("PK_tbl_posicao_bdr_1");
-            });
-
-            modelBuilder.Entity<TblPosicaoCambio>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo })
-                    .HasName("PK_tbl_posicao_cambio_1");
-
-                entity.Property(e => e.MoedaComprada).IsFixedLength(true);
-
-                entity.Property(e => e.MoedaVendida).IsFixedLength(true);
-
-                entity.Property(e => e.Tipo).IsFixedLength(true);
-            });
-
-            modelBuilder.Entity<TblPosicaoCliente>(entity =>
-            {
-                entity.HasKey(e => new { e.CodCliente, e.CodFundo, e.DataRef })
-                    .HasName("PK_tbl_posicao_cliente_1");
-
-                entity.HasOne(d => d.CodAdministradorNavigation)
-                    .WithMany(p => p.TblPosicaoCliente)
-                    .HasForeignKey(d => d.CodAdministrador)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_cliente_tbl_administrador");
-
-                entity.HasOne(d => d.CodClienteNavigation)
-                    .WithMany(p => p.TblPosicaoCliente)
-                    .HasForeignKey(d => d.CodCliente)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_posicao_cliente_tbl_cliente");
-            });
-
-            modelBuilder.Entity<TblPosicaoContacorrente>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Codigo })
-                    .HasName("PK_tbl_posicao_contacorrente_1");
-            });
-
-            modelBuilder.Entity<TblPosicaoCotaFundo>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.CodigoAtivo })
-                    .HasName("PK_tbl_posicao_cota_fundo_1");
-
-                entity.Property(e => e.Cnpj).IsFixedLength(true);
-            });
-
-            modelBuilder.Entity<TblPosicaoEmprAcao>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.CodOperacao })
-                    .HasName("PK_tbl_posicao_empr_acao_1");
-            });
-
-            modelBuilder.Entity<TblPosicaoFuturo>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo, e.Vencimento, e.Corretora })
-                    .HasName("PK_tbl_posicao_futuro_1");
-            });
-
-            modelBuilder.Entity<TblPosicaoOpcaoAcao>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo, e.Tipo, e.Corretora })
-                    .HasName("PK_tbl_posicao_opcao_acao_1");
-
-                entity.Property(e => e.Praca).IsFixedLength(true);
-            });
-
-            modelBuilder.Entity<TblPosicaoOpcaoFuturo>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Ativo, e.Vencimento, e.Tipo, e.Corretora })
-                    .HasName("PK_tbl_posicao_opcao_futuro_1");
-            });
-
-            modelBuilder.Entity<TblPosicaoPatrimonio>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo });
-            });
-
-            modelBuilder.Entity<TblPosicaoRendafixa>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Codigo })
-                    .HasName("PK_tbl_posicao_rendafixa_1");
-            });
-
-            modelBuilder.Entity<TblPosicaoRentabilidade>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo, e.Indexador });
-            });
-
-            modelBuilder.Entity<TblPosicaoTesouraria>(entity =>
-            {
-                entity.HasKey(e => new { e.DataRef, e.CodFundo })
-                    .HasName("PK_tbl_posicao_tesouraria_1");
             });
 
             modelBuilder.Entity<TblSubContrato>(entity =>

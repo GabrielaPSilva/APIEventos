@@ -18,7 +18,6 @@ namespace DUDS.Models
             TblContrato = new HashSet<TblContrato>();
             TblDistribuidorAdministrador = new HashSet<TblDistribuidorAdministrador>();
             TblInvestidorDistribuidor = new HashSet<TblInvestidorDistribuidor>();
-            TblMovimentacaoNota = new HashSet<TblMovimentacaoNota>();
         }
 
         [Key]
@@ -56,7 +55,5 @@ namespace DUDS.Models
         public virtual ICollection<TblDistribuidorAdministrador> TblDistribuidorAdministrador { get; set; }
         [InverseProperty("CodDistribuidorNavigation")]
         public virtual ICollection<TblInvestidorDistribuidor> TblInvestidorDistribuidor { get; set; }
-        [InverseProperty("CodDistribuidorNavigation")]
-        public virtual ICollection<TblMovimentacaoNota> TblMovimentacaoNota { get; set; }
     }
 }

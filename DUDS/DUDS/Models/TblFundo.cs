@@ -23,7 +23,6 @@ namespace DUDS.Models
             TblContas = new HashSet<TblContas>();
             TblContratoFundo = new HashSet<TblContratoFundo>();
             TblErrosPagamento = new HashSet<TblErrosPagamento>();
-            TblOrdemPassivo = new HashSet<TblOrdemPassivo>();
             TblPagamentoServico = new HashSet<TblPagamentoServico>();
             TblPgtoAdmPfee = new HashSet<TblPgtoAdmPfee>();
         }
@@ -155,8 +154,6 @@ namespace DUDS.Models
         public virtual ICollection<TblContratoFundo> TblContratoFundo { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblErrosPagamento> TblErrosPagamento { get; set; }
-        [InverseProperty("CodFundoNavigation")]
-        public virtual ICollection<TblOrdemPassivo> TblOrdemPassivo { get; set; }
         [InverseProperty("CodFundoNavigation")]
         public virtual ICollection<TblPagamentoServico> TblPagamentoServico { get; set; }
         [InverseProperty("CodFundoNavigation")]
