@@ -77,46 +77,52 @@ namespace DUDS.Controllers
             }
         }
 
-        //// GET: api/Contas/GetContasExiste/cnpj
-        //[HttpGet()]
-        //public async Task<ActionResult<TblContas>> GetContasExiste(int? cod_fundo, int? cod_investidor, int cod_tipo_conta)
-        //{
-        //    TblContas tblContas = new TblContas();
+        //// GET: api/Contas/GetContasExiste
+        [HttpGet()]
+        public async Task<ActionResult<TblContas>> GetContasExiste(int cod_fundo, int cod_investidor, int cod_tipo_conta)
+        {
+            TblContas tblContas = new TblContas();
 
-        //    try
-        //    {
-        //        if(cod_fundo != 0)
-        //        {
-        //            tblContas = await _context.TblContas.Where(c => c.Ativo == false && c.CodFundo == cod_fundo && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
+            try
+            {
+                if (cod_fundo != 0)
+                {
+                    tblContas = await _context.TblContas.Where(c => c.Ativo == false && c.CodFundo == cod_fundo && c.CodTipoConta == cod_tipo_conta && cod_investidor == 0).FirstOrDefaultAsync();
 
-        //            if (tblContas != null)
-        //            {
-        //                return Ok(tblContas);
-        //            }
-        //            else
-        //            {
-        //                tblContas = await _context.TblContas.Where(c => c.CodFundo == cod_fundo && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
-        //            }
-        //        }
-        //        else if(cod_investidor != 0)
-        //        {
-        //            tblContas = await _context.TblContas.Where(c => c.Ativo == false && c.CodInvestidor == cod_investidor && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
+                    if (tblContas != null)
+                    {
+                        return Ok(tblContas);
+                    }
+                    else
+                    {
+                        tblContas = await _context.TblContas.Where(c => c.CodFundo == cod_fundo && c.CodTipoConta == cod_tipo_conta && cod_investidor == 0).FirstOrDefaultAsync();
+                        return Ok(tblContas);
+                    }
+                }
+                else if (cod_investidor != 0)
+                {
+                    tblContas = await _context.TblContas.Where(c => c.Ativo == false && c.CodInvestidor == cod_investidor && c.CodTipoConta == cod_tipo_conta && cod_fundo == 0).FirstOrDefaultAsync();
 
-        //            if (tblContas != null)
-        //            {
-        //                return Ok(tblContas);
-        //            }
-        //            else
-        //            {
-        //                tblContas = await _context.TblContas.Where(c => c.CodInvestidor == cod_investidor && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
+                    if (tblContas != null)
+                    {
+                        return Ok(tblContas);
+                    }
+                    else
+                    {
+                        tblContas = await _context.TblContas.Where(c => c.CodInvestidor == cod_investidor && c.CodTipoConta == cod_tipo_conta && cod_fundo == 0).FirstOrDefaultAsync();
+                        return Ok(tblContas);
+                    }
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException.Message);
+            }
+        }
 
         //POST: api/Contas/CadastrarConta/ContaModel
         [HttpPost]
@@ -150,7 +156,7 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Conta/EditarConta/codFundo/codTipoConta
+        //PUT: api/Conta/EditarConta/id
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarConta(int id, ContaModel conta)
         {

@@ -18,9 +18,7 @@ namespace DUDS.Data
         {
         }
 
-        public virtual DbSet<AuditEmployeeData> AuditEmployeeData { get; set; }
         public virtual DbSet<Auditoria> Auditoria { get; set; }
-        public virtual DbSet<EmployeeData> EmployeeData { get; set; }
         public virtual DbSet<TblAdministrador> TblAdministrador { get; set; }
         public virtual DbSet<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
         public virtual DbSet<TblCliente> TblCliente { get; set; }
@@ -95,30 +93,6 @@ namespace DUDS.Data
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
-            modelBuilder.Entity<AuditEmployeeData>(entity =>
-            {
-                entity.HasKey(e => e.AuditLogId)
-                    .HasName("PK__auditEmp__6031F9F888C749FC");
-
-                entity.Property(e => e.AuditLogId).HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.AuditChanged).HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.AuditEmpBankAccountNumber)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.AuditEmpSsn)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.AuditLogType)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.AuditUser).HasDefaultValueSql("(suser_sname())");
-            });
-
             modelBuilder.Entity<Auditoria>(entity =>
             {
                 entity.Property(e => e.Acao)
@@ -134,36 +108,6 @@ namespace DUDS.Data
                 entity.Property(e => e.Tabela).IsUnicode(false);
 
                 entity.Property(e => e.Usuario).IsUnicode(false);
-            });
-
-            modelBuilder.Entity<EmployeeData>(entity =>
-            {
-                entity.HasKey(e => e.EmpId)
-                    .HasName("PK__employee__1299A8616EDE8CD0");
-
-                entity.Property(e => e.EmpId).ValueGeneratedNever();
-
-                entity.Property(e => e.EmpBankAccountNumber)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.EmpFname).IsFixedLength(true);
-
-                entity.Property(e => e.EmpFname2).IsFixedLength(true);
-
-                entity.Property(e => e.EmpFname3).IsFixedLength(true);
-
-                entity.Property(e => e.EmpFname4).IsFixedLength(true);
-
-                entity.Property(e => e.EmpFname5).IsFixedLength(true);
-
-                entity.Property(e => e.EmpFname6).IsFixedLength(true);
-
-                entity.Property(e => e.EmpLname).IsFixedLength(true);
-
-                entity.Property(e => e.EmpSsn)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
             });
 
             modelBuilder.Entity<TblAdministrador>(entity =>
