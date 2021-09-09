@@ -16,6 +16,8 @@ namespace DUDS.Controllers
     [Route("api/[Controller]/[action]")]
     [ApiController]
     //[Authorize]
+    
+    //[ApiExplorerSettings(GroupName ="common")]
     public class InfoFundoController : Controller
     {
         private readonly DataContext _context;
@@ -85,7 +87,7 @@ namespace DUDS.Controllers
         [HttpGet("{cnpj}")]
         public async Task<ActionResult<TblFundo>> GetFundoInativo(string cnpj)
         {
-            TblFundo tblFundo = _context.TblFundo.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefault();
+            TblFundo tblFundo = await _context.TblFundo.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
 
             try
             {
@@ -171,40 +173,40 @@ namespace DUDS.Controllers
 
                 if (registroFundo != null)
                 {
-                    registroFundo.NomeFundo = fundo.NomeFundo == null ? registroFundo.NomeFundo : fundo.NomeFundo;
-                    registroFundo.NomeReduzido = fundo.NomeReduzido == null ? registroFundo.NomeReduzido : fundo.NomeReduzido;
-                    registroFundo.Cnpj = fundo.Cnpj == null ? registroFundo.Cnpj : fundo.Cnpj;
+                    registroFundo.NomeFundo = fundo.NomeFundo ?? registroFundo.NomeFundo;
+                    registroFundo.NomeReduzido = fundo.NomeReduzido ?? registroFundo.NomeReduzido;
+                    registroFundo.Cnpj = fundo.Cnpj ?? registroFundo.Cnpj;
                     registroFundo.PerformanceFee = (fundo.PerformanceFee == null || fundo.PerformanceFee == 0) ? registroFundo.PerformanceFee : fundo.PerformanceFee;
                     registroFundo.AdmFee = (fundo.AdmFee == null || fundo.AdmFee == 0) ? registroFundo.AdmFee : fundo.AdmFee;
-                    registroFundo.TipoFundo = fundo.TipoFundo == null ? registroFundo.TipoFundo : fundo.TipoFundo;
+                    registroFundo.TipoFundo = fundo.TipoFundo ?? registroFundo.TipoFundo;
                     registroFundo.MasterId = fundo.MasterId == 0 ? registroFundo.MasterId : fundo.MasterId;
-                    registroFundo.TipoCota = fundo.TipoCota == null ? registroFundo.TipoCota : fundo.TipoCota;
+                    registroFundo.TipoCota = fundo.TipoCota ?? registroFundo.TipoCota;
                     registroFundo.CodAdministrador = fundo.CodAdministrador == 0 ? registroFundo.CodAdministrador : fundo.CodAdministrador;
                     registroFundo.CodCustodiante = fundo.CodCustodiante == 0 ? registroFundo.CodCustodiante : fundo.CodCustodiante;
                     registroFundo.CodGestor = fundo.CodGestor == 0 ? registroFundo.CodGestor : fundo.CodGestor;
-                    registroFundo.MoedaFundo = fundo.MoedaFundo == null ? registroFundo.MoedaFundo : fundo.MoedaFundo;
+                    registroFundo.MoedaFundo = fundo.MoedaFundo ?? registroFundo.MoedaFundo;
                     registroFundo.CodTipoEstrategia = fundo.CodTipoEstrategia == 0 ? registroFundo.CodTipoEstrategia : fundo.CodTipoEstrategia;
                     registroFundo.DiasCotizacaoAplicacao = fundo.DiasCotizacaoAplicacao == 0 ? registroFundo.DiasCotizacaoAplicacao : fundo.DiasCotizacaoAplicacao;
-                    registroFundo.ContagemDiasCotizacaoAplicacao = fundo.ContagemDiasCotizacaoAplicacao == null ? registroFundo.ContagemDiasCotizacaoAplicacao : fundo.ContagemDiasCotizacaoAplicacao;
+                    registroFundo.ContagemDiasCotizacaoAplicacao = fundo.ContagemDiasCotizacaoAplicacao ?? registroFundo.ContagemDiasCotizacaoAplicacao;
                     registroFundo.DiasCotizacaoResgate = fundo.DiasCotizacaoResgate == 0 ? registroFundo.DiasCotizacaoResgate : fundo.DiasCotizacaoResgate;
-                    registroFundo.ContagemDiasCotizacaoResgate = fundo.ContagemDiasCotizacaoResgate == null ? registroFundo.ContagemDiasCotizacaoResgate : fundo.ContagemDiasCotizacaoResgate;
+                    registroFundo.ContagemDiasCotizacaoResgate = fundo.ContagemDiasCotizacaoResgate ?? registroFundo.ContagemDiasCotizacaoResgate;
                     registroFundo.DiasLiquidacaoAplicacao = fundo.DiasLiquidacaoAplicacao == 0 ? registroFundo.DiasLiquidacaoAplicacao : fundo.DiasLiquidacaoAplicacao;
-                    registroFundo.ContagemDiasLiquidacaoAplicacao = fundo.ContagemDiasLiquidacaoAplicacao == null ? registroFundo.ContagemDiasLiquidacaoAplicacao : fundo.ContagemDiasLiquidacaoAplicacao;
+                    registroFundo.ContagemDiasLiquidacaoAplicacao = fundo.ContagemDiasLiquidacaoAplicacao ?? registroFundo.ContagemDiasLiquidacaoAplicacao;
                     registroFundo.DiasLiquidacaoResgate = fundo.DiasLiquidacaoResgate == 0 ? registroFundo.DiasLiquidacaoResgate : fundo.DiasLiquidacaoResgate;
-                    registroFundo.ContagemDiasLiquidacaoResgate = fundo.ContagemDiasLiquidacaoResgate == null ? registroFundo.ContagemDiasLiquidacaoResgate : fundo.ContagemDiasLiquidacaoResgate;
-                    registroFundo.Mnemonico = fundo.Mnemonico == null ? registroFundo.Mnemonico : fundo.Mnemonico;
-                    registroFundo.NomeReduzido = fundo.NomeReduzido == null ? registroFundo.NomeReduzido : fundo.NomeReduzido;
-                    registroFundo.ClassificacaoAnbima = fundo.ClassificacaoAnbima == null ? registroFundo.ClassificacaoAnbima : fundo.ClassificacaoAnbima;
-                    registroFundo.ClassificacaoCvm = fundo.ClassificacaoCvm == null ? registroFundo.ClassificacaoCvm : fundo.ClassificacaoCvm;
-                    registroFundo.DataCotaInicial = fundo.DataCotaInicial == null ? registroFundo.DataCotaInicial : fundo.DataCotaInicial;
+                    registroFundo.ContagemDiasLiquidacaoResgate = fundo.ContagemDiasLiquidacaoResgate ?? registroFundo.ContagemDiasLiquidacaoResgate;
+                    registroFundo.Mnemonico = fundo.Mnemonico ?? registroFundo.Mnemonico;
+                    registroFundo.NomeReduzido = fundo.NomeReduzido ?? registroFundo.NomeReduzido;
+                    registroFundo.ClassificacaoAnbima = fundo.ClassificacaoAnbima ?? registroFundo.ClassificacaoAnbima;
+                    registroFundo.ClassificacaoCvm = fundo.ClassificacaoCvm ?? registroFundo.ClassificacaoCvm;
+                    registroFundo.DataCotaInicial = fundo.DataCotaInicial ?? registroFundo.DataCotaInicial;
                     registroFundo.ValorCotaInicial = (fundo.ValorCotaInicial == null || fundo.ValorCotaInicial == 0) ? registroFundo.ValorCotaInicial : fundo.ValorCotaInicial;
-                    registroFundo.CodAnbima = fundo.CodAnbima == null ? registroFundo.CodAnbima : fundo.CodAnbima;
-                    registroFundo.CodCvm = fundo.CodCvm == null ? registroFundo.CodCvm : fundo.CodCvm;
-                    registroFundo.AtivoCetip = fundo.AtivoCetip == null ? registroFundo.AtivoCetip : fundo.AtivoCetip;
-                    registroFundo.Isin = fundo.Isin == null ? registroFundo.Isin : fundo.Isin;
-                    registroFundo.NumeroGiin = fundo.NumeroGiin == null ? registroFundo.NumeroGiin : fundo.NumeroGiin;
+                    registroFundo.CodAnbima = fundo.CodAnbima ?? registroFundo.CodAnbima;
+                    registroFundo.CodCvm = fundo.CodCvm ?? registroFundo.CodCvm;
+                    registroFundo.AtivoCetip = fundo.AtivoCetip ?? registroFundo.AtivoCetip;
+                    registroFundo.Isin = fundo.Isin ?? registroFundo.Isin;
+                    registroFundo.NumeroGiin = fundo.NumeroGiin ?? registroFundo.NumeroGiin;
                     registroFundo.CdFundoAdm = fundo.CdFundoAdm == 0 ? registroFundo.CdFundoAdm : fundo.CdFundoAdm;
-                    registroFundo.DataEncerramento = fundo.DataEncerramento == null ? registroFundo.DataEncerramento : fundo.DataEncerramento;
+                    registroFundo.DataEncerramento = fundo.DataEncerramento ?? registroFundo.DataEncerramento;
 
                     try
                     {

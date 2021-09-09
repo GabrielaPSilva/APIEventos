@@ -73,8 +73,10 @@ namespace DUDS
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dahlia Unified Data Service", Version = "v1" });
                 c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dahlia Unified Data Service", Version = "v1" });
+                //c.SwaggerDoc("common", new OpenApiInfo { Title = "Dahlia Unified Data Service - Common", Version = "Common" });
+                
                 /*
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
@@ -113,6 +115,7 @@ namespace DUDS
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dahlia Unified Data Service v1"));
+                //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/common/swagger.json", "Dahlia Unified Data Service Common"));
             }
 
             app.UseHttpsRedirection();
