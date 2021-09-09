@@ -77,45 +77,24 @@ namespace DUDS.Controllers
             }
         }
 
-        //// GET: api/Contas/GetContasExiste
-        [HttpGet()]
+        //// GET: api/Contas/GetContasExiste/cod_fundo/cod_investidor/cod_tipo_conta
+        [HttpGet("{cod_tipo_conta}")]
         public async Task<ActionResult<TblContas>> GetContasExiste(int cod_fundo, int cod_investidor, int cod_tipo_conta)
         {
             TblContas tblContas = new TblContas();
 
             try
             {
-                if (cod_fundo != 0)
-                {
-                    tblContas = await _context.TblContas.Where(c => c.Ativo == false && c.CodFundo == cod_fundo && c.CodTipoConta == cod_tipo_conta && cod_investidor == 0).FirstOrDefaultAsync();
+                tblContas = await _context.TblContas.Where(c => c.Ativo == false && (c.CodFundo == cod_fundo || c.CodInvestidor == cod_investidor) && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
 
-                    if (tblContas != null)
-                    {
-                        return Ok(tblContas);
-                    }
-                    else
-                    {
-                        tblContas = await _context.TblContas.Where(c => c.CodFundo == cod_fundo && c.CodTipoConta == cod_tipo_conta && cod_investidor == 0).FirstOrDefaultAsync();
-                        return Ok(tblContas);
-                    }
-                }
-                else if (cod_investidor != 0)
+                if (tblContas != null)
                 {
-                    tblContas = await _context.TblContas.Where(c => c.Ativo == false && c.CodInvestidor == cod_investidor && c.CodTipoConta == cod_tipo_conta && cod_fundo == 0).FirstOrDefaultAsync();
-
-                    if (tblContas != null)
-                    {
-                        return Ok(tblContas);
-                    }
-                    else
-                    {
-                        tblContas = await _context.TblContas.Where(c => c.CodInvestidor == cod_investidor && c.CodTipoConta == cod_tipo_conta && cod_fundo == 0).FirstOrDefaultAsync();
-                        return Ok(tblContas);
-                    }
+                    return Ok(tblContas);
                 }
                 else
                 {
-                    return NotFound();
+                    tblContas = await _context.TblContas.Where(c => c.CodTipoConta == cod_tipo_conta && (c.CodFundo == cod_fundo || c.CodInvestidor == cod_investidor)).FirstOrDefaultAsync();
+                    return Ok(tblContas);
                 }
             }
             catch (Exception e)
