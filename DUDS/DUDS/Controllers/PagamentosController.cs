@@ -424,7 +424,8 @@ namespace DUDS.Controllers
                         RebatePfeeSementre = line.RebatePfeeSementre,
                         ValorAdm = line.ValorAdm,
                         ValorPfeeResgate = line.ValorPfeeResgate,
-                        ValorPfeeSementre = line.ValorPfeeSementre
+                        ValorPfeeSementre = line.ValorPfeeSementre,
+                        UsuarioModificacao = line.UsuarioModificacao
                     };
 
                     listaCalculoPagamentosAdminPfee.Add(itensCalculoPagamentoAdminPfee);
@@ -436,6 +437,35 @@ namespace DUDS.Controllers
                 return Ok(listaCalculoPagamentosAdminPfee);
             }
             catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Pagamentos/GetCalculoPagamentoAdminPfee
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<TblCalculoPgtoAdmPfee>>> GetCalculoPagamentoAdminPfee(string competencia)
+        {
+            try
+            {
+                List<TblCalculoPgtoAdmPfee> calculoPagamentoAdminPfee = await _context.TblCalculoPgtoAdmPfee
+                    .Where(c => c.Competencia == competencia)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                if (calculoPagamentoAdminPfee == null)
+                {
+                    return BadRequest();
+                }
+
+                if (calculoPagamentoAdminPfee.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(calculoPagamentoAdminPfee);
+            }
+            catch (InvalidOperationException e)
             {
                 return BadRequest(e);
             }
