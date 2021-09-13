@@ -33,19 +33,12 @@ namespace DUDS.Controllers
             {
                 List<TblCustodiante> custodiantes = await _context.TblCustodiante.Where(c => c.Ativo == true).OrderBy(c => c.NomeCustodiante).AsNoTracking().ToListAsync();
 
-                if (custodiantes.Count() == 0)
+                if (custodiantes.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (custodiantes != null)
-                {
-                    return Ok(custodiantes);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(custodiantes);
             }
             catch (InvalidOperationException e)
             {
@@ -57,18 +50,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblCustodiante>> GetCustodiante(int id)
         {
-            TblCustodiante tblCustodiante = await _context.TblCustodiante.FindAsync(id);
-
             try
             {
-                if (tblCustodiante != null)
-                {
-                    return Ok(tblCustodiante);
-                }
-                else
+                TblCustodiante tblCustodiante = await _context.TblCustodiante.FindAsync(id);
+                if (tblCustodiante == null)
                 {
                     return NotFound();
                 }
+                return Ok(tblCustodiante);
             }
             catch (Exception e)
             {

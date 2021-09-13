@@ -34,19 +34,12 @@ namespace DUDS.Controllers
             {
                 List<TblAdministrador> administradores = await _context.TblAdministrador.Where(c => c.Ativo == true).OrderBy(c => c.NomeAdministrador).AsNoTracking().ToListAsync();
 
-                if (administradores.Count() == 0)
+                if (administradores.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (administradores != null)
-                {
-                    return Ok(administradores);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(administradores);
             }
             catch (Exception e)
             {
@@ -58,18 +51,15 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblAdministrador>> GetAdministrador(int id)
         {
-            TblAdministrador tblAdministrador = await _context.TblAdministrador.FindAsync(id);
-
             try
             {
-                if (tblAdministrador != null)
-                {
-                    return Ok(tblAdministrador);
-                }
-                else
+                TblAdministrador tblAdministrador = await _context.TblAdministrador.FindAsync(id);
+                if (tblAdministrador == null)
                 {
                     return NotFound();
                 }
+
+                return Ok(tblAdministrador);
             }
             catch (Exception e)
             {
@@ -86,24 +76,18 @@ namespace DUDS.Controllers
             try
             {
                 tblAdministrador = await _context.TblAdministrador.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
-
-                if (tblAdministrador != null)
+                if (tblAdministrador == null)
                 {
-                    return Ok(tblAdministrador);
+                    return NotFound();
                 }
-                else
-                {
-                    tblAdministrador = await _context.TblAdministrador.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
 
-                    if (tblAdministrador != null)
-                    {
-                        return Ok(tblAdministrador);
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
+                tblAdministrador = await _context.TblAdministrador.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+                if (tblAdministrador == null)
+                {
+                    return NotFound();
                 }
+
+                return Ok(tblAdministrador);
             }
             catch (Exception e)
             {

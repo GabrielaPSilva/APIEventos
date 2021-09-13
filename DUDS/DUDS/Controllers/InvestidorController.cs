@@ -34,19 +34,12 @@ namespace DUDS.Controllers
             {
                 List<TblInvestidor> investidores = await _context.TblInvestidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeCliente).AsNoTracking().ToListAsync();
 
-                if (investidores.Count() == 0)
+                if (investidores.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (investidores != null)
-                {
-                    return Ok(investidores);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(investidores);
             }
             catch (InvalidOperationException e)
             {
@@ -58,18 +51,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblGestor>> GetInvestidor(int id)
         {
-            TblInvestidor tblInvestidor = await _context.TblInvestidor.FindAsync(id);
-
             try
             {
-                if (tblInvestidor != null)
-                {
-                    return Ok(tblInvestidor);
-                }
-                else
+                TblInvestidor tblInvestidor = await _context.TblInvestidor.FindAsync(id);
+                if (tblInvestidor == null)
                 {
                     return NotFound();
                 }
+                return Ok(tblInvestidor);
             }
             catch (Exception e)
             {
@@ -84,24 +73,18 @@ namespace DUDS.Controllers
             TblInvestidor tblInvestidor = new TblInvestidor();
 
             tblInvestidor = await _context.TblInvestidor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
-
-            if (tblInvestidor != null)
+            if (tblInvestidor == null)
             {
-                return Ok(tblInvestidor);
+                return NotFound();
             }
-            else
+            
+            tblInvestidor = await _context.TblInvestidor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+            if (tblInvestidor == null)
             {
-                tblInvestidor = await _context.TblInvestidor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
-
-                if (tblInvestidor != null)
-                {
-                    return Ok(tblInvestidor);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
+
+            return Ok(tblInvestidor);
         }
 
         //POST: api/Investidor/CadastrarInvestidor/InvestidorModel
@@ -290,23 +273,16 @@ namespace DUDS.Controllers
             {
                 List<TblInvestidorDistribuidor> investidorDistribuidores = await _context.TblInvestidorDistribuidor.AsNoTracking().ToListAsync();
 
-                if (investidorDistribuidores.Count() == 0)
+                if (investidorDistribuidores.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (investidorDistribuidores != null)
-                {
-                    return Ok(investidorDistribuidores);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(investidorDistribuidores);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e.InnerException.Message);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
@@ -314,18 +290,14 @@ namespace DUDS.Controllers
         [HttpGet("{cod_investidor}/{cod_distribuidor}/{cod_administrador}")]
         public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(int cod_investidor, int cod_distribuidor, int cod_administrador)
         {
-            TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(cod_investidor, cod_distribuidor, cod_administrador);
-
             try
             {
-                if (tblInvestidorDistribuidor != null)
-                {
-                    return Ok(tblInvestidorDistribuidor);
-                }
-                else
+                TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(cod_investidor, cod_distribuidor, cod_administrador);
+                if (tblInvestidorDistribuidor == null)
                 {
                     return NotFound();
                 }
+                return Ok(tblInvestidorDistribuidor);
             }
             catch (Exception e)
             {
@@ -353,11 +325,12 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetInvestidorDistribuidor),
-                    new {
-                            cod_investidor = itensInvestidorDistribuidor.CodInvestidor,
-                            cod_distribuidor = itensInvestidorDistribuidor.CodDistribuidor,
-                            cod_administrador = itensInvestidorDistribuidor.CodAdministrador
-                        },
+                    new
+                    {
+                        cod_investidor = itensInvestidorDistribuidor.CodInvestidor,
+                        cod_distribuidor = itensInvestidorDistribuidor.CodDistribuidor,
+                        cod_administrador = itensInvestidorDistribuidor.CodAdministrador
+                    },
                     Ok(itensInvestidorDistribuidor));
             }
             catch (Exception e)

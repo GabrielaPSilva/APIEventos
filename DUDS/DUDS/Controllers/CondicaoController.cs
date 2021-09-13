@@ -33,24 +33,16 @@ namespace DUDS.Controllers
             try
             {
                 List<TblCondicaoRemuneracao> condicoesRemuneracao = await _context.TblCondicaoRemuneracao.Where(c => c.Ativo == true).OrderBy(c => c.CodContratoRemuneracao).AsNoTracking().ToListAsync();
-
-                if (condicoesRemuneracao.Count() == 0)
+                if (condicoesRemuneracao.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (condicoesRemuneracao != null)
-                {
-                    return Ok(condicoesRemuneracao);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(condicoesRemuneracao);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -58,18 +50,15 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblCondicaoRemuneracao>> GetCondicaoRemuneracao(int id)
         {
-            TblCondicaoRemuneracao tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
-
             try
             {
+                TblCondicaoRemuneracao tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
                 if (tblCondicaoRemuneracao != null)
-                {
-                    return Ok(tblCondicaoRemuneracao);
-                }
-                else
                 {
                     return NotFound();
                 }
+                    
+                return Ok(tblCondicaoRemuneracao);
             }
             catch (Exception e)
             {
@@ -231,19 +220,12 @@ namespace DUDS.Controllers
             {
                 List<TblTipoCondicao> tipoCondicoes = await _context.TblTipoCondicao.Where(c => c.Ativo == true).OrderBy(c => c.TipoCondicao).AsNoTracking().ToListAsync();
 
-                if (tipoCondicoes.Count() == 0)
+                if (tipoCondicoes.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (tipoCondicoes != null)
-                {
-                    return Ok(tipoCondicoes);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(tipoCondicoes);
             }
             catch (Exception e)
             {
@@ -255,18 +237,15 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblTipoCondicao>> GetTipoCondicao(int id)
         {
-            TblTipoCondicao tblTipoCondicao = await _context.TblTipoCondicao.FindAsync(id);
-
             try
             {
-                if (tblTipoCondicao != null)
+                TblTipoCondicao tblTipoCondicao = await _context.TblTipoCondicao.FindAsync(id);
+                if (tblTipoCondicao == null)
                 {
-                    return Ok(tblTipoCondicao);
+                    NotFound();
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                
+                return Ok(tblTipoCondicao);
             }
             catch (Exception e)
             {

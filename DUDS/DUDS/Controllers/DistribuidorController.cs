@@ -34,19 +34,12 @@ namespace DUDS.Controllers
             {
                 List<TblDistribuidor> distribuidores = await _context.TblDistribuidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeDistribuidor).AsNoTracking().ToListAsync();
 
-                if (distribuidores.Count() == 0)
+                if (distribuidores.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (distribuidores != null)
-                {
-                    return Ok(distribuidores);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(distribuidores);
             }
             catch (InvalidOperationException e)
             {
@@ -58,18 +51,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblDistribuidor>> GetDistribuidor(int id)
         {
-            TblDistribuidor tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
-
             try
             {
-                if (tblDistribuidor != null)
-                {
-                    return Ok(tblDistribuidor);
-                }
-                else
+                TblDistribuidor tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
+                if (tblDistribuidor == null)
                 {
                     return NotFound();
                 }
+                return Ok(tblDistribuidor);
             }
             catch (Exception e)
             {
@@ -231,19 +220,12 @@ namespace DUDS.Controllers
             {
                 List<TblDistribuidorAdministrador> distribuidorAdministradores = await _context.TblDistribuidorAdministrador.AsNoTracking().ToListAsync();
 
-                if (distribuidorAdministradores.Count() == 0)
+                if (distribuidorAdministradores.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (distribuidorAdministradores != null)
-                {
-                    return Ok(distribuidorAdministradores);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(distribuidorAdministradores);
             }
             catch (InvalidOperationException e)
             {
@@ -255,18 +237,14 @@ namespace DUDS.Controllers
         [HttpGet("{cod_distribuidor}/{cod_administrador}")]
         public async Task<ActionResult<TblDistribuidorAdministrador>> GetDistribuidorAdministrador(int cod_distribuidor, int cod_administrador)
         {
-            TblDistribuidorAdministrador tblDistribuidorAdministrador = await _context.TblDistribuidorAdministrador.FindAsync(cod_distribuidor, cod_administrador);
-
             try
             {
-                if (tblDistribuidorAdministrador != null)
-                {
-                    return Ok(tblDistribuidorAdministrador);
-                }
-                else
+                TblDistribuidorAdministrador tblDistribuidorAdministrador = await _context.TblDistribuidorAdministrador.FindAsync(cod_distribuidor, cod_administrador);
+                if (tblDistribuidorAdministrador == null)
                 {
                     return NotFound();
                 }
+                return Ok(tblDistribuidorAdministrador);
             }
             catch (Exception e)
             {

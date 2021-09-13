@@ -34,19 +34,12 @@ namespace DUDS.Controllers
             {
                 List<TblGestor> gestores = await _context.TblGestor.Where(c => c.Ativo == true).OrderBy(c => c.NomeGestor).AsNoTracking().ToListAsync();
 
-                if (gestores.Count() == 0)
+                if (gestores.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (gestores != null)
-                {
-                    return Ok(gestores);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(gestores);
             }
             catch (InvalidOperationException e)
             {
@@ -58,18 +51,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblGestor>> GetGestor(int id)
         {
-            TblGestor tblGestor = await _context.TblGestor.FindAsync(id);
-
             try
             {
+                TblGestor tblGestor = await _context.TblGestor.FindAsync(id);
                 if (tblGestor != null)
-                {
-                    return Ok(tblGestor);
-                }
-                else
                 {
                     return NotFound();
                 }
+                return Ok(tblGestor);
             }
             catch (Exception e)
             {

@@ -30,16 +30,13 @@ namespace DUDS.Controllers
             {
                 if (tblLogErros == null)
                 {
-                    return Ok(tblLogErros);
+                    return NotFound();
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(tblLogErros);
             }
             catch (Exception e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 

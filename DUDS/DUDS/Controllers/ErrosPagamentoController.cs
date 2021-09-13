@@ -32,23 +32,16 @@ namespace DUDS.Controllers
             {
                 List<TblErrosPagamento> errosPagamento = await _context.TblErrosPagamento.OrderBy(c => c.DataAgendamento).AsNoTracking().ToListAsync();
 
-                if (errosPagamento.Count() == 0)
+                if (errosPagamento.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (errosPagamento != null)
-                {
-                    return Ok(errosPagamento);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(errosPagamento);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -56,18 +49,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblErrosPagamento>> GetErrosPagamento(int id)
         {
-            TblErrosPagamento tblErrosPagamento = await _context.TblErrosPagamento.FindAsync(id);
-
             try
             {
-                if (tblErrosPagamento != null)
+                TblErrosPagamento tblErrosPagamento = await _context.TblErrosPagamento.FindAsync(id);
+                if (tblErrosPagamento == null)
                 {
-                    return Ok(tblErrosPagamento);
+                    return NotFound();
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(tblErrosPagamento);
             }
             catch (Exception e)
             {
