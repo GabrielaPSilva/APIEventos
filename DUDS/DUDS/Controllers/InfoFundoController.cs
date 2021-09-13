@@ -16,7 +16,7 @@ namespace DUDS.Controllers
     [Route("api/[Controller]/[action]")]
     [ApiController]
     //[Authorize]
-    
+
     //[ApiExplorerSettings(GroupName ="common")]
     public class InfoFundoController : Controller
     {
@@ -40,23 +40,16 @@ namespace DUDS.Controllers
             {
                 List<TblFundo> fundos = await _context.TblFundo.Where(c => c.Ativo == true).OrderBy(c => c.NomeFundo).AsNoTracking().ToListAsync();
 
-                if (fundos.Count() == 0)
+                if (fundos.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (fundos != null)
-                {
-                    return Ok(fundos);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(fundos);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -64,18 +57,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblFundo>> GetFundoById(int id)
         {
-            TblFundo tblFundo = await _context.TblFundo.FindAsync(id);
-
             try
             {
-                if (tblFundo != null)
-                {
-                    return Ok(tblFundo);
-                }
-                else
+                TblFundo tblFundo = await _context.TblFundo.FindAsync(id);
+                if (tblFundo == null)
                 {
                     return NotFound();
                 }
+                return Ok(tblFundo);
             }
             catch (Exception e)
             {
@@ -87,18 +76,14 @@ namespace DUDS.Controllers
         [HttpGet("{cnpj}")]
         public async Task<ActionResult<TblFundo>> GetFundoExistsBase(string cnpj)
         {
-            TblFundo tblFundo = await _context.TblFundo.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
-
             try
             {
-                if (tblFundo != null)
-                {
-                    return Ok(tblFundo);
-                }
-                else
+                TblFundo tblFundo = await _context.TblFundo.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
+                if (tblFundo == null)
                 {
                     return NotFound();
                 }
+                return Ok(tblFundo);
             }
             catch (Exception e)
             {
@@ -337,21 +322,14 @@ namespace DUDS.Controllers
         {
             try
             {
-                var tiposEstrategia = await _context.TblTipoEstrategia.Where(c => c.Ativo == true).OrderBy(c => c.Estrategia).ToListAsync();
+                List<TblTipoEstrategia> tiposEstrategia = await _context.TblTipoEstrategia.Where(c => c.Ativo == true).OrderBy(c => c.Estrategia).ToListAsync();
 
-                if (tiposEstrategia.Count() == 0)
+                if (tiposEstrategia.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (tiposEstrategia != null)
-                {
-                    return Ok(tiposEstrategia);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(tiposEstrategia);
             }
             catch (InvalidOperationException e)
             {
@@ -367,14 +345,11 @@ namespace DUDS.Controllers
 
             try
             {
-                if (tblTipoEstrategia != null)
+                if (tblTipoEstrategia == null)
                 {
-                    return Ok(tblTipoEstrategia);
+                    return NotFound();
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(tblTipoEstrategia);
             }
             catch (Exception e)
             {

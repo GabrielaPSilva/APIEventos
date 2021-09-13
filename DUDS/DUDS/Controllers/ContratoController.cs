@@ -40,18 +40,11 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (contratos != null)
-                {
-                    return Ok(contratos);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(contratos);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -59,18 +52,15 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblContrato>> GetContratoById(int id)
         {
-            TblContrato tblContrato = await _context.TblContrato.FindAsync(id);
-
             try
             {
-                if (tblContrato != null)
+                TblContrato tblContrato = await _context.TblContrato.FindAsync(id);
+                if (tblContrato == null)
                 {
-                    return Ok(tblContrato);
+                    NotFound();
                 }
-                else
-                {
-                    return NotFound();
-                }
+
+                return Ok(tblContrato);
             }
             catch (Exception e)
             {
@@ -255,18 +245,11 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (subContratos != null)
-                {
-                    return Ok(subContratos);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(subContratos);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -274,18 +257,16 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblSubContrato>> GetSubContratoById(int id)
         {
-            TblSubContrato tblSubContrato = await _context.TblSubContrato.FindAsync(id);
+
 
             try
             {
-                if (tblSubContrato != null)
+                TblSubContrato tblSubContrato = await _context.TblSubContrato.FindAsync(id);
+                if (tblSubContrato == null)
                 {
-                    return Ok(tblSubContrato);
+                    NotFound();
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(tblSubContrato);
             }
             catch (Exception e)
             {
@@ -485,18 +466,11 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (contratoAlocadores != null)
-                {
-                    return Ok(contratoAlocadores);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(contratoAlocadores);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -504,18 +478,15 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblContratoAlocador>> GetContratoAlocadorById(int id)
         {
-            TblContratoAlocador tblContratoAlocador = await _context.TblContratoAlocador.FindAsync(id);
 
             try
             {
+                TblContratoAlocador tblContratoAlocador = await _context.TblContratoAlocador.FindAsync(id);
                 if (tblContratoAlocador != null)
                 {
-                    return Ok(tblContratoAlocador);
+                    NotFound();
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(tblContratoAlocador);
             }
             catch (Exception e)
             {
@@ -639,18 +610,11 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (contratoFundos != null)
-                {
-                    return Ok(contratoFundos);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(contratoFundos);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -658,18 +622,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblContratoFundo>> GetContratoFundoById(int id)
         {
-            TblContratoFundo tblContratoFundo = await _context.TblContratoFundo.FindAsync(id);
-
             try
             {
-                if (tblContratoFundo != null)
+                TblContratoFundo tblContratoFundo = await _context.TblContratoFundo.FindAsync(id);
+                if (tblContratoFundo == null)
                 {
-                    return Ok(tblContratoFundo);
+                    NotFound();
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(tblContratoFundo);
             }
             catch (Exception e)
             {
@@ -793,18 +753,11 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (contratoRemuneracao != null)
-                {
-                    return Ok(contratoRemuneracao);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(contratoRemuneracao);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -812,18 +765,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblContratoRemuneracao>> GetContratoRemuneracaoById(int id)
         {
-            TblContratoRemuneracao tblContratoRemuneracao = await _context.TblContratoRemuneracao.FindAsync(id);
-
             try
             {
-                if (tblContratoRemuneracao != null)
-                {
-                    return Ok(tblContratoRemuneracao);
-                }
-                else
+                TblContratoRemuneracao tblContratoRemuneracao = await _context.TblContratoRemuneracao.FindAsync(id);
+                if (tblContratoRemuneracao == null)
                 {
                     return NotFound();
                 }
+                return Ok(tblContratoRemuneracao);
             }
             catch (Exception e)
             {
@@ -947,14 +896,7 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (tipoContratos != null)
-                {
-                    return Ok(tipoContratos);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(tipoContratos);
             }
             catch (Exception e)
             {
@@ -966,18 +908,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblTipoContrato>> GetTipoContratoById(int id)
         {
-            TblTipoContrato tblTipoContrato = await _context.TblTipoContrato.FindAsync(id);
-
             try
             {
-                if (tblTipoContrato != null)
-                {
-                    return Ok(tblTipoContrato);
-                }
-                else
+                TblTipoContrato tblTipoContrato = await _context.TblTipoContrato.FindAsync(id);
+                if (tblTipoContrato == null)
                 {
                     return NotFound();
                 }
+                return Ok(tblTipoContrato);
             }
             catch (Exception e)
             {
@@ -1336,14 +1274,7 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (estruturaContratoValidoModel != null)
-                {
-                    return Ok(estruturaContratoValidoModel);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(estruturaContratoValidoModel);
             }
             catch (Exception e)
             {

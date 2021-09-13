@@ -34,19 +34,12 @@ namespace DUDS.Controllers
             {
                 var contas = await _context.TblContas.Where(c => c.Ativo == true).ToListAsync();
 
-                if (contas.Count() == 0)
+                if (contas.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (contas != null)
-                {
-                    return Ok(contas);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(contas);
             }
             catch (InvalidOperationException e)
             {
@@ -58,18 +51,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblContas>> GetContasById(int id)
         {
-            TblContas tblContas = await _context.TblContas.FindAsync(id);
-
             try
             {
-                if (tblContas != null)
+                TblContas tblContas = await _context.TblContas.FindAsync(id);
+                if (tblContas == null)
                 {
-                    return Ok(tblContas);
+                    NotFound();
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(tblContas);
             }
             catch (Exception e)
             {
@@ -281,19 +270,12 @@ namespace DUDS.Controllers
             {
                 var tiposConta = await _context.TblTipoConta.Where(c => c.Ativo == true).OrderBy(c => c.TipoConta).ToListAsync();
 
-                if (tiposConta.Count() == 0)
+                if (tiposConta.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (tiposConta != null)
-                {
-                    return Ok(tiposConta);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(tiposConta);
             }
             catch (InvalidOperationException e)
             {
@@ -305,18 +287,15 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblTipoConta>> GetTipoContasById(int id)
         {
-            TblTipoConta tblContas = await _context.TblTipoConta.FindAsync(id);
-
             try
             {
-                if (tblContas != null)
+                TblTipoConta tblContas = await _context.TblTipoConta.FindAsync(id);
+                if (tblContas == null)
                 {
-                    return Ok(tblContas);
+                    NotFound();
                 }
-                else
-                {
-                    return BadRequest();
-                }
+
+                return Ok(tblContas);
             }
             catch (Exception e)
             {

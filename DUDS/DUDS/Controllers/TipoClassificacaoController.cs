@@ -31,23 +31,16 @@ namespace DUDS.Controllers
             {
                 var tiposClassificacao = await _context.TblTipoClassificacao.Where(c => c.Ativo == true).OrderBy(c => c.Classificacao).ToListAsync();
 
-                if (tiposClassificacao.Count() == 0)
+                if (tiposClassificacao.Count == 0)
                 {
                     return NotFound();
                 }
 
-                if (tiposClassificacao != null)
-                {
-                    return Ok(tiposClassificacao);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(tiposClassificacao);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -55,18 +48,14 @@ namespace DUDS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TblTipoClassificacao>> GetTipoClassificacaoById(int id)
         {
-            TblTipoClassificacao tblTipoClassificacao = await _context.TblTipoClassificacao.FindAsync(id);
-
             try
             {
-                if (tblTipoClassificacao != null)
+                TblTipoClassificacao tblTipoClassificacao = await _context.TblTipoClassificacao.FindAsync(id);
+                if (tblTipoClassificacao == null)
                 {
-                    return Ok(tblTipoClassificacao);
+                    return NotFound();
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(tblTipoClassificacao);
             }
             catch (Exception e)
             {

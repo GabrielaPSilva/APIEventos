@@ -38,18 +38,11 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (pgtosServico != null)
-                {
-                    return Ok(pgtosServico);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(pgtosServico);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -57,18 +50,14 @@ namespace DUDS.Controllers
         [HttpGet("{competencia}/{cod_fundo}")]
         public async Task<ActionResult<TblPagamentoServico>> GetPagamentoServicoByIds(string competencia, int cod_fundo)
         {
-            TblPagamentoServico tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(competencia, cod_fundo);
-
             try
             {
+                TblPagamentoServico tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(competencia, cod_fundo);
                 if (tblPagamentoServico != null)
                 {
-                    return Ok(tblPagamentoServico);
+                    return NotFound();
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(tblPagamentoServico);
             }
             catch (Exception e)
             {
@@ -150,18 +139,11 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (pgtosAdmPfee != null)
-                {
-                    return Ok(pgtosAdmPfee);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(pgtosAdmPfee);
             }
             catch (InvalidOperationException e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -169,18 +151,14 @@ namespace DUDS.Controllers
         [HttpGet("{competencia}/{cod_investidor_distribuidor}/{cod_administrador}/{cod_fundo}")]
         public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfeeByIds(string competencia, int cod_investidor_distribuidor, int cod_administrador, int cod_fundo)
         {
-            TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(competencia, cod_investidor_distribuidor, cod_administrador, cod_fundo);
-
             try
             {
-                if (tblPgtoAdmPfee != null)
+                TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(competencia, cod_investidor_distribuidor, cod_administrador, cod_fundo);
+                if (tblPgtoAdmPfee == null)
                 {
-                    return Ok(tblPgtoAdmPfee);
+                    return NotFound();
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(tblPgtoAdmPfee);
             }
             catch (Exception e)
             {
@@ -383,14 +361,7 @@ namespace DUDS.Controllers
                     return NotFound();
                 }
 
-                if (pagamentoAdmPfeeInvestidor != null)
-                {
-                    return Ok(pagamentoAdmPfeeInvestidor);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(pagamentoAdmPfeeInvestidor);
             }
             catch (InvalidOperationException e)
             {
@@ -410,11 +381,6 @@ namespace DUDS.Controllers
                     .Where(c => c.Competencia == competencia)
                     .AsNoTracking()
                     .ToListAsync();
-
-                if (calculoPagamentoAdminPfee == null)
-                {
-                    return BadRequest();
-                }
 
                 if (calculoPagamentoAdminPfee.Count == 0)
                 {
