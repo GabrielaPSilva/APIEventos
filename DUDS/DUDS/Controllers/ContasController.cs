@@ -26,9 +26,9 @@ namespace DUDS.Controllers
         }
 
         #region Conta
-        // GET: api/Contas/Contas
+        // GET: api/Contas/GetContas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContas>>> Contas()
+        public async Task<ActionResult<IEnumerable<TblContas>>> GetContas()
         {
             try
             {
@@ -54,9 +54,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Contas/GetContas/cod_fundo/cod_tipo_conta
+        // GET: api/Contas/GetContasById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContas>> GetContas(int id)
+        public async Task<ActionResult<TblContas>> GetContasById(int id)
         {
             TblContas tblContas = await _context.TblContas.FindAsync(id);
 
@@ -77,9 +77,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //// GET: api/Contas/GetContasExiste/cod_fundo/cod_investidor/cod_tipo_conta
+        //// GET: api/Contas/GetContasExistsBase/cod_fundo/cod_investidor/cod_tipo_conta
         [HttpGet("{cod_tipo_conta}")]
-        public async Task<ActionResult<TblContas>> GetContasExiste(int cod_fundo, int cod_investidor, int cod_tipo_conta)
+        public async Task<ActionResult<TblContas>> GetContasExistsBase(int cod_fundo, int cod_investidor, int cod_tipo_conta)
         {
             TblContas tblContas = new TblContas();
 
@@ -103,9 +103,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Contas/CadastrarConta/ContaModel
+        //POST: api/Contas/AddConta/ContaModel
         [HttpPost]
-        public async Task<ActionResult<ContaModel>> CadastrarConta(ContaModel tblContaModel)
+        public async Task<ActionResult<ContaModel>> AddConta(ContaModel tblContaModel)
         {
             TblContas itensConta = new TblContas
             {
@@ -135,9 +135,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Conta/EditarConta/id
+        //PUT: api/Conta/UpdateConta/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarConta(int id, ContaModel conta)
+        public async Task<IActionResult> UpdateConta(int id, ContaModel conta)
         {
             try
             {
@@ -173,9 +173,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Conta/DeletarConta/id
+        // DELETE: api/Conta/DeleteConta/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarConta(int id)
+        public async Task<IActionResult> DeleteConta(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contas");
 
@@ -205,9 +205,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Contas/DesativarConta/id
+        // DESATIVA: api/Contas/DisableConta/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarConta(int id)
+        public async Task<IActionResult> DisableConta(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contas");
 
@@ -240,9 +240,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // ATIVAR: api/Contas/DesativarContas/id
+        // ATIVAR: api/Contas/ActivateContas/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarContas(int id)
+        public async Task<IActionResult> ActivateContas(int id)
         {
             TblContas registroContas = await _context.TblContas.FindAsync(id);
 
@@ -273,9 +273,9 @@ namespace DUDS.Controllers
         #endregion
 
         #region Tipo Conta
-        // GET: api/Contas/TipoContas
+        // GET: api/Contas/GetTipoContas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblTipoConta>>> TipoContas()
+        public async Task<ActionResult<IEnumerable<TblTipoConta>>> GetTipoContas()
         {
             try
             {
@@ -301,9 +301,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Contas/TipoContas/id
+        // GET: api/Contas/GetTipoContasById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblTipoConta>> GetTipoContas(int id)
+        public async Task<ActionResult<TblTipoConta>> GetTipoContasById(int id)
         {
             TblTipoConta tblContas = await _context.TblTipoConta.FindAsync(id);
 
@@ -324,9 +324,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Contas/CadastrarTipoConta/TipoContaModel
+        //POST: api/Contas/AddTipoConta/TipoContaModel
         [HttpPost]
-        public async Task<ActionResult<TipoContaModel>> CadastrarTipoConta(TipoContaModel tblTipoContaModel)
+        public async Task<ActionResult<TipoContaModel>> AddTipoConta(TipoContaModel tblTipoContaModel)
         {
             TblTipoConta itensTipoConta = new TblTipoConta
             {
@@ -355,9 +355,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Contas/EditarTipoConta/id
+        //PUT: api/Contas/UpdateTipoConta/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarTipoConta(int id, TipoContaModel tipoConta)
+        public async Task<IActionResult> UpdateTipoConta(int id, TipoContaModel tipoConta)
         {
             try
             {
@@ -389,9 +389,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Contas/DeletarTipoConta/id
+        // DELETE: api/Contas/DeleteTipoConta/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarTipoConta(int id)
+        public async Task<IActionResult> DeleteTipoConta(int id)
         {
             TblTipoConta tblTipoConta = await _context.TblTipoConta.FindAsync(id);
 
@@ -412,9 +412,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Conta/DesativarTipoConta/id
+        // DESATIVA: api/Conta/DisableTipoConta/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarTipoConta(int id)
+        public async Task<IActionResult> DisableTipoConta(int id)
         {
             TblTipoConta registroTipoConta = _context.TblTipoConta.Find(id);
 
@@ -438,9 +438,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // ATIVAR: api/Conta/AtivarTipoConta/id
+        // ATIVAR: api/Conta/ActivateTipoConta/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtivarTipoConta(int id)
+        public async Task<IActionResult> ActivateTipoConta(int id)
         {
             TblTipoConta registroTipoConta = await _context.TblTipoConta.FindAsync(id);
 

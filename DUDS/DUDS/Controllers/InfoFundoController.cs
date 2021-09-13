@@ -32,9 +32,9 @@ namespace DUDS.Controllers
         }
 
         #region Fundo
-        // GET: api/InfoFundo/Fundo
+        // GET: api/InfoFundo/GetFundo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblFundo>>> Fundo()
+        public async Task<ActionResult<IEnumerable<TblFundo>>> GetFundo()
         {
             try
             {
@@ -60,9 +60,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/InfoFundo/GetFundo/id
+        // GET: api/InfoFundo/GetFundoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblFundo>> GetFundo(int id)
+        public async Task<ActionResult<TblFundo>> GetFundoById(int id)
         {
             TblFundo tblFundo = await _context.TblFundo.FindAsync(id);
 
@@ -83,9 +83,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Fundo/GetFundoInativo/cnpj
+        // GET: api/Fundo/GetFundoExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblFundo>> GetFundoInativo(string cnpj)
+        public async Task<ActionResult<TblFundo>> GetFundoExistsBase(string cnpj)
         {
             TblFundo tblFundo = await _context.TblFundo.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
 
@@ -106,9 +106,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/InfoFundo/CadastrarFundo/FundoModel
+        //POST: api/InfoFundo/AddFundo/FundoModel
         [HttpPost]
-        public async Task<ActionResult<FundoModel>> CadastrarFundo(FundoModel tblFundoModel)
+        public async Task<ActionResult<FundoModel>> AddFundo(FundoModel tblFundoModel)
         {
             TblFundo itensFundo = new TblFundo
             {
@@ -163,9 +163,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/InfoFundo/EditarFundo/id
+        //PUT: api/InfoFundo/UpdateFundo/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarFundo(int id, FundoModel fundo)
+        public async Task<IActionResult> UpdateFundo(int id, FundoModel fundo)
         {
             try
             {
@@ -230,9 +230,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/InfoFundo/DeletarFundo/id
+        // DELETE: api/InfoFundo/DeleteFundo/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarFundo(int id)
+        public async Task<IActionResult> DeleteFundo(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
 
@@ -262,9 +262,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/InfoFundo/DesativarFundo/id
+        // DESATIVA: api/InfoFundo/DisableFundo/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarFundo(int id)
+        public async Task<IActionResult> DisableFundo(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
 
@@ -297,6 +297,33 @@ namespace DUDS.Controllers
             }
         }
 
+        // ATIVAR: api/InfoFundo/ActivateFundo/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateFundo(int id)
+        {
+            TblFundo registroFundo = await _context.TblFundo.FindAsync(id);
+
+            if (registroFundo != null)
+            {
+                registroFundo.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroFundo);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
         private bool FundoExists(int id)
         {
             return _context.TblFundo.Any(e => e.Id == id);
@@ -304,9 +331,9 @@ namespace DUDS.Controllers
         #endregion
 
         #region Tipo Estrategia
-        // GET: api/InfoFundo/TipoEstrategia
+        // GET: api/InfoFundo/GetTipoEstrategia
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblTipoEstrategia>>> TipoEstrategia()
+        public async Task<ActionResult<IEnumerable<TblTipoEstrategia>>> GetTipoEstrategia()
         {
             try
             {
@@ -332,9 +359,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/InfoFundo/GetTipoEstrategia/id
+        // GET: api/InfoFundo/GetTipoEstrategiaById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblTipoEstrategia>> GetTipoEstrategia(int id)
+        public async Task<ActionResult<TblTipoEstrategia>> GetTipoEstrategiaById(int id)
         {
             TblTipoEstrategia tblTipoEstrategia = await _context.TblTipoEstrategia.FindAsync(id);
 
@@ -355,9 +382,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/InfoFundo/CadastrarTipoEstrategia/TipoContaModel
+        //POST: api/InfoFundo/AddTipoEstrategia/TipoContaModel
         [HttpPost]
-        public async Task<ActionResult<TipoEstrategiaModel>> CadastrarTipoEstrategia(TipoEstrategiaModel tblTipoEstrategiaModel)
+        public async Task<ActionResult<TipoEstrategiaModel>> AddTipoEstrategia(TipoEstrategiaModel tblTipoEstrategiaModel)
         {
             TblTipoEstrategia itensTipoEstrategia = new TblTipoEstrategia
             {
@@ -385,9 +412,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/InfoFundo/EditarTipoEstrategia/id
+        //PUT: api/InfoFundo/UpdateTipoEstrategia/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarTipoEstrategia(int id, TipoEstrategiaModel tipoEstrategia)
+        public async Task<IActionResult> UpdateTipoEstrategia(int id, TipoEstrategiaModel tipoEstrategia)
         {
             try
             {
@@ -418,9 +445,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/InfoFundo/DeletarTipoEstrategia/id
+        // DELETE: api/InfoFundo/DeleteTipoEstrategia/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarTipoEstrategia(int id)
+        public async Task<IActionResult> DeleteTipoEstrategia(int id)
         {
             TblTipoEstrategia tblTipoEstrategia = await _context.TblTipoEstrategia.FindAsync(id);
 
@@ -441,9 +468,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/InfoFundo/DesativarTipoEstrategia/id
+        // DESATIVA: api/InfoFundo/DisableTipoEstrategia/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarTipoEstrategia(int id)
+        public async Task<IActionResult> DisableTipoEstrategia(int id)
         {
             TblTipoEstrategia registroTipoEstrategia = _context.TblTipoEstrategia.Find(id);
 
@@ -459,6 +486,32 @@ namespace DUDS.Controllers
                 catch (Exception e)
                 {
                     return BadRequest(e);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        // ATIVAR: api/InfoFundo/ActivateTipoEstrategia/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateTipoEstrategia(int id)
+        {
+            TblTipoEstrategia registroTipoEstrategia = await _context.TblTipoEstrategia.FindAsync(id);
+
+            if (registroTipoEstrategia != null)
+            {
+                registroTipoEstrategia.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroTipoEstrategia);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else

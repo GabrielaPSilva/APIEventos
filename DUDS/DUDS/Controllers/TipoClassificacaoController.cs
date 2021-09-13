@@ -23,9 +23,9 @@ namespace DUDS.Controllers
         }
 
         #region Tipo Classificação
-        // GET: api/TipoClassificacao/TipoClassificacaoGestor
+        // GET: api/TipoClassificacao/GetTipoClassificacao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblTipoClassificacao>>> TipoClassificacao()
+        public async Task<ActionResult<IEnumerable<TblTipoClassificacao>>> GetTipoClassificacao()
         {
             try
             {
@@ -51,9 +51,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/TipoClassificacao/GetTipoClassificacao/id
+        // GET: api/TipoClassificacao/GetTipoClassificacaoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblTipoClassificacao>> GetTipoClassificacao(int id)
+        public async Task<ActionResult<TblTipoClassificacao>> GetTipoClassificacaoById(int id)
         {
             TblTipoClassificacao tblTipoClassificacao = await _context.TblTipoClassificacao.FindAsync(id);
 
@@ -74,9 +74,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/TipoClassificacao/CadastrarTipoClassificacao/TipoContaModel
+        //POST: api/TipoClassificacao/AddTipoClassificacao/TipoContaModel
         [HttpPost]
-        public async Task<ActionResult<TipoClassificacaoModel>> CadastrarTipoClassificacao(TipoClassificacaoModel tblTipoClassificacaoModel)
+        public async Task<ActionResult<TipoClassificacaoModel>> AddTipoClassificacao(TipoClassificacaoModel tblTipoClassificacaoModel)
         {
             TblTipoClassificacao itensTipoClassificacao = new TblTipoClassificacao
             {
@@ -104,9 +104,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/TipoClassificacao/EditarTipoClassificacao/id
+        //PUT: api/TipoClassificacao/UpdateTipoClassificacao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarTipoClassificacao(int id, TipoClassificacaoModel tipoClassificacao)
+        public async Task<IActionResult> UpdateTipoClassificacao(int id, TipoClassificacaoModel tipoClassificacao)
         {
             try
             {
@@ -137,9 +137,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/TipoClassificacao/DeletarTipoClassificacao/id
+        // DELETE: api/TipoClassificacao/DeleteTipoClassificacao/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarTipoClassificacao(int id)
+        public async Task<IActionResult> DeleteTipoClassificacao(int id)
         {
             TblTipoClassificacao tblTipoClassificacao = await _context.TblTipoClassificacao.FindAsync(id);
 
@@ -160,9 +160,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/TipoClassificacao/DesativarTipoClassificacao/id
+        // DESATIVA: api/TipoClassificacao/DisableTipoClassificacao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarTipoClassificacao(int id)
+        public async Task<IActionResult> DisableTipoClassificacao(int id)
         {
             TblTipoClassificacao registroTipoClassificacao = _context.TblTipoClassificacao.Find(id);
 
@@ -178,6 +178,32 @@ namespace DUDS.Controllers
                 catch (Exception e)
                 {
                     return BadRequest(e);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        // ATIVAR: api/TipoClassificacao/ActivateTipoClassificacao/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateTipoClassificacao(int id)
+        {
+            TblTipoClassificacao registroTipoClassificacao = await _context.TblTipoClassificacao.FindAsync(id);
+
+            if (registroTipoClassificacao != null)
+            {
+                registroTipoClassificacao.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroTipoClassificacao);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else

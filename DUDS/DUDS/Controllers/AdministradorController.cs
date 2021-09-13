@@ -26,9 +26,9 @@ namespace DUDS.Controllers
             _configService = configService;
         }
 
-        // GET: api/Administrador/Administrador
+        // GET: api/Administrador/GetAdministrador
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblAdministrador>>> Administrador()
+        public async Task<ActionResult<IEnumerable<TblAdministrador>>> GetAdministrador()
         {
             try
             {
@@ -54,9 +54,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Administrador/GetAdministrador/id
+        // GET: api/Administrador/GetAdministradorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblAdministrador>> GetAdministrador(int id)
+        public async Task<ActionResult<TblAdministrador>> GetAdministradorById(int id)
         {
             TblAdministrador tblAdministrador = await _context.TblAdministrador.FindAsync(id);
 
@@ -77,9 +77,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Administrador/GetAdministradorExiste/cnpj
+        // GET: api/Administrador/GetAdministradorExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblAdministrador>> GetAdministradorExiste(string cnpj)
+        public async Task<ActionResult<TblAdministrador>> GetAdministradorExistsBase(string cnpj)
         {
             TblAdministrador tblAdministrador = new TblAdministrador();
 
@@ -111,9 +111,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Administrador/CadastrarAdministrador/AdministradorModel
+        //POST: api/Administrador/AddAdministrador/AdministradorModel
         [HttpPost]
-        public async Task<ActionResult<AdministradorModel>> CadastrarAdministrador(AdministradorModel tblAdministradorModel)
+        public async Task<ActionResult<AdministradorModel>> AddAdministrador(AdministradorModel tblAdministradorModel)
         {
             TblAdministrador itensAdministrador = new TblAdministrador
             {
@@ -138,9 +138,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Administrador/EditarAdministrador/id
+        //PUT: api/Administrador/UpdateAdministrador/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarAdministrador(int id, AdministradorModel administrador)
+        public async Task<IActionResult> UpdateAdministrador(int id, AdministradorModel administrador)
         {
             try
             {
@@ -172,9 +172,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Administrador/DeletarAdministrador/id
+        // DELETE: api/Administrador/DeleteAdministrador/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarAdministrador(int id)
+        public async Task<IActionResult> DeleteAdministrador(int id)
         {
             TblAdministrador tblAdministrador = await _context.TblAdministrador.FindAsync(id);
 
@@ -195,9 +195,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Administrador/DesativarAdministrador/id
+        // DESATIVA: api/Administrador/DisableAdministrador/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarAdministrador(int id)
+        public async Task<IActionResult> DisableAdministrador(int id)
         {
             TblAdministrador registroAdministrador = await _context.TblAdministrador.FindAsync(id);
 
@@ -221,9 +221,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // ATIVAR: api/Administrador/AtivarAdministrador/id
+        // ATIVAR: api/Administrador/ActivateAdministrador/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtivarAdministrador(int id)
+        public async Task<IActionResult> ActivateAdministrador(int id)
         {
             TblAdministrador registroAdministrador = await _context.TblAdministrador.FindAsync(id);
 

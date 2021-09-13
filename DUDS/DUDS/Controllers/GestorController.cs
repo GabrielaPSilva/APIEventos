@@ -26,9 +26,9 @@ namespace DUDS.Controllers
         }
 
         #region Gestor
-        // GET: api/Gestor/Gestor
+        // GET: api/Gestor/GetGestor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblGestor>>> Gestor()
+        public async Task<ActionResult<IEnumerable<TblGestor>>> GetGestor()
         {
             try
             {
@@ -54,9 +54,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Gestor/GetGestor/id
+        // GET: api/Gestor/GetGestorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblGestor>> GetGestor(int id)
+        public async Task<ActionResult<TblGestor>> GetGestorById(int id)
         {
             TblGestor tblGestor = await _context.TblGestor.FindAsync(id);
 
@@ -77,9 +77,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Gestor/GetGestorExiste/cnpj
+        // GET: api/Gestor/GetGestorExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblCustodiante>> GetGestorExiste(string cnpj)
+        public async Task<ActionResult<TblCustodiante>> GetGestorExistsBase(string cnpj)
         {
             TblGestor tblGestor = new TblGestor();
 
@@ -111,9 +111,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Gestor/CadastrarGestor/GestorModel
+        //POST: api/Gestor/AddGestor/GestorModel
         [HttpPost]
-        public async Task<ActionResult<GestorModel>> CadastrarGestor(GestorModel tblGestorModel)
+        public async Task<ActionResult<GestorModel>> AddGestor(GestorModel tblGestorModel)
         {
             TblGestor itensGestor = new TblGestor
             {
@@ -139,9 +139,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Gestor/EditarGestor/id
+        //PUT: api/Gestor/UpdateGestor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarGestor(int id, GestorModel gestor)
+        public async Task<IActionResult> UpdateGestor(int id, GestorModel gestor)
         {
             try
             {
@@ -174,9 +174,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Gestor/DeletarGestor/id
+        // DELETE: api/Gestor/DeleteGestor/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarGestor(int id)
+        public async Task<IActionResult> DeleteGestor(int id)
         {
             var tblGestor = await _context.TblGestor.FindAsync(id);
 
@@ -197,9 +197,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Gestor/DesativarGestor/id
+        // DESATIVA: api/Gestor/DisableGestor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarGestor(int id)
+        public async Task<IActionResult> DisableGestor(int id)
         {
             TblGestor registroGestor = _context.TblGestor.Find(id);
 
@@ -223,9 +223,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // ATIVAR: api/Gestor/AtivarGestor/id
+        // ATIVAR: api/Gestor/ActivateGestor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtivarGestor(int id)
+        public async Task<IActionResult> ActivateGestor(int id)
         {
             TblGestor registroGestor = await _context.TblGestor.FindAsync(id);
 

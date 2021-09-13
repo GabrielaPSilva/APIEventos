@@ -26,9 +26,9 @@ namespace DUDS.Controllers
             _configService = configService;
         }
 
-        // GET: api/Investidor/Investidor
+        // GET: api/Investidor/GetInvestidor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblInvestidor>>> Investidor()
+        public async Task<ActionResult<IEnumerable<TblInvestidor>>> GetInvestidor()
         {
             try
             {
@@ -54,9 +54,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Investidor/GetInvestidor/id
+        // GET: api/Investidor/GetInvestidorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblGestor>> GetInvestidor(int id)
+        public async Task<ActionResult<TblGestor>> GetInvestidorById(int id)
         {
             TblInvestidor tblInvestidor = await _context.TblInvestidor.FindAsync(id);
 
@@ -77,9 +77,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Investidor/GetInvestidorExiste/cnpj
+        // GET: api/Investidor/GetInvestidorExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblInvestidor>> GetInvestidorExiste(string cnpj)
+        public async Task<ActionResult<TblInvestidor>> GetInvestidorExistsBase(string cnpj)
         {
             TblInvestidor tblInvestidor = new TblInvestidor();
 
@@ -104,9 +104,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Investidor/CadastrarInvestidor/InvestidorModel
+        //POST: api/Investidor/AddInvestidor/InvestidorModel
         [HttpPost]
-        public async Task<ActionResult<InvestidorModel>> CadastrarInvestidor(InvestidorModel tblInvestidorModel)
+        public async Task<ActionResult<InvestidorModel>> AddInvestidor(InvestidorModel tblInvestidorModel)
         {
             TblInvestidor itensInvestidor = new TblInvestidor
             {
@@ -135,9 +135,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Investidor/CadastrarInvestidor/List<InvestidorModel>
+        //POST: api/Investidor/AddInvestidores/List<InvestidorModel>
         [HttpPost]
-        public async Task<ActionResult<List<InvestidorModel>>> CadastrarInvestidores(List<InvestidorModel> tblListInvestidorModel)
+        public async Task<ActionResult<List<InvestidorModel>>> AddInvestidores(List<InvestidorModel> tblListInvestidorModel)
         {
             try
             {
@@ -171,9 +171,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Investidor/EditarInvestidor/id
+        //PUT: api/Investidor/UpdateInvestidor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarInvestidor(int id, InvestidorModel investidor)
+        public async Task<IActionResult> UpdateInvestidor(int id, InvestidorModel investidor)
         {
             try
             {
@@ -209,9 +209,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Investidor/DeletarInvestidor/id
+        // DELETE: api/Investidor/DeleteInvestidor/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarInvestidor(int id)
+        public async Task<IActionResult> DeleteInvestidor(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_investidor");
 
@@ -241,9 +241,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Investidor/DesativarInvestidor/id
+        // DESATIVA: api/Investidor/DisableInvestidor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarInvestidor(int id)
+        public async Task<IActionResult> DisableInvestidor(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_investidor");
 
@@ -276,15 +276,41 @@ namespace DUDS.Controllers
             }
         }
 
+        // ATIVAR: api/Investidor/ActivateInvestidor/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateInvestidor(int id)
+        {
+            TblInvestidor registroInvestidor = await _context.TblInvestidor.FindAsync(id);
+
+            if (registroInvestidor != null)
+            {
+                registroInvestidor.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroInvestidor);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         private bool InvestidorExists(int id)
         {
             return _context.TblInvestidor.Any(e => e.Id == id);
         }
 
         #region Investidor Distribuidor
-        // GET: api/Investidor/InvestidorDistribuidor
+        // GET: api/Investidor/GetInvestidorDistribuidor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblInvestidorDistribuidor>>> InvestidorDistribuidor()
+        public async Task<ActionResult<IEnumerable<TblInvestidorDistribuidor>>> GetInvestidorDistribuidor()
         {
             try
             {
@@ -310,9 +336,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Investidor/GetInvestidorDistribuidor/cod_investidor/cod_distribuidor/cod_administrador
+        // GET: api/Investidor/GetInvestidorDistribuidorByIds/cod_investidor/cod_distribuidor/cod_administrador
         [HttpGet("{cod_investidor}/{cod_distribuidor}/{cod_administrador}")]
-        public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidor(int cod_investidor, int cod_distribuidor, int cod_administrador)
+        public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidorByIds(int cod_investidor, int cod_distribuidor, int cod_administrador)
         {
             TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(cod_investidor, cod_distribuidor, cod_administrador);
 
@@ -333,9 +359,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Investidor/CadastrarInvestidorDistribuidor/InvestidorDistribuidorModel
+        //POST: api/Investidor/AddInvestidorDistribuidor/InvestidorDistribuidorModel
         [HttpPost]
-        public async Task<ActionResult<InvestidorDistribuidorModel>> CadastrarInvestidorDistribuidor(InvestidorDistribuidorModel tblInvestidorDistribuidorModel)
+        public async Task<ActionResult<InvestidorDistribuidorModel>> AddInvestidorDistribuidor(InvestidorDistribuidorModel tblInvestidorDistribuidorModel)
         {
             TblInvestidorDistribuidor itensInvestidorDistribuidor = new TblInvestidorDistribuidor
             {
@@ -366,9 +392,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Investidor/CadastrarInvestidorDistribuidor/List<InvestidorDistribuidorModel>
+        //POST: api/Investidor/AddInvestidorDistribuidores/List<InvestidorDistribuidorModel>
         [HttpPost]
-        public async Task<ActionResult<List<InvestidorDistribuidorModel>>> CadastrarInvestidorDistribuidores(List<InvestidorDistribuidorModel> tblListInvestidorDistribuidorModel)
+        public async Task<ActionResult<List<InvestidorDistribuidorModel>>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> tblListInvestidorDistribuidorModel)
         {
             try
             {
@@ -400,9 +426,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Investidor/EditarInvestidorDistribuidor/id
+        //PUT: api/Investidor/UpdateInvestidorDistribuidor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarInvestidorDistribuidor(int id, InvestidorDistribuidorModel investidorDistribuidor)
+        public async Task<IActionResult> UpdateInvestidorDistribuidor(int id, InvestidorDistribuidorModel investidorDistribuidor)
         {
             try
             {
@@ -436,9 +462,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Investidor/DeletarInvestidorDistribuidor/id
+        // DELETE: api/Investidor/DeleteInvestidorDistribuidor/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarInvestidorDistribuidor(int id)
+        public async Task<IActionResult> DeleteInvestidorDistribuidor(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_investidor_distribuidor");
 

@@ -25,9 +25,9 @@ namespace DUDS.Controllers
         }
 
         #region Pagamento Servico
-        // GET: api/Pagamentos/PagamentoServico
+        // GET: api/Pagamentos/GetPagamentoServico
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblPagamentoServico>>> PagamentoServico()
+        public async Task<ActionResult<IEnumerable<TblPagamentoServico>>> GetPagamentoServico()
         {
             try
             {
@@ -53,9 +53,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Pagamentos/GetPagamentoServico/competencia/cod_fundo
+        // GET: api/Pagamentos/GetPagamentoServicoByIds/competencia/cod_fundo
         [HttpGet("{competencia}/{cod_fundo}")]
-        public async Task<ActionResult<TblPagamentoServico>> GetPagamentoServico(string competencia, int cod_fundo)
+        public async Task<ActionResult<TblPagamentoServico>> GetPagamentoServicoByIds(string competencia, int cod_fundo)
         {
             TblPagamentoServico tblPagamentoServico = await _context.TblPagamentoServico.FindAsync(competencia, cod_fundo);
 
@@ -76,9 +76,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Pagamentos/CadastrarPagamentoServico/List<PagamentoServicoModel>
+        //POST: api/Pagamentos/AddPagamentoServico/List<PagamentoServicoModel>
         [HttpPost]
-        public async Task<ActionResult<PagamentoServicoModel>> CadastrarPagamentoServico(List<PagamentoServicoModel> tblPagamentoServicoModel)
+        public async Task<ActionResult<PagamentoServicoModel>> AddPagamentoServico(List<PagamentoServicoModel> tblPagamentoServicoModel)
         {
             List<TblPagamentoServico> listaPagamentosServico = new List<TblPagamentoServico>();
             TblPagamentoServico itensPagamentoServico = new TblPagamentoServico();
@@ -112,9 +112,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Pagamentos/DeletarPagamentoServico/competencia
+        // DELETE: api/Pagamentos/DeletePagamentoServico/competencia
         [HttpDelete("{competencia}")]
-        public async Task<ActionResult<IEnumerable<TblPagamentoServico>>> DeletarPagamentoServico(string competencia)
+        public async Task<ActionResult<IEnumerable<TblPagamentoServico>>> DeletePagamentoServico(string competencia)
         {
             IList<TblPagamentoServico> tblPagamentoServico = await _context.TblPagamentoServico.Where(c => c.Competencia == competencia).ToListAsync();
 
@@ -137,9 +137,9 @@ namespace DUDS.Controllers
         #endregion
 
         #region Pagamento Admin Pfee
-        // GET: api/Pagamentos/PgtoAdmPfee
+        // GET: api/Pagamentos/GetPgtoAdmPfee
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> PgtoAdmPfee()
+        public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> GetPgtoAdmPfee()
         {
             try
             {
@@ -165,9 +165,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Pagamentos/GetPgtoAdmPfee/competencia/cod_investidor_distribuidor/cod_administrador/cod_fundo
+        // GET: api/Pagamentos/GetPgtoAdmPfeeByIds/competencia/cod_investidor_distribuidor/cod_administrador/cod_fundo
         [HttpGet("{competencia}/{cod_investidor_distribuidor}/{cod_administrador}/{cod_fundo}")]
-        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfee(string competencia, int cod_investidor_distribuidor, int cod_administrador, int cod_fundo)
+        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfeeByIds(string competencia, int cod_investidor_distribuidor, int cod_administrador, int cod_fundo)
         {
             TblPgtoAdmPfee tblPgtoAdmPfee = await _context.TblPgtoAdmPfee.FindAsync(competencia, cod_investidor_distribuidor, cod_administrador, cod_fundo);
 
@@ -188,9 +188,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Pagamentos/CadastrarPagamentoAdminPfee/List<PagamentoAdminPfeeModel>
+        //POST: api/Pagamentos/AddPagamentoAdminPfee/List<PagamentoAdminPfeeModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<PagamentoAdminPfeeModel>>> CadastrarPagamentoAdminPfee(List<PagamentoAdminPfeeModel> tblPagamentoAdminPfeeModel)
+        public async Task<ActionResult<IEnumerable<PagamentoAdminPfeeModel>>> AddPagamentoAdminPfee(List<PagamentoAdminPfeeModel> tblPagamentoAdminPfeeModel)
         {
             List<TblPgtoAdmPfee> listaPagamentosAdminPfee = new List<TblPgtoAdmPfee>();
             // TblPgtoAdmPfee itensPagamentoAdminPfee = new TblPgtoAdmPfee();
@@ -225,9 +225,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Pagamentos/DeletarPagamentoAdminPfee/competencia
+        // DELETE: api/Pagamentos/DeletePagamentoAdminPfee/competencia
         [HttpDelete("{competencia}")]
-        public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> DeletarPagamentoAdminPfee(string competencia)
+        public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> DeletePagamentoAdminPfee(string competencia)
         {
             IList<TblPgtoAdmPfee> tblPagamentoAdminPfee = await _context.TblPgtoAdmPfee.Where(c => c.Competencia == competencia).ToListAsync();
 
@@ -248,9 +248,12 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Pagamentos/PgtoAdmPfeeInvestidor
+        #endregion
+
+        #region Pagamento Admin Pfee Investidor
+        // GET: api/Pagamentos/GetPgtoAdmPfeeInvestidor
         [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<PagamentoAdmPfeeInvestidorModel>>> PgtoAdmPfeeInvestidor(string competencia)
+        public async Task<ActionResult<IEnumerable<PagamentoAdmPfeeInvestidorModel>>> GetPgtoAdmPfeeInvestidor(string competencia)
         {
             try
             {
@@ -394,13 +397,41 @@ namespace DUDS.Controllers
                 return BadRequest(e);
             }
         }
-
         #endregion
 
         #region Calculo Pagamento Adm Pfee
-        //POST: api/Pagamentos/CadastrarCalculoPagamentoAdminPfee/List<CalculoPgtoAdmPfeeModel>
+        // GET: api/Pagamentos/GetCalculoPagamentoAdminPfee
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<TblCalculoPgtoAdmPfee>>> GetCalculoPagamentoAdminPfee(string competencia)
+        {
+            try
+            {
+                List<TblCalculoPgtoAdmPfee> calculoPagamentoAdminPfee = await _context.TblCalculoPgtoAdmPfee
+                    .Where(c => c.Competencia == competencia)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                if (calculoPagamentoAdminPfee == null)
+                {
+                    return BadRequest();
+                }
+
+                if (calculoPagamentoAdminPfee.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(calculoPagamentoAdminPfee);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //POST: api/Pagamentos/AddCalculoPagamentoAdminPfee/List<CalculoPgtoAdmPfeeModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<CalculoPgtoAdmPfeeModel>>> CadastrarCalculoPagamentoAdminPfee(List<CalculoPgtoAdmPfeeModel> tblCalculoPgtoAdmPfeeModel)
+        public async Task<ActionResult<IEnumerable<CalculoPgtoAdmPfeeModel>>> AddCalculoPagamentoAdminPfee(List<CalculoPgtoAdmPfeeModel> tblCalculoPgtoAdmPfeeModel)
         {
             List<TblCalculoPgtoAdmPfee> listaCalculoPagamentosAdminPfee = new List<TblCalculoPgtoAdmPfee>();
 
@@ -437,35 +468,6 @@ namespace DUDS.Controllers
                 return Ok(listaCalculoPagamentosAdminPfee);
             }
             catch (Exception e)
-            {
-                return BadRequest(e);
-            }
-        }
-
-        // GET: api/Pagamentos/GetCalculoPagamentoAdminPfee
-        [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<TblCalculoPgtoAdmPfee>>> GetCalculoPagamentoAdminPfee(string competencia)
-        {
-            try
-            {
-                List<TblCalculoPgtoAdmPfee> calculoPagamentoAdminPfee = await _context.TblCalculoPgtoAdmPfee
-                    .Where(c => c.Competencia == competencia)
-                    .AsNoTracking()
-                    .ToListAsync();
-
-                if (calculoPagamentoAdminPfee == null)
-                {
-                    return BadRequest();
-                }
-
-                if (calculoPagamentoAdminPfee.Count == 0)
-                {
-                    return NotFound();
-                }
-
-                return Ok(calculoPagamentoAdminPfee);
-            }
-            catch (InvalidOperationException e)
             {
                 return BadRequest(e);
             }

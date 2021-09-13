@@ -26,9 +26,9 @@ namespace DUDS.Controllers
         }
 
         #region Condição Remuneração
-        // GET: api/Condicao/CondicaoRemuneracao
+        // GET: api/Condicao/GetCondicaoRemuneracao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblCondicaoRemuneracao>>> CondicaoRemuneracao()
+        public async Task<ActionResult<IEnumerable<TblCondicaoRemuneracao>>> GetCondicaoRemuneracao()
         {
             try
             {
@@ -54,9 +54,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Condicao/GetCondicaoRemuneracao/id
+        // GET: api/Condicao/GetCondicaoRemuneracaoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblCondicaoRemuneracao>> GetCondicaoRemuneracao(int id)
+        public async Task<ActionResult<TblCondicaoRemuneracao>> GetCondicaoRemuneracaoById(int id)
         {
             TblCondicaoRemuneracao tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
 
@@ -77,9 +77,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Condicao/CadastrarCondicaoRemuneracao/CondicaoRemuneracaoModel
+        //POST: api/Condicao/AddCondicaoRemuneracao/CondicaoRemuneracaoModel
         [HttpPost]
-        public async Task<ActionResult<CondicaoRemuneracaoModel>> CadastrarCondicaoRemuneracao(CondicaoRemuneracaoModel tblCondicaoRemuneracaoModel)
+        public async Task<ActionResult<CondicaoRemuneracaoModel>> AddCondicaoRemuneracao(CondicaoRemuneracaoModel tblCondicaoRemuneracaoModel)
         {
             TblCondicaoRemuneracao itensCondicaoRemuneracao = new TblCondicaoRemuneracao
             {
@@ -109,9 +109,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Condicao/EditarCondicaoRemuneracao/id
+        //PUT: api/Condicao/UpdateCondicaoRemuneracao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarCondicaoRemuneracao(int id, CondicaoRemuneracaoModel condicaoRemuneracao)
+        public async Task<IActionResult> UpdateCondicaoRemuneracao(int id, CondicaoRemuneracaoModel condicaoRemuneracao)
         {
             try
             {
@@ -148,9 +148,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Condicao/DeletarCondicaoRemuneracao/id
+        // DELETE: api/Condicao/DeleteCondicaoRemuneracao/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarCondicaoRemuneracao(int id)
+        public async Task<IActionResult> DeleteCondicaoRemuneracao(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_condicao_remuneracao");
 
@@ -180,9 +180,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Condicao/DesativarCondicaoRemuneracao/id
+        // DESATIVA: api/Condicao/DisableCondicaoRemuneracao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarCondicaoRemuneracao(int id)
+        public async Task<IActionResult> DisableCondicaoRemuneracao(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_condicao_remuneracao");
 
@@ -215,6 +215,32 @@ namespace DUDS.Controllers
             }
         }
 
+        // ATIVAR: api/Condicao/ActivateCondicaoRemuneracao/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateCondicaoRemuneracao(int id)
+        {
+            TblCondicaoRemuneracao registroCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
+
+            if (registroCondicaoRemuneracao != null)
+            {
+                registroCondicaoRemuneracao.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroCondicaoRemuneracao);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         private bool CondicaoRemuneracaoExists(int id)
         {
             return _context.TblCondicaoRemuneracao.Any(e => e.Id == id);
@@ -223,9 +249,9 @@ namespace DUDS.Controllers
 
         #region Tipo Condição
 
-        // GET: api/Condicao/TipoCondicao
+        // GET: api/Condicao/GetTipoCondicao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblTipoCondicao>>> TipoCondicao()
+        public async Task<ActionResult<IEnumerable<TblTipoCondicao>>> GetTipoCondicao()
         {
             try
             {
@@ -251,9 +277,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Condicao/GetTipoCondicao/id
+        // GET: api/Condicao/GetTipoCondicaoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblTipoCondicao>> GetTipoCondicao(int id)
+        public async Task<ActionResult<TblTipoCondicao>> GetTipoCondicaoById(int id)
         {
             TblTipoCondicao tblTipoCondicao = await _context.TblTipoCondicao.FindAsync(id);
 
@@ -274,9 +300,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Condicao/CadastrarTipoCondicao/TipoCondicaoModel
+        //POST: api/Condicao/AddTipoCondicao/TipoCondicaoModel
         [HttpPost]
-        public async Task<ActionResult<TipoCondicaoModel>> CadastrarTipoCondicao(TipoCondicaoModel tblTipoCondicaoModel)
+        public async Task<ActionResult<TipoCondicaoModel>> AddTipoCondicao(TipoCondicaoModel tblTipoCondicaoModel)
         {
             TblTipoCondicao itensTipoCondicao = new TblTipoCondicao
             {
@@ -300,9 +326,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Condicao/EditarTipoCondicao/id
+        //PUT: api/Condicao/UpdateTipoCondicao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarTipoCondicao(int id, TipoCondicaoModel tipoCondicao)
+        public async Task<IActionResult> UpdateTipoCondicao(int id, TipoCondicaoModel tipoCondicao)
         {
             try
             {
@@ -333,9 +359,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Condicao/DeletarTipoCondicao/id
+        // DELETE: api/Condicao/DeleteTipoCondicao/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarTipoCondicao(int id)
+        public async Task<IActionResult> DeleteTipoCondicao(int id)
         {
             TblTipoCondicao tblTipoCondicao = await _context.TblTipoCondicao.FindAsync(id);
 
@@ -356,9 +382,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Condicao/DesativaTipoCondicao/id
+        // DESATIVA: api/Condicao/DisableTipoCondicao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativaTipoCondicao(int id)
+        public async Task<IActionResult> DisableTipoCondicao(int id)
         {
             TblTipoCondicao registroTipoCondicao = _context.TblTipoCondicao.Find(id);
 
@@ -374,6 +400,32 @@ namespace DUDS.Controllers
                 catch (Exception e)
                 {
                     return BadRequest(e);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        // ATIVAR: api/Condicao/ActivateTipoCondicao/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateTipoCondicao(int id)
+        {
+            TblTipoCondicao registroTipoCondicao = await _context.TblTipoCondicao.FindAsync(id);
+
+            if (registroTipoCondicao != null)
+            {
+                registroTipoCondicao.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroTipoCondicao);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
                 }
             }
             else

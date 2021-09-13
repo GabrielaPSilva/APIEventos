@@ -20,9 +20,9 @@ namespace DUDS.Controllers
             _context = context;
         }
 
-        // GET: api/Logger/GetLogErros/id
+        // GET: api/Logger/GetLogErroById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblLogErros>> GetLogErros(int id)
+        public async Task<ActionResult<TblLogErros>> GetLogErroById(int id)
         {
             TblLogErros tblLogErros = await _context.TblLogErros.FindAsync(id);
 
@@ -43,9 +43,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Logger/CadastrarLogErro/LogErrosModel
+        //POST: api/Logger/AddLogErro/LogErrosModel
         [HttpPost]
-        public async Task<ActionResult<LogErrosModel>> CadastrarLogErro(LogErrosModel tblLogErros)
+        public async Task<ActionResult<LogErrosModel>> AddLogErro(LogErrosModel tblLogErros)
         {
             TblLogErros itensLogger = new TblLogErros
             {
@@ -64,7 +64,7 @@ namespace DUDS.Controllers
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(
-                    nameof(GetLogErros),
+                    nameof(GetLogErroById),
                     new { id = itensLogger.Id },
                      Ok(itensLogger));
             }

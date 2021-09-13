@@ -27,9 +27,9 @@ namespace DUDS.Controllers
         }
 
         #region Contrato
-        // GET: api/Contrato/Contrato
+        // GET: api/Contrato/GetContrato
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContrato>>> Contrato()
+        public async Task<ActionResult<IEnumerable<TblContrato>>> GetContrato()
         {
             try
             {
@@ -55,9 +55,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Contrato/GetContrato/id
+        // GET: api/Contrato/GetContratoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContrato>> GetContrato(int id)
+        public async Task<ActionResult<TblContrato>> GetContratoById(int id)
         {
             TblContrato tblContrato = await _context.TblContrato.FindAsync(id);
 
@@ -78,9 +78,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Contrato/CadastrarContrato/ContratoModel
+        //POST: api/Contrato/AddContrato/ContratoModel
         [HttpPost]
-        public async Task<ActionResult<ContratoModel>> CadastrarContrato(ContratoModel tblContratoModel)
+        public async Task<ActionResult<ContratoModel>> AddContrato(ContratoModel tblContratoModel)
         {
             TblContrato itensContrato = new TblContrato
             {
@@ -106,9 +106,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Contrato/EditarContrato/id
+        //PUT: api/Contrato/UpdateContrato/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarContrato(int id, ContratoModel contrato)
+        public async Task<IActionResult> UpdateContrato(int id, ContratoModel contrato)
         {
             try
             {
@@ -141,9 +141,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Contrato/DeletarContrato/id
+        // DELETE: api/Contrato/DeleteContrato/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarContrato(int id)
+        public async Task<IActionResult> DeleteContrato(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contrato");
 
@@ -173,9 +173,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Contrato/DesativarContrato/id
+        // DESATIVA: api/Contrato/DisableContrato/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarContrato(int id)
+        public async Task<IActionResult> DisableContrato(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contrato");
 
@@ -208,6 +208,32 @@ namespace DUDS.Controllers
             }
         }
 
+        // ATIVAR: api/Contrato/ActivateContrato/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateContrato(int id)
+        {
+            TblContrato registroContrato = await _context.TblContrato.FindAsync(id);
+
+            if (registroContrato != null)
+            {
+                registroContrato.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroContrato);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         private bool ContratoExists(int id)
         {
             return _context.TblContrato.Any(e => e.Id == id);
@@ -216,9 +242,9 @@ namespace DUDS.Controllers
 
         #region Sub Contrato
 
-        // GET: api/Contrato/SubContrato
+        // GET: api/Contrato/GetSubContrato
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblSubContrato>>> SubContrato()
+        public async Task<ActionResult<IEnumerable<TblSubContrato>>> GetSubContrato()
         {
             try
             {
@@ -244,9 +270,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Contrato/GetSubContrato/
+        // GET: api/Contrato/GetSubContratoById/
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblSubContrato>> GetSubContrato(int id)
+        public async Task<ActionResult<TblSubContrato>> GetSubContratoById(int id)
         {
             TblSubContrato tblSubContrato = await _context.TblSubContrato.FindAsync(id);
 
@@ -267,9 +293,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Contrato/CadastrarSubContrato/SubContratoModel
+        //POST: api/Contrato/AddSubContrato/SubContratoModel
         [HttpPost]
-        public async Task<ActionResult<SubContratoModel>> CadastrarSubContrato(SubContratoModel tblSubContratoModel)
+        public async Task<ActionResult<SubContratoModel>> AddSubContrato(SubContratoModel tblSubContratoModel)
         {
             TblSubContrato itensSubContrato = new TblSubContrato
             {
@@ -302,9 +328,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Contrato/EditarSubContrato/id
+        //PUT: api/Contrato/UpdateSubContrato/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarSubContrato(int id, SubContratoModel subContrato)
+        public async Task<IActionResult> UpdateSubContrato(int id, SubContratoModel subContrato)
         {
             try
             {
@@ -345,9 +371,9 @@ namespace DUDS.Controllers
         }
 
 
-        // DELETE: api/Contrato/DeletarSubContrato/id
+        // DELETE: api/Contrato/DeleteSubContrato/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarSubContrato(int id)
+        public async Task<IActionResult> DeleteSubContrato(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_sub_contrato");
 
@@ -377,9 +403,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Contrato/DesativarSubContrato/id
+        // DESATIVA: api/Contrato/DisableSubContrato/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarSubContrato(int id)
+        public async Task<IActionResult> DisableSubContrato(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_sub_contrato");
 
@@ -412,6 +438,32 @@ namespace DUDS.Controllers
             }
         }
 
+        // ATIVAR: api/Administrador/ActivateSubContrato/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateSubContrato(int id)
+        {
+            TblSubContrato registroSubContrato = await _context.TblSubContrato.FindAsync(id);
+
+            if (registroSubContrato != null)
+            {
+                registroSubContrato.Status = "Ativo";
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroSubContrato);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         private bool SubContratoExists(int id)
         {
             return _context.TblSubContrato.Any(e => e.Id == id);
@@ -420,9 +472,9 @@ namespace DUDS.Controllers
         #endregion
 
         #region Contrato Alocador
-        // GET: api/Contrato/ContratoAlocador
+        // GET: api/Contrato/GetContratoAlocador
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoAlocador>>> ContratoAlocador()
+        public async Task<ActionResult<IEnumerable<TblContratoAlocador>>> GetContratoAlocador()
         {
             try
             {
@@ -448,9 +500,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Contrato/GetContratoAlocador/id
+        // GET: api/Contrato/GetContratoAlocadorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoAlocador>> GetContratoAlocador(int id)
+        public async Task<ActionResult<TblContratoAlocador>> GetContratoAlocadorById(int id)
         {
             TblContratoAlocador tblContratoAlocador = await _context.TblContratoAlocador.FindAsync(id);
 
@@ -471,9 +523,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Contrato/CadastrarContratoAlocador/ContratoAlocadorModel
+        //POST: api/Contrato/AddContratoAlocador/ContratoAlocadorModel
         [HttpPost]
-        public async Task<ActionResult<ContratoAlocadorModel>> CadastrarContratoAlocador(ContratoAlocadorModel tblContratoAlocadorModel)
+        public async Task<ActionResult<ContratoAlocadorModel>> AddContratoAlocador(ContratoAlocadorModel tblContratoAlocadorModel)
         {
             TblContratoAlocador itensContratoAlocador = new TblContratoAlocador
             {
@@ -499,9 +551,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Contrato/EditarContratoAlocador/id
+        //PUT: api/Contrato/UpdateContratoAlocador/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarContratoAlocador(int id, ContratoAlocadorModel contratoAlocador)
+        public async Task<IActionResult> UpdateContratoAlocador(int id, ContratoAlocadorModel contratoAlocador)
         {
             try
             {
@@ -535,9 +587,9 @@ namespace DUDS.Controllers
         }
 
 
-        // DELETE: api/Contrato/DeletarContratoAlocador/id
+        // DELETE: api/Contrato/DeleteContratoAlocador/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarContratoAlocador(int id)
+        public async Task<IActionResult> DeleteContratoAlocador(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contrato_alocador");
 
@@ -574,9 +626,9 @@ namespace DUDS.Controllers
         #endregion
 
         #region Contrato Fundo
-        // GET: api/Contrato/ContratoFundo
+        // GET: api/Contrato/GetContratoFundo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoFundo>>> ContratoFundo()
+        public async Task<ActionResult<IEnumerable<TblContratoFundo>>> GetContratoFundo()
         {
             try
             {
@@ -602,9 +654,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Contrato/GetContratoFundo/id
+        // GET: api/Contrato/GetContratoFundoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoFundo>> GetContratoFundo(int id)
+        public async Task<ActionResult<TblContratoFundo>> GetContratoFundoById(int id)
         {
             TblContratoFundo tblContratoFundo = await _context.TblContratoFundo.FindAsync(id);
 
@@ -625,9 +677,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Contrato/CadastrarContratoFundo/ContratoFundoModel
+        //POST: api/Contrato/AddContratoFundo/ContratoFundoModel
         [HttpPost]
-        public async Task<ActionResult<ContratoFundoModel>> CadastrarContratoFundo(ContratoFundoModel tblContratoFundoModel)
+        public async Task<ActionResult<ContratoFundoModel>> AddContratoFundo(ContratoFundoModel tblContratoFundoModel)
         {
             TblContratoFundo itensContratoFundo = new TblContratoFundo
             {
@@ -653,9 +705,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Contrato/EditarContratoFundo/id
+        //PUT: api/Contrato/UpdateContratoFundo/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarContratoFundo(int id, ContratoFundoModel contratoFundo)
+        public async Task<IActionResult> UpdateContratoFundo(int id, ContratoFundoModel contratoFundo)
         {
             try
             {
@@ -689,9 +741,9 @@ namespace DUDS.Controllers
         }
 
 
-        // DELETE: api/Contrato/DeletarContratoFundo/id
+        // DELETE: api/Contrato/DeleteContratoFundo/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarContratoFundo(int id)
+        public async Task<IActionResult> DeleteContratoFundo(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contrato_fundo");
 
@@ -728,9 +780,9 @@ namespace DUDS.Controllers
         #endregion
 
         #region Contrato Remuneração
-        // GET: api/Contrato/ContratoRemuneracao
+        // GET: api/Contrato/GetContratoRemuneracao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoRemuneracao>>> ContratoRemuneracao()
+        public async Task<ActionResult<IEnumerable<TblContratoRemuneracao>>> GetContratoRemuneracao()
         {
             try
             {
@@ -756,9 +808,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Contrato/GetContratoRemuneracao/id
+        // GET: api/Contrato/GetContratoRemuneracaoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoRemuneracao>> GetContratoRemuneracao(int id)
+        public async Task<ActionResult<TblContratoRemuneracao>> GetContratoRemuneracaoById(int id)
         {
             TblContratoRemuneracao tblContratoRemuneracao = await _context.TblContratoRemuneracao.FindAsync(id);
 
@@ -779,9 +831,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Contrato/CadastrarContratoRemuneracao/ContratoRemuneracaoModel
+        //POST: api/Contrato/AddContratoRemuneracao/ContratoRemuneracaoModel
         [HttpPost]
-        public async Task<ActionResult<ContratoRemuneracaoModel>> CadastrarContratoRemuneracao(ContratoRemuneracaoModel tblContratoRemuneracaoModel)
+        public async Task<ActionResult<ContratoRemuneracaoModel>> AddContratoRemuneracao(ContratoRemuneracaoModel tblContratoRemuneracaoModel)
         {
             TblContratoRemuneracao itensContratoRemuneracao = new TblContratoRemuneracao
             {
@@ -807,9 +859,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Contrato/EditarContratoRemuneracao/id
+        //PUT: api/Contrato/UpdateContratoRemuneracao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarContratoRemuneracao(int id, ContratoRemuneracaoModel contratoRemuneracao)
+        public async Task<IActionResult> UpdateContratoRemuneracao(int id, ContratoRemuneracaoModel contratoRemuneracao)
         {
             try
             {
@@ -843,9 +895,9 @@ namespace DUDS.Controllers
         }
 
 
-        // DELETE: api/Contrato/DeletarContratoRemuneracao/id
+        // DELETE: api/Contrato/DeleteContratoRemuneracao/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarContratoRemuneracao(int id)
+        public async Task<IActionResult> DeleteContratoRemuneracao(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contrato_remuneracao");
 
@@ -882,9 +934,9 @@ namespace DUDS.Controllers
         #endregion
 
         #region Tipo Contrato
-        // GET: api/Contrato/TipoContrato
+        // GET: api/Contrato/GetTipoContrato
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblTipoContrato>>> TipoContrato()
+        public async Task<ActionResult<IEnumerable<TblTipoContrato>>> GetTipoContrato()
         {
             try
             {
@@ -910,9 +962,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Contrato/GetTipoContrato/id
+        // GET: api/Contrato/GetTipoContratoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblTipoContrato>> GetTipoContrato(int id)
+        public async Task<ActionResult<TblTipoContrato>> GetTipoContratoById(int id)
         {
             TblTipoContrato tblTipoContrato = await _context.TblTipoContrato.FindAsync(id);
 
@@ -933,9 +985,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Contrato/CadastrarTipoContrato/TipoContratoModel
+        //POST: api/Contrato/AddTipoContrato/TipoContratoModel
         [HttpPost]
-        public async Task<ActionResult<TipoContratoModel>> CadastrarTipoContrato(TipoContratoModel tblTipoContratoModel)
+        public async Task<ActionResult<TipoContratoModel>> AddTipoContrato(TipoContratoModel tblTipoContratoModel)
         {
             TblTipoContrato itensTipoContrato = new TblTipoContrato
             {
@@ -959,9 +1011,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Contrato/EditarTipoContrato/id
+        //PUT: api/Contrato/UpdateTipoContrato/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarTipoContrato(int id, TipoContratoModel tipoContrato)
+        public async Task<IActionResult> UpdateTipoContrato(int id, TipoContratoModel tipoContrato)
         {
             try
             {
@@ -992,9 +1044,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Contrato/DeletarTipoContrato/id
+        // DELETE: api/Contrato/DeleteTipoContrato/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarTipoContrato(int id)
+        public async Task<IActionResult> DeleteTipoContrato(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_contrato");
 
@@ -1024,9 +1076,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Contrato/DesativarTipoContrato/id
+        // DESATIVA: api/Contrato/DisableTipoContrato/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarTipoContrato(int id)
+        public async Task<IActionResult> DisableTipoContrato(int id)
         {
             bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_contrato");
 
@@ -1056,6 +1108,32 @@ namespace DUDS.Controllers
             else
             {
                 return BadRequest();
+            }
+        }
+
+        // ATIVAR: api/Contrato/ActivateTipoContrato/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateTipoContrato(int id)
+        {
+            TblTipoContrato registroTipoContrato = await _context.TblTipoContrato.FindAsync(id);
+
+            if (registroTipoContrato != null)
+            {
+                registroTipoContrato.Ativo = true;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return Ok(registroTipoContrato);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
             }
         }
 

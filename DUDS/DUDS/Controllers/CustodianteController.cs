@@ -25,9 +25,9 @@ namespace DUDS.Controllers
             _configService = configService;
         }
 
-        // GET: api/Custodiante/Custodiante
+        // GET: api/Custodiante/GetCustodiante
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblCustodiante>>> Custodiante()
+        public async Task<ActionResult<IEnumerable<TblCustodiante>>> GetCustodiante()
         {
             try
             {
@@ -53,9 +53,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Custodiante/GetCustodiante/id
+        // GET: api/Custodiante/GetCustodianteById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblCustodiante>> GetCustodiante(int id)
+        public async Task<ActionResult<TblCustodiante>> GetCustodianteById(int id)
         {
             TblCustodiante tblCustodiante = await _context.TblCustodiante.FindAsync(id);
 
@@ -76,9 +76,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Custodiante/GetCustodianteExiste/cnpj
+        // GET: api/Custodiante/GetCustodianteExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblCustodiante>> GetCustodianteExiste(string cnpj)
+        public async Task<ActionResult<TblCustodiante>> GetCustodianteExistsBase(string cnpj)
         {
             TblCustodiante tblCustodiante = new TblCustodiante();
 
@@ -110,9 +110,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Custodiante/CadastrarCustodiante/CustodianteModel
+        //POST: api/Custodiante/AddCustodiante/CustodianteModel
         [HttpPost]
-        public async Task<ActionResult<CustodianteModel>> CadastrarCustodiante(CustodianteModel tblCustodianteModel)
+        public async Task<ActionResult<CustodianteModel>> AddCustodiante(CustodianteModel tblCustodianteModel)
         {
             TblCustodiante itensCustodiante = new TblCustodiante
             {
@@ -137,9 +137,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //PUT: api/Custodiante/EditarCustodiante/id
+        //PUT: api/Custodiante/UpdateCustodiante/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarCustodiante(int id, CustodianteModel custodiante)
+        public async Task<IActionResult> UpdateCustodiante(int id, CustodianteModel custodiante)
         {
             try
             {
@@ -171,9 +171,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Custodiante/DeletarCustodiante/id
+        // DELETE: api/Custodiante/DeleteCustodiante/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarCustodiante(int id)
+        public async Task<IActionResult> DeleteCustodiante(int id)
         {
             TblCustodiante tblCustodiante = await _context.TblCustodiante.FindAsync(id);
 
@@ -194,9 +194,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DESATIVA: api/Custodiante/DesativarCustodiante/id
+        // DESATIVA: api/Custodiante/DisableCustodiante/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> DesativarCustodiante(int id)
+        public async Task<IActionResult> DisableCustodiante(int id)
         {
             TblCustodiante registroCustodiante = _context.TblCustodiante.Find(id);
 
@@ -220,9 +220,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // ATIVAR: api/Custodiante/AtivarCustodiante/id
+        // ATIVAR: api/Custodiante/ActivateCustodiante/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtivarCustodiante(int id)
+        public async Task<IActionResult> ActivateCustodiante(int id)
         {
             TblCustodiante registroCustodiante = await _context.TblCustodiante.FindAsync(id);
 
