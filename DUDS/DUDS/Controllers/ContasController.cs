@@ -66,7 +66,7 @@ namespace DUDS.Controllers
             }
         }
 
-        //// GET: api/Contas/GetContasExistsBase/cod_fundo/cod_investidor/cod_tipo_conta
+        // GET: api/Contas/GetContasExistsBase/cod_fundo/cod_investidor/cod_tipo_conta
         [HttpGet("{cod_tipo_conta}")]
         public async Task<ActionResult<TblContas>> GetContasExistsBase(int cod_fundo, int cod_investidor, int cod_tipo_conta)
         {
