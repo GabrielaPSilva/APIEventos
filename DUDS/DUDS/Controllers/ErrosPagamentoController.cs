@@ -96,7 +96,8 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaErros);
                 await _context.SaveChangesAsync();
 
-                return Ok(itensErrosPagamento);
+                return CreatedAtAction(
+                 nameof(GetErrosPagamento), listaErros);
             }
             catch (Exception e)
             {

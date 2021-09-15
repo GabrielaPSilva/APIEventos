@@ -93,7 +93,8 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaPagamentosServico);
                 await _context.SaveChangesAsync();
 
-                return Ok(itensPagamentoServico);
+                return CreatedAtAction(
+                    nameof(GetPagamentoServico), listaPagamentosServico);
             }
             catch (Exception e)
             {
@@ -195,7 +196,8 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaPagamentosAdminPfee);
                 await _context.SaveChangesAsync();
 
-                return Ok(listaPagamentosAdminPfee);
+                return CreatedAtAction(
+                   nameof(GetPgtoAdmPfee), listaPagamentosAdminPfee);
             }
             catch (Exception e)
             {

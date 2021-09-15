@@ -109,8 +109,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetInvestidor),
-                    new { id = itensInvestidor.Id },
-                     Ok(itensInvestidor));
+                    new { id = itensInvestidor.Id }, itensInvestidor);
             }
             catch (Exception e)
             {
@@ -146,7 +145,8 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaInvestidores);
                 await _context.SaveChangesAsync();
 
-                return Ok(itensInvestidor);
+                return CreatedAtAction(
+                     nameof(GetInvestidor), listaInvestidores);
             }
             catch (Exception e)
             {
@@ -356,8 +356,7 @@ namespace DUDS.Controllers
                         cod_investidor = itensInvestidorDistribuidor.CodInvestidor,
                         cod_distribuidor = itensInvestidorDistribuidor.CodDistribuidor,
                         cod_administrador = itensInvestidorDistribuidor.CodAdministrador
-                    },
-                    Ok(itensInvestidorDistribuidor));
+                    }, itensInvestidorDistribuidor);
             }
             catch (Exception e)
             {
@@ -371,7 +370,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblInvestidorDistribuidor> listaInvestidorDIstribuidores = new List<TblInvestidorDistribuidor>();
+                List<TblInvestidorDistribuidor> listaInvestidorDistribuidores = new List<TblInvestidorDistribuidor>();
                 TblInvestidorDistribuidor itensInvestidorDistribuidor = new TblInvestidorDistribuidor();
 
                 foreach (var line in tblListInvestidorDistribuidorModel)
@@ -385,13 +384,14 @@ namespace DUDS.Controllers
                         UsuarioModificacao = line.UsuarioModificacao
                     };
 
-                    listaInvestidorDIstribuidores.Add(itensInvestidorDistribuidor);
+                    listaInvestidorDistribuidores.Add(itensInvestidorDistribuidor);
                 }
 
-                await _context.BulkInsertAsync(listaInvestidorDIstribuidores);
+                await _context.BulkInsertAsync(listaInvestidorDistribuidores);
                 await _context.SaveChangesAsync();
 
-                return Ok(itensInvestidorDistribuidor);
+                return CreatedAtAction(
+                   nameof(GetInvestidorDistribuidor), listaInvestidorDistribuidores);
             }
             catch (Exception e)
             {

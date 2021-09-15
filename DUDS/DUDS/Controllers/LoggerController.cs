@@ -62,8 +62,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetLogErroById),
-                    new { id = itensLogger.Id },
-                     Ok(itensLogger));
+                    new { id = itensLogger.Id }, itensLogger);
             }
             catch (Exception e)
             {

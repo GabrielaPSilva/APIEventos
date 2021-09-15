@@ -139,8 +139,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                   nameof(GetFundo),
-                  new { id = itensFundo.Id },
-                  Ok(itensFundo));
+                  new { id = itensFundo.Id }, itensFundo);
             }
             catch (Exception e)
             {
@@ -378,8 +377,7 @@ namespace DUDS.Controllers
                     new
                     {
                         Id = itensTipoEstrategia.Id,
-                    },
-                     Ok(itensTipoEstrategia));
+                    }, itensTipoEstrategia);
             }
             catch (Exception e)
             {

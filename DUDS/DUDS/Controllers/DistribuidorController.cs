@@ -112,8 +112,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetDistribuidor),
-                    new { id = itensDistribuidor.Id },
-                    Ok(itensDistribuidor));
+                    new { id = itensDistribuidor.Id }, itensDistribuidor);
             }
             catch (Exception e)
             {
@@ -301,8 +300,7 @@ namespace DUDS.Controllers
                     {
                         cod_distribuidor = itensDistribuidorAdmin.CodDistribuidor,
                         cod_administrador = itensDistribuidorAdmin.CodAdministrador
-                    },
-                    Ok(itensDistribuidorAdmin));
+                    }, itensDistribuidorAdmin);
             }
             catch (Exception e)
             {
