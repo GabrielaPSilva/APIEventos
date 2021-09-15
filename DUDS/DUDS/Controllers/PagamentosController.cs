@@ -433,7 +433,8 @@ namespace DUDS.Controllers
                 await _context.BulkInsertAsync(listaCalculoPagamentosAdminPfee);
                 await _context.SaveChangesAsync();
 
-                return Ok(listaCalculoPagamentosAdminPfee);
+                return CreatedAtAction(
+                 nameof(GetCalculoPagamentoAdminPfee), listaCalculoPagamentosAdminPfee);
             }
             catch (Exception e)
             {
