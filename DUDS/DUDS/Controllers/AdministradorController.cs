@@ -113,8 +113,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                    nameof(GetAdministrador),
-                   new { id = itensAdministrador.Id },
-                   Ok(itensAdministrador));
+                   new { id = itensAdministrador.Id }, itensAdministrador);
             }
             catch (Exception e)
             {

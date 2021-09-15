@@ -117,8 +117,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetCustodiante),
-                    new { id = itensCustodiante.Id },
-                   Ok(itensCustodiante));
+                    new { id = itensCustodiante.Id }, itensCustodiante);
             }
             catch (Exception e)
             {

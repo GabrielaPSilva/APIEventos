@@ -89,8 +89,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetCondicaoRemuneracao),
-                    new { id = itensCondicaoRemuneracao.Id },
-                    Ok(itensCondicaoRemuneracao));
+                    new { id = itensCondicaoRemuneracao.Id }, itensCondicaoRemuneracao);
             }
             catch (Exception e)
             {
@@ -296,8 +295,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                    nameof(GetTipoCondicao),
-                   new { id = itensTipoCondicao.Id },
-                   Ok(itensTipoCondicao));
+                   new { id = itensTipoCondicao.Id }, itensTipoCondicao);
             }
             catch (Exception e)
             {

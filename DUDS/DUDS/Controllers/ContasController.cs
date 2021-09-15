@@ -66,7 +66,7 @@ namespace DUDS.Controllers
             }
         }
 
-        //// GET: api/Contas/GetContasExistsBase/cod_fundo/cod_investidor/cod_tipo_conta
+        // GET: api/Contas/GetContasExistsBase/cod_fundo/cod_investidor/cod_tipo_conta
         [HttpGet("{cod_tipo_conta}")]
         public async Task<ActionResult<TblContas>> GetContasExistsBase(int cod_fundo, int cod_investidor, int cod_tipo_conta)
         {
@@ -115,8 +115,7 @@ namespace DUDS.Controllers
                 return CreatedAtAction(
                     nameof(GetContas),
                     new
-                    { id = itensConta.Id },
-                    Ok(itensConta));
+                    { id = itensConta.Id }, itensConta);
             }
             catch (Exception e)
             {
@@ -325,8 +324,7 @@ namespace DUDS.Controllers
                     new
                     {
                         Id = itensTipoConta.Id,
-                    },
-                     Ok(itensTipoConta));
+                    }, itensTipoConta);
             }
             catch (Exception e)
             {

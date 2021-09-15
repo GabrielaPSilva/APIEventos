@@ -84,8 +84,7 @@ namespace DUDS.Controllers
                     new
                     {
                         Id = itensTipoClassificacao.Id,
-                    },
-                     Ok(itensTipoClassificacao));
+                    }, itensTipoClassificacao);
             }
             catch (Exception e)
             {

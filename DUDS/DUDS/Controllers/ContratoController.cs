@@ -87,8 +87,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetContrato),
-                    new { id = itensContrato.Id },
-                      Ok(itensContrato));
+                    new { id = itensContrato.Id }, itensContrato);
             }
             catch (Exception e)
             {
@@ -300,8 +299,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetSubContrato),
-                    new { id = itensSubContrato.Id },
-                     Ok(itensSubContrato));
+                    new { id = itensSubContrato.Id }, itensSubContrato);
             }
             catch (Exception e)
             {
@@ -513,8 +511,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetContratoAlocador),
-                    new { id = itensContratoAlocador.Id },
-                     Ok(itensContratoAlocador));
+                    new { id = itensContratoAlocador.Id }, itensContratoAlocador);
             }
             catch (Exception e)
             {
@@ -656,8 +653,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetContratoFundo),
-                    new { id = itensContratoFundo.Id },
-                     Ok(itensContratoFundo));
+                    new { id = itensContratoFundo.Id }, itensContratoFundo);
             }
             catch (Exception e)
             {
@@ -799,8 +795,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetContratoRemuneracao),
-                    new { id = itensContratoRemuneracao.Id },
-                     Ok(itensContratoRemuneracao));
+                    new { id = itensContratoRemuneracao.Id }, itensContratoRemuneracao);
             }
             catch (Exception e)
             {
@@ -940,8 +935,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                    nameof(GetTipoContrato),
-                   new { id = itensTipoContrato.Id },
-                   Ok(itensTipoContrato));
+                   new { id = itensTipoContrato.Id }, itensTipoContrato);
             }
             catch (Exception e)
             {

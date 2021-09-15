@@ -119,8 +119,7 @@ namespace DUDS.Controllers
 
                 return CreatedAtAction(
                     nameof(GetGestor),
-                    new { id = itensGestor.Id },
-                    Ok(itensGestor));
+                    new { id = itensGestor.Id }, itensGestor);
             }
             catch (Exception e)
             {
