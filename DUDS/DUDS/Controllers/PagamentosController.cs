@@ -438,6 +438,29 @@ namespace DUDS.Controllers
                 return BadRequest(e);
             }
         }
+
+        // DELETE: api/Pagamentos/DeleteCalculoPagamentoAdminPfee/competencia
+        [HttpDelete("{competencia}")]
+        public async Task<ActionResult<IEnumerable<TblCalculoPgtoAdmPfee>>> DeleteCalculoPagamentoAdminPfee(string competencia)
+        {
+            List<TblCalculoPgtoAdmPfee> tblCalculoPgtoAdmPfee = await _context.TblCalculoPgtoAdmPfee.Where(c => c.Competencia == competencia).ToListAsync();
+
+            if (tblCalculoPgtoAdmPfee.Count == 0)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _context.TblCalculoPgtoAdmPfee.RemoveRange(tblCalculoPgtoAdmPfee);
+                await _context.SaveChangesAsync();
+                return Ok(tblCalculoPgtoAdmPfee);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
         #endregion
     }
 }
