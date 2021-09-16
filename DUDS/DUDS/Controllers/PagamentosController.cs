@@ -464,6 +464,48 @@ namespace DUDS.Controllers
                 return BadRequest(e);
             }
         }
+
+        // GET: api/Contrato/GetDescricaoCalculoPgtoAdmPfee
+        // TODO: Modificar o tipo de retorno da função
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EstruturaContratoValidoModel>>> GetDescricaoCalculoPgtoAdmPfee([FromQuery] int cod_contrato, [FromQuery] int cod_sub_contrato, [FromQuery] int cod_contrato_fundo, [FromQuery] int cod_contrato_remuneracao, [FromQuery] string cod_condicao_remuneracao)
+        {
+            try
+            {
+                var detatalheContratoCalculoPgtoAdmPfee = await (from contrato in _context.TblContrato.Where(c => c.Id == cod_contrato)
+                                                                 from tipoContrato in _context.TblTipoContrato.Where(tC => tC.Id == contrato.CodTipoContrato)
+                                                                 from subContrato in _context.TblSubContrato.Where(sC => sC.Id == cod_sub_contrato)
+                                                                 from contratoFundo in _context.TblContratoFundo.Where(cF => cF.Id == cod_contrato_fundo)
+                                                                 from codigoCondicao in _context.TblTipoCondicao.Where(cC => cC.Id == contratoFundo.CodTipoCondicao)
+                                                                 from fundo in _context.TblFundo.Where(f => f.Id == contratoFundo.CodFundo)
+                                                                 from contratoRemuneracao in _context.TblContratoRemuneracao.Where(cR => cR.Id == cod_contrato_remuneracao)
+                                                                 from distribuidor in _context.TblDistribuidor.Where(d => d.Id == contrato.CodDistribuidor).DefaultIfEmpty()
+                                                                 from gestor in _context.TblGestor.Where(g => g.Id == contrato.Parceiro).DefaultIfEmpty()
+                                                                 select new
+                                                                 {
+                                                                     tipoContrato.TipoContrato,
+                                                                     ParceiroDistribuidor = distribuidor == null ? gestor.NomeGestor : distribuidor.NomeDistribuidor,
+                                                                     subContrato.Versao,
+                                                                     subContrato.Status,
+                                                                     subContrato.IdDocusign,
+                                                                     subContrato.DataVigenciaInicio,
+                                                                     subContrato.DataVigenciaFim,
+                                                                     subContrato.DataRetroatividade,
+                                                                     fundo.NomeReduzido,
+                                                                     codigoCondicao.TipoCondicao,
+                                                                     contratoRemuneracao.PercentualAdm,
+                                                                     contratoRemuneracao.PercentualPfee
+
+                                                                 }).AsNoTracking().FirstOrDefaultAsync();
+                // TODO: Arrumar o retorno da função
+                return Ok(new EstruturaContratoValidoModel());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
         #endregion
     }
 }
