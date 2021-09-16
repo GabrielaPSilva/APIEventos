@@ -54,6 +54,7 @@ namespace DUDS.Controllers
             try
             {
                 TblAdministrador tblAdministrador = await _context.TblAdministrador.FindAsync(id);
+
                 if (tblAdministrador == null)
                 {
                     return NotFound();
@@ -67,27 +68,29 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Administrador/GetAdministradorExistsBase/cnpj
-        [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblAdministrador>> GetAdministradorExistsBase(string cnpj)
+        // GET: api/Administrador/GetAdministradorExistsBase/cnpj/nome
+        [HttpGet("{cnpj}/{nome}")]
+        public async Task<ActionResult<TblAdministrador>> GetAdministradorExistsBase(string cnpj, string nome)
         {
             TblAdministrador tblAdministrador = new TblAdministrador();
 
             try
             {
-                tblAdministrador = await _context.TblAdministrador.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
-                if (tblAdministrador == null)
+                tblAdministrador = await _context.TblAdministrador.Where(c => c.Ativo == false && (c.Cnpj == cnpj || c.NomeAdministrador == nome)).FirstOrDefaultAsync();
+                
+                if (tblAdministrador != null)
                 {
-                    return NotFound();
+                    return Ok(tblAdministrador);
                 }
 
-                tblAdministrador = await _context.TblAdministrador.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
-                if (tblAdministrador == null)
+                tblAdministrador = await _context.TblAdministrador.Where(c => (c.Cnpj == cnpj || c.NomeAdministrador == nome)).FirstOrDefaultAsync();
+
+                if (tblAdministrador != null)
                 {
-                    return NotFound();
+                    return Ok(tblAdministrador);
                 }
 
-                return Ok(tblAdministrador);
+                return NotFound();
             }
             catch (Exception e)
             {
