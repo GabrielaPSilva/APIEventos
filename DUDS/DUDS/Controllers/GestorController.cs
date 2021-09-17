@@ -36,6 +36,7 @@ namespace DUDS.Controllers
                                          from gestor in _context.TblGestor
                                          from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == gestor.CodTipoClassificacao)
                                          where gestor.Ativo == true
+                                         orderby gestor.NomeGestor
                                          select new
                                          {
                                              gestor.Id,

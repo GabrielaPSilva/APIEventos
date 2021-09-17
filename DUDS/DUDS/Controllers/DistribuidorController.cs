@@ -36,6 +36,7 @@ namespace DUDS.Controllers
                                      from distribuidor in _context.TblDistribuidor
                                      from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == distribuidor.CodTipoClassificacao)
                                      where distribuidor.Ativo == true
+                                     orderby distribuidor.NomeDistribuidor
                                      select new
                                      {
                                          distribuidor.Id,
@@ -67,9 +68,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                TblDistribuidor tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
-
-                var listaDistribuidores = await (
+                var tblDistribuidor = await (
                                     from distribuidor in _context.TblDistribuidor
                                     from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == distribuidor.CodTipoClassificacao)
                                     where distribuidor.Id == id
