@@ -32,14 +32,27 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblGestor> gestores = await _context.TblGestor.Where(c => c.Ativo == true).OrderBy(c => c.NomeGestor).AsNoTracking().ToListAsync();
+                var listaGestores = await (
+                                         from gestor in _context.TblGestor
+                                         from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == gestor.CodTipoClassificacao)
+                                         where gestor.Ativo == true
+                                         select new
+                                         {
+                                             gestor.Id,
+                                             gestor.NomeGestor,
+                                             gestor.Cnpj,
+                                             gestor.UsuarioModificacao,
+                                             gestor.DataModificacao,
+                                             gestor.Ativo,
+                                             tipoClassificacao.Classificacao
+                                         }).AsNoTracking().ToListAsync();
 
-                if (gestores.Count == 0)
+                if (listaGestores.Count == 0)
                 {
                     return NotFound();
                 }
 
-                return Ok(gestores);
+                return Ok(listaGestores);
             }
             catch (InvalidOperationException e)
             {
@@ -53,7 +66,21 @@ namespace DUDS.Controllers
         {
             try
             {
-                TblGestor tblGestor = await _context.TblGestor.FindAsync(id);
+                var tblGestor = await (
+                                       from gestor in _context.TblGestor
+                                       from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == gestor.CodTipoClassificacao)
+                                       where gestor.Id == id
+                                       select new
+                                       {
+                                           gestor.Id,
+                                           gestor.NomeGestor,
+                                           gestor.Cnpj,
+                                           gestor.UsuarioModificacao,
+                                           gestor.DataModificacao,
+                                           gestor.Ativo,
+                                           tipoClassificacao.Classificacao
+                                       }).AsNoTracking().ToListAsync();
+
                 if (tblGestor != null)
                 {
                     return NotFound();
@@ -70,11 +97,22 @@ namespace DUDS.Controllers
         [HttpGet("{cnpj}")]
         public async Task<ActionResult<TblCustodiante>> GetGestorExistsBase(string cnpj)
         {
-            TblGestor tblGestor = new TblGestor();
-
             try
             {
-                tblGestor = await _context.TblGestor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
+                var tblGestor = await (
+                        from gestor in _context.TblGestor
+                        from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == gestor.CodTipoClassificacao)
+                        where gestor.Ativo == false && gestor.Cnpj == cnpj
+                        select new
+                        {
+                            gestor.Id,
+                            gestor.NomeGestor,
+                            gestor.Cnpj,
+                            gestor.UsuarioModificacao,
+                            gestor.DataModificacao,
+                            gestor.Ativo,
+                            tipoClassificacao.Classificacao
+                        }).FirstOrDefaultAsync();
 
                 if (tblGestor != null)
                 {
@@ -82,7 +120,20 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    tblGestor = await _context.TblGestor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+                    tblGestor = await (
+                        from gestor in _context.TblGestor
+                        from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == gestor.CodTipoClassificacao)
+                        where gestor.Cnpj == cnpj
+                        select new
+                        {
+                            gestor.Id,
+                            gestor.NomeGestor,
+                            gestor.Cnpj,
+                            gestor.UsuarioModificacao,
+                            gestor.DataModificacao,
+                            gestor.Ativo,
+                            tipoClassificacao.Classificacao
+                        }).FirstOrDefaultAsync();
 
                     if (tblGestor != null)
                     {
