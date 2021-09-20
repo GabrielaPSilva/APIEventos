@@ -32,14 +32,29 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblDistribuidor> distribuidores = await _context.TblDistribuidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeDistribuidor).AsNoTracking().ToListAsync();
+                var listaDistribuidores = await (
+                                     from distribuidor in _context.TblDistribuidor
+                                     from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == distribuidor.CodTipoClassificacao)
+                                     where distribuidor.Ativo == true
+                                     orderby distribuidor.NomeDistribuidor
+                                     select new
+                                     {
+                                         distribuidor.Id,
+                                         distribuidor.NomeDistribuidor,
+                                         distribuidor.Cnpj,
+                                         distribuidor.CodTipoClassificacao,
+                                         distribuidor.UsuarioModificacao,
+                                         distribuidor.DataModificacao,
+                                         distribuidor.Ativo,
+                                         tipoClassificacao.Classificacao
+                                     }).AsNoTracking().ToListAsync();
 
-                if (distribuidores.Count == 0)
+                if (listaDistribuidores.Count == 0)
                 {
                     return NotFound();
                 }
 
-                return Ok(distribuidores);
+                return Ok(listaDistribuidores);
             }
             catch (InvalidOperationException e)
             {
@@ -53,7 +68,22 @@ namespace DUDS.Controllers
         {
             try
             {
-                TblDistribuidor tblDistribuidor = await _context.TblDistribuidor.FindAsync(id);
+                var tblDistribuidor = await (
+                                    from distribuidor in _context.TblDistribuidor
+                                    from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == distribuidor.CodTipoClassificacao)
+                                    where distribuidor.Id == id
+                                    select new
+                                    {
+                                        distribuidor.Id,
+                                        distribuidor.NomeDistribuidor,
+                                        distribuidor.Cnpj,
+                                        distribuidor.CodTipoClassificacao,
+                                        distribuidor.UsuarioModificacao,
+                                        distribuidor.DataModificacao,
+                                        distribuidor.Ativo,
+                                        tipoClassificacao.Classificacao
+                                    }).FirstOrDefaultAsync();
+
                 if (tblDistribuidor == null)
                 {
                     return NotFound();
@@ -70,9 +100,21 @@ namespace DUDS.Controllers
         [HttpGet("{cnpj}")]
         public async Task<ActionResult<TblDistribuidor>> GetDistribuidorExistsBase(string cnpj)
         {
-            TblDistribuidor tblDistribuidor = new TblDistribuidor();
-
-            tblDistribuidor = await _context.TblDistribuidor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
+            var tblDistribuidor = await (
+                                   from distribuidor in _context.TblDistribuidor
+                                   from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == distribuidor.CodTipoClassificacao)
+                                   where distribuidor.Ativo == false && distribuidor.Cnpj == cnpj
+                                   select new
+                                   {
+                                       distribuidor.Id,
+                                       distribuidor.NomeDistribuidor,
+                                       distribuidor.Cnpj,
+                                       distribuidor.CodTipoClassificacao,
+                                       distribuidor.UsuarioModificacao,
+                                       distribuidor.DataModificacao,
+                                       distribuidor.Ativo,
+                                       tipoClassificacao.Classificacao
+                                   }).FirstOrDefaultAsync();
 
             if (tblDistribuidor != null)
             {
@@ -80,7 +122,21 @@ namespace DUDS.Controllers
             }
             else
             {
-                tblDistribuidor = await _context.TblDistribuidor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
+                tblDistribuidor = await (
+                                   from distribuidor in _context.TblDistribuidor
+                                   from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == distribuidor.CodTipoClassificacao)
+                                   where distribuidor.Cnpj == cnpj
+                                   select new
+                                   {
+                                       distribuidor.Id,
+                                       distribuidor.NomeDistribuidor,
+                                       distribuidor.Cnpj,
+                                       distribuidor.CodTipoClassificacao,
+                                       distribuidor.UsuarioModificacao,
+                                       distribuidor.DataModificacao,
+                                       distribuidor.Ativo,
+                                       tipoClassificacao.Classificacao
+                                   }).FirstOrDefaultAsync();
 
                 if (tblDistribuidor != null)
                 {

@@ -32,14 +32,36 @@ namespace DUDS.Controllers
         {
             try
             {
-                var contas = await _context.TblContas.Where(c => c.Ativo == true).ToListAsync();
+                var listaContas = await (
+                                from contas in _context.TblContas
+                                from tipoConta in _context.TblTipoConta.Where(c => c.Id == contas.CodTipoConta)
+                                from fundo in _context.TblFundo.Where(c => c.Id == contas.CodFundo).DefaultIfEmpty()
+                                from investidor in _context.TblInvestidor.Where(c => c.Id == contas.CodInvestidor).DefaultIfEmpty()
+                                where contas.Ativo == true
+                                select new
+                                {
+                                    contas.Id,
+                                    contas.Agencia,
+                                    contas.Banco,
+                                    contas.Conta,
+                                    contas.CodFundo,
+                                    contas.CodInvestidor,
+                                    contas.CodTipoConta,
+                                    contas.UsuarioModificacao,
+                                    contas.DataModificacao,
+                                    contas.Ativo,
+                                    tipoConta.TipoConta,
+                                    tipoConta.DescricaoConta,
+                                    NomeFundo = fundo == null ? String.Empty : fundo.NomeReduzido,
+                                    NomeInvestidor = investidor == null ? String.Empty : investidor.NomeCliente,
+                                }).AsNoTracking().ToListAsync();
 
-                if (contas.Count == 0)
+                if (listaContas.Count == 0)
                 {
                     return NotFound();
                 }
 
-                return Ok(contas);
+                return Ok(listaContas);
             }
             catch (InvalidOperationException e)
             {
@@ -53,7 +75,30 @@ namespace DUDS.Controllers
         {
             try
             {
-                TblContas tblContas = await _context.TblContas.FindAsync(id);
+                var tblContas = await (
+                               from contas in _context.TblContas
+                               from tipoConta in _context.TblTipoConta.Where(c => c.Id == contas.CodTipoConta)
+                               from fundo in _context.TblFundo.Where(c => c.Id == contas.CodFundo).DefaultIfEmpty()
+                               from investidor in _context.TblInvestidor.Where(c => c.Id == contas.CodInvestidor).DefaultIfEmpty()
+                               where contas.Id == id
+                               select new
+                               {
+                                   contas.Id,
+                                   contas.Agencia,
+                                   contas.Banco,
+                                   contas.Conta,
+                                   contas.CodFundo,
+                                   contas.CodInvestidor,
+                                   contas.CodTipoConta,
+                                   contas.UsuarioModificacao,
+                                   contas.DataModificacao,
+                                   contas.Ativo,
+                                   tipoConta.TipoConta,
+                                   tipoConta.DescricaoConta,
+                                   NomeFundo = fundo == null ? String.Empty : fundo.NomeReduzido,
+                                   NomeInvestidor = investidor == null ? String.Empty : investidor.NomeCliente,
+                               }).AsNoTracking().ToListAsync();
+
                 if (tblContas == null)
                 {
                     NotFound();
@@ -70,11 +115,31 @@ namespace DUDS.Controllers
         [HttpGet("{cod_tipo_conta}")]
         public async Task<ActionResult<TblContas>> GetContasExistsBase(int cod_fundo, int cod_investidor, int cod_tipo_conta)
         {
-            TblContas tblContas = new TblContas();
-
             try
             {
-                tblContas = await _context.TblContas.Where(c => c.Ativo == false && (c.CodFundo == cod_fundo || c.CodInvestidor == cod_investidor) && c.CodTipoConta == cod_tipo_conta).FirstOrDefaultAsync();
+                var tblContas = await (
+                                 from contas in _context.TblContas
+                                 from tipoConta in _context.TblTipoConta.Where(c => c.Id == contas.CodTipoConta)
+                                 from fundo in _context.TblFundo.Where(c => c.Id == contas.CodFundo).DefaultIfEmpty()
+                                 from investidor in _context.TblInvestidor.Where(c => c.Id == contas.CodInvestidor).DefaultIfEmpty()
+                                 where contas.Ativo == false && (contas.CodFundo == cod_fundo || contas.CodInvestidor == cod_investidor) && contas.CodTipoConta == cod_tipo_conta
+                                 select new
+                                 {
+                                     contas.Id,
+                                     contas.Agencia,
+                                     contas.Banco,
+                                     contas.Conta,
+                                     contas.CodFundo,
+                                     contas.CodInvestidor,
+                                     contas.CodTipoConta,
+                                     contas.UsuarioModificacao,
+                                     contas.DataModificacao,
+                                     contas.Ativo,
+                                     tipoConta.TipoConta,
+                                     tipoConta.DescricaoConta,
+                                     NomeFundo = fundo == null ? String.Empty : fundo.NomeReduzido,
+                                     NomeInvestidor = investidor == null ? String.Empty : investidor.NomeCliente,
+                                 }).FirstOrDefaultAsync();
 
                 if (tblContas != null)
                 {
@@ -82,7 +147,30 @@ namespace DUDS.Controllers
                 }
                 else
                 {
-                    tblContas = await _context.TblContas.Where(c => c.CodTipoConta == cod_tipo_conta && (c.CodFundo == cod_fundo || c.CodInvestidor == cod_investidor)).FirstOrDefaultAsync();
+                    tblContas = await (
+                                 from contas in _context.TblContas
+                                 from tipoConta in _context.TblTipoConta.Where(c => c.Id == contas.CodTipoConta)
+                                 from fundo in _context.TblFundo.Where(c => c.Id == contas.CodFundo).DefaultIfEmpty()
+                                 from investidor in _context.TblInvestidor.Where(c => c.Id == contas.CodInvestidor).DefaultIfEmpty()
+                                 where (contas.CodFundo == cod_fundo || contas.CodInvestidor == cod_investidor) && contas.CodTipoConta == cod_tipo_conta
+                                 select new
+                                 {
+                                     contas.Id,
+                                     contas.Agencia,
+                                     contas.Banco,
+                                     contas.Conta,
+                                     contas.CodFundo,
+                                     contas.CodInvestidor,
+                                     contas.CodTipoConta,
+                                     contas.UsuarioModificacao,
+                                     contas.DataModificacao,
+                                     contas.Ativo,
+                                     tipoConta.TipoConta,
+                                     tipoConta.DescricaoConta,
+                                     NomeFundo = fundo == null ? String.Empty : fundo.NomeReduzido,
+                                     NomeInvestidor = investidor == null ? String.Empty : investidor.NomeCliente,
+                                 }).FirstOrDefaultAsync();
+
                     return Ok(tblContas);
                 }
             }
