@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_tipo_contrato")]
+    [Index(nameof(TipoContrato), Name = "IX_tbl_tipo_contrato", IsUnique = true)]
     public partial class TblTipoContrato
     {
         public TblTipoContrato()

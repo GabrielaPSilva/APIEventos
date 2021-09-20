@@ -40,8 +40,6 @@ namespace DUDS.Models
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
 
-        [ForeignKey(nameof(CodDistribuidor))]
-        [InverseProperty(nameof(TblDistribuidor.TblCliente))]
         public virtual TblDistribuidor CodDistribuidorNavigation { get; set; }
     }
 }

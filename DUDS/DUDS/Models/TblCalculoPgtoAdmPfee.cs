@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace DUDS.Models
 {
     [Table("tbl_calculo_pgto_adm_pfee")]
+    [Index(nameof(CodCondicaoRemuneracao), nameof(CodContrato), nameof(CodContratoFundo), nameof(CodContratoRemuneracao), nameof(CodFundo), nameof(CodInvestidor), nameof(CodSubContrato), Name = "IX_tbl_calculo_pgto_adm_pfee")]
+    [Index(nameof(Competencia), Name = "IX_tbl_calculo_pgto_adm_pfee_1")]
     public partial class TblCalculoPgtoAdmPfee
     {
         [Key]

@@ -42,6 +42,8 @@ namespace DUDS.Models
         public int? CodGestor { get; set; }
         [Column("cod_tipo_contrato")]
         public int CodTipoContrato { get; set; }
+        [Column("cod_grupo_rebate")]
+        public int? CodGrupoRebate { get; set; }
         [Column("data_modificacao", TypeName = "date")]
         public DateTime DataModificacao { get; set; }
         [Column("usuario_modificacao")]
@@ -51,6 +53,9 @@ namespace DUDS.Models
         [Column("ativo")]
         public bool? Ativo { get; set; }
 
+        [ForeignKey(nameof(CodGrupoRebate))]
+        [InverseProperty(nameof(TblGrupoRebate.TblInvestidor))]
+        public virtual TblGrupoRebate CodGrupoRebateNavigation { get; set; }
         [ForeignKey(nameof(CodTipoContrato))]
         [InverseProperty(nameof(TblTipoContrato.TblInvestidor))]
         public virtual TblTipoContrato CodTipoContratoNavigation { get; set; }

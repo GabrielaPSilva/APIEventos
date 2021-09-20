@@ -32,14 +32,39 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblInvestidor> investidores = await _context.TblInvestidor.Where(c => c.Ativo == true).OrderBy(c => c.NomeCliente).AsNoTracking().ToListAsync();
+                var listaDistribuidores = await (
+                                    from investidor in _context.TblInvestidor
+                                    from administrador in _context.TblAdministrador.Where(c => c.Id == investidor.CodAdministrador).DefaultIfEmpty()
+                                    from gestor in _context.TblGestor.Where(c => c.Id == investidor.CodGestor).DefaultIfEmpty()
+                                    from tipoContrato in _context.TblTipoContrato.Where(c => c.Id == investidor.CodTipoContrato)
+                                    from grupoRebate in _context.TblGrupoRebate.Where(c => c.Id == investidor.CodTipoContrato).DefaultIfEmpty()
+                                    where investidor.Ativo == true
+                                    orderby investidor.NomeCliente
+                                    select new
+                                    {
+                                        investidor.Id,
+                                        investidor.NomeCliente,
+                                        investidor.Cnpj,
+                                        investidor.TipoCliente,
+                                        investidor.CodAdministrador,
+                                        investidor.CodGestor,
+                                        investidor.CodTipoContrato,
+                                        investidor.CodGrupoRebate,
+                                        investidor.DataModificacao,
+                                        investidor.UsuarioModificacao,
+                                        investidor.Ativo,
+                                        NomeAdministrador = administrador == null ? String.Empty : administrador.NomeAdministrador,
+                                        NomeGestor = gestor == null ? String.Empty : gestor.NomeGestor,
+                                        tipoContrato.TipoContrato,
+                                        NomeGrupoRebate = grupoRebate == null ? String.Empty : grupoRebate.NomeGrupoRebate,
+                                    }).AsNoTracking().ToListAsync();
 
-                if (investidores.Count == 0)
+                if (listaDistribuidores.Count == 0)
                 {
                     return NotFound();
                 }
 
-                return Ok(investidores);
+                return Ok(listaDistribuidores);
             }
             catch (InvalidOperationException e)
             {
@@ -53,7 +78,33 @@ namespace DUDS.Controllers
         {
             try
             {
-                TblInvestidor tblInvestidor = await _context.TblInvestidor.FindAsync(id);
+                var tblInvestidor = await (
+                                           from investidor in _context.TblInvestidor
+                                           from administrador in _context.TblAdministrador.Where(c => c.Id == investidor.CodAdministrador).DefaultIfEmpty()
+                                           from gestor in _context.TblGestor.Where(c => c.Id == investidor.CodGestor).DefaultIfEmpty()
+                                           from tipoContrato in _context.TblTipoContrato.Where(c => c.Id == investidor.CodTipoContrato)
+                                           from grupoRebate in _context.TblGrupoRebate.Where(c => c.Id == investidor.CodTipoContrato).DefaultIfEmpty()
+                                           where investidor.Id == id
+                                           orderby investidor.NomeCliente
+                                           select new
+                                           {
+                                               investidor.Id,
+                                               investidor.NomeCliente,
+                                               investidor.Cnpj,
+                                               investidor.TipoCliente,
+                                               investidor.CodAdministrador,
+                                               investidor.CodGestor,
+                                               investidor.CodTipoContrato,
+                                               investidor.CodGrupoRebate,
+                                               investidor.DataModificacao,
+                                               investidor.UsuarioModificacao,
+                                               investidor.Ativo,
+                                               NomeAdministrador = administrador == null ? String.Empty : administrador.NomeAdministrador,
+                                               NomeGestor = gestor == null ? String.Empty : gestor.NomeGestor,
+                                               tipoContrato.TipoContrato,
+                                               NomeGrupoRebate = grupoRebate == null ? String.Empty : grupoRebate.NomeGrupoRebate,
+                                           }).FirstOrDefaultAsync();
+
                 if (tblInvestidor == null)
                 {
                     return NotFound();
@@ -70,21 +121,75 @@ namespace DUDS.Controllers
         [HttpGet("{cnpj}")]
         public async Task<ActionResult<TblInvestidor>> GetInvestidorExistsBase(string cnpj)
         {
-            TblInvestidor tblInvestidor = new TblInvestidor();
+            var tblInvestidor = await (
+                                    from investidor in _context.TblInvestidor
+                                    from administrador in _context.TblAdministrador.Where(c => c.Id == investidor.CodAdministrador).DefaultIfEmpty()
+                                    from gestor in _context.TblGestor.Where(c => c.Id == investidor.CodGestor).DefaultIfEmpty()
+                                    from tipoContrato in _context.TblTipoContrato.Where(c => c.Id == investidor.CodTipoContrato)
+                                    from grupoRebate in _context.TblGrupoRebate.Where(c => c.Id == investidor.CodTipoContrato).DefaultIfEmpty()
+                                    where investidor.Ativo == false && investidor.Cnpj == cnpj
+                                    orderby investidor.NomeCliente
+                                    select new
+                                    {
+                                        investidor.Id,
+                                        investidor.NomeCliente,
+                                        investidor.Cnpj,
+                                        investidor.TipoCliente,
+                                        investidor.CodAdministrador,
+                                        investidor.CodGestor,
+                                        investidor.CodTipoContrato,
+                                        investidor.CodGrupoRebate,
+                                        investidor.DataModificacao,
+                                        investidor.UsuarioModificacao,
+                                        investidor.Ativo,
+                                        NomeAdministrador = administrador == null ? String.Empty : administrador.NomeAdministrador,
+                                        NomeGestor = gestor == null ? String.Empty : gestor.NomeGestor,
+                                        tipoContrato.TipoContrato,
+                                        NomeGrupoRebate = grupoRebate == null ? String.Empty : grupoRebate.NomeGrupoRebate,
+                                    }).FirstOrDefaultAsync();
 
-            tblInvestidor = await _context.TblInvestidor.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
-            if (tblInvestidor == null)
+            if (tblInvestidor != null)
             {
-                return NotFound();
+                return Ok(tblInvestidor);
             }
-            
-            tblInvestidor = await _context.TblInvestidor.Where(c => c.Cnpj == cnpj).FirstOrDefaultAsync();
-            if (tblInvestidor == null)
+            else
             {
-                return NotFound();
-            }
+                tblInvestidor = await (
+                                   from investidor in _context.TblInvestidor
+                                   from administrador in _context.TblAdministrador.Where(c => c.Id == investidor.CodAdministrador).DefaultIfEmpty()
+                                   from gestor in _context.TblGestor.Where(c => c.Id == investidor.CodGestor).DefaultIfEmpty()
+                                   from tipoContrato in _context.TblTipoContrato.Where(c => c.Id == investidor.CodTipoContrato)
+                                   from grupoRebate in _context.TblGrupoRebate.Where(c => c.Id == investidor.CodTipoContrato).DefaultIfEmpty()
+                                   where investidor.Cnpj == cnpj
+                                   orderby investidor.NomeCliente
+                                   select new
+                                   {
+                                       investidor.Id,
+                                       investidor.NomeCliente,
+                                       investidor.Cnpj,
+                                       investidor.TipoCliente,
+                                       investidor.CodAdministrador,
+                                       investidor.CodGestor,
+                                       investidor.CodTipoContrato,
+                                       investidor.CodGrupoRebate,
+                                       investidor.DataModificacao,
+                                       investidor.UsuarioModificacao,
+                                       investidor.Ativo,
+                                       NomeAdministrador = administrador == null ? String.Empty : administrador.NomeAdministrador,
+                                       NomeGestor = gestor == null ? String.Empty : gestor.NomeGestor,
+                                       tipoContrato.TipoContrato,
+                                       NomeGrupoRebate = grupoRebate == null ? String.Empty : grupoRebate.NomeGrupoRebate,
+                                   }).FirstOrDefaultAsync();
 
-            return Ok(tblInvestidor);
+                if (tblInvestidor != null)
+                {
+                    return Ok(tblInvestidor);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
         }
 
         //POST: api/Investidor/AddInvestidor/InvestidorModel

@@ -97,7 +97,7 @@ namespace DUDS.Controllers
                                    tipoConta.DescricaoConta,
                                    NomeFundo = fundo == null ? String.Empty : fundo.NomeReduzido,
                                    NomeInvestidor = investidor == null ? String.Empty : investidor.NomeCliente,
-                               }).AsNoTracking().ToListAsync();
+                               }).FirstOrDefaultAsync();
 
                 if (tblContas == null)
                 {

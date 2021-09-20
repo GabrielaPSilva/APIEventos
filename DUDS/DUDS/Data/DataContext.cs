@@ -20,19 +20,21 @@ namespace DUDS.Data
 
         public virtual DbSet<TblAdministrador> TblAdministrador { get; set; }
         public virtual DbSet<TblCalculoPgtoAdmPfee> TblCalculoPgtoAdmPfee { get; set; }
-        public virtual DbSet<TblCliente> TblCliente { get; set; }
         public virtual DbSet<TblCondicaoRemuneracao> TblCondicaoRemuneracao { get; set; }
         public virtual DbSet<TblContas> TblContas { get; set; }
         public virtual DbSet<TblContrato> TblContrato { get; set; }
         public virtual DbSet<TblContratoAlocador> TblContratoAlocador { get; set; }
         public virtual DbSet<TblContratoFundo> TblContratoFundo { get; set; }
         public virtual DbSet<TblContratoRemuneracao> TblContratoRemuneracao { get; set; }
+        public virtual DbSet<TblControleRebate> TblControleRebate { get; set; }
         public virtual DbSet<TblCustodiante> TblCustodiante { get; set; }
         public virtual DbSet<TblDistribuidor> TblDistribuidor { get; set; }
         public virtual DbSet<TblDistribuidorAdministrador> TblDistribuidorAdministrador { get; set; }
+        public virtual DbSet<TblEmailGrupoRebate> TblEmailGrupoRebate { get; set; }
         public virtual DbSet<TblErrosPagamento> TblErrosPagamento { get; set; }
         public virtual DbSet<TblFundo> TblFundo { get; set; }
         public virtual DbSet<TblGestor> TblGestor { get; set; }
+        public virtual DbSet<TblGrupoRebate> TblGrupoRebate { get; set; }
         public virtual DbSet<TblInvestidor> TblInvestidor { get; set; }
         public virtual DbSet<TblInvestidorDistribuidor> TblInvestidorDistribuidor { get; set; }
         public virtual DbSet<TblLogErros> TblLogErros { get; set; }
@@ -45,7 +47,6 @@ namespace DUDS.Data
         public virtual DbSet<TblTipoContrato> TblTipoContrato { get; set; }
         public virtual DbSet<TblTipoEstrategia> TblTipoEstrategia { get; set; }
 
-        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -54,7 +55,7 @@ namespace DUDS.Data
                 optionsBuilder.UseSqlServer("Server=tcp:srvdbdahlia02.database.windows.net;Database=db_dahlia_dev;User ID=sadb;Password=S@$NHujY&jkmjkl;");
             }
         }
-        */
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -128,19 +129,6 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodSubContrato)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_calculo_pgto_adm_pfee_tbl_sub_contrato");
-            });
-
-            modelBuilder.Entity<TblCliente>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
-
-                entity.HasOne(d => d.CodDistribuidorNavigation)
-                    .WithMany(p => p.TblCliente)
-                    .HasForeignKey(d => d.CodDistribuidor)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_cliente_tbl_distribuidor");
             });
 
             modelBuilder.Entity<TblCondicaoRemuneracao>(entity =>
@@ -275,6 +263,25 @@ namespace DUDS.Data
                     .HasConstraintName("FK_tbl_contrato_remuneracao_tbl_contrato_fundo");
             });
 
+            modelBuilder.Entity<TblControleRebate>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Competencia)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
+
+                entity.HasOne(d => d.CodGrupoRebateNavigation)
+                    .WithMany(p => p.TblControleRebate)
+                    .HasForeignKey(d => d.CodGrupoRebate)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_controle_rebate_tbl_grupo_rebate");
+            });
+
             modelBuilder.Entity<TblCustodiante>(entity =>
             {
                 entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
@@ -325,6 +332,25 @@ namespace DUDS.Data
                     .HasForeignKey(d => d.CodDistribuidor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DistribuidorAdministrador_Distribuidor");
+            });
+
+            modelBuilder.Entity<TblEmailGrupoRebate>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Email).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
+
+                entity.HasOne(d => d.CodGrupoRebateNavigation)
+                    .WithMany(p => p.TblEmailGrupoRebate)
+                    .HasForeignKey(d => d.CodGrupoRebate)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tbl_email_contrato_tbl_contrato");
             });
 
             modelBuilder.Entity<TblErrosPagamento>(entity =>
@@ -418,6 +444,17 @@ namespace DUDS.Data
                     .HasConstraintName("FK_Gestor_TipoClassificacao_Gestor");
             });
 
+            modelBuilder.Entity<TblGrupoRebate>(entity =>
+            {
+                entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.NomeGrupoRebate).IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
+            });
+
             modelBuilder.Entity<TblInvestidor>(entity =>
             {
                 entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
@@ -435,6 +472,11 @@ namespace DUDS.Data
                 entity.Property(e => e.TipoCliente).IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacao).IsUnicode(false);
+
+                entity.HasOne(d => d.CodGrupoRebateNavigation)
+                    .WithMany(p => p.TblInvestidor)
+                    .HasForeignKey(d => d.CodGrupoRebate)
+                    .HasConstraintName("FK_tbl_investidor_tbl_grupo_rebate");
 
                 entity.HasOne(d => d.CodTipoContratoNavigation)
                     .WithMany(p => p.TblInvestidor)
