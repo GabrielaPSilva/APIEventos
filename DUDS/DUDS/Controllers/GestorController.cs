@@ -80,9 +80,9 @@ namespace DUDS.Controllers
                                            gestor.DataModificacao,
                                            gestor.Ativo,
                                            tipoClassificacao.Classificacao
-                                       }).AsNoTracking().ToListAsync();
+                                       }).FirstOrDefaultAsync();
 
-                if (tblGestor != null)
+                if (tblGestor == null)
                 {
                     return NotFound();
                 }

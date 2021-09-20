@@ -82,7 +82,7 @@ namespace DUDS.Controllers
                                         distribuidor.DataModificacao,
                                         distribuidor.Ativo,
                                         tipoClassificacao.Classificacao
-                                    }).AsNoTracking().ToListAsync();
+                                    }).FirstOrDefaultAsync();
 
                 if (tblDistribuidor == null)
                 {

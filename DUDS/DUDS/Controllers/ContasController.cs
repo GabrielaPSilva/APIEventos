@@ -32,8 +32,6 @@ namespace DUDS.Controllers
         {
             try
             {
-                //var contas = await _context.TblContas.Where(c => c.Ativo == true).ToListAsync();
-
                 var listaContas = await (
                                 from contas in _context.TblContas
                                 from tipoConta in _context.TblTipoConta.Where(c => c.Id == contas.CodTipoConta)
