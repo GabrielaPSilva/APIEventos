@@ -265,8 +265,6 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblControleRebate>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Competencia)
                     .IsUnicode(false)
                     .IsFixedLength(true);

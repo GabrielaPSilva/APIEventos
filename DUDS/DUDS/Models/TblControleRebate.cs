@@ -24,9 +24,9 @@ namespace DUDS.Models
         [StringLength(7)]
         public string Competencia { get; set; }
         [Column("validado")]
-        public int Validado { get; set; }
+        public bool Validado { get; set; }
         [Column("enviado")]
-        public int Enviado { get; set; }
+        public bool Enviado { get; set; }
         [Required]
         [Column("usuario_modificacao")]
         [StringLength(100)]
