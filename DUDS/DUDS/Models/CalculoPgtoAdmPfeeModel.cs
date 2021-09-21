@@ -10,7 +10,9 @@ namespace DUDS.Models
         public string Competencia { get; set; }
         
         public int CodInvestidor { get; set; }
-        
+
+        public int? CodGrupoRebate { get; set; }
+
         public int CodFundo { get; set; }
         
         public int CodContrato { get; set; }
