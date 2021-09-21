@@ -257,6 +257,7 @@ namespace DUDS.Controllers
                                               investidor.Cnpj,
                                               investidor.TipoCliente,
                                               investidor.CodTipoContrato,
+                                              investidor.CodGrupoRebate,
                                               CodigoAdministradorInvestidor = investidor.CodAdministrador,
                                               CodigoGestorInvestidor = investidor.CodGestor
                                           }).AsNoTracking().ToListAsync();
@@ -329,7 +330,8 @@ namespace DUDS.Controllers
                             TaxaAdministracao = x.TaxaAdministracao,
                             TaxaPerformanceApropriada = x.TaxaPerformanceApropriada,
                             TaxaPerformanceResgate = x.TaxaPerformanceResgate,
-                            TipoCliente = x.TipoCliente
+                            TipoCliente = x.TipoCliente,
+                            CodGrupoRebate = x.CodGrupoRebate
                         };
                         pagamentoAdmPfeeInvestidor.Add(c);
                     }
@@ -379,17 +381,66 @@ namespace DUDS.Controllers
         {
             try
             {
-                List<TblCalculoPgtoAdmPfee> calculoPagamentoAdminPfee = await _context.TblCalculoPgtoAdmPfee
-                    .Where(c => c.Competencia == competencia)
-                    .AsNoTracking()
-                    .ToListAsync();
+                var calculoPagamentoAdminPfee = await (from calculoPgtoAdmPfee in _context.TblCalculoPgtoAdmPfee.Where(c => c.Competencia == competencia)
+                                                       from investidor in _context.TblInvestidor.Where(i => i.Id == calculoPgtoAdmPfee.CodInvestidor)
+                                                       select new
+                                                       {
+                                                           investidor.CodGrupoRebate,
+                                                           calculoPgtoAdmPfee.CodFundo,
+                                                           calculoPgtoAdmPfee.Competencia,
+                                                           calculoPgtoAdmPfee.CodAdministrador,
+                                                           calculoPgtoAdmPfee.CodCondicaoRemuneracao,
+                                                           calculoPgtoAdmPfee.CodContrato,
+                                                           calculoPgtoAdmPfee.CodContratoFundo,
+                                                           calculoPgtoAdmPfee.CodContratoRemuneracao,
+                                                           calculoPgtoAdmPfee.CodInvestidor,
+                                                           calculoPgtoAdmPfee.CodSubContrato,
+                                                           calculoPgtoAdmPfee.RebateAdm,
+                                                           calculoPgtoAdmPfee.RebatePfeeResgate,
+                                                           calculoPgtoAdmPfee.RebatePfeeSementre,
+                                                           calculoPgtoAdmPfee.ValorAdm,
+                                                           calculoPgtoAdmPfee.ValorPfeeResgate,
+                                                           calculoPgtoAdmPfee.ValorPfeeSementre
+                                                       }).AsNoTracking().ToListAsync();
 
-                if (calculoPagamentoAdminPfee.Count == 0)
+                ConcurrentBag<CalculoPgtoAdmPfeeModel> resultadoCalculoPgtoAdmPfee = new ConcurrentBag<CalculoPgtoAdmPfeeModel>();
+                Parallel.ForEach(
+                    calculoPagamentoAdminPfee,
+                    x =>
+                    {
+                        CalculoPgtoAdmPfeeModel c = new CalculoPgtoAdmPfeeModel
+                        {
+                            CodAdministrador = x.CodAdministrador,
+                            CodCondicaoRemuneracao = x.CodCondicaoRemuneracao,
+                            ValorPfeeSementre = x.ValorPfeeSementre,
+                            ValorPfeeResgate = x.ValorPfeeResgate,
+                            ValorAdm = x.ValorAdm,
+                            RebatePfeeSementre = x.RebatePfeeSementre,
+                            RebatePfeeResgate = x.RebatePfeeResgate,
+                            CodContrato = x.CodContrato,
+                            CodContratoFundo = x.CodContratoFundo,
+                            CodContratoRemuneracao = x.CodContratoRemuneracao,
+                            CodSubContrato = x.CodSubContrato,
+                            CodFundo = x.CodFundo,
+                            CodInvestidor = x.CodInvestidor,
+                            Competencia = x.Competencia,
+                            CodGrupoRebate = x.CodGrupoRebate,
+                            RebateAdm = x.RebateAdm
+                        };
+                        resultadoCalculoPgtoAdmPfee.Add(c);
+                    }
+                );
+                //List<TblCalculoPgtoAdmPfee> calculoPagamentoAdminPfee = await _context.TblCalculoPgtoAdmPfee
+                //    .Where(c => c.Competencia == competencia)
+                //    .AsNoTracking()
+                //    .ToListAsync();
+
+                if (resultadoCalculoPgtoAdmPfee.Count == 0)
                 {
                     return NotFound();
                 }
 
-                return Ok(calculoPagamentoAdminPfee);
+                return Ok(resultadoCalculoPgtoAdmPfee);
             }
             catch (InvalidOperationException e)
             {
