@@ -32,7 +32,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                var listaDistribuidores = await (
+                var listaInvestidor = await (
                                     from investidor in _context.TblInvestidor
                                     from administrador in _context.TblAdministrador.Where(c => c.Id == investidor.CodAdministrador).DefaultIfEmpty()
                                     from gestor in _context.TblGestor.Where(c => c.Id == investidor.CodGestor).DefaultIfEmpty()
@@ -59,12 +59,12 @@ namespace DUDS.Controllers
                                         NomeGrupoRebate = grupoRebate == null ? String.Empty : grupoRebate.NomeGrupoRebate,
                                     }).AsNoTracking().ToListAsync();
 
-                if (listaDistribuidores.Count == 0)
+                if (listaInvestidor.Count == 0)
                 {
                     return NotFound();
                 }
 
-                return Ok(listaDistribuidores);
+                return Ok(listaInvestidor);
             }
             catch (InvalidOperationException e)
             {

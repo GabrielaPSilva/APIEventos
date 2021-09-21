@@ -476,6 +476,7 @@ namespace DUDS.Data
                 entity.HasOne(d => d.CodGrupoRebateNavigation)
                     .WithMany(p => p.TblInvestidor)
                     .HasForeignKey(d => d.CodGrupoRebate)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbl_investidor_tbl_grupo_rebate");
 
                 entity.HasOne(d => d.CodTipoContratoNavigation)

@@ -41,6 +41,7 @@ namespace DUDS.Controllers
                                          {
                                              gestor.Id,
                                              gestor.NomeGestor,
+                                             gestor.CodTipoClassificacao,
                                              gestor.Cnpj,
                                              gestor.UsuarioModificacao,
                                              gestor.DataModificacao,
@@ -75,6 +76,7 @@ namespace DUDS.Controllers
                                        {
                                            gestor.Id,
                                            gestor.NomeGestor,
+                                           gestor.CodTipoClassificacao,
                                            gestor.Cnpj,
                                            gestor.UsuarioModificacao,
                                            gestor.DataModificacao,
@@ -108,6 +110,7 @@ namespace DUDS.Controllers
                         {
                             gestor.Id,
                             gestor.NomeGestor,
+                            gestor.CodTipoClassificacao,
                             gestor.Cnpj,
                             gestor.UsuarioModificacao,
                             gestor.DataModificacao,
@@ -129,6 +132,7 @@ namespace DUDS.Controllers
                         {
                             gestor.Id,
                             gestor.NomeGestor,
+                            gestor.CodTipoClassificacao,
                             gestor.Cnpj,
                             gestor.UsuarioModificacao,
                             gestor.DataModificacao,
