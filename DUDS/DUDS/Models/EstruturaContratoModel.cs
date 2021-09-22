@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DUDS.Models
 {
-    public class EstruturaContratoValidoModel
+    public class EstruturaContratoModel
     {
         public double PercentualAdm { get; set; }
         

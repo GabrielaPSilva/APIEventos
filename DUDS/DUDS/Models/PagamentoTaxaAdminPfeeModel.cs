@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DUDS.Models
 {
-    public class PagamentoAdminPfeeModel
+    public class PagamentoTaxaAdminPfeeModel
     {
         [StringLength(7)]
         public string Competencia { get; set; }

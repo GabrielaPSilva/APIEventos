@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DUDS.Models
 {
-    public class DescricaoCalculoPgtoAdmPfeeModel
+    public class DescricaoCalculoPgtoTaxaAdmPfeeModel
     {
         public string TipoContrato { get; set; }
 
