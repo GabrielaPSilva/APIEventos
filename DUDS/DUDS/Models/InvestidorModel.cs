@@ -19,6 +19,7 @@ namespace DUDS.Models
         [StringLength(20)]
         public string TipoCliente { get; set; }
         public int CodTipoContrato { get; set; }
+        public int CodGrupoRebate { get; set; }
         public int? CodAdministrador { get; set; }
         public int? CodGestor { get; set; }
         public DateTime DataModificacao { get; set; }

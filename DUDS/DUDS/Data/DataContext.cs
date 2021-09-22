@@ -334,8 +334,6 @@ namespace DUDS.Data
 
             modelBuilder.Entity<TblEmailGrupoRebate>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Ativo).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.DataModificacao).HasDefaultValueSql("(getdate())");
