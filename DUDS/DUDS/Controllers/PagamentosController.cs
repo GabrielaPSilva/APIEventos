@@ -377,7 +377,7 @@ namespace DUDS.Controllers
         #region Calculo Pagamento Adm Pfee
         // GET: api/Pagamentos/GetCalculoPagamentoAdminPfee
         [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<TblCalculoPgtoAdmPfee>>> GetCalculoPagamentoAdminPfee(string competencia)
+        public async Task<ActionResult<IEnumerable<CalculoPgtoAdmPfeeModel>>> GetCalculoPagamentoAdminPfee(string competencia)
         {
             try
             {
@@ -435,7 +435,7 @@ namespace DUDS.Controllers
                 //    .AsNoTracking()
                 //    .ToListAsync();
 
-                if (resultadoCalculoPgtoAdmPfee.Count == 0)
+                if (resultadoCalculoPgtoAdmPfee.IsEmpty)
                 {
                     return NotFound();
                 }
@@ -520,7 +520,6 @@ namespace DUDS.Controllers
         }
 
         // GET: api/Contrato/GetDescricaoCalculoPgtoAdmPfee
-        // TODO: Modificar o tipo de retorno da função
         [HttpGet("{cod_contrato}/{cod_sub_contrato}/{cod_contrato_fundo}/{cod_contrato_remuneracao}")]
         public async Task<ActionResult<IEnumerable<DescricaoCalculoPgtoAdmPfeeModel>>> GetDescricaoCalculoPgtoAdmPfee(int cod_contrato, int cod_sub_contrato, int cod_contrato_fundo, int cod_contrato_remuneracao, [FromQuery] string cod_condicao_remuneracao)
         {
@@ -567,7 +566,6 @@ namespace DUDS.Controllers
                     VersaoContrato = detatalheContratoCalculoPgtoAdmPfee.VersaoContrato
                 };
                 detatalheContratoCalculoPgtoAdmPfee = null;
-                // TODO: Arrumar o retorno da função
                 return Ok(descricaoCalculoPgtoAdmPfee);
             }
             catch (Exception e)
