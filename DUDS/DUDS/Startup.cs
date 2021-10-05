@@ -5,16 +5,21 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,6 +66,28 @@ namespace DUDS
                };
            });
             */
+
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfigureOptions>();
+            services.AddSwaggerGen(options =>
+            {
+                options.IncludeXmlComments(xmlFilePath);
+            });
+
             services.AddCors(options =>
             {
                 options.AddPolicy("EnableCORS", builder =>
@@ -74,9 +101,10 @@ namespace DUDS
             services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dahlia Unified Data Service", Version = "v1" });
+                c.IncludeXmlComments(xmlFilePath);
+                //c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dahlia Unified Data Service", Version = "v1" });
                 //c.SwaggerDoc("common", new OpenApiInfo { Title = "Dahlia Unified Data Service - Common", Version = "Common" });
-                
+
                 /*
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
@@ -108,14 +136,28 @@ namespace DUDS
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dahlia Unified Data Service v1"));
-                //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/common/swagger.json", "Dahlia Unified Data Service Common"));
+                app.UseSwagger(options =>
+                {
+                    options.PreSerializeFilters.Add((swagger, req) =>
+                    {
+                        swagger.Servers = new List<OpenApiServer>() { new OpenApiServer() { Url = $"https://{req.Host}" } };
+                    });
+                });
+                //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dahlia Unified Data Service v1"));
+                app.UseSwaggerUI(options =>
+                {
+                    foreach (var desc in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint($"../swagger/{desc.GroupName}/swagger.json", "DUDS v" + desc.ApiVersion.ToString().Split(".")[0]);//desc.ApiVersion.ToString());
+                        options.DefaultModelsExpandDepth(-1);
+                        options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+                    }
+                });
             }
 
             app.UseHttpsRedirection();
@@ -129,6 +171,37 @@ namespace DUDS
             {
                 endpoints.MapControllers();
             });
+        }
+    }
+
+    public class SwaggerConfigureOptions : IConfigureOptions<SwaggerGenOptions>
+    {
+        private readonly IApiVersionDescriptionProvider _provider;
+
+        public SwaggerConfigureOptions(IApiVersionDescriptionProvider provider) => _provider = provider;
+
+        public void Configure(SwaggerGenOptions options)
+        {
+            foreach (var desc in _provider.ApiVersionDescriptions)
+            {
+                options.SwaggerDoc(desc.GroupName, new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "Dahlia Unified Data Service",
+                    Version = "DUDS v" + desc.ApiVersion.ToString().Split(".")[0],
+                    Description = "This is a Web API for Movies operations",
+                    TermsOfService = new Uri("http://www.dahliacapital.com.br"),
+                    License = new OpenApiLicense()
+                    {
+                        Name = "MIT"
+                    },
+                    Contact = new OpenApiContact()
+                    {
+                        Name = "Dahlia DevOps",
+                        Email = "dahlia.devops@dahliacapuital.com.br",
+                        Url = new Uri("http://www.dahliacapital.com.br")
+                    }
+                });
+            }
         }
     }
 }

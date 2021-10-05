@@ -10,10 +10,10 @@ using DUDS.Models;
 using DUDS.Service.Interface;
 using Newtonsoft.Json;
 
-namespace DUDS.Controllers.V1
+namespace DUDS.Controllers.V2
 {
     [Produces("application/json")]
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/[Controller]/[action]")]
     [ApiController]
     public class AdministradorController : ControllerBase

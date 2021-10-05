@@ -28,7 +28,7 @@ namespace DUDS.Controllers
         {
             try
             {
-                var grupoRebate = await _context.TblGrupoRebate.Where(c => c.Ativo == true).OrderBy(c => c.NomeGrupoRebate).ToListAsync();
+                List<TblGrupoRebate> grupoRebate = await _context.TblGrupoRebate.Where(c => c.Ativo == true).OrderBy(c => c.NomeGrupoRebate).ToListAsync();
 
                 if (grupoRebate.Count == 0)
                 {
