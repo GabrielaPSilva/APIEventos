@@ -22,6 +22,7 @@ namespace DUDS.Controllers
             _context = context;
         }
 
+        #region Grupo Rebate
         // GET: api/GrupoRebate/GetTblGrupoRebate
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblGrupoRebate>>> GetGrupoRebate()
@@ -201,5 +202,52 @@ namespace DUDS.Controllers
         {
             return _context.TblGrupoRebate.Any(e => e.Id == id);
         }
+
+        #endregion
+
+        #region Email Grupo Rebate
+        // GET: api/GrupoRebate/GetEmailGrupoRebate
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TblEmailGrupoRebate>>> GetEmailGrupoRebate()
+        {
+            try
+            {
+                var emailGrupoRebate = await _context.TblEmailGrupoRebate.Where(c => c.Ativo == true).OrderBy(c => c.Email).ToListAsync();
+
+                if (emailGrupoRebate.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(emailGrupoRebate);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/GrupoRebate/GetEmailGrupoRebateById/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblEmailGrupoRebate>> GetEmailGrupoRebateById(int id)
+        {
+            try
+            {
+                TblEmailGrupoRebate tblEmailGrupoRebate = await _context.TblEmailGrupoRebate.FindAsync(id);
+
+                if (tblEmailGrupoRebate == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(tblEmailGrupoRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        #endregion
     }
 }
