@@ -1,27 +1,18 @@
 using DUDS.Service;
 using DUDS.Service.Interface;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DUDS
 {
@@ -179,34 +170,5 @@ namespace DUDS
         }
     }
 
-    public class SwaggerConfigureOptions : IConfigureOptions<SwaggerGenOptions>
-    {
-        private readonly IApiVersionDescriptionProvider _provider;
-
-        public SwaggerConfigureOptions(IApiVersionDescriptionProvider provider) => _provider = provider;
-
-        public void Configure(SwaggerGenOptions options)
-        {
-            foreach (var desc in _provider.ApiVersionDescriptions)
-            {
-                options.SwaggerDoc(desc.GroupName, new Microsoft.OpenApi.Models.OpenApiInfo
-                {
-                    Title = "Dahlia Unified Data Service",
-                    Version = "DUDS v" + desc.ApiVersion.ToString().Split(".")[0],
-                    Description = "This is a Web API for Movies operations",
-                    TermsOfService = new Uri("http://www.dahliacapital.com.br"),
-                    License = new OpenApiLicense()
-                    {
-                        Name = "MIT"
-                    },
-                    Contact = new OpenApiContact()
-                    {
-                        Name = "Dahlia DevOps",
-                        Email = "dahlia.devops@dahliacapuital.com.br",
-                        Url = new Uri("http://www.dahliacapital.com.br")
-                    }
-                });
-            }
-        }
-    }
+    
 }
