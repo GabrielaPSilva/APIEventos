@@ -12,7 +12,7 @@ namespace DUDS.Service
     {
         public async Task<IEnumerable<AdministradorModel>> GetAdministrador()
         {
-            using (var connection = await SqlHelpers.Standard.ConnectionFactory.ConexaoAsync("db_dahlia_desenv"))
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT 
 	                            *
@@ -26,5 +26,44 @@ namespace DUDS.Service
                 return await connection.QueryAsync<AdministradorModel>(query);
             }
         }
+
+        //public async Task<AdministradorModel> GetAdministradorById(int codigo)
+        //{
+        //    using (var connection = await ConnectionFactorySqlServer.ConexaoAsync("BaseEducacional"))
+        //    {
+        //        #region QUERY
+
+        //        const string query = @"
+        //                        SELECT 
+        //                            * 
+        //                        FROM 
+        //                            MECInstituicao
+        //                        WHERE
+        //                            Codigo = @codigo";
+
+        //        #endregion
+
+        //        return await connection.QueryFirstOrDefaultAsync<InstituicaoMOD>(query, new { codigo });
+        //    }
+        //}
+
+        //public async Task<bool> CadastrarInstituicaoAsync(InstituicaoMOD instituicao)
+        //{
+        //    using (var connection = await ConnectionFactorySqlServer.ConexaoAsync("BaseEducacional"))
+        //    {
+        //        #region QUERY
+
+        //        const string query = @"
+        //                        INSERT INTO
+        //                            MECInstituicao 
+        //                           (Nome, CodigoMEC, Mantenedora, CNPJ, CEP, Numero, Ativo)
+        //                        VALUES
+        //                           (@Nome, @CodigoMEC, @Mantenedora, @CNPJ, @CEP, @Numero, 1)";
+
+        //        #endregion
+
+        //        return await connection.ExecuteAsync(query, instituicao) > 0;
+        //    }
+        //}
     }
 }

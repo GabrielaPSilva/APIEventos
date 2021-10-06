@@ -16,13 +16,11 @@ namespace DUDS.Service
 {
     public class ConfiguracaoService : IConfiguracaoService
     {
-        private readonly DataContext _context;
         private IConfiguration _config;
         string Sistema = "DUDS";
 
-        public ConfiguracaoService(DataContext context, IConfiguration config)
+        public ConfiguracaoService(IConfiguration config)
         {
-            _context = context;
             _config = config;
         }
 
@@ -138,7 +136,7 @@ namespace DUDS.Service
                         StringBuilder query = new StringBuilder();
                         query.AppendLine("SELECT * FROM " + item + " WHERE " + codUsed + id);
 
-                        using (var connection = await SqlHelpers.Standard.ConnectionFactory.ConexaoAsync("db_dahlia_dev"))
+                        using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
                         {
                             retorno = await connection.QueryFirstOrDefaultAsync<int>(query.ToString(), new { item, id }) > 0;
 

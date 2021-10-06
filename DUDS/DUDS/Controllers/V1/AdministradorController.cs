@@ -27,25 +27,6 @@ namespace DUDS.Controllers.V1
             _administradorService = administradorService;
         }
 
-        //public async Task<ActionResult<IEnumerable<TblAdministrador>>> GetAdministrador()
-        //{
-        //    try
-        //    {
-        //        List<TblAdministrador> administradores = await _context.TblAdministrador.Where(c => c.Ativo == true).OrderBy(c => c.NomeAdministrador).AsNoTracking().ToListAsync();
-
-        //        if (administradores.Count == 0)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        return Ok(administradores);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
-
         // GET: api/Administrador/GetAdministrador
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdministradorModel>>> GetAdministrador()
