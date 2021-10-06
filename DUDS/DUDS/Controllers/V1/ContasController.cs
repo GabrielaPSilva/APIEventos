@@ -9,10 +9,11 @@ using DUDS.Data;
 using DUDS.Models;
 using DUDS.Service.Interface;
 
-namespace DUDS.Controllers
+namespace DUDS.Controllers.V1
 {
     [Produces("application/json")]
-    [Route("api/[Controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[Controller]/[action]")]
     [ApiController]
     public class ContasController : ControllerBase
     {
@@ -383,6 +384,36 @@ namespace DUDS.Controllers
                 }
 
                 return Ok(tblContas);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException.Message);
+            }
+        }
+
+        // GET: api/Contas/GetTipoContaExistsBase/tipoConta/descricaoConta
+        [HttpGet("{tipoConta}/{descricaoConta}")]
+        public async Task<ActionResult<TblTipoConta>> GetTipoContaExistsBase(string tipoConta, string descricaoConta)
+        {
+            TblTipoConta tblTipoConta = new TblTipoConta();
+
+            try
+            {
+                tblTipoConta = await _context.TblTipoConta.Where(c => c.Ativo == false && c.TipoConta == tipoConta && c.DescricaoConta == descricaoConta).FirstOrDefaultAsync();
+
+                if (tblTipoConta != null)
+                {
+                    return Ok(tblTipoConta);
+                }
+
+                tblTipoConta = await _context.TblTipoConta.Where(c => c.TipoConta == tipoConta && c.DescricaoConta == descricaoConta).FirstOrDefaultAsync();
+
+                if (tblTipoConta != null)
+                {
+                    return Ok(tblTipoConta);
+                }
+
+                return NotFound();
             }
             catch (Exception e)
             {

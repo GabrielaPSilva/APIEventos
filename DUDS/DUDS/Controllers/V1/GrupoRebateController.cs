@@ -8,10 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 
-namespace DUDS.Controllers
+namespace DUDS.Controllers.V1
 {
     [Produces("application/json")]
-    [Route("api/[Controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[Controller]/[action]")]
     [ApiController]
     public class GrupoRebateController : ControllerBase
     {
@@ -22,13 +23,14 @@ namespace DUDS.Controllers
             _context = context;
         }
 
+        #region Grupo Rebate
         // GET: api/GrupoRebate/GetTblGrupoRebate
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblGrupoRebate>>> GetGrupoRebate()
         {
             try
             {
-                var grupoRebate = await _context.TblGrupoRebate.Where(c => c.Ativo == true).OrderBy(c => c.NomeGrupoRebate).ToListAsync();
+                List<TblGrupoRebate> grupoRebate = await _context.TblGrupoRebate.Where(c => c.Ativo == true).OrderBy(c => c.NomeGrupoRebate).ToListAsync();
 
                 if (grupoRebate.Count == 0)
                 {
@@ -201,5 +203,52 @@ namespace DUDS.Controllers
         {
             return _context.TblGrupoRebate.Any(e => e.Id == id);
         }
+
+        #endregion
+
+        #region Email Grupo Rebate
+        // GET: api/GrupoRebate/GetEmailGrupoRebate
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TblEmailGrupoRebate>>> GetEmailGrupoRebate()
+        {
+            try
+            {
+                var emailGrupoRebate = await _context.TblEmailGrupoRebate.Where(c => c.Ativo == true).OrderBy(c => c.Email).ToListAsync();
+
+                if (emailGrupoRebate.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(emailGrupoRebate);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/GrupoRebate/GetEmailGrupoRebateById/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblEmailGrupoRebate>> GetEmailGrupoRebateById(int id)
+        {
+            try
+            {
+                TblEmailGrupoRebate tblEmailGrupoRebate = await _context.TblEmailGrupoRebate.FindAsync(id);
+
+                if (tblEmailGrupoRebate == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(tblEmailGrupoRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        #endregion
     }
 }

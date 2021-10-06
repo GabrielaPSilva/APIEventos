@@ -10,10 +10,11 @@ using DUDS.Models;
 using EFCore.BulkExtensions;
 using System.Collections.Concurrent;
 
-namespace DUDS.Controllers
+namespace DUDS.Controllers.V1
 {
     [Produces("application/json")]
-    [Route("api/[Controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[Controller]/[action]")]
     [ApiController]
     public class PagamentosController : ControllerBase
     {
@@ -126,10 +127,10 @@ namespace DUDS.Controllers
         }
         #endregion
 
-        #region Pagamento Admin Pfee
-        // GET: api/Pagamentos/GetPgtoAdmPfee
+        #region Pagamento Taxa Admin Pfee
+        // GET: api/Pagamentos/GetPgtoTaxaAdmPfee
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> GetPgtoAdmPfee()
+        public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> GetPgtoTaxaAdmPfee()
         {
             try
             {
@@ -148,9 +149,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Pagamentos/GetPgtoAdmPfeeByIds/competencia/cod_investidor_distribuidor/cod_administrador/cod_fundo
+        // GET: api/Pagamentos/GetPgtoTaxaAdmPfeeByIds/competencia/cod_investidor_distribuidor/cod_administrador/cod_fundo
         [HttpGet("{competencia}/{cod_investidor_distribuidor}/{cod_administrador}/{cod_fundo}")]
-        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoAdmPfeeByIds(string competencia, int cod_investidor_distribuidor, int cod_administrador, int cod_fundo)
+        public async Task<ActionResult<TblPgtoAdmPfee>> GetPgtoTaxaAdmPfeeByIds(string competencia, int cod_investidor_distribuidor, int cod_administrador, int cod_fundo)
         {
             try
             {
@@ -167,9 +168,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Pagamentos/AddPagamentoAdminPfee/List<PagamentoAdminPfeeModel>
+        //POST: api/Pagamentos/AddPgtoTaxaAdminPfee/List<PagamentoTaxaAdminPfeeModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<PagamentoAdminPfeeModel>>> AddPagamentoAdminPfee(List<PagamentoAdminPfeeModel> tblPagamentoAdminPfeeModel)
+        public async Task<ActionResult<IEnumerable<PagamentoTaxaAdminPfeeModel>>> AddPgtoTaxaAdminPfee(List<PagamentoTaxaAdminPfeeModel> tblPagamentoAdminPfeeModel)
         {
             List<TblPgtoAdmPfee> listaPagamentosAdminPfee = new List<TblPgtoAdmPfee>();
             // TblPgtoAdmPfee itensPagamentoAdminPfee = new TblPgtoAdmPfee();
@@ -197,7 +198,7 @@ namespace DUDS.Controllers
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(
-                   nameof(GetPgtoAdmPfee), listaPagamentosAdminPfee);
+                   nameof(GetPgtoTaxaAdmPfee), listaPagamentosAdminPfee);
             }
             catch (Exception e)
             {
@@ -205,9 +206,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Pagamentos/DeletePagamentoAdminPfee/competencia
+        // DELETE: api/Pagamentos/DeletePagamentoTaxaAdminPfee/competencia
         [HttpDelete("{competencia}")]
-        public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> DeletePagamentoAdminPfee(string competencia)
+        public async Task<ActionResult<IEnumerable<TblPgtoAdmPfee>>> DeletePagamentoTaxaAdminPfee(string competencia)
         {
             IList<TblPgtoAdmPfee> tblPagamentoAdminPfee = await _context.TblPgtoAdmPfee.Where(c => c.Competencia == competencia).ToListAsync();
 
@@ -230,10 +231,10 @@ namespace DUDS.Controllers
 
         #endregion
 
-        #region Pagamento Admin Pfee Investidor
-        // GET: api/Pagamentos/GetPgtoAdmPfeeInvestidor
+        #region Pagamento Taxa Admin Pfee Com Dados do Investidor
+        // GET: api/Pagamentos/GetPgtoTaxaAdmPfeeInvestidor
         [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<PagamentoAdmPfeeInvestidorModel>>> GetPgtoAdmPfeeInvestidor(string competencia)
+        public async Task<ActionResult<IEnumerable<PagamentoAdmPfeeInvestidorModel>>> GetPgtoTaxaAdmPfeeInvestidor(string competencia)
         {
             try
             {
@@ -261,52 +262,7 @@ namespace DUDS.Controllers
                                               CodigoAdministradorInvestidor = investidor.CodAdministrador,
                                               CodigoGestorInvestidor = investidor.CodGestor
                                           }).AsNoTracking().ToListAsync();
-                /*
-                var pgtosAdmPfee = await _context.TblPgtoAdmPfee
-                    .Join(
-                        _context.TblInvestidorDistribuidor,
-                        pgtoAdmPfee => pgtoAdmPfee.CodInvestidorDistribuidor,
-                        investidorDistribuidor => investidorDistribuidor.Id,
-                        (pgtoAdmPfee, investidorDistribuidor) => new
-                        {
-                            pgtoAdmPfee.Competencia,
-                            pgtoAdmPfee.CodFundo,
-                            SourceAdministrador = pgtoAdmPfee.CodAdministrador,
-                            pgtoAdmPfee.TaxaAdministracao,
-                            pgtoAdmPfee.TaxaPerformanceApropriada,
-                            pgtoAdmPfee.TaxaPerformanceResgate,
-                            CodigoInvestidorAdministrador = investidorDistribuidor.CodInvestAdministrador,
-                            CodigoInvestidor = investidorDistribuidor.CodInvestidor,
-                            CodigoDistribuidorInvestidor = investidorDistribuidor.CodDistribuidor,
-                            CodigoAdministradorCodigoInvestidor = investidorDistribuidor.CodAdministrador
-
-                        }
-                        )
-                    .Join(
-                        _context.TblInvestidor,
-                        pgtoAdmPfeeInvestidorDistribuidor => pgtoAdmPfeeInvestidorDistribuidor.CodigoInvestidor,
-                        investidor => investidor.Id,
-                        (pgtoAdmPfeeInvestidorDistribuidor, investidor) => new
-                        {
-                            pgtoAdmPfeeInvestidorDistribuidor.Competencia,
-                            pgtoAdmPfeeInvestidorDistribuidor.CodFundo,
-                            pgtoAdmPfeeInvestidorDistribuidor.SourceAdministrador,
-                            pgtoAdmPfeeInvestidorDistribuidor.TaxaAdministracao,
-                            pgtoAdmPfeeInvestidorDistribuidor.TaxaPerformanceApropriada,
-                            pgtoAdmPfeeInvestidorDistribuidor.TaxaPerformanceResgate,
-                            pgtoAdmPfeeInvestidorDistribuidor.CodigoInvestidorAdministrador,
-                            pgtoAdmPfeeInvestidorDistribuidor.CodigoInvestidor,
-                            pgtoAdmPfeeInvestidorDistribuidor.CodigoDistribuidorInvestidor,
-                            pgtoAdmPfeeInvestidorDistribuidor.CodigoAdministradorCodigoInvestidor,
-                            NomeInvestidor = investidor.NomeCliente,
-                            investidor.Cnpj,
-                            investidor.TipoCliente,
-                            //investidor.DirecaoPagamento,
-                            CodigoAdministradorInvestidor = investidor.CodAdministrador,
-                            CodigoGestorInvestidor = investidor.CodGestor
-                        }
-                    ).Where(c => c.Competencia == competencia).AsNoTracking().ToListAsync();
-                */
+                
                 // Verificando a possibilidade de utilizar funções em paralelo para aumentar a velocidade de processamento.
                 ConcurrentBag<PagamentoAdmPfeeInvestidorModel> pagamentoAdmPfeeInvestidor = new ConcurrentBag<PagamentoAdmPfeeInvestidorModel>();
                 Parallel.ForEach(
@@ -336,30 +292,7 @@ namespace DUDS.Controllers
                         pagamentoAdmPfeeInvestidor.Add(c);
                     }
                 );
-                /*
-                List<PagamentoAdmPfeeInvestidorModel> pagamentoAdmPfeeInvestidor = pgtosAdmPfee
-                    .ConvertAll(
-                    x => new PagamentoAdmPfeeInvestidorModel
-                    {
-                        Cnpj = x.Cnpj,
-                        CodFundo = x.CodFundo,
-                        CodigoAdministradorCodigoInvestidor = x.CodigoAdministradorCodigoInvestidor,
-                        CodigoAdministradorInvestidor = x.CodigoAdministradorInvestidor,
-                        CodigoDistribuidorInvestidor = x.CodigoDistribuidorInvestidor,
-                        CodigoGestorInvestidor = x.CodigoGestorInvestidor,
-                        CodigoInvestidor = x.CodigoInvestidor,
-                        CodigoInvestidorAdministrador = x.CodigoInvestidorAdministrador,
-                        Competencia = x.Competencia,
-                        //DirecaoPagamento = x.DirecaoPagamento,
-                        NomeInvestidor = x.NomeInvestidor,
-                        SourceAdministrador = x.SourceAdministrador,
-                        TaxaAdministracao = x.TaxaAdministracao,
-                        TaxaPerformanceApropriada = x.TaxaPerformanceApropriada,
-                        TaxaPerformanceResgate = x.TaxaPerformanceResgate,
-                        TipoCliente = x.TipoCliente
-                    }
-                    );
-                */
+                
                 if (pagamentoAdmPfeeInvestidor.IsEmpty)
                 {
                     return NotFound();
@@ -375,14 +308,15 @@ namespace DUDS.Controllers
         #endregion
 
         #region Calculo Pagamento Adm Pfee
-        // GET: api/Pagamentos/GetCalculoPagamentoAdminPfee
+        // GET: api/Pagamentos/GetCalculoPgtoTaxaAdminPfee
         [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<CalculoPgtoAdmPfeeModel>>> GetCalculoPagamentoAdminPfee(string competencia)
+        public async Task<ActionResult<IEnumerable<CalculoPgtoTaxaAdmPfeeModel>>> GetCalculoPgtoTaxaAdminPfee(string competencia)
         {
             try
             {
                 var calculoPagamentoAdminPfee = await (from calculoPgtoAdmPfee in _context.TblCalculoPgtoAdmPfee.Where(c => c.Competencia == competencia)
                                                        from investidor in _context.TblInvestidor.Where(i => i.Id == calculoPgtoAdmPfee.CodInvestidor)
+                                                       //where investidor.Ativo.Equals(1) && calculoPgtoAdmPfee.Ativo.Equals(1)
                                                        select new
                                                        {
                                                            investidor.CodGrupoRebate,
@@ -403,12 +337,12 @@ namespace DUDS.Controllers
                                                            calculoPgtoAdmPfee.ValorPfeeSementre
                                                        }).AsNoTracking().ToListAsync();
 
-                ConcurrentBag<CalculoPgtoAdmPfeeModel> resultadoCalculoPgtoAdmPfee = new ConcurrentBag<CalculoPgtoAdmPfeeModel>();
+                ConcurrentBag<CalculoPgtoTaxaAdmPfeeModel> resultadoCalculoPgtoAdmPfee = new ConcurrentBag<CalculoPgtoTaxaAdmPfeeModel>();
                 Parallel.ForEach(
                     calculoPagamentoAdminPfee,
                     x =>
                     {
-                        CalculoPgtoAdmPfeeModel c = new CalculoPgtoAdmPfeeModel
+                        CalculoPgtoTaxaAdmPfeeModel c = new CalculoPgtoTaxaAdmPfeeModel
                         {
                             CodAdministrador = x.CodAdministrador,
                             CodCondicaoRemuneracao = x.CodCondicaoRemuneracao,
@@ -448,9 +382,9 @@ namespace DUDS.Controllers
             }
         }
 
-        //POST: api/Pagamentos/AddCalculoPagamentoAdminPfee/List<CalculoPgtoAdmPfeeModel>
+        //POST: api/Pagamentos/AddCalculoPgtoTaxaAdminPfee/List<CalculoPgtoTaxaAdmPfeeModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<CalculoPgtoAdmPfeeModel>>> AddCalculoPagamentoAdminPfee(List<CalculoPgtoAdmPfeeModel> tblCalculoPgtoAdmPfeeModel)
+        public async Task<ActionResult<IEnumerable<CalculoPgtoTaxaAdmPfeeModel>>> AddCalculoPgtoTaxaAdminPfee(List<CalculoPgtoTaxaAdmPfeeModel> tblCalculoPgtoAdmPfeeModel)
         {
             List<TblCalculoPgtoAdmPfee> listaCalculoPagamentosAdminPfee = new List<TblCalculoPgtoAdmPfee>();
 
@@ -485,7 +419,7 @@ namespace DUDS.Controllers
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(
-                 nameof(GetCalculoPagamentoAdminPfee), listaCalculoPagamentosAdminPfee);
+                 nameof(GetCalculoPgtoTaxaAdminPfee), listaCalculoPagamentosAdminPfee);
             }
             catch (Exception e)
             {
@@ -493,9 +427,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // DELETE: api/Pagamentos/DeleteCalculoPagamentoAdminPfee/competencia
+        // DELETE: api/Pagamentos/DeleteCalculoPgtoTaxaAdminPfee/competencia
         [HttpDelete("{competencia}")]
-        public async Task<ActionResult<IEnumerable<TblCalculoPgtoAdmPfee>>> DeleteCalculoPagamentoAdminPfee(string competencia)
+        public async Task<ActionResult<IEnumerable<TblCalculoPgtoAdmPfee>>> DeleteCalculoPgtoTaxaAdminPfee(string competencia)
         {
             try
             {
@@ -519,9 +453,9 @@ namespace DUDS.Controllers
             }
         }
 
-        // GET: api/Contrato/GetDescricaoCalculoPgtoAdmPfee
+        // GET: api/Contrato/GetDescricaoCalculoPgtoTaxaAdmPfee
         [HttpGet("{cod_contrato}/{cod_sub_contrato}/{cod_contrato_fundo}/{cod_contrato_remuneracao}")]
-        public async Task<ActionResult<IEnumerable<DescricaoCalculoPgtoAdmPfeeModel>>> GetDescricaoCalculoPgtoAdmPfee(int cod_contrato, int cod_sub_contrato, int cod_contrato_fundo, int cod_contrato_remuneracao, [FromQuery] string cod_condicao_remuneracao)
+        public async Task<ActionResult<IEnumerable<DescricaoCalculoPgtoTaxaAdmPfeeModel>>> GetDescricaoCalculoPgtoTaxaAdmPfee(int cod_contrato, int cod_sub_contrato, int cod_contrato_fundo, int cod_contrato_remuneracao, [FromQuery] string cod_condicao_remuneracao)
         {
             try
             {
@@ -534,6 +468,7 @@ namespace DUDS.Controllers
                                                                  from contratoRemuneracao in _context.TblContratoRemuneracao.Where(cR => cR.Id == cod_contrato_remuneracao)
                                                                  from distribuidor in _context.TblDistribuidor.Where(d => d.Id == contrato.CodDistribuidor).DefaultIfEmpty()
                                                                  from gestor in _context.TblGestor.Where(g => g.Id == contrato.Parceiro).DefaultIfEmpty()
+                                                                 //where contrato.Ativo.Equals(1)
                                                                  select new
                                                                  {
                                                                      tipoContrato.TipoContrato,
@@ -550,7 +485,7 @@ namespace DUDS.Controllers
                                                                      contratoRemuneracao.PercentualPfee
                                                                  }).AsNoTracking().FirstOrDefaultAsync();
 
-                DescricaoCalculoPgtoAdmPfeeModel descricaoCalculoPgtoAdmPfee = new DescricaoCalculoPgtoAdmPfeeModel
+                DescricaoCalculoPgtoTaxaAdmPfeeModel descricaoCalculoPgtoAdmPfee = new DescricaoCalculoPgtoTaxaAdmPfeeModel
                 {
                     DataRetroatividade = detatalheContratoCalculoPgtoAdmPfee.DataRetroatividade,
                     DataVigenciaFim = detatalheContratoCalculoPgtoAdmPfee.DataVigenciaFim,
