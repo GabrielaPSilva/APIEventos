@@ -8,10 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
 
-namespace DUDS.Controllers
+namespace DUDS.Controllers.V1
 {
     [Produces("application/json")]
-    [Route("api/[Controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[Controller]/[action]")]
     [ApiController]
     public class TipoClassificacaoController : ControllerBase
     {

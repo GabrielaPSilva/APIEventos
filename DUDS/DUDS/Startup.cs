@@ -131,6 +131,7 @@ namespace DUDS
                 });
                 */
             });
+            services.AddSwaggerGenNewtonsoftSupport();
 
             services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
         }
@@ -151,11 +152,14 @@ namespace DUDS
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dahlia Unified Data Service v1"));
                 app.UseSwaggerUI(options =>
                 {
+                    options.ConfigObject.AdditionalItems.Add("syntaxHighlight", false); //Turns off syntax highlight which causing performance issues...
+                    options.ConfigObject.AdditionalItems.Add("theme", "agate"); //Reverts Swagger UI 2.x  theme which is simpler not much performance benefit...
                     foreach (var desc in apiVersionDescriptionProvider.ApiVersionDescriptions)
                     {
                         options.SwaggerEndpoint($"../swagger/{desc.GroupName}/swagger.json", "DUDS v" + desc.ApiVersion.ToString().Split(".")[0]);//desc.ApiVersion.ToString());
                         options.DefaultModelsExpandDepth(-1);
                         options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+                        
                     }
                 });
             }

@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DUDS.Controllers
+namespace DUDS.Controllers.V1
 {
     [Route("api/[controller]")]
     [ApiController]
