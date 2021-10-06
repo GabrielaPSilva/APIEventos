@@ -32,7 +32,7 @@ namespace DUDS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<Data.DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DahliaDatabaseContext")));
+            // services.AddDbContext<Data.DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DahliaDatabaseContext")));
             // services.AddControllers();
             
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -105,6 +105,7 @@ namespace DUDS
             });
 
             services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
+            services.AddScoped<IAdministradorService, AdministradorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
