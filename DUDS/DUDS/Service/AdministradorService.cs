@@ -27,43 +27,84 @@ namespace DUDS.Service
             }
         }
 
-        //public async Task<AdministradorModel> GetAdministradorById(int codigo)
-        //{
-        //    using (var connection = await ConnectionFactorySqlServer.ConexaoAsync("BaseEducacional"))
-        //    {
-        //        #region QUERY
+        public async Task<AdministradorModel> GetAdministradorById(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query = @"
+                                SELECT 
+                                    * 
+                                FROM 
+                                    tbl_administrador
+                                WHERE
+                                    id = @id";
 
-        //        const string query = @"
-        //                        SELECT 
-        //                            * 
-        //                        FROM 
-        //                            MECInstituicao
-        //                        WHERE
-        //                            Codigo = @codigo";
+                return await connection.QueryFirstOrDefaultAsync<AdministradorModel>(query, new { id });
+            }
+        }
 
-        //        #endregion
+        public async Task<bool> AddAdministrador(AdministradorModel administrador)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query = @"
+                                INSERT INTO
+                                    tbl_administrador 
+                                   (nome_administrador, cnpj, data_modificacao, usuario_modificacao, ativo)
+                                VALUES
+                                   (@NomeAdministrador, @Cnpj, GETDATE(), @UsuarioModificacao, 1)";
 
-        //        return await connection.QueryFirstOrDefaultAsync<InstituicaoMOD>(query, new { codigo });
-        //    }
-        //}
+                return await connection.ExecuteAsync(query, administrador) > 0;
+            }
+        }
 
-        //public async Task<bool> CadastrarInstituicaoAsync(InstituicaoMOD instituicao)
-        //{
-        //    using (var connection = await ConnectionFactorySqlServer.ConexaoAsync("BaseEducacional"))
-        //    {
-        //        #region QUERY
+        public async Task<bool> UpdateAdministrador(AdministradorModel administrador)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query = @"
+                                UPDATE
+                                    tbl_administrador
+                                SET 
+                                    nome_administrador = @NomeAdministrador,
+                                    cnpj = @Cnpj
+                                WHERE    
+                                    id = @Id";
 
-        //        const string query = @"
-        //                        INSERT INTO
-        //                            MECInstituicao 
-        //                           (Nome, CodigoMEC, Mantenedora, CNPJ, CEP, Numero, Ativo)
-        //                        VALUES
-        //                           (@Nome, @CodigoMEC, @Mantenedora, @CNPJ, @CEP, @Numero, 1)";
+                return await connection.ExecuteAsync(query, administrador) > 0;
+            }
+        }
 
-        //        #endregion
+        public async Task<bool> DisableAdministrador(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query = @"
+                                UPDATE
+                                    tbl_administrador
+                                SET 
+                                    ativo = 0
+                                WHERE    
+                                    id = @id";
 
-        //        return await connection.ExecuteAsync(query, instituicao) > 0;
-        //    }
-        //}
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
+
+        public async Task<bool> ActivateAdministrador(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query = @"
+                                UPDATE
+                                    tbl_administrador
+                                SET 
+                                    ativo = 1
+                                WHERE    
+                                    id = @id";
+
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
     }
 }

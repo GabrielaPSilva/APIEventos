@@ -49,25 +49,25 @@ namespace DUDS.Controllers.V1
         }
 
         // GET: api/Administrador/GetAdministradorById/id
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<TblAdministrador>> GetAdministradorById(int id)
-        //{
-        //    try
-        //    {
-        //        TblAdministrador tblAdministrador = await _context.TblAdministrador.FindAsync(id);
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TblAdministrador>> GetAdministradorById(int id)
+        {
+            try
+            {
+                var tblAdministrador = await _administradorService.GetAdministradorById(id);
 
-        //        if (tblAdministrador == null)
-        //        {
-        //            return NotFound();
-        //        }
+                if (tblAdministrador == null)
+                {
+                    return NotFound();
+                }
 
-        //        return Ok(tblAdministrador);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
+                return Ok(tblAdministrador);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException.Message);
+            }
+        }
 
         //// GET: api/Administrador/GetAdministradorExistsBase/cnpj/nome
         //[HttpGet("{cnpj}/{nome}")]
@@ -99,144 +99,101 @@ namespace DUDS.Controllers.V1
         //    }
         //}
 
-        ////POST: api/Administrador/AddAdministrador/AdministradorModel
-        //[HttpPost]
-        //public async Task<ActionResult<AdministradorModel>> AddAdministrador(AdministradorModel tblAdministradorModel)
-        //{
-        //    TblAdministrador itensAdministrador = new TblAdministrador
-        //    {
-        //        NomeAdministrador = tblAdministradorModel.NomeAdministrador,
-        //        Cnpj = tblAdministradorModel.Cnpj,
-        //        UsuarioModificacao = tblAdministradorModel.UsuarioModificacao
-        //    };
+        // POST: api/Administrador/AddAdministrador/AdministradorModel
+        [HttpPost]
+        public async Task<ActionResult<AdministradorModel>> AddAdministrador(AdministradorModel administradorModel)
+        {
+            try
+            {
+                var retorno = await _administradorService.AddAdministrador(administradorModel);
 
-        //    try
-        //    {
-        //        _context.TblAdministrador.Add(itensAdministrador);
-        //        await _context.SaveChangesAsync();
+                return CreatedAtAction(
+                   nameof(GetAdministrador),
+                   new { id = administradorModel.Id }, administradorModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException.Message);
+            }
+        }
 
-        //        return CreatedAtAction(
-        //           nameof(GetAdministrador),
-        //           new { id = itensAdministrador.Id }, itensAdministrador);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
+        // PUT: api/Administrador/UpdateAdministrador/id
+        [HttpPut()]
+        public async Task<IActionResult> UpdateAdministrador(AdministradorModel administradorModel)
+        {
+            try
+            {
+                var registroAdministrador = await _administradorService.GetAdministradorById(administradorModel.Id);
 
-        ////PUT: api/Administrador/UpdateAdministrador/id
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateAdministrador(int id, AdministradorModel administrador)
-        //{
-        //    try
-        //    {
-        //        TblAdministrador registroAdministrador = await _context.TblAdministrador.FindAsync(id);
+                if (registroAdministrador != null)
+                {
+                    try
+                    {
+                        await _administradorService.UpdateAdministrador(administradorModel);
+                        return Ok(registroAdministrador);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e.InnerException.Message);
+                    }
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                return BadRequest(e.InnerException.Message);
+            }
+        }
 
-        //        if (registroAdministrador != null)
-        //        {
-        //            registroAdministrador.NomeAdministrador = administrador.NomeAdministrador == null ? registroAdministrador.NomeAdministrador : administrador.NomeAdministrador;
-        //            registroAdministrador.Cnpj = administrador.Cnpj == null ? registroAdministrador.Cnpj : administrador.Cnpj;
+        // DESATIVA: api/Administrador/DisableAdministrador/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DisableAdministrador(int id)
+        {
+            var registroAdministrador = await _administradorService.GetAdministradorById(id);
 
-        //            try
-        //            {
-        //                await _context.SaveChangesAsync();
-        //                return Ok(registroAdministrador);
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                return BadRequest(e.InnerException.Message);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return NotFound();
-        //        }
-        //    }
-        //    catch (DbUpdateConcurrencyException e) when (!AdministradorExists(administrador.Id))
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
+            if (registroAdministrador != null)
+            {
+                try
+                {
+                    await _administradorService.DisableAdministrador(id);
+                    return Ok(registroAdministrador);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
-        //// DELETE: api/Administrador/DeleteAdministrador/id
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteAdministrador(int id)
-        //{
-        //    TblAdministrador tblAdministrador = await _context.TblAdministrador.FindAsync(id);
+        // ATIVAR: api/Administrador/ActivateAdministrador/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateAdministrador(int id)
+        {
+            var registroAdministrador = await _administradorService.GetAdministradorById(id);
 
-        //    if (tblAdministrador == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    try
-        //    {
-        //        _context.TblAdministrador.Remove(tblAdministrador);
-        //        await _context.SaveChangesAsync();
-        //        return Ok(tblAdministrador);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
-
-        //// DESATIVA: api/Administrador/DisableAdministrador/id
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> DisableAdministrador(int id)
-        //{
-        //    TblAdministrador registroAdministrador = await _context.TblAdministrador.FindAsync(id);
-
-        //    if (registroAdministrador != null)
-        //    {
-        //        registroAdministrador.Ativo = false;
-
-        //        try
-        //        {
-        //            await _context.SaveChangesAsync();
-        //            return Ok(registroAdministrador);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            return BadRequest(e.InnerException.Message);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
-
-        //// ATIVAR: api/Administrador/ActivateAdministrador/id
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> ActivateAdministrador(int id)
-        //{
-        //    TblAdministrador registroAdministrador = await _context.TblAdministrador.FindAsync(id);
-
-        //    if (registroAdministrador != null)
-        //    {
-        //        registroAdministrador.Ativo = true;
-
-        //        try
-        //        {
-        //            await _context.SaveChangesAsync();
-        //            return Ok(registroAdministrador);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            return BadRequest(e.InnerException.Message);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
-
-        //private bool AdministradorExists(int id)
-        //{
-        //    return _context.TblAdministrador.Any(e => e.Id == id);
-        //}
+            if (registroAdministrador != null)
+            {
+                try
+                {
+                    await _administradorService.ActivateAdministrador(id);
+                    return Ok(registroAdministrador);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.InnerException.Message);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
