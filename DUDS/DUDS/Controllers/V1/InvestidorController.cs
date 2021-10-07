@@ -60,7 +60,7 @@ namespace DUDS.Controllers.V1
                                         NomeGrupoRebate = grupoRebate == null ? String.Empty : grupoRebate.NomeGrupoRebate,
                                     }).AsNoTracking().ToListAsync();
 
-                if (listaInvestidor.Count == 0)
+                if (listaInvestidor == null)
                 {
                     return NotFound();
                 }
@@ -75,7 +75,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Investidor/GetInvestidorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblGestor>> GetInvestidorById(int id)
+        public async Task<ActionResult<TblInvestidor>> GetInvestidorById(int id)
         {
             try
             {

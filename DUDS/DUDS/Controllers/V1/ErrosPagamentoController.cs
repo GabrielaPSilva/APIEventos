@@ -9,6 +9,7 @@ using DUDS.Data;
 using DUDS.Models;
 using EFCore.BulkExtensions;
 using Microsoft.OData.Edm;
+using DUDS.Service.Interface;
 
 namespace DUDS.Controllers.V1
 {
@@ -18,37 +19,38 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class ErrosPagamentoController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IErrosPagamentoService _errosPagamento;
 
-        public ErrosPagamentoController(DataContext context)
+        public ErrosPagamentoController(IErrosPagamentoService errosPagamento)
         {
-            _context = context;
+            _errosPagamento = errosPagamento;
         }
 
         // GET: api/ErrosPagamento/ErrosPagamento
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblPagamentoServico>>> ErrosPagamento()
+        public async Task<ActionResult<IEnumerable<ErrosPagamentoModel>>> GetErrosPagamento()
         {
             try
             {
-                List<TblErrosPagamento> errosPagamento = await _context.TblErrosPagamento.OrderBy(c => c.DataAgendamento).AsNoTracking().ToListAsync();
+                var errosPagamentoa = await _errosPagamento.GetErrosPagamento();
 
-                if (errosPagamento.Count == 0)
+                if (errosPagamentoa.Any())
                 {
-                    return NotFound();
+                    return Ok(errosPagamentoa);
                 }
+                return NotFound();
 
-                return Ok(errosPagamento);
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
+        /*
         // GET: api/ErrosPagamento/GetErrosPagamento/cod_fundo/data_agendamento
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblErrosPagamento>> GetErrosPagamento(int id)
+        public async Task<ActionResult<TblErrosPagamento>> GetErrosPagamentoById(int id)
         {
             try
             {
@@ -64,48 +66,23 @@ namespace DUDS.Controllers.V1
                 return BadRequest(e);
             }
         }
+        */
 
         //POST: api/ErrosPagamento/CadastrarPagamentoServico/List<ErrosPagamentoModel>
         [HttpPost]
-        public async Task<ActionResult<ErrosPagamentoModel>> CadastrarPagamentoServico(List<ErrosPagamentoModel> errosPagamentoModel)
+        public async Task<ActionResult<ErrosPagamentoModel>> AddErrosPagamento(List<ErrosPagamentoModel> errosPagamento)
         {
-            List<TblErrosPagamento> listaErros = new List<TblErrosPagamento>();
-            TblErrosPagamento itensErrosPagamento = new TblErrosPagamento();
-
             try
             {
-                foreach (var line in errosPagamentoModel)
-                {
-                    itensErrosPagamento = new TblErrosPagamento
-                    {
-                        DataAgendamento = line.DataAgendamento,
-                        CodFundo = line.CodFundo,
-                        TipoDespesa = line.TipoDespesa,
-                        ValorBruto = line.ValorBruto,
-                        CpfCnpjFavorecido = line.CpfCnpjFavorecido,
-                        Favorecido = line.Favorecido,
-                        ContaFavorecida = line.ContaFavorecida,
-                        Competencia = line.Competencia,
-                        Status = line.Status,
-                        CnpjFundoInvestidor = line.CnpjFundoInvestidor,
-                        MensagemErro = line.MensagemErro
-                    };
-
-                    listaErros.Add(itensErrosPagamento);
-                }
-
-                await _context.BulkInsertAsync(listaErros);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(
-                 nameof(GetErrosPagamento), listaErros);
+                bool retorno = await _errosPagamento.AddErrosPagamento(errosPagamento);
+                return CreatedAtAction(nameof(GetErrosPagamento), errosPagamento);
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
-
+        /*
         // DELETE: api/ErrosPagamento/DeletarErrosPagamento/data_agendamento
         [HttpDelete("{data_agendamento}")]
         public async Task<ActionResult<IEnumerable<TblErrosPagamento>>> DeletarErrosPagamento(DateTime data_agendamento)
@@ -128,5 +105,6 @@ namespace DUDS.Controllers.V1
                 return BadRequest(e);
             }
         }
+        */
     }
 }

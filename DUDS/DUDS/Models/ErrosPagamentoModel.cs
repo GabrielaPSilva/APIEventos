@@ -10,7 +10,7 @@ namespace DUDS.Models
     public class ErrosPagamentoModel
     {
         public int Id { get; set; }
-        public Date DataAgendamento { get; set; }
+        public DateTime DataAgendamento { get; set; }
         public int CodFundo { get; set; }
 
         [StringLength(50)]

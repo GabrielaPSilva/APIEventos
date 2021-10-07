@@ -19,7 +19,7 @@ namespace DUDS.Models
 
         [StringLength(50)]
         public string UsuarioModificacao { get; set; }
-        public bool? Ativo { get; set; }
+        public bool Ativo { get; set; }
 
     }
 }

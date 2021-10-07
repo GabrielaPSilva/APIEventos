@@ -47,7 +47,7 @@ namespace DUDS.Controllers.V1
                 return BadRequest(e.InnerException.Message);
             }
         }
-
+        /*
         // GET: api/Administrador/GetAdministradorById/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TblAdministrador>> GetAdministradorById(int id)
@@ -195,5 +195,6 @@ namespace DUDS.Controllers.V1
                 return NotFound();
             }
         }
+        */
     }
 }
