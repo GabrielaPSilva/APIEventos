@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DUDS.Models
 {
@@ -21,7 +18,7 @@ namespace DUDS.Models
         public string Descricao { get; set; }
 
         [StringLength(100)]
-        public string UsuarioModificacao { get; set; }
-        public DateTime DataCadastro { get; set; }
+        public string UsuarioCriacao { get; set; }
+        public DateTime DataCriacao { get; set; }
     }
 }
