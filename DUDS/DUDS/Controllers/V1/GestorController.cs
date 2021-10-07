@@ -17,205 +17,116 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class GestorController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IConfiguracaoService _configService;
+        private readonly IGestorService _gestorService;
 
-        public GestorController(DataContext context, IConfiguracaoService configService)
+        public GestorController(IConfiguracaoService configService, IGestorService gestorService)
         {
-            _context = context;
             _configService = configService;
+            _gestorService = gestorService;
         }
 
+
         #region Gestor
+
         // GET: api/Gestor/GetGestor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblGestor>>> GetGestor()
+        public async Task<ActionResult<IEnumerable<GestorModel>>> GetGestor()
         {
             try
             {
-                var listaGestores = await (
-                                         from gestor in _context.TblGestor
-                                         from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == gestor.CodTipoClassificacao)
-                                         where gestor.Ativo == true
-                                         orderby gestor.NomeGestor
-                                         select new
-                                         {
-                                             gestor.Id,
-                                             gestor.NomeGestor,
-                                             gestor.CodTipoClassificacao,
-                                             gestor.Cnpj,
-                                             gestor.UsuarioModificacao,
-                                             gestor.DataModificacao,
-                                             gestor.Ativo,
-                                             tipoClassificacao.Classificacao
-                                         }).AsNoTracking().ToListAsync();
 
-                if (listaGestores.Count == 0)
+                var listaGestores = await _gestorService.GetGestor();
+
+                if (listaGestores.Any())
                 {
-                    return NotFound();
+                    return Ok(listaGestores);
                 }
-
-                return Ok(listaGestores);
+                return NotFound();
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
         // GET: api/Gestor/GetGestorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblGestor>> GetGestorById(int id)
+        public async Task<ActionResult<GestorModel>> GetGestorById(int id)
         {
             try
             {
-                var tblGestor = await (
-                                       from gestor in _context.TblGestor
-                                       from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == gestor.CodTipoClassificacao)
-                                       where gestor.Id == id
-                                       select new
-                                       {
-                                           gestor.Id,
-                                           gestor.NomeGestor,
-                                           gestor.CodTipoClassificacao,
-                                           gestor.Cnpj,
-                                           gestor.UsuarioModificacao,
-                                           gestor.DataModificacao,
-                                           gestor.Ativo,
-                                           tipoClassificacao.Classificacao
-                                       }).FirstOrDefaultAsync();
+                var gestor = await _gestorService.GetGestorById(id);
 
-                if (tblGestor == null)
+                if (gestor == null)
                 {
                     return NotFound();
                 }
-                return Ok(tblGestor);
+                return Ok(gestor);
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
         // GET: api/Gestor/GetGestorExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblCustodiante>> GetGestorExistsBase(string cnpj)
+        public async Task<ActionResult<GestorModel>> GetGestorExistsBase(string cnpj)
         {
             try
             {
-                var tblGestor = await (
-                        from gestor in _context.TblGestor
-                        from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == gestor.CodTipoClassificacao)
-                        where gestor.Ativo == false && gestor.Cnpj == cnpj
-                        select new
-                        {
-                            gestor.Id,
-                            gestor.NomeGestor,
-                            gestor.CodTipoClassificacao,
-                            gestor.Cnpj,
-                            gestor.UsuarioModificacao,
-                            gestor.DataModificacao,
-                            gestor.Ativo,
-                            tipoClassificacao.Classificacao
-                        }).FirstOrDefaultAsync();
-
-                if (tblGestor != null)
+                var gestor = await _gestorService.GetGestorExistsBase(cnpj);
+                if (gestor == null)
                 {
-                    return Ok(tblGestor);
+                    NotFound();
                 }
-                else
-                {
-                    tblGestor = await (
-                        from gestor in _context.TblGestor
-                        from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == gestor.CodTipoClassificacao)
-                        where gestor.Cnpj == cnpj
-                        select new
-                        {
-                            gestor.Id,
-                            gestor.NomeGestor,
-                            gestor.CodTipoClassificacao,
-                            gestor.Cnpj,
-                            gestor.UsuarioModificacao,
-                            gestor.DataModificacao,
-                            gestor.Ativo,
-                            tipoClassificacao.Classificacao
-                        }).FirstOrDefaultAsync();
-
-                    if (tblGestor != null)
-                    {
-                        return Ok(tblGestor);
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
-                }
+                return Ok(gestor);
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
         //POST: api/Gestor/AddGestor/GestorModel
         [HttpPost]
-        public async Task<ActionResult<GestorModel>> AddGestor(GestorModel tblGestorModel)
+        public async Task<ActionResult<GestorModel>> AddGestor(GestorModel gestor)
         {
-            TblGestor itensGestor = new TblGestor
-            {
-                NomeGestor = tblGestorModel.NomeGestor,
-                CodTipoClassificacao = tblGestorModel.CodTipoClassificacao,
-                Cnpj = tblGestorModel.Cnpj,
-                UsuarioModificacao = tblGestorModel.UsuarioModificacao
-            };
 
             try
             {
-                _context.TblGestor.Add(itensGestor);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(
-                    nameof(GetGestor),
-                    new { id = itensGestor.Id }, itensGestor);
+                bool retorno = await _gestorService.AddGestor(gestor);
+                return CreatedAtAction(nameof(GetGestorById), new { id = gestor.Id }, gestor);
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
         //PUT: api/Gestor/UpdateGestor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGestor(int id, GestorModel gestor)
+        public async Task<ActionResult<GestorModel>> UpdateGestor(int id, GestorModel gestor)
         {
             try
             {
-                TblGestor registroGestor = _context.TblGestor.Find(id);
-
-                if (registroGestor != null)
-                {
-                    registroGestor.NomeGestor = gestor.NomeGestor == null ? registroGestor.NomeGestor : gestor.NomeGestor;
-                    registroGestor.CodTipoClassificacao = gestor.CodTipoClassificacao == 0 ? registroGestor.CodTipoClassificacao : gestor.CodTipoClassificacao;
-                    registroGestor.Cnpj = gestor.Cnpj == null ? registroGestor.Cnpj : gestor.Cnpj;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroGestor);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e.InnerException.Message);
-                    }
-                }
-                else
+                GestorModel retornoGestor = await _gestorService.GetGestorById(gestor.Id);
+                if (retornoGestor == null)
                 {
                     return NotFound();
                 }
+                bool retorno = await _gestorService.UpdateGestor(gestor);
+                if (retorno)
+                {
+                    return Ok(gestor);
+                }
+                return NotFound();
+
             }
-            catch (DbUpdateConcurrencyException e) when (!GestorExists(gestor.Id))
+            catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
@@ -223,81 +134,42 @@ namespace DUDS.Controllers.V1
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGestor(int id)
         {
-            var tblGestor = await _context.TblGestor.FindAsync(id);
-
-            if (tblGestor == null)
-            {
-                return NotFound();
-            }
-
             try
             {
-                _context.TblGestor.Remove(tblGestor);
-                await _context.SaveChangesAsync();
-                return Ok(tblGestor);
+                bool retorno = await _gestorService.DisableGestor(id);
+                if (retorno)
+                {
+                    return Ok();
+                }
+                return NotFound();
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
-            }
-        }
-
-        // DESATIVA: api/Gestor/DisableGestor/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DisableGestor(int id)
-        {
-            TblGestor registroGestor = _context.TblGestor.Find(id);
-
-            if (registroGestor != null)
-            {
-                registroGestor.Ativo = false;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    return Ok(registroGestor);
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.InnerException.Message);
-                }
-            }
-            else
-            {
-                return NotFound();
+                return BadRequest();
             }
         }
 
         // ATIVAR: api/Gestor/ActivateGestor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> ActivateGestor(int id)
+        public async Task<ActionResult<GestorModel>> ActivateGestor(int id)
         {
-            TblGestor registroGestor = await _context.TblGestor.FindAsync(id);
-
-            if (registroGestor != null)
+            try
             {
-                registroGestor.Ativo = true;
-
-                try
+                bool retorno = await _gestorService.ActivateGestor(id);
+                if (retorno)
                 {
-                    await _context.SaveChangesAsync();
-                    return Ok(registroGestor);
+                    GestorModel gestor = await _gestorService.GetGestorById(id);
+                    return Ok(gestor);
                 }
-                catch (Exception e)
-                {
-                    return BadRequest(e.InnerException.Message);
-                }
-            }
-            else
-            {
                 return NotFound();
             }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
-        private bool GestorExists(int id)
-        {
-            return _context.TblGestor.Any(e => e.Id == id);
-        }
         #endregion
+
     }
 }
