@@ -35,22 +35,22 @@ namespace DUDS.Controllers.V1
             {
                 var administradores = await _administradorService.GetAdministrador();
 
-                if (administradores == null)
+                if (administradores.Any())
                 {
-                    return NotFound();
+                    return Ok(administradores);
                 }
 
-                return Ok(administradores);
+                return NotFound();
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
         /*
         // GET: api/Administrador/GetAdministradorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblAdministrador>> GetAdministradorById(int id)
+        public async Task<ActionResult<AdministradorModel>> GetAdministradorById(int id)
         {
             try
             {
@@ -65,39 +65,30 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
         //// GET: api/Administrador/GetAdministradorExistsBase/cnpj/nome
-        //[HttpGet("{cnpj}/{nome}")]
-        //public async Task<ActionResult<TblAdministrador>> GetAdministradorExistsBase(string cnpj, string nome)
-        //{
-        //    TblAdministrador tblAdministrador = new TblAdministrador();
+        [HttpGet()]
+        public async Task<ActionResult<AdministradorModel>> GetAdministradorExistsBase(string cnpj, string nome)
+        {
+            try
+            {
+                var tblAdministrador = await _administradorService.GetAdministradorExistsBase(cnpj, nome);
 
-        //    try
-        //    {
-        //        tblAdministrador = await _context.TblAdministrador.Where(c => c.Ativo == false && (c.Cnpj == cnpj || c.NomeAdministrador == nome)).FirstOrDefaultAsync();
+                if (tblAdministrador != null)
+                {
+                    return Ok(tblAdministrador);
+                }
 
-        //        if (tblAdministrador != null)
-        //        {
-        //            return Ok(tblAdministrador);
-        //        }
-
-        //        tblAdministrador = await _context.TblAdministrador.Where(c => (c.Cnpj == cnpj || c.NomeAdministrador == nome)).FirstOrDefaultAsync();
-
-        //        if (tblAdministrador != null)
-        //        {
-        //            return Ok(tblAdministrador);
-        //        }
-
-        //        return NotFound();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
 
         // POST: api/Administrador/AddAdministrador/AdministradorModel
         [HttpPost]
@@ -108,12 +99,13 @@ namespace DUDS.Controllers.V1
                 var retorno = await _administradorService.AddAdministrador(administradorModel);
 
                 return CreatedAtAction(
-                   nameof(GetAdministrador),
-                   new { id = administradorModel.Id }, administradorModel);
+                    nameof(GetAdministrador),
+                    new { id = administradorModel.Id }, administradorModel);
+
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
@@ -134,7 +126,7 @@ namespace DUDS.Controllers.V1
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(e.InnerException.Message);
+                        return BadRequest();
                     }
                 }
                 else
@@ -142,33 +134,32 @@ namespace DUDS.Controllers.V1
                     return NotFound();
                 }
             }
-            catch (DbUpdateConcurrencyException e)
+            catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
         // DESATIVA: api/Administrador/DisableAdministrador/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DisableAdministrador(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAdministrador(int id)
         {
-            var registroAdministrador = await _administradorService.GetAdministradorById(id);
-
-            if (registroAdministrador != null)
+            try
             {
-                try
+                var registroAdministrador = await _administradorService.DisableAdministrador(id);
+
+                if (registroAdministrador)
                 {
-                    await _administradorService.DisableAdministrador(id);
-                    return Ok(registroAdministrador);
+                    return Ok();
                 }
-                catch (Exception e)
+                else
                 {
-                    return BadRequest(e.InnerException.Message);
+                    return NotFound();
                 }
             }
-            else
+            catch (Exception e)
             {
-                return NotFound();
+                return BadRequest();
             }
         }
 
@@ -187,7 +178,7 @@ namespace DUDS.Controllers.V1
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.InnerException.Message);
+                    return BadRequest();
                 }
             }
             else
