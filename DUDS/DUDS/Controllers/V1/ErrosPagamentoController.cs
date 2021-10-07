@@ -20,10 +20,12 @@ namespace DUDS.Controllers.V1
     public class ErrosPagamentoController : ControllerBase
     {
         private readonly IErrosPagamentoService _errosPagamento;
+        private readonly IConfiguracaoService _configService;
 
-        public ErrosPagamentoController(IErrosPagamentoService errosPagamento)
+        public ErrosPagamentoController(IConfiguracaoService configService, IErrosPagamentoService errosPagamento)
         {
             _errosPagamento = errosPagamento;
+            _configService = configService;
         }
 
         // GET: api/ErrosPagamento/ErrosPagamento
@@ -33,17 +35,15 @@ namespace DUDS.Controllers.V1
             try
             {
                 var errosPagamentos = await _errosPagamento.GetErrosPagamento();
-
                 if (errosPagamentos.Any())
                 {
                     return Ok(errosPagamentos);
                 }
                 return NotFound();
-
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
@@ -54,17 +54,15 @@ namespace DUDS.Controllers.V1
             try
             {
                 var errosPagamentos = await _errosPagamento.GetErrosPagamentoByCompetenciaDataAgendamento(competencia,data_agendamento);
-
                 if (errosPagamentos.Any())
                 {
                     return Ok(errosPagamentos);
                 }
                 return NotFound();
-
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
@@ -84,7 +82,7 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
         
@@ -100,13 +98,13 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
         
         // DELETE: api/ErrosPagamento/DeletarErrosPagamento/data_agendamento
         [HttpDelete("{data_agendamento}")]
-        public async Task<ActionResult<IEnumerable<TblErrosPagamento>>> DeletarErrosPagamento(DateTime data_agendamento)
+        public async Task<IActionResult> DeletarErrosPagamento(DateTime data_agendamento)
         {
             try
             {
@@ -119,13 +117,13 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
         // DELETE: api/ErrosPagamento/DeletarErrosPagamento/id
         [HttpDelete("{data_agendamento}")]
-        public async Task<ActionResult<IEnumerable<TblErrosPagamento>>> DeletarErrosPagamentoById(int id)
+        public async Task<IActionResult> DeletarErrosPagamentoById(int id)
         {
             try
             {
@@ -138,7 +136,7 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
