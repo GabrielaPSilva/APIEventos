@@ -10,6 +10,7 @@ namespace DUDS.Service.Interface
     {
         Task<IEnumerable<AdministradorModel>> GetAdministrador();
         Task<AdministradorModel> GetAdministradorById(int id);
+        Task<AdministradorModel> GetAdministradorExistsBase(string cnpj, string nome);
         Task<bool> AddAdministrador(AdministradorModel administrador);
         Task<bool> UpdateAdministrador(AdministradorModel administrador);
         Task<bool> DisableAdministrador(int id);
