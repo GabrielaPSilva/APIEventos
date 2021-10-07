@@ -35,7 +35,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> DeleteErrosPagamento(DateTime dataAgendamento)
+        public async Task<bool> DeleteErrosPagamentoByDataAgendamento(DateTime dataAgendamento)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -67,9 +67,11 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT
-                                erros_pagamento.*
+                                erros_pagamento.*,
+                                fundo.nome_reduzido as NomeFundo
                               FROM
 	                            tbl_erros_pagamento erros_pagamento
+                                inner join tbl_fundo fundo on erros_pagamento.cod_fundo = fundo.id
                             ORDER BY    
                                 erros_pagamento.data_agendamento";
 
@@ -82,9 +84,11 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT
-                                erros_pagamento.*
+                                erros_pagamento.*,
+                                fundo.nome_reduzido as NomeFundo
                               FROM
 	                            tbl_erros_pagamento erros_pagamento
+                                inner join tbl_fundo fundo on erros_pagamento.cod_fundo = fundo.id
                             WHERE
                                 erros_pagamento.competencia = @competencia OR
                                 erros_pagamento.data_agendamento = @dataAgendamento";
@@ -98,9 +102,11 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT
-                                erros_pagamento.*
+                                erros_pagamento.*,
+                                fundo.nome_reduzido as NomeFundo
                               FROM
 	                            tbl_erros_pagamento erros_pagamento
+                                inner join tbl_fundo fundo on erros_pagamento.cod_fundo = fundo.id
                             WHERE
                                 erros_pagamento.id = @id";
 

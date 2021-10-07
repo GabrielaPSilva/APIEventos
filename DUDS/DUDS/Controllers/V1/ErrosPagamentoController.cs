@@ -32,11 +32,11 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var errosPagamentoa = await _errosPagamento.GetErrosPagamento();
+                var errosPagamentos = await _errosPagamento.GetErrosPagamento();
 
-                if (errosPagamentoa.Any())
+                if (errosPagamentos.Any())
                 {
-                    return Ok(errosPagamentoa);
+                    return Ok(errosPagamentos);
                 }
                 return NotFound();
 
@@ -47,26 +47,47 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        /*
+        // GET: api/ErrosPagamento/ErrosPagamento
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ErrosPagamentoModel>>> GetErrosPagamentoByCompetenciaDataAgendamento([FromQuery] string competencia,[FromQuery] DateTime? data_agendamento)
+        {
+            try
+            {
+                var errosPagamentos = await _errosPagamento.GetErrosPagamentoByCompetenciaDataAgendamento(competencia,data_agendamento);
+
+                if (errosPagamentos.Any())
+                {
+                    return Ok(errosPagamentos);
+                }
+                return NotFound();
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+
         // GET: api/ErrosPagamento/GetErrosPagamento/cod_fundo/data_agendamento
         [HttpGet("{id}")]
         public async Task<ActionResult<TblErrosPagamento>> GetErrosPagamentoById(int id)
         {
             try
             {
-                TblErrosPagamento tblErrosPagamento = await _context.TblErrosPagamento.FindAsync(id);
-                if (tblErrosPagamento == null)
+                var errosPagamento = await _errosPagamento.GetErrosPagamentoById(id);
+                if (errosPagamento == null)
                 {
                     return NotFound();
                 }
-                return Ok(tblErrosPagamento);
+                return Ok(errosPagamento);
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
-        */
+        
 
         //POST: api/ErrosPagamento/CadastrarPagamentoServico/List<ErrosPagamentoModel>
         [HttpPost]
@@ -82,29 +103,44 @@ namespace DUDS.Controllers.V1
                 return BadRequest();
             }
         }
-        /*
+        
         // DELETE: api/ErrosPagamento/DeletarErrosPagamento/data_agendamento
         [HttpDelete("{data_agendamento}")]
         public async Task<ActionResult<IEnumerable<TblErrosPagamento>>> DeletarErrosPagamento(DateTime data_agendamento)
         {
-            IList<TblErrosPagamento> tblErrosPagamento = await _context.TblErrosPagamento.Where(c => c.DataAgendamento == data_agendamento).ToListAsync();
-
-            if (tblErrosPagamento == null)
-            {
-                return NotFound();
-            }
-
             try
             {
-                _context.TblErrosPagamento.RemoveRange(tblErrosPagamento);
-                await _context.SaveChangesAsync();
-                return Ok(tblErrosPagamento);
+                bool retorno = await _errosPagamento.DeleteErrosPagamentoByDataAgendamento(data_agendamento);
+                if (retorno)
+                {
+                    return Ok();
+                }
+                return NotFound();
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
-        */
+
+        // DELETE: api/ErrosPagamento/DeletarErrosPagamento/id
+        [HttpDelete("{data_agendamento}")]
+        public async Task<ActionResult<IEnumerable<TblErrosPagamento>>> DeletarErrosPagamentoById(int id)
+        {
+            try
+            {
+                bool retorno = await _errosPagamento.DeleteErrosPagamentoById(id);
+                if (retorno)
+                {
+                    return Ok();
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }
