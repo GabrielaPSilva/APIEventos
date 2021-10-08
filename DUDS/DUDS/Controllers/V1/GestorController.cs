@@ -33,7 +33,7 @@ namespace DUDS.Controllers.V1
             try
             {
 
-                var listaGestores = await _gestorService.GetGestor();
+                var listaGestores = await _gestorService.GetAllAsync();
 
                 if (listaGestores.Any())
                 {
@@ -53,7 +53,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var gestor = await _gestorService.GetGestorById(id);
+                var gestor = await _gestorService.GetByIdAsync(id);
 
                 if (gestor == null)
                 {
@@ -93,7 +93,7 @@ namespace DUDS.Controllers.V1
 
             try
             {
-                bool retorno = await _gestorService.AddGestor(gestor);
+                bool retorno = await _gestorService.AddAsync(gestor);
                 return CreatedAtAction(nameof(GetGestorById), new { id = gestor.Id }, gestor);
             }
             catch (Exception e)
@@ -108,12 +108,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                GestorModel retornoGestor = await _gestorService.GetGestorById(gestor.Id);
+                GestorModel retornoGestor = await _gestorService.GetByIdAsync(id);
                 if (retornoGestor == null)
                 {
                     return NotFound();
                 }
-                bool retorno = await _gestorService.UpdateGestor(gestor);
+                gestor.Id = id;
+                bool retorno = await _gestorService.UpdateAsync(gestor);
                 if (retorno)
                 {
                     return Ok(gestor);
@@ -133,7 +134,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _gestorService.DisableGestor(id);
+                bool retorno = await _gestorService.DisableAsync(id);
                 if (retorno)
                 {
                     return Ok();
@@ -152,10 +153,10 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _gestorService.ActivateGestor(id);
+                bool retorno = await _gestorService.ActivateAsync(id);
                 if (retorno)
                 {
-                    GestorModel gestor = await _gestorService.GetGestorById(id);
+                    GestorModel gestor = await _gestorService.GetByIdAsync(id);
                     return Ok(gestor);
                 }
                 return NotFound();

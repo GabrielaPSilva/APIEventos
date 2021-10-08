@@ -149,7 +149,7 @@ namespace DUDS.Controllers.V1
                 }
             }
         }
-
+        /*
         //POST: api/Distribuidor/AddDistribuidor/DistribuidorModel
         [HttpPost]
         public async Task<ActionResult<DistribuidorModel>> AddDistribuidor(DistribuidorModel tblDistribuidorModel)
@@ -333,7 +333,7 @@ namespace DUDS.Controllers.V1
                 return BadRequest(e.InnerException.Message);
             }
         }
-
+        /*
         //POST: api/Distribuidor/AddDistribuidorAdministrador/DistribuidorAdministradorModel
         [HttpPost]
         public async Task<ActionResult<DistribuidorAdministradorModel>> AddDistribuidorAdministrador(DistribuidorAdministradorModel tblDistribuidorAdminModel)
@@ -436,7 +436,7 @@ namespace DUDS.Controllers.V1
         {
             return _context.TblDistribuidorAdministrador.Any(e => e.Id == id);
         }
-
+        */
         #endregion
     }
 }

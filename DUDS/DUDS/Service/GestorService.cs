@@ -1,66 +1,62 @@
 ﻿using Dapper;
 using DUDS.Models;
 using DUDS.Service.Interface;
+using DUDS.Service.SQL;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class GestorService : IGestorService
+    public class GestorService : GenericService<GestorModel>, IGestorService
     {
-        public GestorService()
+
+        public GestorService() : base(new GestorModel(),
+            "tbl_gestor",
+            new List<string> { "'id'", "'data_criacao'", "'ativo'" },
+            new List<string> { "Id", "DataCriacao", "Ativo", "Classificacao" },
+            new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
+            new List<string> { "Id", "DataCriacao", "Ativo", "Classificacao","UsuarioCriacao" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
-        public async Task<bool> ActivateGestor(int id)
+        public async Task<bool> ActivateAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"
-                                UPDATE
-                                    tbl_gestor
-                                SET 
-                                    ativo = 1
-                                WHERE    
-                                    id = @id";
-
+                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
                 return await connection.ExecuteAsync(query, new { id }) > 0;
             }
         }
 
-        public async Task<bool> AddGestor(GestorModel gestor)
+        public async Task<bool> AddAsync(GestorModel gestor)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"
-                                INSERT INTO
-                                    tbl_gestor 
-                                   (nome_gestor, cnpj, usuario_criacao, cod_tipo_classificacao)
-                                VALUES
-                                   (@NomeGestor, @Cnpj, @UsuarioCriacao, @CodTipoClassificacao)";
-
+                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
                 return await connection.ExecuteAsync(query, gestor) > 0;
             }
         }
 
-        public async Task<bool> DisableGestor(int id)
+        public Task<bool> DeleteAsync(int id)
+        {
+            return DisableAsync(id);
+        }
+
+        public async Task<bool> DisableAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"
-                                UPDATE
-                                    tbl_gestor
-                                SET 
-                                    ativo = 0
-                                WHERE    
-                                    id = @id";
-
+                string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
                 return await connection.ExecuteAsync(query, new { id }) > 0;
             }
         }
 
-        public async Task<IEnumerable<GestorModel>> GetGestor()
+        public async Task<IEnumerable<GestorModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -80,7 +76,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<GestorModel> GetGestorById(int id)
+        public async Task<GestorModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -114,20 +110,17 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> UpdateGestor(GestorModel gestor)
+        public async Task<bool> UpdateAsync(GestorModel gestor)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"
-                                UPDATE
-                                    tbl_gestor
-                                SET 
-                                    nome_gestor = @NomeGestor,
-                                    cnpj = @Cnpj,
-                                    cod_tipo_classificacao = @CodTipoClassificacao
-                                WHERE    
-                                    id = @Id";
-
+                string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
+                List<string> str = new List<string>();
+                for (int i = 0; i < _propertiesUpdate.Count; i++)
+                {
+                    str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
+                }
+                query = query.Replace("VALORES", String.Join(",", str));
                 return await connection.ExecuteAsync(query, gestor) > 0;
             }
         }
