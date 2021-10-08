@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service.Interface
 {
-    public interface IAdministradorService
+    public interface IAdministradorService : IGenericOperationsService<AdministradorModel>
     {
-        Task<IEnumerable<AdministradorModel>> GetAdministrador();
-        Task<AdministradorModel> GetAdministradorById(int id);
         Task<AdministradorModel> GetAdministradorExistsBase(string cnpj, string nome);
-        Task<bool> AddAdministrador(AdministradorModel administrador);
-        Task<bool> UpdateAdministrador(AdministradorModel administrador);
-        Task<bool> DisableAdministrador(int id);
-        Task<bool> ActivateAdministrador(int id);
     }
 }

@@ -32,7 +32,6 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-
                 var listaGestores = await _gestorService.GetAllAsync();
 
                 if (listaGestores.Any())
@@ -168,6 +167,5 @@ namespace DUDS.Controllers.V1
         }
 
         #endregion
-
     }
 }

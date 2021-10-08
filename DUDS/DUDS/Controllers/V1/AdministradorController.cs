@@ -27,13 +27,14 @@ namespace DUDS.Controllers.V1
             _administradorService = administradorService;
         }
 
+        #region Administrador
         // GET: api/Administrador/GetAdministrador
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdministradorModel>>> GetAdministrador()
         {
             try
             {
-                var administradores = await _administradorService.GetAdministrador();
+                var administradores = await _administradorService.GetAllAsync();
 
                 if (administradores.Any())
                 {
@@ -47,14 +48,14 @@ namespace DUDS.Controllers.V1
                 return BadRequest();
             }
         }
-        /*
+        
         // GET: api/Administrador/GetAdministradorById/id
         [HttpGet("{id}")]
         public async Task<ActionResult<AdministradorModel>> GetAdministradorById(int id)
         {
             try
             {
-                var tblAdministrador = await _administradorService.GetAdministradorById(id);
+                var tblAdministrador = await _administradorService.GetByIdAsync(id);
 
                 if (tblAdministrador == null)
                 {
@@ -96,7 +97,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var retorno = await _administradorService.AddAdministrador(administradorModel);
+                var retorno = await _administradorService.AddAsync(administradorModel);
 
                 return CreatedAtAction(
                     nameof(GetAdministrador),
@@ -111,32 +112,30 @@ namespace DUDS.Controllers.V1
 
         // PUT: api/Administrador/UpdateAdministrador/id
         [HttpPut()]
-        public async Task<IActionResult> UpdateAdministrador(AdministradorModel administradorModel)
+        public async Task<ActionResult<AdministradorModel>> UpdateGestor(int id, AdministradorModel administrador)
         {
             try
             {
-                var registroAdministrador = await _administradorService.GetAdministradorById(administradorModel.Id);
+                var retornoAdministrador = await _administradorService.GetByIdAsync(id);
 
-                if (registroAdministrador != null)
-                {
-                    try
-                    {
-                        await _administradorService.UpdateAdministrador(administradorModel);
-                        return Ok(registroAdministrador);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest();
-                    }
-                }
-                else
+                if (retornoAdministrador == null)
                 {
                     return NotFound();
                 }
+
+                administrador.Id = id;
+                bool retorno = await _administradorService.UpdateAsync(administrador);
+
+                if (retorno)
+                {
+                    return Ok(administrador);
+                }
+                return NotFound();
+
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
@@ -146,7 +145,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var registroAdministrador = await _administradorService.DisableAdministrador(id);
+                var registroAdministrador = await _administradorService.DisableAsync(id);
 
                 if (registroAdministrador)
                 {
@@ -167,13 +166,13 @@ namespace DUDS.Controllers.V1
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateAdministrador(int id)
         {
-            var registroAdministrador = await _administradorService.GetAdministradorById(id);
+            var registroAdministrador = await _administradorService.GetByIdAsync(id);
 
             if (registroAdministrador != null)
             {
                 try
                 {
-                    await _administradorService.ActivateAdministrador(id);
+                    await _administradorService.ActivateAsync(id);
                     return Ok(registroAdministrador);
                 }
                 catch (Exception e)
@@ -186,6 +185,7 @@ namespace DUDS.Controllers.V1
                 return NotFound();
             }
         }
-        */
+
+        #endregion
     }
 }
