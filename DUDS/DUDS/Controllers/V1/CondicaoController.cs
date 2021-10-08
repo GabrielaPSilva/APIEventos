@@ -238,7 +238,7 @@ namespace DUDS.Controllers.V1
         }
         #endregion
 
-        #region Tipo Classificação
+        #region Tipo Condição
         // GET: api/TipoCondicao/GetTipoCondicao
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TipoCondicaoModel>>> GetTipoCondicao()
@@ -283,7 +283,7 @@ namespace DUDS.Controllers.V1
 
         //POST: api/TipoCondicao/AddTipoCondicao/TipoCondicaoModel
         [HttpPost]
-        public async Task<ActionResult<TipoCondicaoModel>> AddTipoClassificacao(TipoCondicaoModel tipoCondicao)
+        public async Task<ActionResult<TipoCondicaoModel>> AddTipoCondicao(TipoCondicaoModel tipoCondicao)
         {
             try
             {

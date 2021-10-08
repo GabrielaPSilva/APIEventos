@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class TipoCondicaoService : GenericService<TipoCondicaoModel>, ITipoCondicaoService
+    public class TipoContaService : GenericService<TipoContaModel>, ITipoContaService
     {
-        public TipoCondicaoService() : base(new TipoCondicaoModel(),
-                                               "tbl_tipo_condicao",
-                                               new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                               new List<string> { "Id", "DataCriacao", "Ativo" },
-                                               new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                               new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
+        public TipoContaService() : base(new TipoContaModel(),
+                                              "tbl_tipo_conta",
+                                              new List<string> { "'id'", "'data_criacao'", "'ativo'" },
+                                              new List<string> { "Id", "DataCriacao", "Ativo" },
+                                              new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
+                                              new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -30,12 +30,12 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddAsync(TipoCondicaoModel tipoCondicao)
+        public async Task<bool> AddAsync(TipoContaModel tipoConta)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                return await connection.ExecuteAsync(query, tipoCondicao) > 0;
+                return await connection.ExecuteAsync(query, tipoConta) > 0;
             }
         }
 
@@ -53,7 +53,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<TipoCondicaoModel>> GetAllAsync()
+        public async Task<IEnumerable<TipoContaModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -61,32 +61,49 @@ namespace DUDS.Service
                 var query = @"SELECT
                                  *
                               FROM
-	                             tbl_tipo_condicao
+	                             tbl_tipo_conta
                               WHERE 
 	                             ativo = 1
                               ORDER BY    
-                                 tipo_condicao";
+                                 tipo_conta,
+                                 descricao_conta";
 
-                return await connection.QueryAsync<TipoCondicaoModel>(query);
+                return await connection.QueryAsync<TipoContaModel>(query);
             }
         }
 
-        public async Task<TipoCondicaoModel> GetByIdAsync(int id)
+        public async Task<TipoContaModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT
                                  *
                               FROM
-	                             tbl_tipo_condicao
+	                             tbl_tipo_conta
                               WHERE 
 	                             id = @id";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoCondicaoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<TipoContaModel>(query, new { id });
             }
         }
 
-        public async Task<bool> UpdateAsync(TipoCondicaoModel tipoCondicao)
+        public async Task<GestorModel> GetTipoContaExistsBase(string tipoConta, string descricaoConta)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = @"SELECT
+                                 *
+                              FROM
+	                             tbl_tipo_conta
+                              WHERE 
+	                             tipo_conta = @tipoConta AND
+                                 descricao_conta = @descricaoConta";
+
+                return await connection.QueryFirstOrDefaultAsync<GestorModel>(query, new { tipoConta, descricaoConta });
+            }
+        }
+
+        public async Task<bool> UpdateAsync(TipoContaModel tipoConta)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -97,7 +114,7 @@ namespace DUDS.Service
                     str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
                 }
                 query = query.Replace("VALORES", String.Join(",", str));
-                return await connection.ExecuteAsync(query, tipoCondicao) > 0;
+                return await connection.ExecuteAsync(query, tipoConta) > 0;
             }
         }
     }
