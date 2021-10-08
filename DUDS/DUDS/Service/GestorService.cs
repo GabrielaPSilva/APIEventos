@@ -13,7 +13,6 @@ namespace DUDS.Service
 {
     public class GestorService : GenericService<GestorModel>, IGestorService
     {
-
         public GestorService() : base(new GestorModel(),
             "tbl_gestor",
             new List<string> { "'id'", "'data_criacao'", "'ativo'" },

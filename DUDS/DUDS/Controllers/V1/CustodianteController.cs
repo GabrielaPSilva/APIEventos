@@ -14,12 +14,10 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class CustodianteController : ControllerBase
     {
-        private readonly IConfiguracaoService _configService;
         private readonly ICustodianteService _custodianteService;
 
-        public CustodianteController(IConfiguracaoService configService, ICustodianteService custodianteService)
+        public CustodianteController(ICustodianteService custodianteService)
         {
-            _configService = configService;
             _custodianteService = custodianteService;
         }
 
