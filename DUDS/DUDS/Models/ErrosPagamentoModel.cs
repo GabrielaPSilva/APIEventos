@@ -9,8 +9,6 @@ namespace DUDS.Models
         public DateTime DataAgendamento { get; set; }
         public int CodFundo { get; set; }
 
-        public string NomeFundo { get; set; }
-
         [StringLength(50)]
         public string TipoDespesa { get; set; }
         public double ValorBruto { get; set; }
@@ -35,5 +33,7 @@ namespace DUDS.Models
 
         [StringLength(100)]
         public string MensagemErro { get; set; }
+
+        public string NomeFundo { get; set; }
     }
 }

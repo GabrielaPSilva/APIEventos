@@ -101,8 +101,8 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                CustodianteModel retornoGestor = await _custodianteService.GetByIdAsync(custodiante.Id);
-                if (retornoGestor == null)
+                CustodianteModel retornoCustodiante = await _custodianteService.GetByIdAsync(custodiante.Id);
+                if (retornoCustodiante == null)
                 {
                     return NotFound();
                 }

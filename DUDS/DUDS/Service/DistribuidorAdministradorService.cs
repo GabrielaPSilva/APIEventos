@@ -4,7 +4,6 @@ using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -39,9 +38,13 @@ namespace DUDS.Service
             }
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            return DisableAsync(id);
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
         }
 
         public async Task<bool> DisableAsync(int id)
@@ -91,8 +94,6 @@ namespace DUDS.Service
                             ORDER BY    
                                 distribuidor.nome_distribuidor";
 
-                //List<DistribuidorAdministradorModel> distrAdmList = await connection.QueryAsync<DistribuidorAdministradorModel>(query, new { id }) as List<DistribuidorAdministradorModel>;
-                //return distrAdmList;
                 return await connection.QueryAsync<DistribuidorAdministradorModel>(query, new { id });
             }
         }
