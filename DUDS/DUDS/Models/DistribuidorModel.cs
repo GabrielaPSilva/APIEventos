@@ -14,11 +14,16 @@ namespace DUDS.Models
         [StringLength(14)]
         public string Cnpj { get; set; }
         public int? CodTipoClassificacao { get; set; }
-        public DateTime DataCriacao { get; set; }
 
         [StringLength(50)]
         public string UsuarioCriacao { get; set; }
+
+        public DateTime DataCriacao { get; set; }
+
         public bool Ativo { get; set; }
-        public List<TipoClassificacaoModel> ListaTipoClassificacao { get; set; }
+
+        public List<DistribuidorAdministradorModel> ListaDistribuidorAdministrador { get; set; }
+
+        public string Classificacao { get; set; }
     }
 }

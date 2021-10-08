@@ -26,7 +26,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Gestor/GetGestor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GestorModel>>> GetGestor()
+        public async Task<ActionResult<IEnumerable<GestorModel>>> GetGestores()
         {
             try
             {

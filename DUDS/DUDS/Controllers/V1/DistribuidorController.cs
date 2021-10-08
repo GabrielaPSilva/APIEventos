@@ -17,86 +17,56 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class DistribuidorController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IDistribuidorService _distribuidorService;
         private readonly IConfiguracaoService _configService;
 
-        public DistribuidorController(DataContext context, IConfiguracaoService configService)
+        public DistribuidorController(IDistribuidorService distribuidorService, IConfiguracaoService configService)
         {
-            _context = context;
+            _distribuidorService = distribuidorService;
             _configService = configService;
         }
 
         #region Distribuidor
         // GET: api/Distribuidor/GetDistribuidor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblDistribuidor>>> GetDistribuidor()
+        public async Task<ActionResult<IEnumerable<DistribuidorModel>>> GetDistribuidor()
         {
             try
             {
-                var listaDistribuidores = await (
-                                     from distribuidor in _context.TblDistribuidor
-                                     from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == distribuidor.CodTipoClassificacao)
-                                     where distribuidor.Ativo == true
-                                     orderby distribuidor.NomeDistribuidor
-                                     select new
-                                     {
-                                         distribuidor.Id,
-                                         distribuidor.NomeDistribuidor,
-                                         distribuidor.Cnpj,
-                                         distribuidor.CodTipoClassificacao,
-                                         distribuidor.UsuarioModificacao,
-                                         distribuidor.DataModificacao,
-                                         distribuidor.Ativo,
-                                         tipoClassificacao.Classificacao
-                                     }).AsNoTracking().ToListAsync();
+                var distribuidores = await _distribuidorService.GetAllAsync();
 
-                if (listaDistribuidores.Count == 0)
+                if (distribuidores.Any())
                 {
-                    return NotFound();
+                    return Ok(distribuidores);
                 }
+                return NotFound();
 
-                return Ok(listaDistribuidores);
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(e.InnerException.Message);
-            }
-        }
-
-        // GET: api/Distribuidor/GetDistribuidorById/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblDistribuidor>> GetDistribuidorById(int id)
-        {
-            try
-            {
-                var tblDistribuidor = await (
-                                    from distribuidor in _context.TblDistribuidor
-                                    from tipoClassificacao in _context.TblTipoClassificacao.Where(c => c.Id == distribuidor.CodTipoClassificacao)
-                                    where distribuidor.Id == id
-                                    select new
-                                    {
-                                        distribuidor.Id,
-                                        distribuidor.NomeDistribuidor,
-                                        distribuidor.Cnpj,
-                                        distribuidor.CodTipoClassificacao,
-                                        distribuidor.UsuarioModificacao,
-                                        distribuidor.DataModificacao,
-                                        distribuidor.Ativo,
-                                        tipoClassificacao.Classificacao
-                                    }).FirstOrDefaultAsync();
-
-                if (tblDistribuidor == null)
-                {
-                    return NotFound();
-                }
-                return Ok(tblDistribuidor);
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest(e);
             }
         }
-
+        
+        // GET: api/Distribuidor/GetDistribuidorById/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<DistribuidorModel>> GetDistribuidorById(int id)
+        {
+            try
+            {
+                var distribuidor = await _distribuidorService.GetByIdAsync(id);
+                if (distribuidor == null)
+                {
+                    return NotFound();
+                }
+                return Ok(distribuidor);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+        /*
         // GET: api/Distribuidor/GetDistribuidorExistsBase/cnpj
         [HttpGet("{cnpj}")]
         public async Task<ActionResult<TblDistribuidor>> GetDistribuidorExistsBase(string cnpj)
