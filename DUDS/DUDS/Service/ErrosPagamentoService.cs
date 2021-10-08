@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DUDS.Models;
 using DUDS.Service.Interface;
+using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,27 +9,35 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class ErrosPagamentoService : IErrosPagamentoService
+    public class ErrosPagamentoService : GenericService<ErrosPagamentoModel>, IErrosPagamentoService
     {
 
-        public ErrosPagamentoService()
+        public ErrosPagamentoService() : base(new ErrosPagamentoModel(),
+            "tbl_erros_pagamento",
+            new List<string> { "'id'" },
+            new List<string> { "Id", "NomeFundo" },
+            new List<string> { "'id'" },
+            new List<string> { "Id", "NomeFundo" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
+        }
+
+        public async Task<bool> AddAsync(ErrosPagamentoModel item)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                return await connection.ExecuteAsync(query, item) > 0;
+            }
         }
 
         public async Task<bool> AddErrosPagamento(List<ErrosPagamentoModel> errosPagamento)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                Parallel.ForEach(errosPagamento, x =>
+                Parallel.ForEach(errosPagamento, async x =>
                 {
-                    const string query = @"
-                                INSERT INTO
-                                    tbl_erros_pagamento
-                                VALUES
-                                   (@DataAgendamento, @CodFundo, @TipoDespesa, @ValorBruto, @CpfCnpjFavorecido, @Favorecido, 
-                                    @ContaFavorecida, @Competencia, @Status, @CnpjFundoInvestidor, @MensagemErro)";
-                    connection.ExecuteAsync(query, x);
+                    _ = await AddAsync(x);
                 });
 
                 return GetErrosPagamentoByCompetenciaDataAgendamento(errosPagamento.FirstOrDefault().Competencia, errosPagamento.FirstOrDefault().DataAgendamento).Result.ToArray().Length == errosPagamento.Count;
@@ -48,21 +57,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> DeleteErrosPagamentoById(int id)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                const string query = @"
-                                DELETE FROM
-                                    tbl_erros_pagamento
-                                WHERE
-                                   id = @id";
-
-                return await connection.ExecuteAsync(query, new { id }) > 0;
-            }
-        }
-
-        public async Task<IEnumerable<ErrosPagamentoModel>> GetErrosPagamento()
+        public async Task<IEnumerable<ErrosPagamentoModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -97,7 +92,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<ErrosPagamentoModel> GetErrosPagamentoById(int id)
+        public async Task<ErrosPagamentoModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -110,9 +105,32 @@ namespace DUDS.Service
                             WHERE
                                 erros_pagamento.id = @id";
 
-                return await connection.QueryFirstAsync<ErrosPagamentoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<ErrosPagamentoModel>(query, new { id });
             }
         }
 
+        public Task<bool> DisableAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ActivateAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateAsync(ErrosPagamentoModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
     }
 }

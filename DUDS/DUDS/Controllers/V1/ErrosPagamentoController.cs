@@ -29,12 +29,14 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var errosPagamentos = await _errosPagamento.GetErrosPagamento();
-                if (errosPagamentos.Any())
+                var errosPagamento = await _errosPagamento.GetAllAsync();
+
+                if (errosPagamento.Any())
                 {
-                    return Ok(errosPagamentos);
+                    return Ok(errosPagamento);
                 }
                 return NotFound();
+
             }
             catch (Exception e)
             {
@@ -68,7 +70,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var errosPagamento = await _errosPagamento.GetErrosPagamentoById(id);
+                var errosPagamento = await _errosPagamento.GetByIdAsync(id);
                 if (errosPagamento == null)
                 {
                     return NotFound();
@@ -89,7 +91,12 @@ namespace DUDS.Controllers.V1
             try
             {
                 bool retorno = await _errosPagamento.AddErrosPagamento(errosPagamento);
-                return CreatedAtAction(nameof(GetErrosPagamento), errosPagamento);
+                if (retorno)
+                {
+                    return CreatedAtAction(nameof(GetErrosPagamentoByCompetenciaDataAgendamento),
+                        new { competencia = errosPagamento.FirstOrDefault().Competencia, data_agendamento = errosPagamento.FirstOrDefault().DataAgendamento }, errosPagamento);
+                }
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -117,12 +124,12 @@ namespace DUDS.Controllers.V1
         }
 
         // DELETE: api/ErrosPagamento/DeletarErrosPagamento/id
-        [HttpDelete("{data_agendamento}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarErrosPagamentoById(int id)
         {
             try
             {
-                bool retorno = await _errosPagamento.DeleteErrosPagamentoById(id);
+                bool retorno = await _errosPagamento.DeleteAsync(id);
                 if (retorno)
                 {
                     return Ok();

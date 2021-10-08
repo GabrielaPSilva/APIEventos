@@ -4,7 +4,6 @@ using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -76,8 +75,7 @@ namespace DUDS.Service
 
                 foreach (DistribuidorModel distribuidor in distribuidores)
                 {
-                    List<DistribuidorAdministradorModel> distrAdmList = new List<DistribuidorAdministradorModel>();
-                    distrAdmList = await distrAdmService.GetByDistribuidorIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
+                    List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetByDistribuidorIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
                     distribuidor.ListaDistribuidorAdministrador = distrAdmList;
                 }
 
@@ -102,9 +100,7 @@ namespace DUDS.Service
                 DistribuidorModel distribuidor = await connection.QueryFirstOrDefaultAsync<DistribuidorModel>(query, new { id });
 
                 DistribuidorAdministradorService distrAdmService = new DistribuidorAdministradorService();
-
-                List<DistribuidorAdministradorModel> distrAdmList = new List<DistribuidorAdministradorModel>();
-                distrAdmList = await distrAdmService.GetByDistribuidorIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
+                List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetByDistribuidorIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
                 distribuidor.ListaDistribuidorAdministrador = distrAdmList;
                 //return null;
                 return distribuidor;
@@ -124,7 +120,17 @@ namespace DUDS.Service
                             WHERE 
 	                            gestor.cnpj = @cnpj";
 
-                return await connection.QueryFirstOrDefaultAsync<DistribuidorModel>(query, new { cnpj });
+                DistribuidorModel distribuidor = await connection.QueryFirstOrDefaultAsync<DistribuidorModel>(query, new { cnpj });
+                if (distribuidor == null)
+                {
+                    return null;
+                }
+
+                DistribuidorAdministradorService distrAdmService = new DistribuidorAdministradorService();
+                List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetByDistribuidorIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
+                distribuidor.ListaDistribuidorAdministrador = distrAdmList;
+
+                return distribuidor;
             }
         }
 
