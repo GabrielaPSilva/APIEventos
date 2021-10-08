@@ -18,12 +18,10 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class AdministradorController : ControllerBase
     {
-        private readonly IConfiguracaoService _configService;
         private readonly IAdministradorService _administradorService;
 
-        public AdministradorController(IConfiguracaoService configService, IAdministradorService administradorService)
+        public AdministradorController(IAdministradorService administradorService)
         {
-            _configService = configService;
             _administradorService = administradorService;
         }
 
@@ -112,7 +110,7 @@ namespace DUDS.Controllers.V1
 
         // PUT: api/Administrador/UpdateAdministrador/id
         [HttpPut()]
-        public async Task<ActionResult<AdministradorModel>> UpdateGestor(int id, AdministradorModel administrador)
+        public async Task<ActionResult<AdministradorModel>> UpdateAdministrador(int id, AdministradorModel administrador)
         {
             try
             {

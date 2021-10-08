@@ -14,9 +14,9 @@ namespace DUDS.Service
         public AdministradorService() : base(new AdministradorModel(),
                    "tbl_administrador",
                    new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                   new List<string> { "Id", "DataCriacao", "Ativo", "Classificacao" },
+                   new List<string> { "Id", "DataCriacao", "Ativo" },
                    new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                   new List<string> { "Id", "DataCriacao", "Ativo", "Classificacao", "UsuarioCriacao" })
+                   new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DUDS.Data;
 using DUDS.Models;
+using DUDS.Service.Interface;
 
 namespace DUDS.Controllers.V1
 {
@@ -16,113 +17,101 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class TipoClassificacaoController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly ITipoClassificacaoService _tipoClassificacaoService;
 
-        public TipoClassificacaoController(DataContext context)
+        public TipoClassificacaoController(ITipoClassificacaoService tipoClassificacaoService)
         {
-            _context = context;
+            _tipoClassificacaoService = tipoClassificacaoService;
         }
 
         #region Tipo Classificação
         // GET: api/TipoClassificacao/GetTipoClassificacao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblTipoClassificacao>>> GetTipoClassificacao()
+        public async Task<ActionResult<IEnumerable<TipoClassificacaoModel>>> GetTipoClassificacao()
         {
             try
             {
-                var tiposClassificacao = await _context.TblTipoClassificacao.Where(c => c.Ativo == true).OrderBy(c => c.Classificacao).ToListAsync();
+                var tipoClassificacaoes = await _tipoClassificacaoService.GetAllAsync();
 
-                if (tiposClassificacao.Count == 0)
+                if (tipoClassificacaoes.Any())
                 {
-                    return NotFound();
+                    return Ok(tipoClassificacaoes);
                 }
 
-                return Ok(tiposClassificacao);
+                return NotFound();
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
         // GET: api/TipoClassificacao/GetTipoClassificacaoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblTipoClassificacao>> GetTipoClassificacaoById(int id)
+        public async Task<ActionResult<TipoClassificacaoModel>> GetTipoClassificacaoById(int id)
         {
             try
             {
-                TblTipoClassificacao tblTipoClassificacao = await _context.TblTipoClassificacao.FindAsync(id);
+                var tblTipoClassificacao = await _tipoClassificacaoService.GetByIdAsync(id);
+
                 if (tblTipoClassificacao == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(tblTipoClassificacao);
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
-        //POST: api/TipoClassificacao/AddTipoClassificacao/TipoContaModel
+        //POST: api/TipoClassificacao/AddTipoClassificacao/TipoClassificacaoModel
         [HttpPost]
-        public async Task<ActionResult<TipoClassificacaoModel>> AddTipoClassificacao(TipoClassificacaoModel tblTipoClassificacaoModel)
+        public async Task<ActionResult<TipoClassificacaoModel>> AddTipoClassificacao(TipoClassificacaoModel tipoClassificacao)
         {
-            TblTipoClassificacao itensTipoClassificacao = new TblTipoClassificacao
-            {
-                Id = tblTipoClassificacaoModel.Id,
-                Classificacao = tblTipoClassificacaoModel.Classificacao,
-                UsuarioModificacao = tblTipoClassificacaoModel.UsuarioModificacao
-            };
-
             try
             {
-                _context.TblTipoClassificacao.Add(itensTipoClassificacao);
-                await _context.SaveChangesAsync();
+                var retorno = await _tipoClassificacaoService.AddAsync(tipoClassificacao);
 
                 return CreatedAtAction(
                     nameof(GetTipoClassificacao),
-                    new
-                    {
-                        Id = itensTipoClassificacao.Id,
-                    }, itensTipoClassificacao);
+                    new { id = tipoClassificacao.Id }, tipoClassificacao);
+
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
         //PUT: api/TipoClassificacao/UpdateTipoClassificacao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTipoClassificacao(int id, TipoClassificacaoModel tipoClassificacao)
+        public async Task<ActionResult<TipoClassificacaoModel>> UpdateTipoClassificacao(int id, TipoClassificacaoModel tipoClassificacao)
         {
             try
             {
-                TblTipoClassificacao registroTipoClassificacao = _context.TblTipoClassificacao.Find(id);
+                var retornoTipoClassificacao = await _tipoClassificacaoService.GetByIdAsync(id);
 
-                if (registroTipoClassificacao != null)
+                if (retornoTipoClassificacao == null)
                 {
-                    registroTipoClassificacao.Classificacao = tipoClassificacao.Classificacao == null ? registroTipoClassificacao.Classificacao : tipoClassificacao.Classificacao;
+                    return NotFound();
+                }
 
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroTipoClassificacao);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
+                tipoClassificacao.Id = id;
+                bool retorno = await _tipoClassificacaoService.UpdateAsync(tipoClassificacao);
+
+                if (retorno)
                 {
-                    return BadRequest();
+                    return Ok(tipoClassificacao);
                 }
+                return NotFound();
+
             }
-            catch (DbUpdateConcurrencyException e) when (!TipoClassificacaoExists(tipoClassificacao.Id))
+            catch (Exception e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -130,48 +119,22 @@ namespace DUDS.Controllers.V1
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTipoClassificacao(int id)
         {
-            TblTipoClassificacao tblTipoClassificacao = await _context.TblTipoClassificacao.FindAsync(id);
-
-            if (tblTipoClassificacao == null)
-            {
-                return NotFound();
-            }
-
             try
             {
-                _context.TblTipoClassificacao.Remove(tblTipoClassificacao);
-                await _context.SaveChangesAsync();
-                return Ok(tblTipoClassificacao);
+                var registroTipoClassificacao = await _tipoClassificacaoService.DisableAsync(id);
+
+                if (registroTipoClassificacao)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception e)
             {
-                return BadRequest(e);
-            }
-        }
-
-        // DESATIVA: api/TipoClassificacao/DisableTipoClassificacao/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DisableTipoClassificacao(int id)
-        {
-            TblTipoClassificacao registroTipoClassificacao = _context.TblTipoClassificacao.Find(id);
-
-            if (registroTipoClassificacao != null)
-            {
-                registroTipoClassificacao.Ativo = false;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    return Ok(registroTipoClassificacao);
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e);
-                }
-            }
-            else
-            {
-                return NotFound();
+                return BadRequest();
             }
         }
 
@@ -179,20 +142,18 @@ namespace DUDS.Controllers.V1
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateTipoClassificacao(int id)
         {
-            TblTipoClassificacao registroTipoClassificacao = await _context.TblTipoClassificacao.FindAsync(id);
+            var registroTipoClassificacao = await _tipoClassificacaoService.GetByIdAsync(id);
 
             if (registroTipoClassificacao != null)
             {
-                registroTipoClassificacao.Ativo = true;
-
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    await _tipoClassificacaoService.ActivateAsync(id);
                     return Ok(registroTipoClassificacao);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.InnerException.Message);
+                    return BadRequest();
                 }
             }
             else
@@ -201,10 +162,6 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        private bool TipoClassificacaoExists(int id)
-        {
-            return _context.TblTipoClassificacao.Any(e => e.Id == id);
-        }
         #endregion
     }
 }

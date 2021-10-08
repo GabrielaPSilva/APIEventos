@@ -14,12 +14,10 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class GestorController : ControllerBase
     {
-        private readonly IConfiguracaoService _configService;
         private readonly IGestorService _gestorService;
 
-        public GestorController(IConfiguracaoService configService, IGestorService gestorService)
+        public GestorController(IGestorService gestorService)
         {
-            _configService = configService;
             _gestorService = gestorService;
         }
 

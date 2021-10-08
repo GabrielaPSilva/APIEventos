@@ -13,9 +13,9 @@ namespace DUDS.Models
         [StringLength(50)]
         public string TipoCondicao { get; set; }
         public bool? Ativo { get; set; }
-        public DateTime DataModificacao { get; set; }
+        public DateTime DataCriacao { get; set; }
 
         [StringLength(100)]
-        public string UsuarioModificacao { get; set; }
+        public string UsuarioCriacao { get; set; }
     }
 }
