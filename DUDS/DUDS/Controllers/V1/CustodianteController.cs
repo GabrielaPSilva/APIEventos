@@ -25,11 +25,11 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Custodiante/GetCustodiante
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CustodianteModel>>> GetCustodiante()
+        public async Task<ActionResult<IEnumerable<CustodianteModel>>> GetCustodiantes()
         {
             try
             {
-                var custodiantes = await _custodianteService.GetCustodiante();
+                var custodiantes = await _custodianteService.GetAllAsync();
 
                 if (custodiantes.Any())
                 {
@@ -50,7 +50,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var custodiante = await _custodianteService.GetCustodianteById(id);
+                var custodiante = await _custodianteService.GetByIdAsync(id);
                 if (custodiante == null)
                 {
                     return NotFound();
@@ -88,7 +88,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _custodianteService.AddCustodiante(custodiante);
+                bool retorno = await _custodianteService.AddAsync(custodiante);
                 return CreatedAtAction(nameof(GetCustodianteById), new { id = custodiante.Id }, custodiante);
             }
             catch (Exception e)
@@ -103,12 +103,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                CustodianteModel retornoGestor = await _custodianteService.GetCustodianteById(custodiante.Id);
+                CustodianteModel retornoGestor = await _custodianteService.GetByIdAsync(custodiante.Id);
                 if (retornoGestor == null)
                 {
                     return NotFound();
                 }
-                bool retorno = await _custodianteService.UpdateCustodiante(custodiante);
+                custodiante.Id = id;
+                bool retorno = await _custodianteService.UpdateAsync(custodiante);
                 if (retorno)
                 {
                     return Ok(custodiante);
@@ -127,7 +128,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _custodianteService.DisableCustodiante(id);
+                bool retorno = await _custodianteService.DisableAsync(id);
                 if (retorno)
                 {
                     return Ok();
@@ -146,10 +147,10 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _custodianteService.ActivateCustodiante(id);
+                bool retorno = await _custodianteService.ActivateAsync(id);
                 if (retorno)
                 {
-                    CustodianteModel gestor = await _custodianteService.GetCustodianteById(id);
+                    CustodianteModel gestor = await _custodianteService.GetByIdAsync(id);
                     return Ok(gestor);
                 }
                 return NotFound();

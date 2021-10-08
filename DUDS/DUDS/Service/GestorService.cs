@@ -33,12 +33,12 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddAsync(GestorModel gestor)
+        public async Task<bool> AddAsync(GestorModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                return await connection.ExecuteAsync(query, gestor) > 0;
+                return await connection.ExecuteAsync(query, item) > 0;
             }
         }
 
@@ -110,7 +110,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> UpdateAsync(GestorModel gestor)
+        public async Task<bool> UpdateAsync(GestorModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -121,7 +121,7 @@ namespace DUDS.Service
                     str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
                 }
                 query = query.Replace("VALORES", String.Join(",", str));
-                return await connection.ExecuteAsync(query, gestor) > 0;
+                return await connection.ExecuteAsync(query, item) > 0;
             }
         }
     }
