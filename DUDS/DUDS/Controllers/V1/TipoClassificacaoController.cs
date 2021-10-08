@@ -67,7 +67,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //POST: api/TipoClassificacao/AddTipoClassificacao/TipoContaModel
+        //POST: api/TipoClassificacao/AddTipoClassificacao/TipoClassificacaoModel
         [HttpPost]
         public async Task<ActionResult<TipoClassificacaoModel>> AddTipoClassificacao(TipoClassificacaoModel tipoClassificacao)
         {
