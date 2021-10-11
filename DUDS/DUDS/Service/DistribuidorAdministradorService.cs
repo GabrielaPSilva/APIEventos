@@ -62,8 +62,8 @@ namespace DUDS.Service
                                 administrador.nome_administrador
                               FROM
 	                            tbl_distribuidor_administrador distr_adm
-                                inner join tbl_distribuidor distribuidor on distr_adm.cod_distribuidor = distribuidor.id
-                                inner join tbl_administrador administrador on distr_adm.cod_administrador = administrador.id
+                                    INNER JOIN tbl_distribuidor distribuidor ON distr_adm.cod_distribuidor = distribuidor.id
+                                    INNER JOIN tbl_administrador administrador ON distr_adm.cod_administrador = administrador.id
                             WHERE 
 	                            distr_adm.ativo = 1
                             ORDER BY    
@@ -73,7 +73,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<DistribuidorAdministradorModel>> GetByDistribuidorIdAsync(int id)
+        public async Task<IEnumerable<DistribuidorAdministradorModel>> GetDistribuidorByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -83,8 +83,8 @@ namespace DUDS.Service
                                 administrador.nome_administrador
                               FROM
 	                            tbl_distribuidor_administrador distr_adm
-                                inner join tbl_distribuidor distribuidor on distr_adm.cod_distribuidor = distribuidor.id
-                                inner join tbl_administrador administrador on distr_adm.cod_administrador = administrador.id
+                                    INNER JOIN tbl_distribuidor distribuidor ON distr_adm.cod_distribuidor = distribuidor.id
+                                    INNER JOIN tbl_administrador administrador ON distr_adm.cod_administrador = administrador.id
                             WHERE 
 	                            distr_adm.cod_distribuidor = @id
                             ORDER BY    
@@ -104,8 +104,8 @@ namespace DUDS.Service
                                 administrador.nome_administrador
                               FROM
 	                            tbl_distribuidor_administrador distr_adm
-                                inner join tbl_distribuidor distribuidor on distr_adm.cod_distribuidor = distribuidor.id
-                                inner join tbl_administrador administrador on distr_adm.cod_administrador = administrador.id
+                                    INNER JOIN tbl_distribuidor distribuidor ON distr_adm.cod_distribuidor = distribuidor.id
+                                    INNER JOIN tbl_administrador administrador ON distr_adm.cod_administrador = administrador.id
                             WHERE 
 	                            distr_adm.id = @id
                             ORDER BY    

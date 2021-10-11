@@ -65,7 +65,7 @@ namespace DUDS.Service
                                 tipo_classificacao.classificacao as Classificacao
                               FROM
 	                            tbl_gestor gestor
-                                inner join tbl_tipo_classificacao tipo_classificacao on gestor.cod_tipo_classificacao = tipo_classificacao.id
+                                    INNER JOIN tbl_tipo_classificacao tipo_classificacao ON gestor.cod_tipo_classificacao = tipo_classificacao.id
                             WHERE 
 	                            gestor.ativo = 1
                             ORDER BY    
@@ -84,7 +84,7 @@ namespace DUDS.Service
                                 tipo_classificacao.classificacao
                               FROM
 	                            tbl_gestor gestor
-                                inner join tbl_tipo_classificacao tipo_classificacao on gestor.cod_tipo_classificacao = tipo_classificacao.id
+                                    INNER JOIN tbl_tipo_classificacao tipo_classificacao ON gestor.cod_tipo_classificacao = tipo_classificacao.id
                             WHERE 
 	                            gestor.id = @id";
 
@@ -101,7 +101,7 @@ namespace DUDS.Service
                                 tipo_classificacao.classificacao
                               FROM
 	                            tbl_gestor gestor
-                                inner join tbl_tipo_classificacao tipo_classificacao on gestor.cod_tipo_classificacao = tipo_classificacao.id
+                                    INNER JOIN tbl_tipo_classificacao tipo_classificacao ON gestor.cod_tipo_classificacao = tipo_classificacao.id
                             WHERE 
 	                            gestor.cnpj = @cnpj";
 

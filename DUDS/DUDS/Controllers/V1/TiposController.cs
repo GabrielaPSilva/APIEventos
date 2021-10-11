@@ -384,7 +384,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Tipos/GetTipoContasById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TipoContaModel>> GetTipoContasById(int id)
+        public async Task<ActionResult<TipoContaModel>> GetTipoContaById(int id)
         {
             try
             {

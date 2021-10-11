@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service.Interface
 {
-    public interface IInvestidorService
+    public interface IInvestidorService : IGenericOperationsService<InvestidorModel>
     {
-        Task<IEnumerable<InvestidorModel>> GetInvestidor();
-        Task<InvestidorModel> GetInvestidorById(int id);
         Task<InvestidorModel> GetInvestidorExistsBase(string cnpj);
-        Task<bool> AddInvestidor(InvestidorModel investidor);
-        Task<bool> UpdateInvestidor(InvestidorModel investidor);
-        Task<bool> DisableInvestidor(int id);
-        Task<bool> ActivateInvestidor(int id);
     }
 }
