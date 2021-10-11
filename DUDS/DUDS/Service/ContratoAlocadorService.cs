@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class SubContratoService : GenericService<SubContratoModel>, ISubContratoService
+    public class ContratoAlocadorService : GenericService<ContratoAlocadorModel>, IContratoAlocadorService
     {
-        public SubContratoService() : base(new SubContratoModel(),
-            "tbl_sub_contrato",
-            new List<string> { "'id'", "'data_criacao'"},
-            new List<string> { "Id", "DataCriacao" },
+        public ContratoAlocadorService() : base(new ContratoAlocadorModel(),
+            "tbl_contrato_alocador",
+            new List<string> { "'id'", "'data_criacao'" },
+            new List<string> { "Id", "DataCriacao", "NomeInvestidor" },
             new List<string> { "'id'", "'data_criacao'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "UsuarioCriacao"})
+            new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "NomeInvestidor" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -26,7 +26,7 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<bool> AddAsync(SubContratoModel item)
+        public async Task<bool> AddAsync(ContratoAlocadorModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -49,40 +49,40 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<SubContratoModel>> GetAllAsync()
+        public async Task<IEnumerable<ContratoAlocadorModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT 
-	                            sub_contrato.*,
+	                            contrato_alocador.*,
+                                investidor.nome_investidor
                              FROM
-	                            tbl_sub_contrato sub_contrato
-                                inner join tbl_contrato contrato on contrato.id = sub_contrado.cod_contrato
-                             WHERE
-	                            contrato.ativo = 1 AND
-                                sub_contrato.status = 'Ativo'
+	                            tbl_contrato_alocador contrato_alocador
+                                inner join tbl_investidor investidor on contrato.id = contrato_alocador.cod_investidor
                              ORDER BY
-                                contrato.id";
+                                investidor.nome_investidor";
 
-                return await connection.QueryAsync<SubContratoModel>(query);
+                return await connection.QueryAsync<ContratoAlocadorModel>(query);
             }
         }
 
-        public async Task<SubContratoModel> GetByIdAsync(int id)
+        public async Task<ContratoAlocadorModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = @"SELECT 
-                                        sub_contrato.*,
-                                       FROM
-                                        tbl_sub_contrato sub_contrato
+	                                    contrato_alocador.*,
+                                        investidor.nome_investidor
+                                     FROM
+	                                    tbl_contrato_alocador contrato_alocador
+                                        inner join tbl_investidor investidor on contrato.id = contrato_alocador.cod_investidor
                                        WHERE
                                         id = @id";
-                return await connection.QueryFirstOrDefaultAsync<SubContratoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<ContratoAlocadorModel>(query, new { id });
             }
         }
 
-        public async Task<bool> UpdateAsync(SubContratoModel item)
+        public async Task<bool> UpdateAsync(ContratoAlocadorModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {

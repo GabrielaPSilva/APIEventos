@@ -22,13 +22,15 @@ namespace DUDS.Controllers.V1
         private readonly IConfiguracaoService _configService;
         private readonly IContratoService _contratoService;
         private readonly ISubContratoService _subContratoService;
+        private readonly IContratoAlocadorService _contratoAlocadorService;
 
-        public ContratoController(DataContext context, IConfiguracaoService configService, IContratoService contratoService, ISubContratoService subContratoService)
+        public ContratoController(DataContext context, IConfiguracaoService configService, IContratoService contratoService, ISubContratoService subContratoService, IContratoAlocadorService contratoAlocadorService)
         {
             _context = context;
             _configService = configService;
             _contratoService = contratoService;
             _subContratoService = subContratoService;
+            _contratoAlocadorService = contratoAlocadorService;
         }
 
         #region Contrato
@@ -118,7 +120,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _contratoService.Disable(id);
+                bool retorno = await _contratoService.DisableAsync(id);
                 if (retorno)
                 {
                     return Ok();
@@ -162,7 +164,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var subContratos = await _subContratoService.GetAllAsync();
+                var subContratos = await _contratoAlocadorService.GetAllAsync();
 
                 if (subContratos.Any())
                 {
@@ -268,22 +270,22 @@ namespace DUDS.Controllers.V1
         #endregion
 
         #region Contrato Alocador
-        // GET: api/Contrato/GetContratoAlocador
+        // GET: api/Contrato/GetContratosAlocadores
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoAlocador>>> GetContratoAlocador()
+        public async Task<ActionResult<IEnumerable<ContratoAlocadorModel>>> GetContratosAlocadores()
         {
             try
             {
-                List<TblContratoAlocador> contratoAlocadores = await _context.TblContratoAlocador.AsNoTracking().ToListAsync();
+                var contratoAlocador = await _contratoAlocadorService.GetAllAsync();
 
-                if (contratoAlocadores.Count == 0)
+                if (contratoAlocador.Any())
                 {
-                    return NotFound();
+                    return Ok(contratoAlocador);
                 }
+                return NotFound();
 
-                return Ok(contratoAlocadores);
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
@@ -291,17 +293,16 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Contrato/GetContratoAlocadorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoAlocador>> GetContratoAlocadorById(int id)
+        public async Task<ActionResult<ContratoAlocadorModel>> GetContratoAlocadorById(int id)
         {
-
             try
             {
-                TblContratoAlocador tblContratoAlocador = await _context.TblContratoAlocador.FindAsync(id);
-                if (tblContratoAlocador != null)
+                var contratoAlocador = await _contratoAlocadorService.GetByIdAsync(id);
+                if (contratoAlocador == null)
                 {
-                    NotFound();
+                    return NotFound();
                 }
-                return Ok(tblContratoAlocador);
+                return Ok(contratoAlocador);
             }
             catch (Exception e)
             {
@@ -311,24 +312,12 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Contrato/AddContratoAlocador/ContratoAlocadorModel
         [HttpPost]
-        public async Task<ActionResult<ContratoAlocadorModel>> AddContratoAlocador(ContratoAlocadorModel tblContratoAlocadorModel)
+        public async Task<ActionResult<ContratoAlocadorModel>> AddContratoAlocador(ContratoAlocadorModel contratoAlocador)
         {
-            TblContratoAlocador itensContratoAlocador = new TblContratoAlocador
-            {
-                CodInvestidor = tblContratoAlocadorModel.CodInvestidor,
-                CodSubContrato = tblContratoAlocadorModel.CodSubContrato,
-                DataTransferencia = tblContratoAlocadorModel.DataTransferencia,
-                UsuarioModificacao = tblContratoAlocadorModel.UsuarioModificacao
-            };
-
             try
             {
-                _context.TblContratoAlocador.Add(itensContratoAlocador);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(
-                    nameof(GetContratoAlocador),
-                    new { id = itensContratoAlocador.Id }, itensContratoAlocador);
+                bool retorno = await _contratoAlocadorService.AddAsync(contratoAlocador);
+                return CreatedAtAction(nameof(GetContratoAlocadorById), new { id = contratoAlocador.Id }, contratoAlocador);
             }
             catch (Exception e)
             {
@@ -338,34 +327,24 @@ namespace DUDS.Controllers.V1
 
         //PUT: api/Contrato/UpdateContratoAlocador/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateContratoAlocador(int id, ContratoAlocadorModel contratoAlocador)
+        public async Task<ActionResult<ContratoAlocadorModel>> UpdateContratoAlocador(int id, ContratoAlocadorModel contratoAlocador)
         {
             try
             {
-                TblContratoAlocador registroContratoAlocador = _context.TblContratoAlocador.Find(id);
-
-                if (registroContratoAlocador != null)
+                ContratoAlocadorModel retornoContratoAlocador = await _contratoAlocadorService.GetByIdAsync(contratoAlocador.Id);
+                if (retornoContratoAlocador == null)
                 {
-                    registroContratoAlocador.CodInvestidor = contratoAlocador.CodInvestidor == 0 ? registroContratoAlocador.CodInvestidor : contratoAlocador.CodInvestidor;
-                    registroContratoAlocador.CodSubContrato = contratoAlocador.CodSubContrato == 0 ? registroContratoAlocador.CodSubContrato : contratoAlocador.CodSubContrato;
-                    registroContratoAlocador.DataTransferencia = contratoAlocador.DataTransferencia == null ? registroContratoAlocador.DataTransferencia : contratoAlocador.DataTransferencia;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroContratoAlocador);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
+                    return NotFound();
                 }
-                else
+                contratoAlocador.Id = id;
+                bool retorno = await _contratoAlocadorService.UpdateAsync(contratoAlocador);
+                if (retorno)
                 {
-                    return BadRequest();
+                    return Ok(contratoAlocador);
                 }
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException e) when (!ContratoAlocadorExists(contratoAlocador.Id))
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
@@ -380,18 +359,14 @@ namespace DUDS.Controllers.V1
 
             if (!existeRegistro)
             {
-                TblContratoAlocador tblContratoAlocador = await _context.TblContratoAlocador.FindAsync(id);
-
-                if (tblContratoAlocador == null)
-                {
-                    return NotFound();
-                }
-
                 try
                 {
-                    _context.TblContratoAlocador.Remove(tblContratoAlocador);
-                    await _context.SaveChangesAsync();
-                    return Ok(tblContratoAlocador);
+                    bool retorno = await _contratoAlocadorService.DeleteAsync(id);
+                    if (retorno)
+                    {
+                        return Ok();
+                    }
+                    return NotFound();
                 }
                 catch (Exception e)
                 {
@@ -404,10 +379,6 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        private bool ContratoAlocadorExists(int id)
-        {
-            return _context.TblContratoAlocador.Any(e => e.Id == id);
-        }
         #endregion
 
         #region Contrato Fundo
@@ -460,7 +431,7 @@ namespace DUDS.Controllers.V1
                 CodSubContrato = tblContratoFundoModel.CodSubContrato,
                 CodFundo = tblContratoFundoModel.CodFundo,
                 CodTipoCondicao = tblContratoFundoModel.CodTipoCondicao,
-                UsuarioModificacao = tblContratoFundoModel.UsuarioModificacao
+                UsuarioModificacao = tblContratoFundoModel.UsuarioCriacao
             };
 
             try

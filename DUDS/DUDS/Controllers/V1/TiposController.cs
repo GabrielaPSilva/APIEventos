@@ -127,7 +127,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var registroTipoClassificacao = await _tipoClassificacaoService.Disable(id);
+                var registroTipoClassificacao = await _tipoClassificacaoService.DisableAsync(id);
 
                 if (registroTipoClassificacao)
                 {
@@ -267,7 +267,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var registroTipoCondicao = await _tipoCondicaoService.Disable(id);
+                var registroTipoCondicao = await _tipoCondicaoService.DisableAsync(id);
 
                 if (registroTipoCondicao)
                 {

@@ -14,8 +14,12 @@ namespace DUDS.Models
         public int CodTipoCondicao { get; set; }
 
         [StringLength(100)]
-        public string UsuarioModificacao { get; set; }
-        public DateTime DataModificacao { get; set; }
+        public string UsuarioCriacao { get; set; }
+        public DateTime DataCriacao { get; set; }
+
+        public string NomeFundo { get; set; }
+
+        public string TipoCondicao { get; set; }
 
     }
 }

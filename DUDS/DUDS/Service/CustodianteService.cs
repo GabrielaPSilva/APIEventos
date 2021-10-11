@@ -40,10 +40,10 @@ namespace DUDS.Service
 
         public Task<bool> DeleteAsync(int id)
         {
-            return Disable(id);
+            return DisableAsync(id);
         }
 
-        public async Task<bool> Disable(int id)
+        public async Task<bool> DisableAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
