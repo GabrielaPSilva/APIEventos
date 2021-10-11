@@ -11,7 +11,7 @@ namespace DUDS.Models
         public int Id { get; set; }
         public string TipoConta { get; set; }
         public string DescricaoConta { get; set; }
-        public DateTime DataModificacao { get; set; }
-        public string UsuarioModificacao { get; set; }
+        public DateTime DataCriacao { get; set; }
+        public string UsuarioCriacao { get; set; }
     }
 }

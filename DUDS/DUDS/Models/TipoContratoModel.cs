@@ -14,9 +14,9 @@ namespace DUDS.Models
         public string TipoContrato { get; set; }
 
         public bool? Ativo { get; set; }
-        public DateTime DataModificacao { get; set; }
+        public DateTime DataCriacao { get; set; }
 
         [StringLength(50)]
-        public string UsuarioModificacao { get; set; }
+        public string UsuarioCriacao { get; set; }
     }
 }
