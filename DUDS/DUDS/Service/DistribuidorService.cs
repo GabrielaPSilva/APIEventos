@@ -10,7 +10,6 @@ namespace DUDS.Service
 {
     public class DistribuidorService : GenericService<DistribuidorModel>, IDistribuidorService
     {
-
         public DistribuidorService() : base(new DistribuidorModel(),
             "tbl_distribuidor",
             new List<string> { "'id'", "'data_criacao'", "'ativo'" },
@@ -75,7 +74,7 @@ namespace DUDS.Service
 
                 foreach (DistribuidorModel distribuidor in distribuidores)
                 {
-                    List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetByDistribuidorIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
+                    List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetDistribuidorByIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
                     distribuidor.ListaDistribuidorAdministrador = distrAdmList;
                 }
 
@@ -100,7 +99,7 @@ namespace DUDS.Service
                 DistribuidorModel distribuidor = await connection.QueryFirstOrDefaultAsync<DistribuidorModel>(query, new { id });
 
                 DistribuidorAdministradorService distrAdmService = new DistribuidorAdministradorService();
-                List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetByDistribuidorIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
+                List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetDistribuidorByIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
                 distribuidor.ListaDistribuidorAdministrador = distrAdmList;
                 //return null;
                 return distribuidor;
@@ -127,7 +126,7 @@ namespace DUDS.Service
                 }
 
                 DistribuidorAdministradorService distrAdmService = new DistribuidorAdministradorService();
-                List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetByDistribuidorIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
+                List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetDistribuidorByIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
                 distribuidor.ListaDistribuidorAdministrador = distrAdmList;
 
                 return distribuidor;
@@ -148,7 +147,5 @@ namespace DUDS.Service
                 return await connection.ExecuteAsync(query, item) > 0;
             }
         }
-
-        
     }
 }

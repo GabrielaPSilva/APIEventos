@@ -73,7 +73,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<DistribuidorAdministradorModel>> GetByDistribuidorIdAsync(int id)
+        public async Task<IEnumerable<DistribuidorAdministradorModel>> GetDistribuidorByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {

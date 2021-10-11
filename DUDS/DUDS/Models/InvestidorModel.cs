@@ -11,13 +11,13 @@ namespace DUDS.Models
         public int Id { get; set; }
 
         [StringLength(200)]
-        public string NomeCliente { get; set; }
+        public string NomeInvestidor { get; set; }
 
         [StringLength(14)]
         public string Cnpj { get; set; }
 
         [StringLength(20)]
-        public string TipoCliente { get; set; }
+        public string TipoInvestidor { get; set; }
         public int CodTipoContrato { get; set; }
         public int CodGrupoRebate { get; set; }
         public int? CodAdministrador { get; set; }
@@ -27,5 +27,6 @@ namespace DUDS.Models
         [StringLength(100)]
         public string UsuarioModificacao { get; set; }
         public bool? Ativo { get; set; }
+        public List<InvestidorDistribuidorModel> ListaInvestDistribuidor { get; set; }
     }
 }

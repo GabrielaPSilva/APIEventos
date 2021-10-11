@@ -6,6 +6,6 @@ namespace DUDS.Service.Interface
 {
     public interface IDistribuidorAdministradorService : IGenericOperationsService<DistribuidorAdministradorModel>
     {
-        Task<IEnumerable<DistribuidorAdministradorModel>> GetByDistribuidorIdAsync(int id);
+        Task<IEnumerable<DistribuidorAdministradorModel>> GetDistribuidorByIdAsync(int id);
     }
 }

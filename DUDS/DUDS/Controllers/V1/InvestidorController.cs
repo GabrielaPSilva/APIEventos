@@ -33,7 +33,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var investidores = await _investidorService.GetInvestidor();
+                var investidores = await _investidorService.GetAllAsync();
 
                 if (investidores.Any())
                 {
@@ -54,7 +54,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var tblInvestidor = await _investidorService.GetInvestidorById(id);
+                var tblInvestidor = await _investidorService.GetByIdAsync(id);
 
                 if (tblInvestidor == null)
                 {
@@ -96,7 +96,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var retorno = await _investidorService.AddInvestidor(investidorModel);
+                var retorno = await _investidorService.AddAsync(investidorModel);
 
                 return CreatedAtAction(
                     nameof(GetInvestidor),
@@ -153,13 +153,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var registroInvestidor = await _investidorService.GetInvestidorById(investidorModel.Id);
+                var registroInvestidor = await _investidorService.GetByIdAsync(investidorModel.Id);
 
                 if (registroInvestidor != null)
                 {
                     try
                     {
-                        await _investidorService.UpdateInvestidor(investidorModel);
+                        await _investidorService.UpdateAsync(investidorModel);
                         return Ok(registroInvestidor);
                     }
                     catch (Exception e)
@@ -184,7 +184,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var registroInvestidor = await _investidorService.DisableInvestidor(id);
+                var registroInvestidor = await _investidorService.DisableAsync(id);
 
                 if (registroInvestidor)
                 {
@@ -205,13 +205,13 @@ namespace DUDS.Controllers.V1
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateInvestidor(int id)
         {
-            var registroInvestidor = await _investidorService.GetInvestidorById(id);
+            var registroInvestidor = await _investidorService.GetByIdAsync(id);
 
             if (registroInvestidor != null)
             {
                 try
                 {
-                    await _investidorService.ActivateInvestidor(id);
+                    await _investidorService.ActivateAsync(id);
                     return Ok(registroInvestidor);
                 }
                 catch (Exception e)
