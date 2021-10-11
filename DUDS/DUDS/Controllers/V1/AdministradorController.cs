@@ -143,7 +143,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var registroAdministrador = await _administradorService.DisableAsync(id);
+                var registroAdministrador = await _administradorService.Disable(id);
 
                 if (registroAdministrador)
                 {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service.Interface
 {
-    public interface IContratoService: IGenericOperationsService<ContratoModel>
+    public interface ISubContratoService : IGenericOperationsService<SubContratoModel>
     {
 
     }

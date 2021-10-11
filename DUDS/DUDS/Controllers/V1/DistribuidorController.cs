@@ -131,7 +131,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _distribuidorService.DisableAsync(id);
+                bool retorno = await _distribuidorService.Disable(id);
                 if (retorno)
                 {
                     return Ok();
@@ -253,19 +253,29 @@ namespace DUDS.Controllers.V1
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDistribuidorAdministrador(int id)
         {
-            try
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_distribuidor_administrador");
+
+            if (!existeRegistro)
             {
-                bool retorno = await _distribuidorAdministradorService.DeleteAsync(id);
-                if (retorno)
+                try
                 {
-                    return Ok();
+                    bool retorno = await _distribuidorAdministradorService.DeleteAsync(id);
+                    if (retorno)
+                    {
+                        return Ok();
+                    }
+                    return NotFound();
                 }
-                return NotFound();
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
             }
-            catch (Exception e)
+            else
             {
-                return BadRequest(e);
+                return BadRequest();
             }
+            
         }
 
         #endregion

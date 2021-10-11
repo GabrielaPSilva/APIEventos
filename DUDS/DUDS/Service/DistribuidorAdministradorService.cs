@@ -47,13 +47,9 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> DisableAsync(int id)
+        public bool Disable(int id)
         {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
-            }
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<DistribuidorAdministradorModel>> GetAllAsync()
