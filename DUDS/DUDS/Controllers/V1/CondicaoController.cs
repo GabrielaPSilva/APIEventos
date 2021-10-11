@@ -19,13 +19,13 @@ namespace DUDS.Controllers.V1
     {
         private readonly DataContext _context;
         private readonly IConfiguracaoService _configService;
-        private readonly ITipoCondicaoService _tipoCondicaoService;
+        
 
-        public CondicaoController(DataContext context, IConfiguracaoService configService, ITipoCondicaoService tipoCondicaoService)
+        public CondicaoController(DataContext context, IConfiguracaoService configService)
         {
             _context = context;
             _configService = configService;
-            _tipoCondicaoService = tipoCondicaoService;
+            
         }
 
         #region Condição Remuneração
@@ -238,144 +238,7 @@ namespace DUDS.Controllers.V1
         }
         #endregion
 
-        #region Tipo Condição
-        // GET: api/TipoCondicao/GetTipoCondicao
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TipoCondicaoModel>>> GetTipoCondicao()
-        {
-            try
-            {
-                var tipoCondicoes = await _tipoCondicaoService.GetAllAsync();
-
-                if (tipoCondicoes.Any())
-                {
-                    return Ok(tipoCondicoes);
-                }
-
-                return NotFound();
-            }
-            catch (Exception e)
-            {
-                return BadRequest();
-            }
-        }
-
-        // GET: api/TipoCondicao/GetTipoCondicaoById/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TipoCondicaoModel>> GetTipoCondicaoById(int id)
-        {
-            try
-            {
-                var tblTipoCondicao = await _tipoCondicaoService.GetByIdAsync(id);
-
-                if (tblTipoCondicao == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(tblTipoCondicao);
-            }
-            catch (Exception e)
-            {
-                return BadRequest();
-            }
-        }
-
-        //POST: api/TipoCondicao/AddTipoCondicao/TipoCondicaoModel
-        [HttpPost]
-        public async Task<ActionResult<TipoCondicaoModel>> AddTipoCondicao(TipoCondicaoModel tipoCondicao)
-        {
-            try
-            {
-                var retorno = await _tipoCondicaoService.AddAsync(tipoCondicao);
-
-                return CreatedAtAction(
-                    nameof(GetTipoCondicao),
-                    new { id = tipoCondicao.Id }, tipoCondicao);
-
-            }
-            catch (Exception e)
-            {
-                return BadRequest();
-            }
-        }
-
-        //PUT: api/TipoCondicao/UpdateTipoCondicao/id
-        [HttpPut("{id}")]
-        public async Task<ActionResult<TipoCondicaoModel>> UpdateTipoCondicao(int id, TipoCondicaoModel tipoCondicao)
-        {
-            try
-            {
-                var retornoTipoCondicao = await _tipoCondicaoService.GetByIdAsync(id);
-
-                if (retornoTipoCondicao == null)
-                {
-                    return NotFound();
-                }
-
-                tipoCondicao.Id = id;
-                bool retorno = await _tipoCondicaoService.UpdateAsync(tipoCondicao);
-
-                if (retorno)
-                {
-                    return Ok(tipoCondicao);
-                }
-                return NotFound();
-
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
-            }
-        }
-
-        // DELETE: api/TipoCondicao/DeleteTipoCondicao/id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTipoCondicao(int id)
-        {
-            try
-            {
-                var registroTipoCondicao = await _tipoCondicaoService.DisableAsync(id);
-
-                if (registroTipoCondicao)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception e)
-            {
-                return BadRequest();
-            }
-        }
-
-        // ATIVAR: api/TipoCondicao/ActivateTipoCondicao/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> ActivateTipoCondicao(int id)
-        {
-            var registroTipoCondicao = await _tipoCondicaoService.GetByIdAsync(id);
-
-            if (registroTipoCondicao != null)
-            {
-                try
-                {
-                    await _tipoCondicaoService.ActivateAsync(id);
-                    return Ok(registroTipoCondicao);
-                }
-                catch (Exception e)
-                {
-                    return BadRequest();
-                }
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-        #endregion
+       
 
     }
 }
