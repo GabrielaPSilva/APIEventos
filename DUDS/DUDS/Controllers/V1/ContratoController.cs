@@ -23,14 +23,23 @@ namespace DUDS.Controllers.V1
         private readonly IContratoService _contratoService;
         private readonly ISubContratoService _subContratoService;
         private readonly IContratoAlocadorService _contratoAlocadorService;
+        private readonly IContratoFundoService _contratoFundoService;
+        private readonly IContratoRemuneracaoService _contratoRemuneracao;
 
-        public ContratoController(DataContext context, IConfiguracaoService configService, IContratoService contratoService, ISubContratoService subContratoService, IContratoAlocadorService contratoAlocadorService)
+        public ContratoController(DataContext context, IConfiguracaoService configService, 
+            IContratoService contratoService, 
+            ISubContratoService subContratoService, 
+            IContratoAlocadorService contratoAlocadorService,
+            IContratoFundoService contratoFundoService,
+            IContratoRemuneracaoService contratoRemuneracao)
         {
             _context = context;
             _configService = configService;
             _contratoService = contratoService;
             _subContratoService = subContratoService;
             _contratoAlocadorService = contratoAlocadorService;
+            _contratoFundoService = contratoFundoService;
+            _contratoRemuneracao = contratoRemuneracao;
         }
 
         #region Contrato
@@ -384,20 +393,19 @@ namespace DUDS.Controllers.V1
         #region Contrato Fundo
         // GET: api/Contrato/GetContratoFundo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoFundo>>> GetContratoFundo()
+        public async Task<ActionResult<IEnumerable<ContratoFundoModel>>> GetContratoFundo()
         {
             try
             {
-                List<TblContratoFundo> contratoFundos = await _context.TblContratoFundo.OrderBy(c => c.CodSubContrato).AsNoTracking().ToListAsync();
+                var contratoFundo = await _contratoFundoService.GetAllAsync();
 
-                if (contratoFundos.Count == 0)
+                if (contratoFundo.Any())
                 {
-                    return NotFound();
+                    return Ok(contratoFundo);
                 }
-
-                return Ok(contratoFundos);
+                return NotFound();
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
@@ -405,16 +413,16 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Contrato/GetContratoFundoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoFundo>> GetContratoFundoById(int id)
+        public async Task<ActionResult<ContratoFundoModel>> GetContratoFundoById(int id)
         {
             try
             {
-                TblContratoFundo tblContratoFundo = await _context.TblContratoFundo.FindAsync(id);
-                if (tblContratoFundo == null)
+                var contratoFundo = await _contratoFundoService.GetByIdAsync(id);
+                if (contratoFundo == null)
                 {
-                    NotFound();
+                    return NotFound();
                 }
-                return Ok(tblContratoFundo);
+                return Ok(contratoFundo);
             }
             catch (Exception e)
             {
@@ -424,24 +432,17 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Contrato/AddContratoFundo/ContratoFundoModel
         [HttpPost]
-        public async Task<ActionResult<ContratoFundoModel>> AddContratoFundo(ContratoFundoModel tblContratoFundoModel)
+        public async Task<ActionResult<ContratoFundoModel>> AddContratoFundo(ContratoFundoModel contratoFundo)
         {
-            TblContratoFundo itensContratoFundo = new TblContratoFundo
-            {
-                CodSubContrato = tblContratoFundoModel.CodSubContrato,
-                CodFundo = tblContratoFundoModel.CodFundo,
-                CodTipoCondicao = tblContratoFundoModel.CodTipoCondicao,
-                UsuarioModificacao = tblContratoFundoModel.UsuarioCriacao
-            };
-
             try
             {
-                _context.TblContratoFundo.Add(itensContratoFundo);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(
-                    nameof(GetContratoFundo),
-                    new { id = itensContratoFundo.Id }, itensContratoFundo);
+                bool retorno = await _contratoFundoService.AddAsync(contratoFundo);
+                if (retorno)
+                {
+                    return CreatedAtAction(nameof(GetContratoFundoById), new { id = contratoFundo.Id }, contratoFundo);
+                }
+                return NotFound();
+                
             }
             catch (Exception e)
             {
@@ -451,34 +452,24 @@ namespace DUDS.Controllers.V1
 
         //PUT: api/Contrato/UpdateContratoFundo/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateContratoFundo(int id, ContratoFundoModel contratoFundo)
+        public async Task<ActionResult<ContratoFundoModel>> UpdateContratoFundo(int id, ContratoFundoModel contratoFundo)
         {
             try
             {
-                TblContratoFundo registroContratoFundo = _context.TblContratoFundo.Find(id);
-
-                if (registroContratoFundo != null)
+                ContratoFundoModel retornoContratoFundo = await _contratoFundoService.GetByIdAsync(contratoFundo.Id);
+                if (retornoContratoFundo == null)
                 {
-                    registroContratoFundo.CodSubContrato = contratoFundo.CodSubContrato == 0 ? registroContratoFundo.CodSubContrato : contratoFundo.CodSubContrato;
-                    registroContratoFundo.CodFundo = contratoFundo.CodFundo == 0 ? registroContratoFundo.CodFundo : contratoFundo.CodFundo;
-                    registroContratoFundo.CodTipoCondicao = contratoFundo.CodTipoCondicao == 0 ? registroContratoFundo.CodTipoCondicao : contratoFundo.CodTipoCondicao;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroContratoFundo);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
+                    return NotFound();
                 }
-                else
+                contratoFundo.Id = id;
+                bool retorno = await _contratoFundoService.UpdateAsync(contratoFundo);
+                if (retorno)
                 {
-                    return BadRequest();
+                    return Ok(contratoFundo);
                 }
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException e) when (!ContratoFundoExists(contratoFundo.Id))
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
@@ -493,18 +484,14 @@ namespace DUDS.Controllers.V1
 
             if (!existeRegistro)
             {
-                TblContratoFundo tblContratoFundo = await _context.TblContratoFundo.FindAsync(id);
-
-                if (tblContratoFundo == null)
-                {
-                    return NotFound();
-                }
-
                 try
                 {
-                    _context.TblContratoFundo.Remove(tblContratoFundo);
-                    await _context.SaveChangesAsync();
-                    return Ok(tblContratoFundo);
+                    bool retorno = await _contratoFundoService.DeleteAsync(id);
+                    if (retorno)
+                    {
+                        return Ok();
+                    }
+                    return NotFound();
                 }
                 catch (Exception e)
                 {
@@ -517,29 +504,24 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        private bool ContratoFundoExists(int id)
-        {
-            return _context.TblContratoFundo.Any(e => e.Id == id);
-        }
         #endregion
 
         #region Contrato Remuneração
         // GET: api/Contrato/GetContratoRemuneracao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContratoRemuneracao>>> GetContratoRemuneracao()
+        public async Task<ActionResult<IEnumerable<ContratoRemuneracaoModel>>> GetContratoRemuneracao()
         {
             try
             {
-                List<TblContratoRemuneracao> contratoRemuneracao = await _context.TblContratoRemuneracao.OrderBy(c => c.CodContratoFundo).AsNoTracking().ToListAsync();
+                var contratoRemuneracao = await _contratoRemuneracao.GetAllAsync();
 
-                if (contratoRemuneracao.Count == 0)
+                if (contratoRemuneracao.Any())
                 {
-                    return NotFound();
+                    return Ok(contratoRemuneracao);
                 }
-
-                return Ok(contratoRemuneracao);
+                return NotFound();
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
@@ -547,16 +529,16 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Contrato/GetContratoRemuneracaoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContratoRemuneracao>> GetContratoRemuneracaoById(int id)
+        public async Task<ActionResult<ContratoRemuneracaoModel>> GetContratoRemuneracaoById(int id)
         {
             try
             {
-                TblContratoRemuneracao tblContratoRemuneracao = await _context.TblContratoRemuneracao.FindAsync(id);
-                if (tblContratoRemuneracao == null)
+                var contratoRemuneracao = await _contratoRemuneracao.GetByIdAsync(id);
+                if (contratoRemuneracao == null)
                 {
                     return NotFound();
                 }
-                return Ok(tblContratoRemuneracao);
+                return Ok(contratoRemuneracao);
             }
             catch (Exception e)
             {
@@ -566,24 +548,17 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Contrato/AddContratoRemuneracao/ContratoRemuneracaoModel
         [HttpPost]
-        public async Task<ActionResult<ContratoRemuneracaoModel>> AddContratoRemuneracao(ContratoRemuneracaoModel tblContratoRemuneracaoModel)
+        public async Task<ActionResult<ContratoRemuneracaoModel>> AddContratoRemuneracao(ContratoRemuneracaoModel contratoRemuneracao)
         {
-            TblContratoRemuneracao itensContratoRemuneracao = new TblContratoRemuneracao
-            {
-                CodContratoFundo = tblContratoRemuneracaoModel.CodContratoFundo,
-                PercentualAdm = tblContratoRemuneracaoModel.PercentualAdm,
-                PercentualPfee = tblContratoRemuneracaoModel.PercentualPfee,
-                UsuarioModificacao = tblContratoRemuneracaoModel.UsuarioModificacao,
-            };
-
             try
             {
-                _context.TblContratoRemuneracao.Add(itensContratoRemuneracao);
-                await _context.SaveChangesAsync();
+                bool retorno = await _contratoRemuneracao.AddAsync(contratoRemuneracao);
+                if (retorno)
+                {
+                    return CreatedAtAction(nameof(GetContratoFundoById), new { id = contratoRemuneracao.Id }, contratoRemuneracao);
+                }
+                return NotFound();
 
-                return CreatedAtAction(
-                    nameof(GetContratoRemuneracao),
-                    new { id = itensContratoRemuneracao.Id }, itensContratoRemuneracao);
             }
             catch (Exception e)
             {
@@ -597,30 +572,20 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                TblContratoRemuneracao registroContratoRemuneracao = _context.TblContratoRemuneracao.Find(id);
-
-                if (registroContratoRemuneracao != null)
+                ContratoRemuneracaoModel retornoContratoRemuneracao = await _contratoRemuneracao.GetByIdAsync(contratoRemuneracao.Id);
+                if (retornoContratoRemuneracao == null)
                 {
-                    registroContratoRemuneracao.CodContratoFundo = contratoRemuneracao.CodContratoFundo == 0 ? registroContratoRemuneracao.CodContratoFundo : contratoRemuneracao.CodContratoFundo;
-                    registroContratoRemuneracao.PercentualAdm = contratoRemuneracao.PercentualAdm == 0 ? registroContratoRemuneracao.PercentualAdm : contratoRemuneracao.PercentualAdm;
-                    registroContratoRemuneracao.PercentualPfee = contratoRemuneracao.PercentualPfee == 0 ? registroContratoRemuneracao.PercentualPfee : contratoRemuneracao.PercentualPfee;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroContratoRemuneracao);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
+                    return NotFound();
                 }
-                else
+                contratoRemuneracao.Id = id;
+                bool retorno = await _contratoRemuneracao.UpdateAsync(contratoRemuneracao);
+                if (retorno)
                 {
-                    return BadRequest();
+                    return Ok(contratoRemuneracao);
                 }
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException e) when (!ContratoRemuneracaoExists(contratoRemuneracao.Id))
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
@@ -635,18 +600,14 @@ namespace DUDS.Controllers.V1
 
             if (!existeRegistro)
             {
-                TblContratoRemuneracao tblContratoRemuneracao = await _context.TblContratoRemuneracao.FindAsync(id);
-
-                if (tblContratoRemuneracao == null)
-                {
-                    return NotFound();
-                }
-
                 try
                 {
-                    _context.TblContratoRemuneracao.Remove(tblContratoRemuneracao);
-                    await _context.SaveChangesAsync();
-                    return Ok(tblContratoRemuneracao);
+                    bool retorno = await _contratoRemuneracao.DeleteAsync(id);
+                    if (retorno)
+                    {
+                        return Ok();
+                    }
+                    return NotFound();
                 }
                 catch (Exception e)
                 {
@@ -659,10 +620,6 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        private bool ContratoRemuneracaoExists(int id)
-        {
-            return _context.TblContratoRemuneracao.Any(e => e.Id == id);
-        }
         #endregion 
 
         #region Condição Remuneração
