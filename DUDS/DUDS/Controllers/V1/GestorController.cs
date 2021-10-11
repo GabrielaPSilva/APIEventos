@@ -21,7 +21,6 @@ namespace DUDS.Controllers.V1
             _gestorService = gestorService;
         }
 
-
         #region Gestor
 
         // GET: api/Gestor/GetGestor

@@ -87,7 +87,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<GestorModel> GetTipoContaExistsBase(string tipoConta, string descricaoConta)
+        public async Task<TipoContaModel> GetTipoContaExistsBase(string tipoConta, string descricaoConta)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -96,10 +96,10 @@ namespace DUDS.Service
                               FROM
 	                             tbl_tipo_conta
                               WHERE 
-	                             tipo_conta = @tipoConta AND
-                                 descricao_conta = @descricaoConta";
+	                             tipo_conta = @tipo_conta AND
+                                 descricao_conta = @descricao_conta";
 
-                return await connection.QueryFirstOrDefaultAsync<GestorModel>(query, new { tipoConta, descricaoConta });
+                return await connection.QueryFirstOrDefaultAsync<TipoContaModel>(query, new { tipo_conta = tipoConta, descricao_conta = descricaoConta });
             }
         }
 

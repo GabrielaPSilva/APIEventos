@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service.Interface
 {
-    public interface ITipoCondicaoService : IGenericOperationsService<TipoCondicaoModel>
+    public interface ITipoContratoService : IGenericOperationsService<TipoContratoModel>
     {
-        Task<TipoCondicaoModel> GetTipoCondicaoExistsBase(string tipoCondicao);
+        Task<TipoContratoModel> GetTipoContaExistsBase(string tipoContrato);
     }
 }

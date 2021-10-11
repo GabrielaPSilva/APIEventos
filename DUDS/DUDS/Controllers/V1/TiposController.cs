@@ -19,19 +19,28 @@ namespace DUDS.Controllers.V1
     {
         private readonly ITipoClassificacaoService _tipoClassificacaoService;
         private readonly ITipoCondicaoService _tipoCondicaoService;
-        private readonly DataContext _context;
+        private readonly ITipoContaService _tipoContaService;
+        private readonly ITipoContratoService _tipoContratoService;
+        private readonly ITipoEstrategiaService _tipoEstrategiaService;
         private readonly IConfiguracaoService _configService;
 
-        public TiposController(DataContext context, IConfiguracaoService configService, ITipoClassificacaoService tipoClassificacaoService, ITipoCondicaoService tipoCondicaoService)
+        public TiposController(IConfiguracaoService configService,
+                               ITipoClassificacaoService tipoClassificacaoService,
+                               ITipoCondicaoService tipoCondicaoService,
+                               ITipoContaService tipoContaService,
+                               ITipoContratoService tipoContratoService,
+                               ITipoEstrategiaService tipoEstrategiaService)
         {
             _tipoClassificacaoService = tipoClassificacaoService;
             _tipoCondicaoService = tipoCondicaoService;
-            _context = context;
+            _tipoContaService = tipoContaService;
+            _tipoContratoService = tipoContratoService;
+            _tipoEstrategiaService = tipoEstrategiaService;
             _configService = configService;
         }
 
         #region Tipo Classificação
-        // GET: api/TipoClassificacao/GetTipoClassificacao
+        // GET: api/Tipos/GetTipoClassificacao
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TipoClassificacaoModel>>> GetTipoClassificacao()
         {
@@ -52,7 +61,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // GET: api/TipoClassificacao/GetTipoClassificacaoById/id
+        // GET: api/Tipos/GetTipoClassificacaoById/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TipoClassificacaoModel>> GetTipoClassificacaoById(int id)
         {
@@ -73,7 +82,28 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //POST: api/TipoClassificacao/AddTipoClassificacao/TipoClassificacaoModel
+        // GET: api/Tipos/GetTipoClassificacaoExistsBase/classificacao
+        [HttpGet("{classificacao}")]
+        public async Task<ActionResult<AdministradorModel>> GetTipoClassificacaoExistsBase(string classificacao)
+        {
+            try
+            {
+                var tblTipoClassificacao = await _tipoClassificacaoService.GetTipoClassificacaoExistsBase(classificacao);
+
+                if (tblTipoClassificacao != null)
+                {
+                    return Ok(tblTipoClassificacao);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        //POST: api/Tipos/AddTipoClassificacao/TipoClassificacaoModel
         [HttpPost]
         public async Task<ActionResult<TipoClassificacaoModel>> AddTipoClassificacao(TipoClassificacaoModel tipoClassificacao)
         {
@@ -92,7 +122,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //PUT: api/TipoClassificacao/UpdateTipoClassificacao/id
+        //PUT: api/Tipos/UpdateTipoClassificacao/id
         [HttpPut("{id}")]
         public async Task<ActionResult<TipoClassificacaoModel>> UpdateTipoClassificacao(int id, TipoClassificacaoModel tipoClassificacao)
         {
@@ -117,11 +147,11 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
-        // DELETE: api/TipoClassificacao/DeleteTipoClassificacao/id
+        // DELETE: api/Tipos/DeleteTipoClassificacao/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTipoClassificacao(int id)
         {
@@ -144,7 +174,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // ATIVAR: api/TipoClassificacao/ActivateTipoClassificacao/id
+        // ATIVAR: api/Tipos/ActivateTipoClassificacao/id
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateTipoClassificacao(int id)
         {
@@ -171,7 +201,7 @@ namespace DUDS.Controllers.V1
         #endregion
 
         #region Tipo Condição
-        // GET: api/TipoCondicao/GetTipoCondicao
+        // GET: api/Tipos/GetTipoCondicao
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TipoCondicaoModel>>> GetTipoCondicao()
         {
@@ -192,7 +222,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // GET: api/TipoCondicao/GetTipoCondicaoById/id
+        // GET: api/Tipos/GetTipoCondicaoById/id
         [HttpGet("{id}")]
         public async Task<ActionResult<TipoCondicaoModel>> GetTipoCondicaoById(int id)
         {
@@ -213,7 +243,28 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //POST: api/TipoCondicao/AddTipoCondicao/TipoCondicaoModel
+        // GET: api/Tipos/GetTipoCondicaoExistsBase/tipoCondicao
+        [HttpGet("{tipoCondicao}")]
+        public async Task<ActionResult<AdministradorModel>> GetTipoCondicaoExistsBase(string tipoCondicao)
+        {
+            try
+            {
+                var tblTipoCondicao = await _tipoCondicaoService.GetTipoCondicaoExistsBase(tipoCondicao);
+
+                if (tblTipoCondicao != null)
+                {
+                    return Ok(tblTipoCondicao);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        //POST: api/Tipos/AddTipoCondicao/TipoCondicaoModel
         [HttpPost]
         public async Task<ActionResult<TipoCondicaoModel>> AddTipoCondicao(TipoCondicaoModel tipoCondicao)
         {
@@ -232,7 +283,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //PUT: api/TipoCondicao/UpdateTipoCondicao/id
+        //PUT: api/Tipos/UpdateTipoCondicao/id
         [HttpPut("{id}")]
         public async Task<ActionResult<TipoCondicaoModel>> UpdateTipoCondicao(int id, TipoCondicaoModel tipoCondicao)
         {
@@ -257,11 +308,11 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
-        // DELETE: api/TipoCondicao/DeleteTipoCondicao/id
+        // DELETE: api/Tipos/DeleteTipoCondicao/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTipoCondicao(int id)
         {
@@ -284,7 +335,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // ATIVAR: api/TipoCondicao/ActivateTipoCondicao/id
+        // ATIVAR: api/Tipos/ActivateTipoCondicao/id
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateTipoCondicao(int id)
         {
@@ -310,63 +361,55 @@ namespace DUDS.Controllers.V1
         #endregion
 
         #region Tipo Conta
-        // GET: api/Contas/GetTipoContas
+        // GET: api/Tipos/GetTipoContas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblTipoConta>>> GetTipoContas()
+        public async Task<ActionResult<IEnumerable<TipoContaModel>>> GetTipoConta()
         {
             try
             {
-                var tiposConta = await _context.TblTipoConta.Where(c => c.Ativo == true).OrderBy(c => c.TipoConta).ToListAsync();
+                var tipoConta = await _tipoContaService.GetAllAsync();
 
-                if (tiposConta.Count == 0)
+                if (tipoConta.Any())
+                {
+                    return Ok(tipoConta);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        // GET: api/Tipos/GetTipoContasById/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TipoContaModel>> GetTipoContasById(int id)
+        {
+            try
+            {
+                var tblTipoCondicao = await _tipoCondicaoService.GetByIdAsync(id);
+
+                if (tblTipoCondicao == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(tiposConta);
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(e.InnerException.Message);
-            }
-        }
-
-        // GET: api/Contas/GetTipoContasById/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TblTipoConta>> GetTipoContasById(int id)
-        {
-            try
-            {
-                TblTipoConta tblContas = await _context.TblTipoConta.FindAsync(id);
-                if (tblContas == null)
-                {
-                    NotFound();
-                }
-
-                return Ok(tblContas);
+                return Ok(tblTipoCondicao);
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
-        // GET: api/Contas/GetTipoContaExistsBase/tipoConta/descricaoConta
+        // GET: api/Tipos/GetTipoContaExistsBase/tipoConta/descricaoConta
         [HttpGet("{tipoConta}/{descricaoConta}")]
-        public async Task<ActionResult<TblTipoConta>> GetTipoContaExistsBase(string tipoConta, string descricaoConta)
+        public async Task<ActionResult<AdministradorModel>> GetTipoContaExistsBase(string tipoConta, string descricaoConta)
         {
-            TblTipoConta tblTipoConta = new TblTipoConta();
-
             try
             {
-                tblTipoConta = await _context.TblTipoConta.Where(c => c.Ativo == false && c.TipoConta == tipoConta && c.DescricaoConta == descricaoConta).FirstOrDefaultAsync();
-
-                if (tblTipoConta != null)
-                {
-                    return Ok(tblTipoConta);
-                }
-
-                tblTipoConta = await _context.TblTipoConta.Where(c => c.TipoConta == tipoConta && c.DescricaoConta == descricaoConta).FirstOrDefaultAsync();
+                var tblTipoConta = await _tipoContaService.GetTipoContaExistsBase(tipoConta, descricaoConta);
 
                 if (tblTipoConta != null)
                 {
@@ -377,141 +420,97 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
-        //POST: api/Contas/AddTipoConta/TipoContaModel
+        //POST: api/Tipos/AddTipoConta/TipoContaModel
         [HttpPost]
-        public async Task<ActionResult<TipoContaModel>> AddTipoConta(TipoContaModel tblTipoContaModel)
+        public async Task<ActionResult<TipoContaModel>> AddTipoConta(TipoContaModel tipoContaModel)
         {
-            TblTipoConta itensTipoConta = new TblTipoConta
-            {
-                Id = tblTipoContaModel.Id,
-                TipoConta = tblTipoContaModel.TipoConta,
-                DescricaoConta = tblTipoContaModel.DescricaoConta,
-                UsuarioModificacao = tblTipoContaModel.UsuarioModificacao
-            };
-
             try
             {
-                _context.TblTipoConta.Add(itensTipoConta);
-                await _context.SaveChangesAsync();
+                var retorno = await _tipoContaService.AddAsync(tipoContaModel);
 
                 return CreatedAtAction(
-                    nameof(GetTipoContas),
-                    new
-                    {
-                        Id = itensTipoConta.Id,
-                    }, itensTipoConta);
+                    nameof(GetTipoCondicao),
+                    new { id = tipoContaModel.Id }, tipoContaModel);
+
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
-        //PUT: api/Contas/UpdateTipoConta/id
+        //PUT: api/Tipos/UpdateTipoConta/id
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTipoConta(int id, TipoContaModel tipoConta)
         {
             try
             {
-                TblTipoConta registroTipoConta = _context.TblTipoConta.Find(id);
+                var retornoTipoConta = await _tipoContaService.GetByIdAsync(id);
 
-                if (registroTipoConta != null)
+                if (retornoTipoConta == null)
                 {
-                    registroTipoConta.TipoConta = tipoConta.TipoConta == null ? registroTipoConta.TipoConta : tipoConta.TipoConta;
-                    registroTipoConta.DescricaoConta = tipoConta.DescricaoConta == null ? registroTipoConta.DescricaoConta : tipoConta.DescricaoConta;
+                    return NotFound();
+                }
 
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroTipoConta);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
+                tipoConta.Id = id;
+                bool retorno = await _tipoContaService.UpdateAsync(tipoConta);
+
+                if (retorno)
+                {
+                    return Ok(tipoConta);
+                }
+                return NotFound();
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        // DELETE: api/Tipos/DeleteTipoConta/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTipoConta(int id)
+        {
+            try
+            {
+                var registroTipoConta = await _tipoContaService.DisableAsync(id);
+
+                if (registroTipoConta)
+                {
+                    return Ok();
                 }
                 else
                 {
                     return NotFound();
                 }
             }
-            catch (DbUpdateConcurrencyException e) when (!TipoContasExists(tipoConta.Id))
-            {
-                return BadRequest(e.InnerException.Message);
-            }
-        }
-
-        // DELETE: api/Contas/DeleteTipoConta/id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTipoConta(int id)
-        {
-            TblTipoConta tblTipoConta = await _context.TblTipoConta.FindAsync(id);
-
-            if (tblTipoConta == null)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                _context.TblTipoConta.Remove(tblTipoConta);
-                await _context.SaveChangesAsync();
-                return Ok(tblTipoConta);
-            }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
-        // DESATIVA: api/Conta/DisableTipoConta/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DisableTipoConta(int id)
-        {
-            TblTipoConta registroTipoConta = _context.TblTipoConta.Find(id);
-
-            if (registroTipoConta != null)
-            {
-                registroTipoConta.Ativo = false;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    return Ok(registroTipoConta);
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.InnerException.Message);
-                }
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        // ATIVAR: api/Conta/ActivateTipoConta/id
+        // ATIVAR: api/Tipos/ActivateTipoConta/id
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateTipoConta(int id)
         {
-            TblTipoConta registroTipoConta = await _context.TblTipoConta.FindAsync(id);
+            var registroTipoConta = await _tipoContaService.GetByIdAsync(id);
 
             if (registroTipoConta != null)
             {
-                registroTipoConta.Ativo = true;
-
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    await _tipoContaService.ActivateAsync(id);
                     return Ok(registroTipoConta);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.InnerException.Message);
+                    return BadRequest();
                 }
             }
             else
@@ -519,114 +518,100 @@ namespace DUDS.Controllers.V1
                 return NotFound();
             }
         }
-
-        private bool TipoContasExists(int id)
-        {
-            return _context.TblTipoConta.Any(e => e.Id == id);
-        }
-
         #endregion
 
         #region Tipo Contrato
-        // GET: api/Contrato/GetTipoContrato
+        // GET: api/Tipos/GetTipoContrato
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblTipoContrato>>> GetTipoContrato()
+        public async Task<ActionResult<IEnumerable<TipoContratoModel>>> GetTipoContrato()
         {
             try
             {
-                List<TblTipoContrato> tipoContratos = await _context.TblTipoContrato.Where(c => c.Ativo == true).OrderBy(c => c.TipoContrato).AsNoTracking().ToListAsync();
+                var tipoContrato = await _tipoContratoService.GetAllAsync();
 
-                if (tipoContratos.Count == 0)
+                if (tipoContrato.Any())
                 {
-                    return NotFound();
+                    return Ok(tipoContrato);
                 }
 
-                return Ok(tipoContratos);
+                return NotFound();
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
-        // GET: api/Contrato/GetTipoContratoById/id
+        // GET: api/Tipos/GetTipoContratoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblTipoContrato>> GetTipoContratoById(int id)
+        public async Task<ActionResult<TipoContratoModel>> GetTipoContratoById(int id)
         {
             try
             {
-                TblTipoContrato tblTipoContrato = await _context.TblTipoContrato.FindAsync(id);
+                var tblTipoContrato = await _tipoContratoService.GetByIdAsync(id);
+
                 if (tblTipoContrato == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(tblTipoContrato);
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
-        //POST: api/Contrato/AddTipoContrato/TipoContratoModel
+        //POST: api/Tipos/AddTipoContrato/TipoContratoModel
         [HttpPost]
-        public async Task<ActionResult<TipoContratoModel>> AddTipoContrato(TipoContratoModel tblTipoContratoModel)
+        public async Task<ActionResult<TipoContratoModel>> AddTipoContrato(TipoContratoModel tipoContratoModel)
         {
-            TblTipoContrato itensTipoContrato = new TblTipoContrato
-            {
-                TipoContrato = tblTipoContratoModel.TipoContrato,
-                UsuarioModificacao = tblTipoContratoModel.UsuarioModificacao
-            };
-
             try
             {
-                _context.TblTipoContrato.Add(itensTipoContrato);
-                await _context.SaveChangesAsync();
+                var retorno = await _tipoContratoService.AddAsync(tipoContratoModel);
 
                 return CreatedAtAction(
-                   nameof(GetTipoContrato),
-                   new { id = itensTipoContrato.Id }, itensTipoContrato);
+                    nameof(GetTipoCondicao),
+                    new { id = tipoContratoModel.Id }, tipoContratoModel);
+
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
-        //PUT: api/Contrato/UpdateTipoContrato/id
+        //PUT: api/Tipos/UpdateTipoContrato/id
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTipoContrato(int id, TipoContratoModel tipoContrato)
         {
             try
             {
-                TblTipoContrato registroTipoContrato = await _context.TblTipoContrato.FindAsync(id);
+                var retornoTipoContrato = await _tipoContratoService.GetByIdAsync(id);
 
-                if (registroTipoContrato != null)
-                {
-                    registroTipoContrato.TipoContrato = tipoContrato.TipoContrato == null ? registroTipoContrato.TipoContrato : tipoContrato.TipoContrato;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroTipoContrato);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e.InnerException.Message);
-                    }
-                }
-                else
+                if (retornoTipoContrato == null)
                 {
                     return NotFound();
                 }
+
+                tipoContrato.Id = id;
+                bool retorno = await _tipoContratoService.UpdateAsync(tipoContrato);
+
+                if (retorno)
+                {
+                    return Ok(tipoContrato);
+                }
+                return NotFound();
+
             }
-            catch (DbUpdateConcurrencyException e) when (!TipoContratoExists(tipoContrato.Id))
+            catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
-        // DELETE: api/Contrato/DeleteTipoContrato/id
+        // DELETE: api/Tipos/DeleteTipoContrato/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTipoContrato(int id)
         {
@@ -634,83 +619,22 @@ namespace DUDS.Controllers.V1
 
             if (!existeRegistro)
             {
-                TblTipoContrato tblTipoContrato = await _context.TblTipoContrato.FindAsync(id);
-
-                if (tblTipoContrato == null)
-                {
-                    return NotFound();
-                }
-
                 try
                 {
-                    _context.TblTipoContrato.Remove(tblTipoContrato);
-                    await _context.SaveChangesAsync();
-                    return Ok(tblTipoContrato);
+                    var registroTipoContrato = await _tipoContratoService.DisableAsync(id);
+
+                    if (registroTipoContrato)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.InnerException.Message);
-                }
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        // DESATIVA: api/Contrato/DisableTipoContrato/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DisableTipoContrato(int id)
-        {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_contrato");
-
-            if (!existeRegistro)
-            {
-                TblTipoContrato registroTipoContrato = await _context.TblTipoContrato.FindAsync(id);
-
-                if (registroTipoContrato != null)
-                {
-                    registroTipoContrato.Ativo = false;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroTipoContrato);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e.InnerException.Message);
-                    }
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        // ATIVAR: api/Contrato/ActivateTipoContrato/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> ActivateTipoContrato(int id)
-        {
-            TblTipoContrato registroTipoContrato = await _context.TblTipoContrato.FindAsync(id);
-
-            if (registroTipoContrato != null)
-            {
-                registroTipoContrato.Ativo = true;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    return Ok(registroTipoContrato);
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.InnerException.Message);
+                    return BadRequest();
                 }
             }
             else
@@ -719,194 +643,176 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        private bool TipoContratoExists(int id)
+        // ATIVAR: api/Tipos/ActivateTipoContrato/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActivateTipoContrato(int id)
         {
-            return _context.TblTipoContrato.Any(e => e.Id == id);
+            var registroTipoContrato = await _tipoContratoService.GetByIdAsync(id);
+
+            if (registroTipoContrato != null)
+            {
+                try
+                {
+                    await _tipoContratoService.ActivateAsync(id);
+                    return Ok(registroTipoContrato);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         #endregion
 
         #region Tipo Estrategia
-        // GET: api/InfoFundo/GetTipoEstrategia
+        // GET: api/Tipos/GetTipoEstrategia
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblTipoEstrategia>>> GetTipoEstrategia()
+        public async Task<ActionResult<IEnumerable<TipoEstrategiaModel>>> GetTipoEstrategia()
         {
             try
             {
-                List<TblTipoEstrategia> tiposEstrategia = await _context.TblTipoEstrategia.Where(c => c.Ativo == true).OrderBy(c => c.Estrategia).ToListAsync();
+                var tipoEstrategia = await _tipoEstrategiaService.GetAllAsync();
 
-                if (tiposEstrategia.Count == 0)
+                if (tipoEstrategia.Any())
                 {
-                    return NotFound();
+                    return Ok(tipoEstrategia);
                 }
 
-                return Ok(tiposEstrategia);
+                return NotFound();
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
-                return NotFound(e);
+                return BadRequest();
             }
         }
 
-        // GET: api/InfoFundo/GetTipoEstrategiaById/id
+        // GET: api/Tipos/GetTipoEstrategiaById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblTipoEstrategia>> GetTipoEstrategiaById(int id)
+        public async Task<ActionResult<TipoEstrategiaModel>> GetTipoEstrategiaById(int id)
         {
-            TblTipoEstrategia tblTipoEstrategia = await _context.TblTipoEstrategia.FindAsync(id);
-
             try
             {
+                var tblTipoEstrategia = await _tipoEstrategiaService.GetByIdAsync(id);
+
                 if (tblTipoEstrategia == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(tblTipoEstrategia);
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
-        //POST: api/InfoFundo/AddTipoEstrategia/TipoContaModel
+        //POST: api/Tipos/AddTipoEstrategia/TipoContaModel
         [HttpPost]
-        public async Task<ActionResult<TipoEstrategiaModel>> AddTipoEstrategia(TipoEstrategiaModel tblTipoEstrategiaModel)
+        public async Task<ActionResult<TipoEstrategiaModel>> AddTipoEstrategia(TipoEstrategiaModel tipoEstrategiaModel)
         {
-            TblTipoEstrategia itensTipoEstrategia = new TblTipoEstrategia
-            {
-                Id = tblTipoEstrategiaModel.Id,
-                Estrategia = tblTipoEstrategiaModel.Estrategia,
-                UsuarioModificacao = tblTipoEstrategiaModel.UsuarioModificacao
-            };
-
             try
             {
-                _context.TblTipoEstrategia.Add(itensTipoEstrategia);
-                await _context.SaveChangesAsync();
+                var retorno = await _tipoEstrategiaService.AddAsync(tipoEstrategiaModel);
 
                 return CreatedAtAction(
-                    nameof(GetTipoEstrategia),
-                    new
-                    {
-                        Id = itensTipoEstrategia.Id,
-                    }, itensTipoEstrategia);
+                    nameof(GetTipoCondicao),
+                    new { id = tipoEstrategiaModel.Id }, tipoEstrategiaModel);
+
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
-        //PUT: api/InfoFundo/UpdateTipoEstrategia/id
+        //PUT: api/Tipos/UpdateTipoEstrategia/id
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTipoEstrategia(int id, TipoEstrategiaModel tipoEstrategia)
         {
             try
             {
-                TblTipoEstrategia registroTipoEstrategia = _context.TblTipoEstrategia.Find(id);
+                var retornoTipoEstrategia = await _tipoEstrategiaService.GetByIdAsync(id);
 
-                if (registroTipoEstrategia != null)
+                if (retornoTipoEstrategia == null)
                 {
-                    registroTipoEstrategia.Estrategia = tipoEstrategia.Estrategia == null ? registroTipoEstrategia.Estrategia : tipoEstrategia.Estrategia;
+                    return NotFound();
+                }
 
-                    try
+                tipoEstrategia.Id = id;
+                bool retorno = await _tipoEstrategiaService.UpdateAsync(tipoEstrategia);
+
+                if (retorno)
+                {
+                    return Ok(tipoEstrategia);
+                }
+                return NotFound();
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        // DELETE: api/Tipos/DeleteTipoEstrategia/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTipoEstrategia(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_tipo_estrategia");
+
+            if (!existeRegistro)
+            {
+                try
+                {
+                    var registroTipoEstrategia = await _tipoEstrategiaService.DisableAsync(id);
+
+                    if (registroTipoEstrategia)
                     {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroTipoEstrategia);
+                        return Ok();
                     }
-                    catch (Exception e)
+                    else
                     {
-                        return BadRequest(e);
+                        return NotFound();
                     }
                 }
-                else
+                catch (Exception e)
                 {
                     return BadRequest();
                 }
             }
-            catch (DbUpdateConcurrencyException e) when (!TipoEstrategiaExists(tipoEstrategia.Id))
-            {
-                return NotFound(e);
-            }
-        }
-
-        // DELETE: api/InfoFundo/DeleteTipoEstrategia/id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTipoEstrategia(int id)
-        {
-            TblTipoEstrategia tblTipoEstrategia = await _context.TblTipoEstrategia.FindAsync(id);
-
-            if (tblTipoEstrategia == null)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                _context.TblTipoEstrategia.Remove(tblTipoEstrategia);
-                await _context.SaveChangesAsync();
-                return Ok(tblTipoEstrategia);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
-            }
-        }
-
-        // DESATIVA: api/InfoFundo/DisableTipoEstrategia/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DisableTipoEstrategia(int id)
-        {
-            TblTipoEstrategia registroTipoEstrategia = _context.TblTipoEstrategia.Find(id);
-
-            if (registroTipoEstrategia != null)
-            {
-                registroTipoEstrategia.Ativo = false;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    return Ok(registroTipoEstrategia);
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e);
-                }
-            }
             else
             {
                 return NotFound();
             }
         }
 
-        // ATIVAR: api/InfoFundo/ActivateTipoEstrategia/id
+        // ATIVAR: api/Tipos/ActivateTipoEstrategia/id
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateTipoEstrategia(int id)
         {
-            TblTipoEstrategia registroTipoEstrategia = await _context.TblTipoEstrategia.FindAsync(id);
+            var registroTipoEstrategia = await _tipoEstrategiaService.GetByIdAsync(id);
 
             if (registroTipoEstrategia != null)
             {
-                registroTipoEstrategia.Ativo = true;
-
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    await _tipoEstrategiaService.ActivateAsync(id);
                     return Ok(registroTipoEstrategia);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.InnerException.Message);
+                    return BadRequest();
                 }
             }
             else
             {
                 return NotFound();
             }
-        }
-
-        private bool TipoEstrategiaExists(int id)
-        {
-            return _context.TblTipoEstrategia.Any(e => e.Id == id);
         }
         #endregion
     }

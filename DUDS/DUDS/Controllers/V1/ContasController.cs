@@ -347,8 +347,6 @@ namespace DUDS.Controllers.V1
         {
             return _context.TblContas.Any(e => e.Id == id);
         }
-        #endregion
-
-        
+        #endregion      
     }
 }
