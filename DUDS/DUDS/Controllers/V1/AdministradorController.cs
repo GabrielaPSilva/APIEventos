@@ -68,8 +68,8 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //// GET: api/Administrador/GetAdministradorExistsBase/cnpj/nome
-        [HttpGet()]
+        // GET: api/Administrador/GetAdministradorExistsBase/cnpj/nome
+        [HttpGet("{cnpj}")]
         public async Task<ActionResult<AdministradorModel>> GetAdministradorExistsBase(string cnpj, string nome)
         {
             try
@@ -133,7 +133,7 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 

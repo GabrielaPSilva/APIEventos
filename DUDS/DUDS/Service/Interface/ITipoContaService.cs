@@ -8,6 +8,6 @@ namespace DUDS.Service.Interface
 {
     public interface ITipoContaService : IGenericOperationsService<TipoContaModel>
     {
-        Task<GestorModel> GetTipoContaExistsBase(string tipoConta, string descricaoConta);
+        Task<TipoContaModel> GetTipoContaExistsBase(string tipoConta, string descricaoConta);
     }
 }

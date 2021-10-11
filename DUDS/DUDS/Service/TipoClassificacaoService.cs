@@ -86,6 +86,21 @@ namespace DUDS.Service
             }
         }
 
+        public async Task<TipoClassificacaoModel> GetTipoClassificacaoExistsBase(string classificacao)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = @"SELECT 
+	                              *
+                              FROM
+	                             tbl_tipo_classificacao
+                              WHERE 
+                                 classificacao = @classificacao";
+
+                return await connection.QueryFirstOrDefaultAsync<TipoClassificacaoModel>(query, new { classificacao });
+            }
+        }
+
         public async Task<bool> UpdateAsync(TipoClassificacaoModel tipoClassificacao)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())

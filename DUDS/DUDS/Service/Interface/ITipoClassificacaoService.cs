@@ -8,5 +8,6 @@ namespace DUDS.Service.Interface
 {
     public interface ITipoClassificacaoService : IGenericOperationsService<TipoClassificacaoModel>
     {
+        Task<TipoClassificacaoModel> GetTipoClassificacaoExistsBase(string classificacao);
     }
 }
