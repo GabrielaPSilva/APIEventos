@@ -57,7 +57,7 @@ namespace DUDS.Service
 	                            sub_contrato.*,
                              FROM
 	                            tbl_sub_contrato sub_contrato
-                                inner join tbl_contrato contrato on contrato.id = sub_contrado.cod_contrato
+                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrado.cod_contrato
                              WHERE
 	                            contrato.ativo = 1 AND
                                 sub_contrato.status = 'Ativo'

@@ -14,7 +14,7 @@ namespace DUDS.Models
         public double PercentualPfee { get; set; }
 
         [StringLength(100)]
-        public string UsuarioModificacao { get; set; }
-        public DateTime DataModificacao { get; set; }
+        public string UsuarioCriacao { get; set; }
+        public DateTime DataCriacao { get; set; }
     }
 }

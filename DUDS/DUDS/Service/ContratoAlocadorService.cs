@@ -58,7 +58,11 @@ namespace DUDS.Service
                                 investidor.nome_investidor
                              FROM
 	                            tbl_contrato_alocador contrato_alocador
-                                inner join tbl_investidor investidor on contrato.id = contrato_alocador.cod_investidor
+                                INNER JOIN tbl_investidor investidor ON contrato.id = contrato_alocador.cod_investidor
+                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_alocador.cod_sub_contrato
+                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
+                             WHERE
+                                contrato.ativo = 1
                              ORDER BY
                                 investidor.nome_investidor";
 
