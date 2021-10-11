@@ -7,7 +7,7 @@ namespace DUDS.Service.Interface
 {
     public interface IGenericOperationsService<T>
     {
-        Task<bool> Disable(int id);
+        Task<bool> DisableAsync(int id);
         Task<bool> ActivateAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetByIdAsync(int id);

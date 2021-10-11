@@ -131,7 +131,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _distribuidorService.Disable(id);
+                bool retorno = await _distribuidorService.DisableAsync(id);
                 if (retorno)
                 {
                     return Ok();

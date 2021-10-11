@@ -133,6 +133,11 @@ namespace DUDS
             services.AddScoped<ICustodianteService, CustodianteService>();
             services.AddScoped<IDistribuidorService, DistribuidorService>();
             services.AddScoped<IDistribuidorAdministradorService, DistribuidorAdministradorService>();
+            services.AddScoped<IContratoService, ContratoService>();
+            services.AddScoped<ISubContratoService, SubContratoService>();
+            services.AddScoped<IContratoAlocadorService, ContratoAlocadorService>();
+            services.AddScoped<IContratoFundoService, ContratoFundoService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
