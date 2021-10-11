@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DUDS.Models;
 using DUDS.Service.Interface;
+using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,51 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class ContratoService : IContratoService
+    public class ContratoService : GenericService<ContratoModel>, IContratoService
     {
-        public ContratoService()
+        public ContratoService(): base(new ContratoModel(),
+            "tbl_contrato",
+            new List<string> { "'id'", "'data_criacao'", "'ativo'" },
+            new List<string> { "Id", "DataCriacao", "Ativo", "NomeDistribuidor", "NomeGestor", "TipoContrato" },
+            new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
+            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao", "NomeDistribuidor", "NomeGestor", "TipoContrato" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
-        public async Task<IEnumerable<ContratoModel>> GetContrato()
+        public async Task<bool> ActivateAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
+
+        public async Task<bool> AddAsync(ContratoModel item)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                return await connection.ExecuteAsync(query, item) > 0;
+            }
+        }
+
+        public Task<bool> DeleteAsync(int id)
+        {
+            return Disable(id);
+        }
+
+        public async Task<bool> Disable(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
+
+        public async Task<IEnumerable<ContratoModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -36,7 +74,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<ContratoModel> GetContratoById(int id)
+        public async Task<ContratoModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -58,18 +96,18 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddContrato(ContratoModel contrato)
+        public async Task<bool> UpdateAsync(ContratoModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"
-                                INSERT INTO
-                                    tbl_contrato 
-                                   (cod_distribuidor, cod_gestor, cod_tipo_contrato)
-                                VALUES
-                                   (@CodDistribuidor, @CodGestor, @CodTipoContrato)";
-
-                return await connection.ExecuteAsync(query, contrato) > 0;
+                string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
+                List<string> str = new List<string>();
+                for (int i = 0; i < _propertiesUpdate.Count; i++)
+                {
+                    str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
+                }
+                query = query.Replace("VALORES", String.Join(",", str));
+                return await connection.ExecuteAsync(query, item) > 0;
             }
         }
     }

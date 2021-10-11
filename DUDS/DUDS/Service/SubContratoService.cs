@@ -4,18 +4,19 @@ using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class CustodianteService : GenericService<CustodianteModel>, ICustodianteService
+    public class SubContratoService : GenericService<SubContratoModel>, ISubContratoService
     {
-        public CustodianteService() : base(new CustodianteModel(),
-            "tbl_custodiante",
+        public SubContratoService() : base(new SubContratoModel(),
+            "tbl_sub_contrato",
             new List<string> { "'id'", "'data_criacao'", "'ativo'" },
             new List<string> { "Id", "DataCriacao", "Ativo" },
             new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
+            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao"})
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -29,7 +30,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddAsync(CustodianteModel item)
+        public async Task<bool> AddAsync(SubContratoModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -38,68 +39,54 @@ namespace DUDS.Service
             }
         }
 
-        public Task<bool> DeleteAsync(int id)
-        {
-            return Disable(id);
-        }
-
-        public async Task<bool> Disable(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
+                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
                 return await connection.ExecuteAsync(query, new { id }) > 0;
             }
         }
 
-        public async Task<IEnumerable<CustodianteModel>> GetAllAsync()
+        public Task<bool> Disable(int id)
         {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                var query = @"SELECT
-                                custodiante.*
-                              FROM
-	                            tbl_custodiante custodiante
-                            WHERE 
-	                            custodiante.ativo = 1
-                            ORDER BY    
-                                custodiante.nome_custodiante";
-
-                return await connection.QueryAsync<CustodianteModel>(query);
-            }
+            throw new NotImplementedException();
         }
 
-        public async Task<CustodianteModel> GetByIdAsync(int id)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                var query = @"SELECT
-                                custodiante.*
-                              FROM
-	                            tbl_custodiante custodiante
-                            WHERE 
-	                            custodiante.id = @id";
-
-                return await connection.QueryFirstOrDefaultAsync<CustodianteModel>(query, new { id });
-            }
-        }
-
-        public async Task<CustodianteModel> GetCustodianteExistsBase(string cnpj)
+        public async Task<IEnumerable<SubContratoModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT 
-	                            tbl_custodiante custodiante.*
-                              FROM
-	                            tbl_custodiante custodiante
-                            WHERE 
-	                            gestor.cnpj = @cnpj";
+	                            sub_contrato.*,
+                             FROM
+	                            tbl_sub_contrato sub_contrato
+                                inner join tbl_contrato contrato on contrato.id = sub_contrado.cod_contrato
+                             WHERE
+	                            contrato.ativo = 1 AND
+                                sub_contrato.status = 'Ativo'
+                             ORDER BY
+                                contrato.id";
 
-                return await connection.QueryFirstOrDefaultAsync<CustodianteModel>(query, new { cnpj });
+                return await connection.QueryAsync<SubContratoModel>(query);
             }
         }
 
-        public async Task<bool> UpdateAsync(CustodianteModel item)
+        public async Task<SubContratoModel> GetByIdAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query = @"SELECT 
+                                        sub_contrato.*,
+                                       FROM
+                                        tbl_sub_contrato sub_contrato
+                                       WHERE
+                                        id = @id";
+                return await connection.QueryFirstOrDefaultAsync<SubContratoModel>(query, new { id });
+            }
+        }
+
+        public async Task<bool> UpdateAsync(SubContratoModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {

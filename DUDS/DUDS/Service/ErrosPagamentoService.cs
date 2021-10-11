@@ -109,7 +109,7 @@ namespace DUDS.Service
             }
         }
 
-        public Task<bool> DisableAsync(int id)
+        public Task<bool> Disable(int id)
         {
             throw new NotImplementedException();
         }
