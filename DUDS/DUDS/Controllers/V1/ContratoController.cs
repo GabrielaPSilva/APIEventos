@@ -744,81 +744,16 @@ namespace DUDS.Controllers.V1
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EstruturaContratoModel>>> GetEstruturaContratoValidos()
         {
-            // Left Join utilizando LINQ - para Gabriela
-            var estruturaContrato = await (from contrato in _context.TblContrato
-                                           from subContrato in _context.TblSubContrato.Where(sC => sC.CodContrato == contrato.Id)
-                                           from contratoFundo in _context.TblContratoFundo.Where(cF => cF.CodSubContrato == subContrato.Id)
-                                           from contratoRemuneracao in _context.TblContratoRemuneracao.Where(cR => cR.CodContratoFundo == contratoFundo.Id)
-                                           from contratoAlocador in _context.TblContratoAlocador.Where(cA => cA.CodSubContrato == subContrato.Id).DefaultIfEmpty()
-                                           from investidorDistribuidor in _context.TblInvestidorDistribuidor.Where(iD => iD.CodInvestidor == contratoAlocador.CodInvestidor).DefaultIfEmpty()
-                                           where subContrato.Status != "Inativo"
-                                           select new
-                                           {
-                                               CodContratoRemuneracao = contratoRemuneracao.Id,
-                                               contratoRemuneracao.PercentualAdm,
-                                               contratoRemuneracao.PercentualPfee,
-                                               CodContrato = contrato.Id,
-                                               contrato.CodTipoContrato,
-                                               contrato.Parceiro,
-                                               contrato.CodDistribuidor,
-                                               CodSubContrato = subContrato.Id,
-                                               subContrato.Versao,
-                                               subContrato.Status,
-                                               subContrato.ClausulaRetroatividade,
-                                               subContrato.DataRetroatividade,
-                                               subContrato.DataVigenciaInicio,
-                                               subContrato.DataVigenciaFim,
-                                               CodInvestidor = contratoAlocador == null ? (int?)null : contratoAlocador.CodInvestidor,
-                                               CodContratoFundo = contratoFundo.Id,
-                                               contratoFundo.CodFundo,
-                                               contratoFundo.CodTipoCondicao,
-                                               CodigoInvestidorDistribuidor = investidorDistribuidor == null ? String.Empty : investidorDistribuidor.CodInvestAdministrador,
-                                               AdministradorCodigoInvestidor = investidorDistribuidor == null ? (int?)null : investidorDistribuidor.CodAdministrador,
-                                               DistribuidorCodigoInvestidor = investidorDistribuidor == null ? (int?)null : investidorDistribuidor.CodDistribuidor
-                                           }).AsNoTracking().ToListAsync();
-
-            // Verificando a possibilidade de utilizar funções em paralelo para aumentar a velocidade de processamento.
-            ConcurrentBag<EstruturaContratoModel> estruturaContratoValidoModel = new ConcurrentBag<EstruturaContratoModel>();
-            Parallel.ForEach(
-                estruturaContrato,
-                x =>
-                {
-                    EstruturaContratoModel c = new EstruturaContratoModel
-                    {
-                        ClausulaRetroatividade = x.ClausulaRetroatividade,
-                        CodDistribuidor = x.CodDistribuidor,
-                        CodFundo = x.CodFundo,
-                        CodTipoCondicao = x.CodTipoCondicao,
-                        DataRetroatividade = x.DataRetroatividade,
-                        DataVigenciaFim = x.DataVigenciaFim,
-                        DataVigenciaInicio = x.DataVigenciaInicio,
-                        IdInvestidor = x.CodInvestidor,
-                        Parceiro = x.Parceiro,
-                        PercentualAdm = x.PercentualAdm,
-                        PercentualPfee = x.PercentualPfee,
-                        Status = x.Status,
-                        CodTipoContrato = x.CodTipoContrato,
-                        Versao = x.Versao,
-                        AdministradorCodigoInvestidor = x.AdministradorCodigoInvestidor,
-                        CodigoInvestidorDistribuidor = x.CodigoInvestidorDistribuidor,
-                        DistribuidorCodigoInvestidor = x.DistribuidorCodigoInvestidor,
-                        CodContrato = x.CodContrato,
-                        CodContratoFundo = x.CodContratoFundo,
-                        CodSubContrato = x.CodSubContrato,
-                        CodContratoRemuneracao = x.CodContratoRemuneracao
-                    };
-                    estruturaContratoValidoModel.Add(c);
-                }
-            );
-
             try
             {
-                if (estruturaContratoValidoModel.IsEmpty)
-                {
-                    return NotFound();
-                }
+                var contratosRebate = await _contratoService.GetContratosRebateAsync("Ativo");
 
-                return Ok(estruturaContratoValidoModel);
+                if (contratosRebate.Any())
+                {
+                    return Ok(contratosRebate);
+                }
+                return NotFound();
+
             }
             catch (Exception e)
             {
@@ -830,81 +765,16 @@ namespace DUDS.Controllers.V1
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EstruturaContratoModel>>> GetEstruturaContratoInativos()
         {
-            // Left Join utilizando LINQ - para Gabriela
-            var estruturaContrato = await (from contrato in _context.TblContrato
-                                           from subContrato in _context.TblSubContrato.Where(sC => sC.CodContrato == contrato.Id)
-                                           from contratoFundo in _context.TblContratoFundo.Where(cF => cF.CodSubContrato == subContrato.Id)
-                                           from contratoRemuneracao in _context.TblContratoRemuneracao.Where(cR => cR.CodContratoFundo == contratoFundo.Id)
-                                           from contratoAlocador in _context.TblContratoAlocador.Where(cA => cA.CodSubContrato == subContrato.Id).DefaultIfEmpty()
-                                           from investidorDistribuidor in _context.TblInvestidorDistribuidor.Where(iD => iD.CodInvestidor == contratoAlocador.CodInvestidor).DefaultIfEmpty()
-                                           where subContrato.Status == "Inativo"
-                                           select new
-                                           {
-                                               CodContratoRemuneracao = contratoRemuneracao.Id,
-                                               contratoRemuneracao.PercentualAdm,
-                                               contratoRemuneracao.PercentualPfee,
-                                               CodContrato = contrato.Id,
-                                               contrato.CodTipoContrato,
-                                               contrato.Parceiro,
-                                               contrato.CodDistribuidor,
-                                               CodSubContrato = subContrato.Id,
-                                               subContrato.Versao,
-                                               subContrato.Status,
-                                               subContrato.ClausulaRetroatividade,
-                                               subContrato.DataRetroatividade,
-                                               subContrato.DataVigenciaInicio,
-                                               subContrato.DataVigenciaFim,
-                                               CodInvestidor = contratoAlocador == null ? (int?)null : contratoAlocador.CodInvestidor,
-                                               CodContratoFundo = contratoFundo.Id,
-                                               contratoFundo.CodFundo,
-                                               contratoFundo.CodTipoCondicao,
-                                               CodigoInvestidorDistribuidor = investidorDistribuidor == null ? String.Empty : investidorDistribuidor.CodInvestAdministrador,
-                                               AdministradorCodigoInvestidor = investidorDistribuidor == null ? (int?)null : investidorDistribuidor.CodAdministrador,
-                                               DistribuidorCodigoInvestidor = investidorDistribuidor == null ? (int?)null : investidorDistribuidor.CodDistribuidor
-                                           }).AsNoTracking().ToListAsync();
-
-            // Verificando a possibilidade de utilizar funções em paralelo para aumentar a velocidade de processamento.
-            ConcurrentBag<EstruturaContratoModel> estruturaContratoValidoModel = new ConcurrentBag<EstruturaContratoModel>();
-            Parallel.ForEach(
-                estruturaContrato,
-                x =>
-                {
-                    EstruturaContratoModel c = new EstruturaContratoModel
-                    {
-                        ClausulaRetroatividade = x.ClausulaRetroatividade,
-                        CodDistribuidor = x.CodDistribuidor,
-                        CodFundo = x.CodFundo,
-                        CodTipoCondicao = x.CodTipoCondicao,
-                        DataRetroatividade = x.DataRetroatividade,
-                        DataVigenciaFim = x.DataVigenciaFim,
-                        DataVigenciaInicio = x.DataVigenciaInicio,
-                        IdInvestidor = x.CodInvestidor,
-                        Parceiro = x.Parceiro,
-                        PercentualAdm = x.PercentualAdm,
-                        PercentualPfee = x.PercentualPfee,
-                        Status = x.Status,
-                        CodTipoContrato = x.CodTipoContrato,
-                        Versao = x.Versao,
-                        AdministradorCodigoInvestidor = x.AdministradorCodigoInvestidor,
-                        CodigoInvestidorDistribuidor = x.CodigoInvestidorDistribuidor,
-                        DistribuidorCodigoInvestidor = x.DistribuidorCodigoInvestidor,
-                        CodContrato = x.CodContrato,
-                        CodContratoFundo = x.CodContratoFundo,
-                        CodSubContrato = x.CodSubContrato,
-                        CodContratoRemuneracao = x.CodContratoRemuneracao
-                    };
-                    estruturaContratoValidoModel.Add(c);
-                }
-            );
-
             try
             {
-                if (estruturaContratoValidoModel.IsEmpty)
-                {
-                    return NotFound();
-                }
+                var contratosRebate = await _contratoService.GetContratosRebateAsync("Inativo");
 
-                return Ok(estruturaContratoValidoModel);
+                if (contratosRebate.Any())
+                {
+                    return Ok(contratosRebate);
+                }
+                return NotFound();
+
             }
             catch (Exception e)
             {

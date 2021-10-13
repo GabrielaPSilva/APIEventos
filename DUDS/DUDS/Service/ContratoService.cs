@@ -11,7 +11,7 @@ namespace DUDS.Service
 {
     public class ContratoService : GenericService<ContratoModel>, IContratoService
     {
-        public ContratoService(): base(new ContratoModel(),
+        public ContratoService() : base(new ContratoModel(),
             "tbl_contrato",
             new List<string> { "'id'", "'data_criacao'", "'ativo'" },
             new List<string> { "Id", "DataCriacao", "Ativo", "NomeDistribuidor", "NomeGestor", "TipoContrato", "ListaSubContrato" },
@@ -114,6 +114,58 @@ namespace DUDS.Service
                 }
                 query = query.Replace("VALORES", String.Join(",", str));
                 return await connection.ExecuteAsync(query, item) > 0;
+            }
+        }
+
+        public async Task<IEnumerable<EstruturaContratoModel>> GetContratosRebateAsync(string subContratoStatus)
+        {
+            string whereClause;
+            if (subContratoStatus == "Ativo")
+            {
+                whereClause = "sub_contrato.status <> @Status";
+            }
+            else
+            {
+                whereClause = "sub_contrato.status = @Status";
+            }
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = @"
+                            SELECT 
+                                contrato_remuneracao.id AS cod_contrato_remuneracao,
+                                contrato_remuneracao.percentual_adm,
+                                contrato_remuneracao.percentual_pfee,
+                                contrato.id AS cod_contrato,
+                                contrato.cod_tipo_contrato,
+                                contrato.cod_gestor,
+                                contrato.cod_distribuidor,
+                                sub_contrato.id AS cod_sub_contrato,
+                                sub_contrato.versao,
+                                sub_contrato.status,
+                                sub_contrato.clausula_retroatividade,
+                                sub_contrato.data_retroatividade,
+                                sub_contrato.data_vigencia_inicio,
+                                sub_contrato.data_vigencia_fim,
+                                contrato_alocador.cod_investidor,
+                                contrato_fundo.id AS cod_contrato_fundo,
+                                contrato_fundo.cod_fundo,
+                                contrato_fundo.cod_tipo_condicao,
+                                investidor_distribuidor.cod_invest_administrador AS codigo_investidor_distribuidor,
+                                investidor_distribuidor.cod_administrador AS administrador_codigo_investidor,
+                                investidor_distribuidor.cod_distribuidor AS distribuidor_codigo_investidor
+                            FROM
+                                tbl_contrato contrato
+                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.cod_contrato = contrato.id
+                                INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.cod_sub_contrato = sub_contrato.id
+                                INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.cod_contrato_fundo = contrato_fundo.id
+                                LEFT JOIN tbl_contrato_alocador contrato_alocador ON contrato_alocador.cod_sub_contrato = sub_contrato.id
+                                LEFT JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.cod_investidor = contrato_alocador.cod_investidor
+                            WHERE
+                                WHERE_CLAUSE";
+                query = query.Replace("WHERE_CLAUSE", whereClause);
+
+                List<EstruturaContratoModel> listaContratoModel = await connection.QueryAsync<EstruturaContratoModel>(query, new { Status = subContratoStatus }) as List<EstruturaContratoModel>;
+                return listaContratoModel;
             }
         }
     }
