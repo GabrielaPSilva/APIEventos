@@ -130,7 +130,7 @@ namespace DUDS.Controllers.V1
                 Isin = tblFundoModel.Isin,
                 NumeroGiin = tblFundoModel.NumeroGiin,
                 CdFundoAdm = tblFundoModel.CdFundoAdm,
-                UsuarioModificacao = tblFundoModel.UsuarioModificacao
+                UsuarioModificacao = tblFundoModel.UsuarioCriacao
             };
 
             try

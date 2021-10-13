@@ -112,7 +112,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _tipoClassificacaoService.AddAsync(tipoClassificacao);
 
                 return CreatedAtAction(
-                    nameof(GetTipoClassificacao),
+                    nameof(GetTipoClassificacaoById),
                     new { id = tipoClassificacao.Id }, tipoClassificacao);
 
             }
@@ -273,7 +273,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _tipoCondicaoService.AddAsync(tipoCondicao);
 
                 return CreatedAtAction(
-                    nameof(GetTipoCondicao),
+                    nameof(GetTipoCondicaoById),
                     new { id = tipoCondicao.Id }, tipoCondicao);
 
             }
@@ -433,7 +433,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _tipoContaService.AddAsync(tipoContaModel);
 
                 return CreatedAtAction(
-                    nameof(GetTipoCondicao),
+                    nameof(GetTipoContaById),
                     new { id = tipoContaModel.Id }, tipoContaModel);
 
             }
@@ -572,7 +572,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _tipoContratoService.AddAsync(tipoContratoModel);
 
                 return CreatedAtAction(
-                    nameof(GetTipoCondicao),
+                    nameof(GetTipoContratoById),
                     new { id = tipoContratoModel.Id }, tipoContratoModel);
 
             }
@@ -720,7 +720,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _tipoEstrategiaService.AddAsync(tipoEstrategiaModel);
 
                 return CreatedAtAction(
-                    nameof(GetTipoCondicao),
+                    nameof(GetTipoEstrategiaById),
                     new { id = tipoEstrategiaModel.Id }, tipoEstrategiaModel);
 
             }

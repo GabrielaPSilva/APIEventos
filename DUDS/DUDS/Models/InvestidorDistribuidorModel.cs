@@ -19,8 +19,8 @@ namespace DUDS.Models
 
         [StringLength(100)]
         public string UsuarioCriacao { get; set; }
-        public string NomeDistribuidor { get; set; }
 
+        public string NomeDistribuidor { get; set; }
         public string NomeAdministrador { get; set; }
         public string NomeInvestidor { get; set; }
     }

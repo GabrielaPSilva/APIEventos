@@ -20,13 +20,16 @@ namespace DUDS.Controllers.V1
     {
         private readonly IConfiguracaoService _configService;
         private readonly IInvestidorService _investidorService;
+        private readonly IInvestidorDistribuidorService _investidorDistribuidorService;
 
-        public InvestidorController(IConfiguracaoService configService, IInvestidorService investidorService)
+        public InvestidorController(IConfiguracaoService configService, IInvestidorService investidorService, IInvestidorDistribuidorService investidorDistribuidorService)
         {
             _configService = configService;
             _investidorService = investidorService;
+            _investidorDistribuidorService = investidorDistribuidorService;
         }
 
+        #region Investidor
         // GET: api/Investidor/GetInvestidor
         [HttpGet]
         public async Task<ActionResult<IEnumerable<InvestidorModel>>> GetInvestidor()
@@ -90,7 +93,27 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //POST: api/Investidor/AddInvestidor/InvestidorModel
+        // GET: api/Investidor/GetInvestidorByDataCriacao/dataCriacao
+        [HttpGet("{dataCriacao}")]
+        public async Task<ActionResult<IEnumerable<ErrosPagamentoModel>>> GetInvestidorByDataCriacao(DateTime dataCriacao)
+        {
+            try
+            {
+                var investidores = await _investidorService.GetInvestidorByDataCriacao(dataCriacao);
+
+                if (investidores.Any())
+                {
+                    return Ok(investidores);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // POST: api/Investidor/AddInvestidor/InvestidorModel
         [HttpPost]
         public async Task<ActionResult<InvestidorModel>> AddInvestidor(InvestidorModel investidorModel)
         {
@@ -99,7 +122,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _investidorService.AddAsync(investidorModel);
 
                 return CreatedAtAction(
-                    nameof(GetInvestidor),
+                    nameof(GetInvestidorById),
                     new { id = investidorModel.Id }, investidorModel);
 
             }
@@ -110,42 +133,25 @@ namespace DUDS.Controllers.V1
         }
 
         //POST: api/Investidor/AddInvestidores/List<InvestidorModel>
-        //[HttpPost]
-        //public async Task<ActionResult<List<InvestidorModel>>> AddInvestidores(List<InvestidorModel> tblListInvestidorModel)
-        //{
-        //    try
-        //    {
-        //        List<TblInvestidor> listaInvestidores = new List<TblInvestidor>();
-        //        TblInvestidor itensInvestidor = new TblInvestidor();
+        [HttpPost]
+        public async Task<ActionResult<InvestidorModel>> AddInvestidores(List<InvestidorModel> investidores)
+        {
+            try
+            {
+                bool retorno = await _investidorService.AddInvestidores(investidores);
+                if (retorno)
+                {
+                    return CreatedAtAction(nameof(GetInvestidorByDataCriacao),
+                        new { data_criacao = investidores.FirstOrDefault().DataCriacao }, investidores);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
-        //        foreach (var line in tblListInvestidorModel)
-        //        {
-        //            itensInvestidor = new TblInvestidor
-        //            {
-        //                NomeCliente = line.NomeCliente,
-        //                Cnpj = line.Cnpj,
-        //                TipoCliente = line.TipoCliente,
-        //                CodAdministrador = line.CodAdministrador,
-        //                CodGestor = line.CodGestor,
-        //                CodGrupoRebate = line.CodGrupoRebate,
-        //                CodTipoContrato = line.CodTipoContrato,
-        //                UsuarioModificacao = line.UsuarioModificacao
-        //            };
-
-        //            listaInvestidores.Add(itensInvestidor);
-        //        }
-
-        //        await _context.BulkInsertAsync(listaInvestidores);
-        //        await _context.SaveChangesAsync();
-
-        //        return CreatedAtAction(
-        //             nameof(GetInvestidor), listaInvestidores);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
 
         //PUT: api/Investidor/UpdateInvestidor/id
         [HttpPut("{id}")]
@@ -225,6 +231,8 @@ namespace DUDS.Controllers.V1
             }
         }
 
+        #endregion
+
         #region Investidor Distribuidor
         // GET: api/Investidor/GetInvestidorDistribuidor
         //[HttpGet]
@@ -247,57 +255,43 @@ namespace DUDS.Controllers.V1
         //    }
         //}
 
-        // GET: api/Investidor/GetInvestidorDistribuidorByIds/cod_investidor/cod_distribuidor/cod_administrador
-        //[HttpGet("{cod_investidor}/{cod_distribuidor}/{cod_administrador}")]
-        //public async Task<ActionResult<TblInvestidorDistribuidor>> GetInvestidorDistribuidorByIds(int cod_investidor, int cod_distribuidor, int cod_administrador)
-        //{
-        //    try
-        //    {
-        //        TblInvestidorDistribuidor tblInvestidorDistribuidor = await _context.TblInvestidorDistribuidor.FindAsync(cod_investidor, cod_distribuidor, cod_administrador);
-        //        if (tblInvestidorDistribuidor == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        return Ok(tblInvestidorDistribuidor);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
+        // GET: api/Investidor/GetInvestidorDistribuidorByIds/codInvestidor/codDistribuidor/codAdministrador
+        [HttpGet("{codInvestidor}/{codDistribuidor}/{codAdministrador}")]
+        public async Task<ActionResult<InvestidorDistribuidorModel>> GetInvestidorDistribuidorByIds(int codInvestidor, int codDistribuidor, int codAdministrador)
+        {
+            try
+            {
+                var InvestidorDistribuidor = await _investidorDistribuidorService.GetByIdsAsync(codInvestidor, codDistribuidor, codAdministrador);
+               
+                if (InvestidorDistribuidor == null)
+                {
+                    return NotFound();
+                }
+                return Ok(InvestidorDistribuidor);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
         //POST: api/Investidor/AddInvestidorDistribuidor/InvestidorDistribuidorModel
-        //[HttpPost]
-        //public async Task<ActionResult<InvestidorDistribuidorModel>> AddInvestidorDistribuidor(InvestidorDistribuidorModel tblInvestidorDistribuidorModel)
-        //{
-        //    TblInvestidorDistribuidor itensInvestidorDistribuidor = new TblInvestidorDistribuidor
-        //    {
-        //        CodAdministrador = tblInvestidorDistribuidorModel.CodAdministrador,
-        //        CodDistribuidor = tblInvestidorDistribuidorModel.CodDistribuidor,
-        //        CodInvestAdministrador = tblInvestidorDistribuidorModel.CodInvestAdministrador,
-        //        CodInvestidor = tblInvestidorDistribuidorModel.CodInvestidor,
-        //        UsuarioModificacao = tblInvestidorDistribuidorModel.UsuarioModificacao
-        //    };
-
-        //    try
-        //    {
-        //        _context.TblInvestidorDistribuidor.Add(itensInvestidorDistribuidor);
-        //        await _context.SaveChangesAsync();
-
-        //        return CreatedAtAction(
-        //            nameof(GetInvestidorDistribuidor),
-        //            new
-        //            {
-        //                cod_investidor = itensInvestidorDistribuidor.CodInvestidor,
-        //                cod_distribuidor = itensInvestidorDistribuidor.CodDistribuidor,
-        //                cod_administrador = itensInvestidorDistribuidor.CodAdministrador
-        //            }, itensInvestidorDistribuidor);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
+        [HttpPost]
+        public async Task<ActionResult<InvestidorDistribuidorModel>> AddInvestidorDistribuidor(InvestidorDistribuidorModel investidorDistribuidorModel)
+        {
+            try
+            {
+                bool retorno = await _investidorDistribuidorService.AddAsync(investidorDistribuidorModel);
+                return CreatedAtAction(nameof(GetInvestidorDistribuidorByIds), new { 
+                                                          codInvestidor = investidorDistribuidorModel.CodInvestidor,
+                                                          codAdministrador = investidorDistribuidorModel.CodAdministrador,
+                                                          codDistribuidor = investidorDistribuidorModel.CodDistribuidor}, investidorDistribuidorModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
         //POST: api/Investidor/AddInvestidorDistribuidores/List<InvestidorDistribuidorModel>
         //[HttpPost]
@@ -305,107 +299,83 @@ namespace DUDS.Controllers.V1
         //{
         //    try
         //    {
-        //        List<TblInvestidorDistribuidor> listaInvestidorDistribuidores = new List<TblInvestidorDistribuidor>();
-        //        TblInvestidorDistribuidor itensInvestidorDistribuidor = new TblInvestidorDistribuidor();
-
-        //        foreach (var line in tblListInvestidorDistribuidorModel)
+        //        DistribuidorAdministradorModel retornoDistribuidorAdministrador = await _distribuidorAdministradorService.GetByIdAsync(distribuidorAdministrador.Id);
+        //        if (retornoDistribuidorAdministrador == null)
         //        {
-        //            itensInvestidorDistribuidor = new TblInvestidorDistribuidor
-        //            {
-        //                CodAdministrador = line.CodAdministrador,
-        //                CodDistribuidor = line.CodDistribuidor,
-        //                CodInvestAdministrador = line.CodInvestAdministrador,
-        //                CodInvestidor = line.CodInvestidor,
-        //                UsuarioModificacao = line.UsuarioModificacao
-        //            };
-
-        //            listaInvestidorDistribuidores.Add(itensInvestidorDistribuidor);
+        //            return NotFound();
         //        }
-
-        //        await _context.BulkInsertAsync(listaInvestidorDistribuidores);
-        //        await _context.SaveChangesAsync();
-
-        //        return CreatedAtAction(
-        //           nameof(GetInvestidorDistribuidor), listaInvestidorDistribuidores);
+        //        distribuidorAdministrador.Id = id;
+        //        bool retorno = await _distribuidorAdministradorService.UpdateAsync(distribuidorAdministrador);
+        //        if (retorno)
+        //        {
+        //            return Ok(distribuidorAdministrador);
+        //        }
+        //        return NotFound();
         //    }
         //    catch (Exception e)
         //    {
-        //        return BadRequest(e.InnerException.Message);
+        //        return BadRequest(e);
         //    }
         //}
 
         //PUT: api/Investidor/UpdateInvestidorDistribuidor/id
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateInvestidorDistribuidor(int id, InvestidorDistribuidorModel investidorDistribuidor)
-        //{
-        //    try
-        //    {
-        //        TblInvestidorDistribuidor registroInvestidorDistribuidor = _context.TblInvestidorDistribuidor.Where(c => c.Id == id).FirstOrDefault();
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateInvestidorDistribuidor(int id, InvestidorDistribuidorModel investidorDistribuidor)
+        {
+            try
+            {
+                InvestidorDistribuidorModel retornoInvestidorDistribuidor = await _investidorDistribuidorService.GetByIdAsync(investidorDistribuidor.Id);
+                
+                if (retornoInvestidorDistribuidor == null)
+                {
+                    return NotFound();
+                }
+                
+                investidorDistribuidor.Id = id;
+                bool retorno = await _investidorDistribuidorService.UpdateAsync(investidorDistribuidor);
+                
+                if (retorno)
+                {
+                    return Ok(investidorDistribuidor);
+                }
 
-        //        if (registroInvestidorDistribuidor != null)
-        //        {
-        //            registroInvestidorDistribuidor.CodInvestAdministrador = investidorDistribuidor.CodInvestAdministrador == null ? registroInvestidorDistribuidor.CodInvestAdministrador : investidorDistribuidor.CodInvestAdministrador;
-        //            registroInvestidorDistribuidor.CodInvestidor = investidorDistribuidor.CodInvestidor == 0 ? registroInvestidorDistribuidor.CodInvestidor : investidorDistribuidor.CodInvestidor;
-        //            registroInvestidorDistribuidor.CodDistribuidor = investidorDistribuidor.CodDistribuidor == 0 ? registroInvestidorDistribuidor.CodDistribuidor : investidorDistribuidor.CodDistribuidor;
-        //            registroInvestidorDistribuidor.CodAdministrador = investidorDistribuidor.CodAdministrador == 0 ? registroInvestidorDistribuidor.CodAdministrador : investidorDistribuidor.CodAdministrador;
-
-        //            try
-        //            {
-        //                await _context.SaveChangesAsync();
-        //                return Ok(registroInvestidorDistribuidor);
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                return BadRequest(e.InnerException.Message);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return BadRequest();
-        //        }
-        //    }
-        //    catch (DbUpdateConcurrencyException e) when (!InvestidorDistribuidorExists(investidorDistribuidor.Id))
-        //    {
-        //        return NotFound(e.InnerException.Message);
-        //    }
-        //}
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
         // DELETE: api/Investidor/DeleteInvestidorDistribuidor/id
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteInvestidorDistribuidor(int id)
-        //{
-        //    bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_investidor_distribuidor");
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteInvestidorDistribuidor(int id)
+        {
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_investidor_distribuidor");
 
-        //    if (!existeRegistro)
-        //    {
-        //        TblInvestidorDistribuidor tblInvestidorDistribuidor = _context.TblInvestidorDistribuidor.Where(c => c.Id == id).FirstOrDefault();
+            if (!existeRegistro)
+            {
+                try
+                {
+                    bool retorno = await _investidorDistribuidorService.DeleteAsync(id);
+                    
+                    if (retorno)
+                    {
+                        return Ok();
+                    }
 
-        //        if (tblInvestidorDistribuidor == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        try
-        //        {
-        //            _context.TblInvestidorDistribuidor.Remove(tblInvestidorDistribuidor);
-        //            await _context.SaveChangesAsync();
-        //            return Ok(tblInvestidorDistribuidor);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            return BadRequest(e.InnerException.Message);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
-        //private bool InvestidorDistribuidorExists(int id)
-        //{
-        //    return _context.TblInvestidorDistribuidor.Any(e => e.Id == id);
-        //}
+                    return NotFound();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
         #endregion
     }

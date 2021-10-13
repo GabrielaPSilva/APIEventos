@@ -98,7 +98,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _administradorService.AddAsync(administradorModel);
 
                 return CreatedAtAction(
-                    nameof(GetAdministrador),
+                    nameof(GetAdministradorById),
                     new { id = administradorModel.Id }, administradorModel);
 
             }

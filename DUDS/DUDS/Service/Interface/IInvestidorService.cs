@@ -9,5 +9,7 @@ namespace DUDS.Service.Interface
     public interface IInvestidorService : IGenericOperationsService<InvestidorModel>
     {
         Task<InvestidorModel> GetInvestidorExistsBase(string cnpj);
+        Task<IEnumerable<InvestidorModel>> GetInvestidorByDataCriacao(DateTime dataCriacao);
+        Task<bool> AddInvestidores(List<InvestidorModel> investidor);
     }
 }
