@@ -25,5 +25,11 @@ namespace DUDS.Models
         public List<DistribuidorAdministradorModel> ListaDistribuidorAdministrador { get; set; }
 
         public string Classificacao { get; set; }
+
+
+        public DistribuidorModel()
+        {
+            ListaDistribuidorAdministrador = new List<DistribuidorAdministradorModel>();
+        }
     }
 }

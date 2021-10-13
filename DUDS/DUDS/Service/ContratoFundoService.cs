@@ -14,9 +14,9 @@ namespace DUDS.Service
         public ContratoFundoService() : base(new ContratoFundoModel(),
             "tbl_contrato_fundo",
             new List<string> { "'id'", "'data_criacao'" },
-            new List<string> { "Id", "DataCriacao", "NomeFundo", "TipoCondicao" },
+            new List<string> { "Id", "DataCriacao", "NomeFundo", "TipoCondicao", "ListaContratoRemuneracao" },
             new List<string> { "'id'", "'data_criacao'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "NomeFundo", "TipoCondicao" })
+            new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "NomeFundo", "TipoCondicao", "ListaContratoRemuneracao" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -89,6 +89,37 @@ namespace DUDS.Service
                                        ORDER BY
                                         fundo.nome_reduzido";
                 return await connection.QueryFirstOrDefaultAsync<ContratoFundoModel>(query, new { id });
+            }
+        }
+
+        public async Task<IEnumerable<ContratoFundoModel>> GetSubContratoByIdAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query = @"SELECT 
+	                                    contrato_fundo.*,
+                                        fundo.nome_reduzido as nome_fundo,
+                                        tipo_condicao.tipo_condicao
+                                     FROM
+	                                    tbl_contrato_fundo contrato_fundo
+                                        INNER JOIN tbl_fundo fundo ON fundo.id = contrato_fundo.cod_fundo
+                                        INNER JOIN tbl_tipo_condicao tipo_condicao ON tipo_condicao.id = contrato_fundo.cod_tipo_condicao
+                                        INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrado.id = contrato_fundo.cod_sub_contrato
+                                        INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
+                                     WHERE
+                                        sub_contrato.id = @id
+                                     ORDER BY
+                                        fundo.nome_reduzido";
+                List<ContratoFundoModel> contratoFundoModels = await connection.QueryAsync<ContratoFundoModel>(query, new { id }) as List<ContratoFundoModel>;
+                ContratoRemuneracaoService contratoRemuneracaoService = new ContratoRemuneracaoService();
+
+                foreach (var item in contratoFundoModels)
+                {
+                    List<ContratoRemuneracaoModel> contratoRemuneracaoModels = await contratoRemuneracaoService.GetContratoFundoByIdAsync(item.Id) as List<ContratoRemuneracaoModel>;
+                    item.ListaContratoRemuneracao = contratoRemuneracaoModels;
+                }
+
+                return contratoFundoModels;
             }
         }
 

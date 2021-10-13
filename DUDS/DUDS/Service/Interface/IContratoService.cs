@@ -8,6 +8,6 @@ namespace DUDS.Service.Interface
 {
     public interface IContratoService: IGenericOperationsService<ContratoModel>
     {
-
+        
     }
 }

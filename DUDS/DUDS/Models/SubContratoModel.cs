@@ -29,5 +29,15 @@ namespace DUDS.Models
         [StringLength(100)]
         public string UsuarioCriacao { get; set; }
         public DateTime DataCriacao { get; set; }
+
+        public List<ContratoAlocadorModel> ListaContratoAlocador { get; set; }
+
+        public List<ContratoFundoModel> ListaContratoFundo { get; set; }
+
+        public SubContratoModel()
+        {
+            ListaContratoFundo = new List<ContratoFundoModel>();
+            ListaContratoAlocador = new List<ContratoAlocadorModel>();
+        }
     }
 }

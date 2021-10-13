@@ -8,6 +8,6 @@ namespace DUDS.Service.Interface
 {
     public interface IContratoFundoService : IGenericOperationsService<ContratoFundoModel>
     {
-
+        Task<IEnumerable<ContratoFundoModel>> GetSubContratoByIdAsync(int id);
     }
 }

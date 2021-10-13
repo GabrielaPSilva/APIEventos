@@ -86,6 +86,27 @@ namespace DUDS.Service
             }
         }
 
+        public async Task<IEnumerable<ContratoAlocadorModel>> GetSubContratoByIdAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = @"SELECT 
+	                            contrato_alocador.*,
+                                investidor.nome_investidor
+                             FROM
+	                            tbl_contrato_alocador contrato_alocador
+                                INNER JOIN tbl_investidor investidor ON contrato.id = contrato_alocador.cod_investidor
+                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_alocador.cod_sub_contrato
+                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
+                             WHERE
+                                sub_contrato.id = @id
+                             ORDER BY
+                                investidor.nome_investidor";
+
+                return await connection.QueryAsync<ContratoAlocadorModel>(query,new { id });
+            }
+        }
+
         public async Task<bool> UpdateAsync(ContratoAlocadorModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())

@@ -23,5 +23,12 @@ namespace DUDS.Models
         public string NomeGestor { get; set; }
 
         public string TipoContrato { get; set; }
+
+        public List<SubContratoModel> ListaSubContrato { get; set; }
+
+        public ContratoModel()
+        {
+            ListaSubContrato = new List<SubContratoModel>();
+        }
     }
 }

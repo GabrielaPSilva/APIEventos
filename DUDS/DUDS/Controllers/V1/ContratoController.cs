@@ -25,13 +25,15 @@ namespace DUDS.Controllers.V1
         private readonly IContratoAlocadorService _contratoAlocadorService;
         private readonly IContratoFundoService _contratoFundoService;
         private readonly IContratoRemuneracaoService _contratoRemuneracao;
+        private readonly ICondicaoRemuneracaoService _condicaoRemuneracao;
 
         public ContratoController(DataContext context, IConfiguracaoService configService, 
             IContratoService contratoService, 
             ISubContratoService subContratoService, 
             IContratoAlocadorService contratoAlocadorService,
             IContratoFundoService contratoFundoService,
-            IContratoRemuneracaoService contratoRemuneracao)
+            IContratoRemuneracaoService contratoRemuneracao,
+            ICondicaoRemuneracaoService condicaoRemuneracao)
         {
             _context = context;
             _configService = configService;
@@ -40,6 +42,7 @@ namespace DUDS.Controllers.V1
             _contratoAlocadorService = contratoAlocadorService;
             _contratoFundoService = contratoFundoService;
             _contratoRemuneracao = contratoRemuneracao;
+            _condicaoRemuneracao = condicaoRemuneracao;
         }
 
         #region Contrato
@@ -568,7 +571,7 @@ namespace DUDS.Controllers.V1
 
         //PUT: api/Contrato/UpdateContratoRemuneracao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateContratoRemuneracao(int id, ContratoRemuneracaoModel contratoRemuneracao)
+        public async Task<ActionResult<ContratoRemuneracaoModel>> UpdateContratoRemuneracao(int id, ContratoRemuneracaoModel contratoRemuneracao)
         {
             try
             {
@@ -625,19 +628,19 @@ namespace DUDS.Controllers.V1
         #region Condição Remuneração
         // GET: api/Condicao/GetCondicaoRemuneracao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblCondicaoRemuneracao>>> GetCondicaoRemuneracao()
+        public async Task<ActionResult<IEnumerable<CondicaoRemuneracaoModel>>> GetCondicaoRemuneracao()
         {
             try
             {
-                List<TblCondicaoRemuneracao> condicoesRemuneracao = await _context.TblCondicaoRemuneracao.Where(c => c.Ativo == true).OrderBy(c => c.CodContratoRemuneracao).AsNoTracking().ToListAsync();
-                if (condicoesRemuneracao.Count == 0)
-                {
-                    return NotFound();
-                }
+                var condicaoRemuneracao = await _condicaoRemuneracao.GetAllAsync();
 
-                return Ok(condicoesRemuneracao);
+                if (condicaoRemuneracao.Any())
+                {
+                    return Ok(condicaoRemuneracao);
+                }
+                return NotFound();
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
@@ -645,17 +648,16 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Condicao/GetCondicaoRemuneracaoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblCondicaoRemuneracao>> GetCondicaoRemuneracaoById(int id)
+        public async Task<ActionResult<CondicaoRemuneracaoModel>> GetCondicaoRemuneracaoById(int id)
         {
             try
             {
-                TblCondicaoRemuneracao tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
-                if (tblCondicaoRemuneracao != null)
+                var condincaoRemuneracao = await _condicaoRemuneracao.GetByIdAsync(id);
+                if (condincaoRemuneracao == null)
                 {
                     return NotFound();
                 }
-
-                return Ok(tblCondicaoRemuneracao);
+                return Ok(condincaoRemuneracao);
             }
             catch (Exception e)
             {
@@ -665,28 +667,16 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Condicao/AddCondicaoRemuneracao/CondicaoRemuneracaoModel
         [HttpPost]
-        public async Task<ActionResult<CondicaoRemuneracaoModel>> AddCondicaoRemuneracao(CondicaoRemuneracaoModel tblCondicaoRemuneracaoModel)
+        public async Task<ActionResult<CondicaoRemuneracaoModel>> AddCondicaoRemuneracao(CondicaoRemuneracaoModel condicaoRemuneracao)
         {
-            TblCondicaoRemuneracao itensCondicaoRemuneracao = new TblCondicaoRemuneracao
-            {
-                CodContratoRemuneracao = tblCondicaoRemuneracaoModel.CodContratoRemuneracao,
-                CodFundo = tblCondicaoRemuneracaoModel.CodFundo,
-                DataInicio = tblCondicaoRemuneracaoModel.DataInicio,
-                DataFim = tblCondicaoRemuneracaoModel.DataFim,
-                ValorPosicaoInicio = tblCondicaoRemuneracaoModel.ValorPosicaoInicio,
-                ValorPosicaoFim = tblCondicaoRemuneracaoModel.ValorPosicaoFim,
-                ValorPgtoFixo = tblCondicaoRemuneracaoModel.ValorPgtoFixo,
-                UsuarioModificacao = tblCondicaoRemuneracaoModel.UsuarioModificacao
-            };
-
             try
             {
-                _context.TblCondicaoRemuneracao.Add(itensCondicaoRemuneracao);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(
-                    nameof(GetCondicaoRemuneracao),
-                    new { id = itensCondicaoRemuneracao.Id }, itensCondicaoRemuneracao);
+                bool retorno = await _condicaoRemuneracao.AddAsync(condicaoRemuneracao);
+                if (retorno)
+                {
+                    return CreatedAtAction(nameof(GetCondicaoRemuneracaoById), new { id = condicaoRemuneracao.Id }, condicaoRemuneracao);
+                }
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -696,40 +686,26 @@ namespace DUDS.Controllers.V1
 
         //PUT: api/Condicao/UpdateCondicaoRemuneracao/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCondicaoRemuneracao(int id, CondicaoRemuneracaoModel condicaoRemuneracao)
+        public async Task<ActionResult<CondicaoRemuneracaoModel>> UpdateCondicaoRemuneracao(int id, CondicaoRemuneracaoModel condicaoRemuneracao)
         {
             try
             {
-                TblCondicaoRemuneracao registroCondicaoRemuneracao = _context.TblCondicaoRemuneracao.Find(id);
-
-                if (registroCondicaoRemuneracao != null)
+                CondicaoRemuneracaoModel retornoContratoRemuneracao = await _condicaoRemuneracao.GetByIdAsync(condicaoRemuneracao.Id);
+                if (retornoContratoRemuneracao == null)
                 {
-                    registroCondicaoRemuneracao.CodContratoRemuneracao = condicaoRemuneracao.CodContratoRemuneracao == 0 ? registroCondicaoRemuneracao.CodContratoRemuneracao : condicaoRemuneracao.CodContratoRemuneracao;
-                    registroCondicaoRemuneracao.CodFundo = condicaoRemuneracao.CodFundo == 0 ? registroCondicaoRemuneracao.CodFundo : condicaoRemuneracao.CodFundo;
-                    registroCondicaoRemuneracao.DataInicio = condicaoRemuneracao.DataInicio == null ? registroCondicaoRemuneracao.DataInicio : condicaoRemuneracao.DataInicio;
-                    registroCondicaoRemuneracao.DataFim = condicaoRemuneracao.DataFim == null ? registroCondicaoRemuneracao.DataFim : condicaoRemuneracao.DataFim;
-                    registroCondicaoRemuneracao.ValorPosicaoInicio = (condicaoRemuneracao.ValorPosicaoInicio == null || condicaoRemuneracao.ValorPosicaoInicio == 0) ? registroCondicaoRemuneracao.ValorPosicaoInicio : condicaoRemuneracao.ValorPosicaoInicio;
-                    registroCondicaoRemuneracao.ValorPosicaoFim = (condicaoRemuneracao.ValorPosicaoFim == null || condicaoRemuneracao.ValorPosicaoFim == 0) ? registroCondicaoRemuneracao.ValorPosicaoFim : condicaoRemuneracao.ValorPosicaoFim;
-                    registroCondicaoRemuneracao.ValorPgtoFixo = (condicaoRemuneracao.ValorPgtoFixo == null || condicaoRemuneracao.ValorPgtoFixo == 0) ? registroCondicaoRemuneracao.ValorPgtoFixo : condicaoRemuneracao.ValorPgtoFixo;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroCondicaoRemuneracao);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
+                    return NotFound();
                 }
-                else
+                condicaoRemuneracao.Id = id;
+                bool retorno = await _condicaoRemuneracao.UpdateAsync(condicaoRemuneracao);
+                if (retorno)
                 {
-                    return BadRequest();
+                    return Ok(condicaoRemuneracao);
                 }
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException e) when (!CondicaoRemuneracaoExists(condicaoRemuneracao.Id))
+            catch (Exception e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -741,18 +717,14 @@ namespace DUDS.Controllers.V1
 
             if (!existeRegistro)
             {
-                TblCondicaoRemuneracao tblCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
-
-                if (tblCondicaoRemuneracao == null)
-                {
-                    return NotFound();
-                }
-
                 try
                 {
-                    _context.TblCondicaoRemuneracao.Remove(tblCondicaoRemuneracao);
-                    await _context.SaveChangesAsync();
-                    return Ok(tblCondicaoRemuneracao);
+                    bool retorno = await _condicaoRemuneracao.DeleteAsync(id);
+                    if (retorno)
+                    {
+                        return Ok();
+                    }
+                    return NotFound();
                 }
                 catch (Exception e)
                 {
@@ -765,71 +737,6 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // DESATIVA: api/Condicao/DisableCondicaoRemuneracao/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DisableCondicaoRemuneracao(int id)
-        {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_condicao_remuneracao");
-
-            if (!existeRegistro)
-            {
-                TblCondicaoRemuneracao registroCondicaoRemuneracao = _context.TblCondicaoRemuneracao.Find(id);
-
-                if (registroCondicaoRemuneracao != null)
-                {
-                    registroCondicaoRemuneracao.Ativo = false;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroCondicaoRemuneracao);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        // ATIVAR: api/Condicao/ActivateCondicaoRemuneracao/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> ActivateCondicaoRemuneracao(int id)
-        {
-            TblCondicaoRemuneracao registroCondicaoRemuneracao = await _context.TblCondicaoRemuneracao.FindAsync(id);
-
-            if (registroCondicaoRemuneracao != null)
-            {
-                registroCondicaoRemuneracao.Ativo = true;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    return Ok(registroCondicaoRemuneracao);
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.InnerException.Message);
-                }
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        private bool CondicaoRemuneracaoExists(int id)
-        {
-            return _context.TblCondicaoRemuneracao.Any(e => e.Id == id);
-        }
         #endregion
 
         #region Estrutura de Contratos Ativos e Inativos

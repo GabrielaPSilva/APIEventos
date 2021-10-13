@@ -16,11 +16,11 @@ namespace DUDS.Models
         public double? ValorPosicaoInicio { get; set; }
         public double? ValorPosicaoFim { get; set; }
         public double? ValorPgtoFixo { get; set; }
-        public DateTime DataModificacao { get; set; }
+        public DateTime DataCriacao { get; set; }
 
         [StringLength(100)]
-        public string UsuarioModificacao { get; set; }
+        public string UsuarioCriacao { get; set; }
 
-        public bool? Ativo { get; set; }
+        public string NomeFundo { get; set; }
     }
 }

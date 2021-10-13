@@ -21,5 +21,12 @@ namespace DUDS.Models
 
         public string TipoCondicao { get; set; }
 
+        public List<ContratoRemuneracaoModel> ListaContratoRemuneracao { get; set; }
+
+        public ContratoFundoModel()
+        {
+            ListaContratoRemuneracao = new List<ContratoRemuneracaoModel>();
+        }
+
     }
 }

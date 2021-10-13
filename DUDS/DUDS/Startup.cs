@@ -137,6 +137,8 @@ namespace DUDS
             services.AddScoped<ISubContratoService, SubContratoService>();
             services.AddScoped<IContratoAlocadorService, ContratoAlocadorService>();
             services.AddScoped<IContratoFundoService, ContratoFundoService>();
+            services.AddScoped<IContratoRemuneracaoService, ContratoRemuneracaoService>();
+            services.AddScoped<ICondicaoRemuneracaoService, CondicaoRemuneracaoService>();
 
         }
 

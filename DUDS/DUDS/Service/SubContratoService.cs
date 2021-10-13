@@ -13,10 +13,10 @@ namespace DUDS.Service
     {
         public SubContratoService() : base(new SubContratoModel(),
             "tbl_sub_contrato",
-            new List<string> { "'id'", "'data_criacao'"},
-            new List<string> { "Id", "DataCriacao" },
+            new List<string> { "'id'", "'data_criacao'" },
+            new List<string> { "Id", "DataCriacao", "ListaContratoAlocador", "ListaContratoFundo" },
             new List<string> { "'id'", "'data_criacao'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "UsuarioCriacao"})
+            new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "ListaContratoAlocador", "ListaContratoFundo" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -79,6 +79,36 @@ namespace DUDS.Service
                                        WHERE
                                         id = @id";
                 return await connection.QueryFirstOrDefaultAsync<SubContratoModel>(query, new { id });
+            }
+        }
+
+        public async Task<IEnumerable<SubContratoModel>> GetContratoByIdAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = @"SELECT 
+	                            sub_contrato.*,
+                             FROM
+	                            tbl_sub_contrato sub_contrato
+                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrado.cod_contrato
+                             WHERE
+	                            contrato.id = @id
+                             ORDER BY
+                                contrato.id";
+                List<SubContratoModel> subContratoModels = await connection.QueryAsync<SubContratoModel>(query, new { id }) as List<SubContratoModel>;
+                ContratoAlocadorService contratoAlocadorService = new ContratoAlocadorService();
+                ContratoFundoService contratoFundoService = new ContratoFundoService();
+
+                foreach (SubContratoModel item in subContratoModels)
+                {
+                    List<ContratoFundoModel> contratoFundoModels = await contratoFundoService.GetSubContratoByIdAsync(item.Id) as List<ContratoFundoModel>;
+                    item.ListaContratoFundo = contratoFundoModels;
+
+                    List<ContratoAlocadorModel> contratoAlocadorModels = await contratoAlocadorService.GetSubContratoByIdAsync(item.Id) as List<ContratoAlocadorModel>;
+                    item.ListaContratoAlocador = contratoAlocadorModels;
+                }
+
+                return subContratoModels;
             }
         }
 

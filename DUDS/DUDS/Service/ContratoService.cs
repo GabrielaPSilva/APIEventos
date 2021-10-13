@@ -14,9 +14,9 @@ namespace DUDS.Service
         public ContratoService(): base(new ContratoModel(),
             "tbl_contrato",
             new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "NomeDistribuidor", "NomeGestor", "TipoContrato" },
+            new List<string> { "Id", "DataCriacao", "Ativo", "NomeDistribuidor", "NomeGestor", "TipoContrato", "ListaSubContrato" },
             new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao", "NomeDistribuidor", "NomeGestor", "TipoContrato" })
+            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao", "NomeDistribuidor", "NomeGestor", "TipoContrato", "ListaSubContrato" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -69,8 +69,14 @@ namespace DUDS.Service
 	                            INNER JOIN tbl_tipo_contrato ON tbl_contrato.cod_tipo_contrato = tbl_tipo_contrato.id
                              WHERE
 	                            tbl_contrato.ativo = 1";
-
-                return await connection.QueryAsync<ContratoModel>(query);
+                List<ContratoModel> listaContratoModel = await connection.QueryAsync<ContratoModel>(query) as List<ContratoModel>;
+                SubContratoService subContratoService = new SubContratoService();
+                foreach (ContratoModel item in listaContratoModel)
+                {
+                    List<SubContratoModel> listaSubContrato = await subContratoService.GetContratoByIdAsync(item.Id) as List<SubContratoModel>;
+                    item.ListaSubContrato = listaSubContrato;
+                }
+                return listaContratoModel;
             }
         }
 
