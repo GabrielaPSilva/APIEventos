@@ -93,7 +93,27 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //POST: api/Investidor/AddInvestidor/InvestidorModel
+        // GET: api/Investidor/GetInvestidorByDataCriacao/dataCriacao
+        [HttpGet("{dataCriacao}")]
+        public async Task<ActionResult<IEnumerable<ErrosPagamentoModel>>> GetInvestidorByDataCriacao(DateTime dataCriacao)
+        {
+            try
+            {
+                var investidores = await _investidorService.GetInvestidorByDataCriacao(dataCriacao);
+
+                if (investidores.Any())
+                {
+                    return Ok(investidores);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // POST: api/Investidor/AddInvestidor/InvestidorModel
         [HttpPost]
         public async Task<ActionResult<InvestidorModel>> AddInvestidor(InvestidorModel investidorModel)
         {
@@ -113,42 +133,25 @@ namespace DUDS.Controllers.V1
         }
 
         //POST: api/Investidor/AddInvestidores/List<InvestidorModel>
-        //[HttpPost]
-        //public async Task<ActionResult<List<InvestidorModel>>> AddInvestidores(List<InvestidorModel> tblListInvestidorModel)
-        //{
-        //    try
-        //    {
-        //        List<TblInvestidor> listaInvestidores = new List<TblInvestidor>();
-        //        TblInvestidor itensInvestidor = new TblInvestidor();
+        [HttpPost]
+        public async Task<ActionResult<InvestidorModel>> AddInvestidores(List<InvestidorModel> investidores)
+        {
+            try
+            {
+                bool retorno = await _investidorService.AddInvestidores(investidores);
+                if (retorno)
+                {
+                    return CreatedAtAction(nameof(GetInvestidorByDataCriacao),
+                        new { data_criacao = investidores.FirstOrDefault().DataCriacao }, investidores);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
-        //        foreach (var line in tblListInvestidorModel)
-        //        {
-        //            itensInvestidor = new TblInvestidor
-        //            {
-        //                NomeCliente = line.NomeCliente,
-        //                Cnpj = line.Cnpj,
-        //                TipoCliente = line.TipoCliente,
-        //                CodAdministrador = line.CodAdministrador,
-        //                CodGestor = line.CodGestor,
-        //                CodGrupoRebate = line.CodGrupoRebate,
-        //                CodTipoContrato = line.CodTipoContrato,
-        //                UsuarioModificacao = line.UsuarioModificacao
-        //            };
-
-        //            listaInvestidores.Add(itensInvestidor);
-        //        }
-
-        //        await _context.BulkInsertAsync(listaInvestidores);
-        //        await _context.SaveChangesAsync();
-
-        //        return CreatedAtAction(
-        //             nameof(GetInvestidor), listaInvestidores);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
 
         //PUT: api/Investidor/UpdateInvestidor/id
         [HttpPut("{id}")]

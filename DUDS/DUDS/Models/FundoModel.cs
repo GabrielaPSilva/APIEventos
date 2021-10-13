@@ -44,6 +44,8 @@ namespace DUDS.Models
         public int CodAdministrador { get; set; }
         public int CodCustodiante { get; set; }
         public int? CodGestor { get; set; }
+        public int? CodTipoEstrategia { get; set; }
+        public int? CodClearing { get; set; }
 
         [StringLength(15)]
         public string AtivoCetip { get; set; }
@@ -57,7 +59,6 @@ namespace DUDS.Models
         [StringLength(3)]
         public string MoedaFundo { get; set; }
         public int? CdFundoAdm { get; set; }
-        public int? CodTipoEstrategia { get; set; }
         public int? DiasCotizacaoAplicacao { get; set; }
 
         [StringLength(2)]
@@ -74,10 +75,15 @@ namespace DUDS.Models
 
         [StringLength(2)]
         public string ContagemDiasLiquidacaoResgate { get; set; }
-        public DateTime DataModificacao { get; set; }
+        public DateTime DataCriacao { get; set; }
 
         [StringLength(50)]
-        public string UsuarioModificacao { get; set; }
+        public string UsuarioCriacao { get; set; }
         public bool? Ativo { get; set; }
+
+        public string NomeAdministrador { get; set; }
+        public string NomeCustodiante { get; set; }
+        public string NomeGestor { get; set; }
+        public string TipoEstrategia { get; set; }
     }
 }
