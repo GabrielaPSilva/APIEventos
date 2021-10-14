@@ -130,7 +130,6 @@ namespace DUDS
             services.AddScoped<ICustodianteService, CustodianteService>();
             services.AddScoped<IErrosPagamentoService, ErrosPagamentoService>();
             services.AddScoped<ILogErrosService, LogErrosService>();
-            services.AddScoped<ICustodianteService, CustodianteService>();
             services.AddScoped<IDistribuidorService, DistribuidorService>();
             services.AddScoped<IDistribuidorAdministradorService, DistribuidorAdministradorService>();
             services.AddScoped<IContratoService, ContratoService>();
@@ -138,6 +137,15 @@ namespace DUDS
             services.AddScoped<IContratoAlocadorService, ContratoAlocadorService>();
             services.AddScoped<IContratoFundoService, ContratoFundoService>();
             services.AddScoped<IContratoRemuneracaoService, ContratoRemuneracaoService>();
+            services.AddScoped<IContaService, ContaService>();
+            services.AddScoped<IFundoService, FundoService>();
+            services.AddScoped<IInvestidorService, InvestidorService>();
+            services.AddScoped<IInvestidorDistribuidorService, InvestidorDistribuidorService>();
+            services.AddScoped<ITipoClassificacaoService, TipoClassificacaoService>();
+            services.AddScoped<ITipoCondicaoService, TipoCondicaoService>();
+            services.AddScoped<ITipoContaService, TipoContaService>();
+            services.AddScoped<ITipoContratoService, TipoContratoService>();
+            services.AddScoped<ITipoEstrategiaService, TipoEstrategiaService>();
             services.AddScoped<ICondicaoRemuneracaoService, CondicaoRemuneracaoService>();
             services.AddScoped<ICalculoRebateService, CalculoRebateService>();
             services.AddScoped<IPagamentoServicoService, PagamentoServicoService>();

@@ -17,198 +17,95 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class ContasController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IConfiguracaoService _configService;
+        private readonly IContaService _contaService;
 
-        public ContasController(DataContext context, IConfiguracaoService configService)
+        public ContasController(IConfiguracaoService configService, IContaService contaService)
         {
-            _context = context;
             _configService = configService;
+            _contaService = contaService;
         }
 
         #region Conta
         // GET: api/Contas/GetContas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblContas>>> GetContas()
+        public async Task<ActionResult<IEnumerable<ContaModel>>> GetContas()
         {
             try
             {
-                var listaContas = await (
-                                from contas in _context.TblContas
-                                from tipoConta in _context.TblTipoConta.Where(c => c.Id == contas.CodTipoConta)
-                                from fundo in _context.TblFundo.Where(c => c.Id == contas.CodFundo).DefaultIfEmpty()
-                                from investidor in _context.TblInvestidor.Where(c => c.Id == contas.CodInvestidor).DefaultIfEmpty()
-                                where contas.Ativo == true
-                                select new
-                                {
-                                    contas.Id,
-                                    contas.Agencia,
-                                    contas.Banco,
-                                    contas.Conta,
-                                    contas.CodFundo,
-                                    contas.CodInvestidor,
-                                    contas.CodTipoConta,
-                                    contas.UsuarioModificacao,
-                                    contas.DataModificacao,
-                                    contas.Ativo,
-                                    tipoConta.TipoConta,
-                                    tipoConta.DescricaoConta,
-                                    NomeFundo = fundo == null ? String.Empty : fundo.NomeReduzido,
-                                    NomeInvestidor = investidor == null ? String.Empty : investidor.NomeCliente,
-                                }).AsNoTracking().ToListAsync();
+                var contas = await _contaService.GetAllAsync();
 
-                if (listaContas.Count == 0)
+                if (contas.Any())
                 {
-                    return NotFound();
+                    return Ok(contas);
                 }
 
-                return Ok(listaContas);
+                return NotFound();
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
         // GET: api/Contas/GetContasById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblContas>> GetContasById(int id)
+        public async Task<ActionResult<ContaModel>> GetContaById(int id)
         {
             try
             {
-                var tblContas = await (
-                               from contas in _context.TblContas
-                               from tipoConta in _context.TblTipoConta.Where(c => c.Id == contas.CodTipoConta)
-                               from fundo in _context.TblFundo.Where(c => c.Id == contas.CodFundo).DefaultIfEmpty()
-                               from investidor in _context.TblInvestidor.Where(c => c.Id == contas.CodInvestidor).DefaultIfEmpty()
-                               where contas.Id == id
-                               select new
-                               {
-                                   contas.Id,
-                                   contas.Agencia,
-                                   contas.Banco,
-                                   contas.Conta,
-                                   contas.CodFundo,
-                                   contas.CodInvestidor,
-                                   contas.CodTipoConta,
-                                   contas.UsuarioModificacao,
-                                   contas.DataModificacao,
-                                   contas.Ativo,
-                                   tipoConta.TipoConta,
-                                   tipoConta.DescricaoConta,
-                                   NomeFundo = fundo == null ? String.Empty : fundo.NomeReduzido,
-                                   NomeInvestidor = investidor == null ? String.Empty : investidor.NomeCliente,
-                               }).FirstOrDefaultAsync();
+                var tblConta = await _contaService.GetByIdAsync(id);
 
-                if (tblContas == null)
+                if (tblConta == null)
                 {
-                    NotFound();
+                    return NotFound();
                 }
-                return Ok(tblContas);
+
+                return Ok(tblConta);
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
         // GET: api/Contas/GetContasExistsBase/cod_fundo/cod_investidor/cod_tipo_conta
         [HttpGet("{cod_tipo_conta}")]
-        public async Task<ActionResult<TblContas>> GetContasExistsBase(int cod_fundo, int cod_investidor, int cod_tipo_conta)
+        public async Task<ActionResult<ContaModel>> GetContasExistsBase(int codFundo, int codInvestidor, int codTipoConta)
         {
             try
             {
-                var tblContas = await (
-                                 from contas in _context.TblContas
-                                 from tipoConta in _context.TblTipoConta.Where(c => c.Id == contas.CodTipoConta)
-                                 from fundo in _context.TblFundo.Where(c => c.Id == contas.CodFundo).DefaultIfEmpty()
-                                 from investidor in _context.TblInvestidor.Where(c => c.Id == contas.CodInvestidor).DefaultIfEmpty()
-                                 where contas.Ativo == false && (contas.CodFundo == cod_fundo || contas.CodInvestidor == cod_investidor) && contas.CodTipoConta == cod_tipo_conta
-                                 select new
-                                 {
-                                     contas.Id,
-                                     contas.Agencia,
-                                     contas.Banco,
-                                     contas.Conta,
-                                     contas.CodFundo,
-                                     contas.CodInvestidor,
-                                     contas.CodTipoConta,
-                                     contas.UsuarioModificacao,
-                                     contas.DataModificacao,
-                                     contas.Ativo,
-                                     tipoConta.TipoConta,
-                                     tipoConta.DescricaoConta,
-                                     NomeFundo = fundo == null ? String.Empty : fundo.NomeReduzido,
-                                     NomeInvestidor = investidor == null ? String.Empty : investidor.NomeCliente,
-                                 }).FirstOrDefaultAsync();
+                var tblConta = await _contaService.GetContaExistsBase(codFundo, codInvestidor, codTipoConta);
 
-                if (tblContas != null)
+                if (tblConta != null)
                 {
-                    return Ok(tblContas);
+                    return Ok(tblConta);
                 }
-                else
-                {
-                    tblContas = await (
-                                 from contas in _context.TblContas
-                                 from tipoConta in _context.TblTipoConta.Where(c => c.Id == contas.CodTipoConta)
-                                 from fundo in _context.TblFundo.Where(c => c.Id == contas.CodFundo).DefaultIfEmpty()
-                                 from investidor in _context.TblInvestidor.Where(c => c.Id == contas.CodInvestidor).DefaultIfEmpty()
-                                 where (contas.CodFundo == cod_fundo || contas.CodInvestidor == cod_investidor) && contas.CodTipoConta == cod_tipo_conta
-                                 select new
-                                 {
-                                     contas.Id,
-                                     contas.Agencia,
-                                     contas.Banco,
-                                     contas.Conta,
-                                     contas.CodFundo,
-                                     contas.CodInvestidor,
-                                     contas.CodTipoConta,
-                                     contas.UsuarioModificacao,
-                                     contas.DataModificacao,
-                                     contas.Ativo,
-                                     tipoConta.TipoConta,
-                                     tipoConta.DescricaoConta,
-                                     NomeFundo = fundo == null ? String.Empty : fundo.NomeReduzido,
-                                     NomeInvestidor = investidor == null ? String.Empty : investidor.NomeCliente,
-                                 }).FirstOrDefaultAsync();
 
-                    return Ok(tblContas);
-                }
+                return NotFound();
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
         //POST: api/Contas/AddConta/ContaModel
         [HttpPost]
-        public async Task<ActionResult<ContaModel>> AddConta(ContaModel tblContaModel)
+        public async Task<ActionResult<ContaModel>> AddConta(ContaModel contaModel)
         {
-            TblContas itensConta = new TblContas
-            {
-                CodFundo = tblContaModel.CodFundo,
-                CodInvestidor = tblContaModel.CodInvestidor,
-                CodTipoConta = tblContaModel.CodTipoConta,
-                Banco = tblContaModel.Banco,
-                Agencia = tblContaModel.Agencia,
-                Conta = tblContaModel.Conta,
-                UsuarioModificacao = tblContaModel.UsuarioModificacao
-            };
-
             try
             {
-                _context.TblContas.Add(itensConta);
-                await _context.SaveChangesAsync();
+                var retorno = await _contaService.AddAsync(contaModel);
 
                 return CreatedAtAction(
-                    nameof(GetContas),
-                    new
-                    { id = itensConta.Id }, itensConta);
+                    nameof(GetContaById),
+                    new { id = contaModel.Id }, contaModel);
+
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest();
             }
         }
 
@@ -218,35 +115,25 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                TblContas registroConta = _context.TblContas.Find(id);
+                ContaModel retornoConta = await _contaService.GetByIdAsync(conta.Id);
 
-                if (registroConta != null)
-                {
-                    registroConta.CodFundo = conta.CodFundo == 0 ? registroConta.CodFundo : conta.CodFundo;
-                    registroConta.CodInvestidor = conta.CodInvestidor == 0 ? registroConta.CodInvestidor : conta.CodInvestidor;
-                    registroConta.CodTipoConta = conta.CodTipoConta == 0 ? registroConta.CodTipoConta : conta.CodTipoConta;
-                    registroConta.Banco = conta.Banco == null ? registroConta.Banco : conta.Banco;
-                    registroConta.Agencia = conta.Agencia == null ? registroConta.Agencia : conta.Agencia;
-                    registroConta.Conta = conta.Conta == null ? registroConta.Conta : conta.Conta;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroConta);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
+                if (retornoConta == null)
                 {
                     return NotFound();
                 }
+
+                conta.Id = id;
+                bool retorno = await _contaService.UpdateAsync(conta);
+
+                if (retorno)
+                {
+                    return Ok(conta);
+                }
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException e) when (!ContasExists(conta.Id))
+            catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest(e);
             }
         }
 
@@ -258,57 +145,20 @@ namespace DUDS.Controllers.V1
 
             if (!existeRegistro)
             {
-                TblContas tblConta = _context.TblContas.Find(id);
-
-                if (tblConta == null)
-                {
-                    return NotFound();
-                }
-
                 try
                 {
-                    _context.TblContas.Remove(tblConta);
-                    await _context.SaveChangesAsync();
-                    return Ok(tblConta);
+                    bool retorno = await _contaService.DeleteAsync(id);
+
+                    if (retorno)
+                    {
+                        return Ok();
+                    }
+
+                    return NotFound();
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.InnerException.Message);
-                }
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        // DESATIVA: api/Contas/DisableConta/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DisableConta(int id)
-        {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contas");
-
-            if (!existeRegistro)
-            {
-                TblContas registroConta = _context.TblContas.Find(id);
-
-                if (registroConta != null)
-                {
-                    registroConta.Ativo = false;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroConta);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
-                {
-                    return NotFound();
+                    return BadRequest(e);
                 }
             }
             else
@@ -321,32 +171,26 @@ namespace DUDS.Controllers.V1
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateContas(int id)
         {
-            TblContas registroContas = await _context.TblContas.FindAsync(id);
+            var registroConta = await _contaService.GetByIdAsync(id);
 
-            if (registroContas != null)
+            if (registroConta != null)
             {
-                registroContas.Ativo = true;
-
                 try
                 {
-                    await _context.SaveChangesAsync();
-                    return Ok(registroContas);
+                    await _contaService.ActivateAsync(id);
+                    return Ok(registroConta);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.InnerException.Message);
+                    return BadRequest();
                 }
             }
             else
             {
                 return NotFound();
             }
-        }
 
-        private bool ContasExists(int id)
-        {
-            return _context.TblContas.Any(e => e.Id == id);
+            #endregion
         }
-        #endregion      
     }
 }

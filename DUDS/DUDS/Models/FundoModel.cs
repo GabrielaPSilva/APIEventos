@@ -85,5 +85,6 @@ namespace DUDS.Models
         public string NomeCustodiante { get; set; }
         public string NomeGestor { get; set; }
         public string TipoEstrategia { get; set; }
+        public List<ContaModel> ListaConta { get; set; }
     }
 }

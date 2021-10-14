@@ -87,7 +87,7 @@ namespace DUDS.Service
                              WHERE
 	                            tbl_investidor.ativo = 1
                              ORDER BY
-	                            tbl_investidor.nome_cliente";
+	                            tbl_investidor.nome_investidor";
 
 
                 List<InvestidorModel> investidores = await connection.QueryAsync<InvestidorModel>(query) as List<InvestidorModel>;

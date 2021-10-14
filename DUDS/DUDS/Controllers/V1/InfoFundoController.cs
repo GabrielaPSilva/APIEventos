@@ -21,197 +21,123 @@ namespace DUDS.Controllers.V1
     //[ApiExplorerSettings(GroupName ="common")]
     public class InfoFundoController : Controller
     {
-        private readonly DataContext _context;
         private readonly IConfiguracaoService _configService;
-        //private static readonly Dictionary<int, TblFundo> tblFundoStore = new Dictionary<int, TblFundo>();
-        string Sistema = "DUDS";
+        private readonly IFundoService _fundoService;
 
-        public InfoFundoController(DataContext context, IConfiguracaoService configService)
+        public InfoFundoController(IConfiguracaoService configService, IFundoService fundoService)
         {
-            _context = context;
             _configService = configService;
+            _fundoService = fundoService;
         }
 
         #region Fundo
         // GET: api/InfoFundo/GetFundo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TblFundo>>> GetFundo()
+        public async Task<ActionResult<IEnumerable<FundoModel>>> GetFundo()
         {
             try
             {
-                List<TblFundo> fundos = await _context.TblFundo.Where(c => c.Ativo == true).OrderBy(c => c.NomeFundo).AsNoTracking().ToListAsync();
+                var fundos = await _fundoService.GetAllAsync();
 
-                if (fundos.Count == 0)
+                if (fundos.Any())
                 {
-                    return NotFound();
+                    return Ok(fundos);
                 }
 
-                return Ok(fundos);
+                return NotFound();
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
         // GET: api/InfoFundo/GetFundoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblFundo>> GetFundoById(int id)
+        public async Task<ActionResult<FundoModel>> GetFundoById(int id)
         {
             try
             {
-                TblFundo tblFundo = await _context.TblFundo.FindAsync(id);
+                var tblFundo = await _fundoService.GetByIdAsync(id);
+
                 if (tblFundo == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(tblFundo);
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
         // GET: api/Fundo/GetFundoExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblFundo>> GetFundoExistsBase(string cnpj)
+        public async Task<ActionResult<FundoModel>> GetFundoExistsBase(string cnpj)
         {
             try
             {
-                TblFundo tblFundo = await _context.TblFundo.Where(c => c.Ativo == false && c.Cnpj == cnpj).FirstOrDefaultAsync();
-                if (tblFundo == null)
+                var tblFundo = await _fundoService.GetFundoExistsBase(cnpj);
+
+                if (tblFundo != null)
                 {
-                    return NotFound();
+                    return Ok(tblFundo);
                 }
-                return Ok(tblFundo);
+
+                return NotFound();
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
         //POST: api/InfoFundo/AddFundo/FundoModel
         [HttpPost]
-        public async Task<ActionResult<FundoModel>> AddFundo(FundoModel tblFundoModel)
+        public async Task<ActionResult<FundoModel>> AddFundo(FundoModel fundoModel)
         {
-            TblFundo itensFundo = new TblFundo
-            {
-                NomeFundo = tblFundoModel.NomeFundo,
-                Cnpj = tblFundoModel.Cnpj,
-                PerformanceFee = tblFundoModel.PerformanceFee,
-                AdmFee = tblFundoModel.AdmFee,
-                TipoFundo = tblFundoModel.TipoFundo,
-                MasterId = tblFundoModel.MasterId,
-                TipoCota = tblFundoModel.TipoCota,
-                CodAdministrador = tblFundoModel.CodAdministrador,
-                CodCustodiante = tblFundoModel.CodCustodiante,
-                CodGestor = tblFundoModel.CodGestor,
-                MoedaFundo = tblFundoModel.MoedaFundo,
-                CodTipoEstrategia = tblFundoModel.CodTipoEstrategia,
-                DiasCotizacaoAplicacao = tblFundoModel.DiasCotizacaoAplicacao,
-                ContagemDiasCotizacaoAplicacao = tblFundoModel.ContagemDiasCotizacaoAplicacao,
-                DiasCotizacaoResgate = tblFundoModel.DiasCotizacaoResgate,
-                ContagemDiasCotizacaoResgate = tblFundoModel.ContagemDiasCotizacaoResgate,
-                DiasLiquidacaoAplicacao = tblFundoModel.DiasLiquidacaoAplicacao,
-                ContagemDiasLiquidacaoAplicacao = tblFundoModel.ContagemDiasLiquidacaoAplicacao,
-                DiasLiquidacaoResgate = tblFundoModel.DiasLiquidacaoResgate,
-                ContagemDiasLiquidacaoResgate = tblFundoModel.ContagemDiasLiquidacaoResgate,
-                Mnemonico = tblFundoModel.Mnemonico,
-                NomeReduzido = tblFundoModel.NomeReduzido,
-                ClassificacaoAnbima = tblFundoModel.ClassificacaoAnbima,
-                ClassificacaoCvm = tblFundoModel.ClassificacaoCvm,
-                DataCotaInicial = tblFundoModel.DataCotaInicial,
-                ValorCotaInicial = tblFundoModel.ValorCotaInicial,
-                CodAnbima = tblFundoModel.CodAnbima,
-                CodCvm = tblFundoModel.CodCvm,
-                AtivoCetip = tblFundoModel.AtivoCetip,
-                Isin = tblFundoModel.Isin,
-                NumeroGiin = tblFundoModel.NumeroGiin,
-                CdFundoAdm = tblFundoModel.CdFundoAdm,
-                UsuarioModificacao = tblFundoModel.UsuarioCriacao
-            };
-
             try
             {
-                _context.TblFundo.Add(itensFundo);
-                await _context.SaveChangesAsync();
+                var retorno = await _fundoService.AddAsync(fundoModel);
 
                 return CreatedAtAction(
-                  nameof(GetFundo),
-                  new { id = itensFundo.Id }, itensFundo);
+                    nameof(GetFundoById),
+                    new { id = fundoModel.Id }, fundoModel);
+
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest();
             }
         }
 
         //PUT: api/InfoFundo/UpdateFundo/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFundo(int id, FundoModel fundo)
+        public async Task<IActionResult> UpdateFundo(int id, FundoModel fundoModel)
         {
             try
             {
-                TblFundo registroFundo = _context.TblFundo.Find(id);
+                FundoModel retornoFundo = await _fundoService.GetByIdAsync(fundoModel.Id);
 
-                if (registroFundo != null)
+                if (retornoFundo == null)
                 {
-                    registroFundo.NomeFundo = fundo.NomeFundo ?? registroFundo.NomeFundo;
-                    registroFundo.NomeReduzido = fundo.NomeReduzido ?? registroFundo.NomeReduzido;
-                    registroFundo.Cnpj = fundo.Cnpj ?? registroFundo.Cnpj;
-                    registroFundo.PerformanceFee = (fundo.PerformanceFee == null || fundo.PerformanceFee == 0) ? registroFundo.PerformanceFee : fundo.PerformanceFee;
-                    registroFundo.AdmFee = (fundo.AdmFee == null || fundo.AdmFee == 0) ? registroFundo.AdmFee : fundo.AdmFee;
-                    registroFundo.TipoFundo = fundo.TipoFundo ?? registroFundo.TipoFundo;
-                    registroFundo.MasterId = fundo.MasterId == 0 ? registroFundo.MasterId : fundo.MasterId;
-                    registroFundo.TipoCota = fundo.TipoCota ?? registroFundo.TipoCota;
-                    registroFundo.CodAdministrador = fundo.CodAdministrador == 0 ? registroFundo.CodAdministrador : fundo.CodAdministrador;
-                    registroFundo.CodCustodiante = fundo.CodCustodiante == 0 ? registroFundo.CodCustodiante : fundo.CodCustodiante;
-                    registroFundo.CodGestor = fundo.CodGestor == 0 ? registroFundo.CodGestor : fundo.CodGestor;
-                    registroFundo.MoedaFundo = fundo.MoedaFundo ?? registroFundo.MoedaFundo;
-                    registroFundo.CodTipoEstrategia = fundo.CodTipoEstrategia == 0 ? registroFundo.CodTipoEstrategia : fundo.CodTipoEstrategia;
-                    registroFundo.DiasCotizacaoAplicacao = fundo.DiasCotizacaoAplicacao == 0 ? registroFundo.DiasCotizacaoAplicacao : fundo.DiasCotizacaoAplicacao;
-                    registroFundo.ContagemDiasCotizacaoAplicacao = fundo.ContagemDiasCotizacaoAplicacao ?? registroFundo.ContagemDiasCotizacaoAplicacao;
-                    registroFundo.DiasCotizacaoResgate = fundo.DiasCotizacaoResgate == 0 ? registroFundo.DiasCotizacaoResgate : fundo.DiasCotizacaoResgate;
-                    registroFundo.ContagemDiasCotizacaoResgate = fundo.ContagemDiasCotizacaoResgate ?? registroFundo.ContagemDiasCotizacaoResgate;
-                    registroFundo.DiasLiquidacaoAplicacao = fundo.DiasLiquidacaoAplicacao == 0 ? registroFundo.DiasLiquidacaoAplicacao : fundo.DiasLiquidacaoAplicacao;
-                    registroFundo.ContagemDiasLiquidacaoAplicacao = fundo.ContagemDiasLiquidacaoAplicacao ?? registroFundo.ContagemDiasLiquidacaoAplicacao;
-                    registroFundo.DiasLiquidacaoResgate = fundo.DiasLiquidacaoResgate == 0 ? registroFundo.DiasLiquidacaoResgate : fundo.DiasLiquidacaoResgate;
-                    registroFundo.ContagemDiasLiquidacaoResgate = fundo.ContagemDiasLiquidacaoResgate ?? registroFundo.ContagemDiasLiquidacaoResgate;
-                    registroFundo.Mnemonico = fundo.Mnemonico ?? registroFundo.Mnemonico;
-                    registroFundo.NomeReduzido = fundo.NomeReduzido ?? registroFundo.NomeReduzido;
-                    registroFundo.ClassificacaoAnbima = fundo.ClassificacaoAnbima ?? registroFundo.ClassificacaoAnbima;
-                    registroFundo.ClassificacaoCvm = fundo.ClassificacaoCvm ?? registroFundo.ClassificacaoCvm;
-                    registroFundo.DataCotaInicial = fundo.DataCotaInicial ?? registroFundo.DataCotaInicial;
-                    registroFundo.ValorCotaInicial = (fundo.ValorCotaInicial == null || fundo.ValorCotaInicial == 0) ? registroFundo.ValorCotaInicial : fundo.ValorCotaInicial;
-                    registroFundo.CodAnbima = fundo.CodAnbima ?? registroFundo.CodAnbima;
-                    registroFundo.CodCvm = fundo.CodCvm ?? registroFundo.CodCvm;
-                    registroFundo.AtivoCetip = fundo.AtivoCetip ?? registroFundo.AtivoCetip;
-                    registroFundo.Isin = fundo.Isin ?? registroFundo.Isin;
-                    registroFundo.NumeroGiin = fundo.NumeroGiin ?? registroFundo.NumeroGiin;
-                    registroFundo.CdFundoAdm = fundo.CdFundoAdm == 0 ? registroFundo.CdFundoAdm : fundo.CdFundoAdm;
-                    registroFundo.DataEncerramento = fundo.DataEncerramento ?? registroFundo.DataEncerramento;
+                    return NotFound();
+                }
 
-                    try
-                    {
-                        //_context.Entry(registroFundo).State = EntityState.Modified;
-                        await _context.SaveChangesAsync();
-                        return Ok(registroFundo);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
+                fundoModel.Id = id;
+                bool retorno = await _fundoService.UpdateAsync(fundoModel);
+
+                if (retorno)
                 {
-                    return BadRequest();
+                    return Ok(fundoModel);
                 }
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException e) when (!FundoExists(fundo.Id))
+            catch (Exception e)
             {
-                return NotFound(e);
+                return BadRequest(e);
             }
         }
 
@@ -223,18 +149,16 @@ namespace DUDS.Controllers.V1
 
             if (!existeRegistro)
             {
-                TblFundo tblFundo = await _context.TblFundo.FindAsync(id);
-
-                if (tblFundo == null)
-                {
-                    return NotFound();
-                }
-
                 try
                 {
-                    _context.TblFundo.Remove(tblFundo);
-                    await _context.SaveChangesAsync();
-                    return Ok(tblFundo);
+                    bool retorno = await _fundoService.DeleteAsync(id);
+
+                    if (retorno)
+                    {
+                        return Ok();
+                    }
+
+                    return NotFound();
                 }
                 catch (Exception e)
                 {
@@ -247,59 +171,22 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // DESATIVA: api/InfoFundo/DisableFundo/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> DisableFundo(int id)
-        {
-            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_fundo");
-
-            if (!existeRegistro)
-            {
-                TblFundo registroFundo = _context.TblFundo.Find(id);
-
-                if (registroFundo != null)
-                {
-                    registroFundo.Ativo = false;
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return Ok(registroFundo);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest(e);
-                    }
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
         // ATIVAR: api/InfoFundo/ActivateFundo/id
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateFundo(int id)
         {
-            TblFundo registroFundo = await _context.TblFundo.FindAsync(id);
+            var registroFundo = await _fundoService.GetByIdAsync(id);
 
             if (registroFundo != null)
             {
-                registroFundo.Ativo = true;
-
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    await _fundoService.ActivateAsync(id);
                     return Ok(registroFundo);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.InnerException.Message);
+                    return BadRequest();
                 }
             }
             else
@@ -308,13 +195,6 @@ namespace DUDS.Controllers.V1
             }
         }
 
-
-        private bool FundoExists(int id)
-        {
-            return _context.TblFundo.Any(e => e.Id == id);
-        }
         #endregion
-
-        
     }
 }

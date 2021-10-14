@@ -68,7 +68,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Distribuidor/GetDistribuidorExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<TblDistribuidor>> GetDistribuidorExistsBase(string cnpj)
+        public async Task<ActionResult<DistribuidorModel>> GetDistribuidorExistsBase(string cnpj)
         {
             try
             {
@@ -192,7 +192,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Distribuidor/GetDistribuidorAdministradorByIds/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblDistribuidorAdministrador>> GetDistribuidorAdministradorById(int id)
+        public async Task<ActionResult<DistribuidorAdministradorModel>> GetDistribuidorAdministradorById(int id)
         {
             try
             {
