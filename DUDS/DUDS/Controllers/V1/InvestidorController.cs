@@ -155,32 +155,29 @@ namespace DUDS.Controllers.V1
 
         //PUT: api/Investidor/UpdateInvestidor/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateInvestidor(InvestidorModel investidorModel)
+        public async Task<IActionResult> UpdateInvestidor(int id, InvestidorModel investidorModel)
         {
             try
             {
-                var registroInvestidor = await _investidorService.GetByIdAsync(investidorModel.Id);
+                InvestidorModel retornoInvestidor = await _investidorService.GetByIdAsync(investidorModel.Id);
 
-                if (registroInvestidor != null)
-                {
-                    try
-                    {
-                        await _investidorService.UpdateAsync(investidorModel);
-                        return Ok(registroInvestidor);
-                    }
-                    catch (Exception e)
-                    {
-                        return BadRequest();
-                    }
-                }
-                else
+                if (retornoInvestidor == null)
                 {
                     return NotFound();
                 }
+
+                investidorModel.Id = id;
+                bool retorno = await _investidorService.UpdateAsync(investidorModel);
+
+                if (retorno)
+                {
+                    return Ok(investidorModel);
+                }
+                return NotFound();
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 

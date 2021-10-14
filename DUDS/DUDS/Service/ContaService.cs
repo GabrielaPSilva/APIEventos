@@ -95,7 +95,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<GestorModel> GetGestorExistsBase(int codFundo, int codInvestidor, int codTipoConta)
+        public async Task<GestorModel> GetContaExistsBase(int codFundo, int codInvestidor, int codTipoConta)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {

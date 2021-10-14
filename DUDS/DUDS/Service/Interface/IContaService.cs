@@ -8,7 +8,7 @@ namespace DUDS.Service.Interface
 {
     public interface IContaService : IGenericOperationsService<ContaModel>
     {
-        Task<GestorModel> GetGestorExistsBase(int codFundo, int codInvestidor, int codTipoConta);
+        Task<GestorModel> GetContaExistsBase(int codFundo, int codInvestidor, int codTipoConta);
         Task<IEnumerable<ContaModel>> GetFundoByIdAsync(int id);
     }
 }

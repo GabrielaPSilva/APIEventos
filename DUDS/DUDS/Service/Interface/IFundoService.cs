@@ -8,5 +8,6 @@ namespace DUDS.Service.Interface
 {
     public interface IFundoService : IGenericOperationsService<FundoModel>
     {
+        Task<FundoModel> GetFundoExistsBase(string cnpj);
     }
 }
