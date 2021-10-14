@@ -28,7 +28,7 @@ namespace DUDS.Models
 
         public bool? Ativo { get; set; }
 
-        public string NomeFUndo { get; set; }
+        public string NomeFundo { get; set; }
         public string NomeInvestidor { get; set; }
         public string TipoConta { get; set; }
     }
