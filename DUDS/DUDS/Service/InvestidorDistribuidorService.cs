@@ -59,7 +59,7 @@ namespace DUDS.Service
             {
                 var query = @"SELECT 
 	                            tbl_investidor_distribuidor.*,
-	                            tbl_investidor.nome_cliente,
+	                            tbl_investidor.nome_investidor,
 	                            tbl_distribuidor.nome_distribuidor,
 	                            tbl_administrador.nome_administrador
                             FROM 
@@ -78,7 +78,7 @@ namespace DUDS.Service
             {
                 var query = @"SELECT 
 	                            tbl_investidor_distribuidor.*,
-	                            tbl_investidor.nome_cliente,
+	                            tbl_investidor.nome_investidor,
 	                            tbl_distribuidor.nome_distribuidor,
 	                            tbl_administrador.nome_administrador
                             FROM 
@@ -87,9 +87,7 @@ namespace DUDS.Service
 	                                INNER JOIN tbl_distribuidor ON tbl_investidor_distribuidor.cod_distribuidor = tbl_distribuidor.id
 	                                INNER JOIN tbl_administrador ON tbl_investidor_distribuidor.cod_administrador = tbl_administrador.id
                             WHERE 
-	                            tbl_investidor_distribuidor.cod_investidor = @cod_investidor
-                            ORDER BY    
-                                tbl_investidor.nome_cliente";
+	                            tbl_investidor_distribuidor.cod_investidor = @cod_investidor";
 
                 return await connection.QueryAsync<InvestidorDistribuidorModel>(query, new { cod_investidor = id });
             }
@@ -101,7 +99,7 @@ namespace DUDS.Service
             {
                 var query = @"SELECT 
 	                            tbl_investidor_distribuidor.*,
-	                            tbl_investidor.nome_cliente,
+	                            tbl_investidor.nome_investidor,
 	                            tbl_distribuidor.nome_distribuidor,
 	                            tbl_administrador.nome_administrador
                             FROM 
@@ -124,7 +122,7 @@ namespace DUDS.Service
             {
                 var query = @"SELECT 
 	                            tbl_investidor_distribuidor.*,
-	                            tbl_investidor.nome_cliente,
+	                            tbl_investidor.nome_investidor,
 	                            tbl_distribuidor.nome_distribuidor,
 	                            tbl_administrador.nome_administrador
                             FROM 
