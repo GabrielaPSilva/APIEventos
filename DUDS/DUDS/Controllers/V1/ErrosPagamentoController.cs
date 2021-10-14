@@ -66,7 +66,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/ErrosPagamento/GetErrosPagamento/cod_fundo/data_agendamento
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblErrosPagamento>> GetErrosPagamentoById(int id)
+        public async Task<ActionResult<ErrosPagamentoModel>> GetErrosPagamentoById(int id)
         {
             try
             {
