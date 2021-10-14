@@ -21,7 +21,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Logger/GetLogErroById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<TblLogErros>> GetLogErroById(int id)
+        public async Task<ActionResult<LogErrosModel>> GetLogErroById(int id)
         {
             try
             {

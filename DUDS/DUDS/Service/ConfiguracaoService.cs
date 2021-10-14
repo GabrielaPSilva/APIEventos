@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using DUDS.Data;
 using DUDS.Models;
 using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Mvc;

@@ -1,5 +1,4 @@
-﻿using DUDS.Data;
-using DUDS.Models;
+﻿using DUDS.Models;
 using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

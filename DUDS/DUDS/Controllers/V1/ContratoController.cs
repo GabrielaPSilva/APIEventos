@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DUDS.Data;
 using DUDS.Models;
 using DUDS.Service.Interface;
 using System.Collections.Concurrent;
@@ -18,7 +17,6 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class ContratoController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IConfiguracaoService _configService;
         private readonly IContratoService _contratoService;
         private readonly ISubContratoService _subContratoService;
@@ -27,7 +25,7 @@ namespace DUDS.Controllers.V1
         private readonly IContratoRemuneracaoService _contratoRemuneracao;
         private readonly ICondicaoRemuneracaoService _condicaoRemuneracao;
 
-        public ContratoController(DataContext context, IConfiguracaoService configService, 
+        public ContratoController(IConfiguracaoService configService, 
             IContratoService contratoService, 
             ISubContratoService subContratoService, 
             IContratoAlocadorService contratoAlocadorService,
@@ -35,7 +33,6 @@ namespace DUDS.Controllers.V1
             IContratoRemuneracaoService contratoRemuneracao,
             ICondicaoRemuneracaoService condicaoRemuneracao)
         {
-            _context = context;
             _configService = configService;
             _contratoService = contratoService;
             _subContratoService = subContratoService;

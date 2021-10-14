@@ -1,5 +1,4 @@
-﻿using DUDS.Data;
-using DUDS.Models;
+﻿using DUDS.Models;
 using DUDS.Service.Interface;
 using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Http;
@@ -685,7 +684,7 @@ namespace DUDS.Controllers.V1
 
         //POST: api/GrupoRebate/AddGrupoRebate/GrupoRebateModel
         [HttpPost]
-        public async Task<ActionResult<EmailGrupoRebateModel>> AddGrupoRebate(EmailGrupoRebateModel emailGrupoRebate)
+        public async Task<ActionResult<EmailGrupoRebateModel>> AddEmailGrupoRebate(EmailGrupoRebateModel emailGrupoRebate)
         {
             try
             {
