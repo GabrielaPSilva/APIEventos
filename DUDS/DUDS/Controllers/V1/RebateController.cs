@@ -1,11 +1,7 @@
 ﻿using DUDS.Models;
 using DUDS.Service.Interface;
-using EFCore.BulkExtensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
