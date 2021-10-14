@@ -70,14 +70,14 @@ namespace DUDS
                 options.SubstituteApiVersionInUrl = true;
             });
 
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            //var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfigureOptions>();
-            services.AddSwaggerGen(options =>
-            {
-                options.IncludeXmlComments(xmlFilePath);
-            });
+            //services.AddSwaggerGen(options =>
+            //{
+            //    options.IncludeXmlComments(xmlFilePath);
+            //});
 
             services.AddCors(options =>
             {
@@ -92,7 +92,7 @@ namespace DUDS
             services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();
-                c.IncludeXmlComments(xmlFilePath);
+                //c.IncludeXmlComments(xmlFilePath);
                 //c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dahlia Unified Data Service", Version = "v1" });
                 //c.SwaggerDoc("common", new OpenApiInfo { Title = "Dahlia Unified Data Service - Common", Version = "Common" });
 
