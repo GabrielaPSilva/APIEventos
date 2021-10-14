@@ -7,7 +7,7 @@ namespace DUDS.Service.Interface
 {
     public interface IErrosPagamentoService : IGenericOperationsService<ErrosPagamentoModel>
     {
-        Task<IEnumerable<ErrosPagamentoModel>> GetErrosPagamentoByCompetenciaDataAgendamento(string competencia, DateTime? dataAgendamento);
+        Task<IEnumerable<ErrosPagamentoModel>> GetErrosPagamentoByCompetencia(string competencia);
         Task<bool> DeleteErrosPagamentoByDataAgendamento(DateTime dataAgendamento);
         Task<bool> AddErrosPagamento(List<ErrosPagamentoModel> errosPagamento);
     }

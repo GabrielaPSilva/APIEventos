@@ -5,16 +5,14 @@ using System.Threading.Tasks;
 
 namespace DUDS.Models
 {
-    public class CalculoPgtoTaxaAdmPfeeModel
+    public class CalculoRebateModel
     {
         public string Competencia { get; set; }
         
         public int CodInvestidor { get; set; }
 
-        public int? CodGrupoRebate { get; set; }
-
         public int CodFundo { get; set; }
-        
+
         public int CodContrato { get; set; }
         
         public int CodSubContrato { get; set; }
@@ -39,7 +37,22 @@ namespace DUDS.Models
         
         public decimal RebatePfeeSementre { get; set; }
         
-        public string UsuarioModificacao { get; set; }
-        
+        public DateTime DataCriacao { get; set; }
+
+        public string UsuarioCriacao { get; set; }
+
+        public bool Ativo { get; set; }
+
+        public string NomeInvestidor { get; set; }
+
+        public int CodGrupoRebate { get; set; }
+
+        public string NomeGrupoRebate { get; set; }
+
+        public int CodTipoContrato { get; set; }
+
+        public string NomeTipoContrato { get; set; }
+
+        public string NomeFundo { get; set; }
     }
 }

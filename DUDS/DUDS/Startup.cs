@@ -139,6 +139,11 @@ namespace DUDS
             services.AddScoped<IContratoFundoService, ContratoFundoService>();
             services.AddScoped<IContratoRemuneracaoService, ContratoRemuneracaoService>();
             services.AddScoped<ICondicaoRemuneracaoService, CondicaoRemuneracaoService>();
+            services.AddScoped<ICalculoRebateService, CalculoRebateService>();
+            services.AddScoped<IPagamentoServicoService, PagamentoServicoService>();
+            services.AddScoped<IPagamentoTaxaAdministracaoPerformanceService, PagamentoTaxaAdministracaoPerformanceService>();
+            services.AddScoped<IGrupoRebateService, GrupoRebateService>();
+            services.AddScoped<IEmailGrupoRebateService, EmailGrupoRebateService>();
 
         }
 

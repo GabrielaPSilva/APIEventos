@@ -15,8 +15,10 @@ namespace DUDS.Models
         public string Email { get; set; }
 
         [StringLength(100)]
-        public string UsuarioModificacao { get; set; }
-        public DateTime DataModificacao { get; set; }
-        public bool? Ativo { get; set; }
+        public string UsuarioCriacao { get; set; }
+        public DateTime DataCriacao { get; set; }
+        public bool Ativo { get; set; }
+
+        public string GrupoRebate { get; set; }
     }
 }

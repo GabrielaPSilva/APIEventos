@@ -8,7 +8,7 @@ namespace DUDS.Models
 {
     public class PagamentoServicoModel
     {
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [StringLength(7)]
         public string Competencia { get; set; }
@@ -18,5 +18,6 @@ namespace DUDS.Models
         public decimal Servico { get; set; }
         public decimal SaldoParcial { get; set; }
         public decimal SaldoGestor { get; set; }
+        public string NomeFundo { get; set; }
     }
 }

@@ -40,7 +40,7 @@ namespace DUDS.Service
                     _ = await AddAsync(x);
                 });
 
-                return GetErrosPagamentoByCompetenciaDataAgendamento(errosPagamento.FirstOrDefault().Competencia, errosPagamento.FirstOrDefault().DataAgendamento).Result.ToArray().Length == errosPagamento.Count;
+                return GetErrosPagamentoByCompetencia(errosPagamento.FirstOrDefault().Competencia).Result.ToArray().Length == errosPagamento.Count;
             }
         }
 
@@ -74,7 +74,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ErrosPagamentoModel>> GetErrosPagamentoByCompetenciaDataAgendamento(string competencia, DateTime? dataAgendamento)
+        public async Task<IEnumerable<ErrosPagamentoModel>> GetErrosPagamentoByCompetencia(string competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -85,10 +85,9 @@ namespace DUDS.Service
 	                            tbl_erros_pagamento erros_pagamento
                                 inner join tbl_fundo fundo on erros_pagamento.cod_fundo = fundo.id
                             WHERE
-                                erros_pagamento.competencia = @competencia OR
-                                erros_pagamento.data_agendamento = @dataAgendamento";
+                                erros_pagamento.competencia = @competencia";
 
-                return await connection.QueryAsync<ErrosPagamentoModel>(query, new { competencia, dataAgendamento });
+                return await connection.QueryAsync<ErrosPagamentoModel>(query, new { competencia });
             }
         }
 

@@ -8,6 +8,7 @@ namespace DUDS.Models
 {
     public class PagamentoTaxaAdminPfeeModel
     {
+        public int Id { get; set; }
         [StringLength(7)]
         public string Competencia { get; set; }
         public int CodInvestidorDistribuidor { get; set; }
@@ -17,6 +18,9 @@ namespace DUDS.Models
         public decimal TaxaPerformanceResgate { get; set; }
         public decimal TaxaAdministracao { get; set; }
         public decimal TaxaGestao { get; set; }
+        public string NomeInvestidor { get; set; }
+        public string NomeFundo { get; set; }
+        public string NomeAdministrador { get; set; }
 
     }
 }

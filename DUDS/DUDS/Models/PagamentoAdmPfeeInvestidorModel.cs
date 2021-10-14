@@ -12,7 +12,11 @@ namespace DUDS.Models
         
         public int CodFundo { get; set; }
 
+        public string NomeFundo { get; set; }
+
         public int SourceAdministrador { get; set; }
+
+        public string NomeSourceAdministrador { get; set; }
         
         public decimal TaxaAdministracao { get; set; }
         
@@ -22,11 +26,15 @@ namespace DUDS.Models
         
         public string CodigoInvestidorAdministrador { get; set; }
         
-        public int CodigoInvestidor { get; set; }
+        public int CodInvestidor { get; set; }
         
-        public int CodigoDistribuidorInvestidor { get; set; }
+        public int CodDistribuidorInvestidor { get; set; }
+
+        public string NomeDistribuidorInvestidor { get; set; }
         
-        public int CodigoAdministradorCodigoInvestidor { get; set; }
+        public int CodAdministradorCodigoInvestidor { get; set; }
+
+        public string NomeAdministradorCodigoInvestidor { get; set; }
         
         public string NomeInvestidor { get; set; }
         
@@ -36,11 +44,19 @@ namespace DUDS.Models
         
         public int CodTipoContrato { get; set; }
 
+        public string TipoContrato { get; set; }
+
         public int CodGrupoRebate { get; set; }
 
-        public int? CodigoAdministradorInvestidor { get; set; }
+        public string NomeGrupoRebate { get; set; }
+
+        public int? CodAdministradorInvestidor { get; set; }
+
+        public string NomeAdministradorInvestidor { get; set; }
         
-        public int? CodigoGestorInvestidor { get; set; }
+        public int? CodGestorInvestidor { get; set; }
+
+        public string NomeGestorInvestidor { get; set; }
 
     }
 }
