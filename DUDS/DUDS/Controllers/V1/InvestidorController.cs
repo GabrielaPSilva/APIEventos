@@ -130,7 +130,7 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Investidor/AddInvestidores/List<InvestidorModel>
         [HttpPost]
-        public async Task<ActionResult<InvestidorModel>> AddInvestidores(List<InvestidorModel> investidores)
+        public async Task<ActionResult<IEnumerable<InvestidorModel>>> AddInvestidores(List<InvestidorModel> investidores)
         {
             try
             {

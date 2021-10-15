@@ -103,7 +103,7 @@ namespace DUDS.Controllers.V1
 
         //POST: api/ErrosPagamento/CadastrarPagamentoServico/List<ErrosPagamentoModel>
         [HttpPost]
-        public async Task<ActionResult<ErrosPagamentoModel>> AddErrosPagamento(List<ErrosPagamentoModel> errosPagamento)
+        public async Task<ActionResult<IEnumerable<ErrosPagamentoModel>>> AddErrosPagamento(List<ErrosPagamentoModel> errosPagamento)
         {
             try
             {
@@ -223,7 +223,7 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Pagamentos/AddPagamentoServico/List<PagamentoServicoModel>
         [HttpPost]
-        public async Task<ActionResult<PagamentoServicoModel>> AddPagamentoServico(List<PagamentoServicoModel> pagamentoServico)
+        public async Task<ActionResult<IEnumerable<PagamentoServicoModel>>> AddPagamentoServico(List<PagamentoServicoModel> pagamentoServico)
         {
             try
             {
