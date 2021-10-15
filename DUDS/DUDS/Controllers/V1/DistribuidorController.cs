@@ -168,7 +168,7 @@ namespace DUDS.Controllers.V1
 
         #region Distribuidor Administrador
         // GET: api/Distribuidor/GetDistribuidorAdministrador
-        /*
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DistribuidorAdministradorModel>>> GetDistribuidorAdministrador()
         {
@@ -188,7 +188,7 @@ namespace DUDS.Controllers.V1
                 return BadRequest(e);
             }
         }
-        */
+        
 
         // GET: api/Distribuidor/GetDistribuidorAdministradorByIds/id
         [HttpGet("{id}")]
