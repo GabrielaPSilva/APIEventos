@@ -228,7 +228,7 @@ namespace DUDS.Controllers.V1
 
         #region Investidor Distribuidor
         // GET: api/Investidor/GetInvestidorDistribuidor
-        //[HttpGet]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<InvestidorDistribuidorModel>>> GetInvestidorDistribuidor()
         {
             try
