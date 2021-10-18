@@ -21,16 +21,16 @@ namespace DUDS.Models
 
         public int? CodAdministrador { get; set; }
         public int? CodGestor { get; set; }
-        public int CodTipoContrato { get; set; }
-        public int CodGrupoRebate { get; set; }
+        //public int CodTipoContrato { get; set; }
+        //public int CodGrupoRebate { get; set; }
         public DateTime DataCriacao { get; set; }
 
         [StringLength(100)]
         public string UsuarioCriacao { get; set; }
         public bool? Ativo { get; set; }
 
-        public string TipoContrato { get; set; }
-        public string GrupoRebate { get; set; }
+        //public string TipoContrato { get; set; }
+        //public string GrupoRebate { get; set; }
         public string NomeAdministrador { get; set; }
         public string NomeGestor { get; set; }
         public List<InvestidorDistribuidorModel> ListaInvestDistribuidor { get; set; }

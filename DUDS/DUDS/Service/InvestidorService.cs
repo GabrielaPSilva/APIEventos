@@ -14,9 +14,9 @@ namespace DUDS.Service
         public InvestidorService() : base(new InvestidorModel(),
                                             "tbl_investidor",
                                             new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                            new List<string> { "Id", "DataCriacao", "Ativo", "TipoContrato", "GrupoRebate", "NomeAdministrador", "NomeGestor", "ListaInvestDistribuidor" },
+                                            new List<string> { "Id", "DataCriacao", "Ativo", "NomeAdministrador", "NomeGestor", "ListaInvestDistribuidor" },
                                             new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao", "TipoContrato", "GrupoRebate", "NomeAdministrador", "NomeGestor", "ListaInvestDistribuidor" })
+                                            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao", "NomeAdministrador", "NomeGestor", "ListaInvestDistribuidor" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -75,15 +75,11 @@ namespace DUDS.Service
                 var query = @"SELECT 
 	                            tbl_investidor.*,
 	                            tbl_administrador.nome_administrador,
-	                            tbl_gestor.nome_gestor,
-	                            tbl_tipo_contrato.tipo_contrato,
-	                            tbl_grupo_rebate.nome_grupo_rebate
+	                            tbl_gestor.nome_gestor
                              FROM
 	                            tbl_investidor
-		                            LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
-		                            LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
-		                            INNER JOIN tbl_tipo_contrato ON tbl_investidor.cod_tipo_contrato = tbl_tipo_contrato.id
-		                            INNER JOIN tbl_grupo_rebate ON tbl_investidor.cod_grupo_rebate = tbl_grupo_rebate.id
+		                        LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
+		                        LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
                              WHERE
 	                            tbl_investidor.ativo = 1
                              ORDER BY
@@ -111,15 +107,11 @@ namespace DUDS.Service
                 var query = @"SELECT 
 	                            tbl_investidor.*,
 	                            tbl_administrador.nome_administrador,
-	                            tbl_gestor.nome_gestor,
-	                            tbl_tipo_contrato.tipo_contrato,
-	                            tbl_grupo_rebate.nome_grupo_rebate
+	                            tbl_gestor.nome_gestor
                              FROM
 	                            tbl_investidor
-		                            LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
-		                            LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
-		                            INNER JOIN tbl_tipo_contrato ON tbl_investidor.cod_tipo_contrato = tbl_tipo_contrato.id
-		                            INNER JOIN tbl_grupo_rebate ON tbl_investidor.cod_grupo_rebate = tbl_grupo_rebate.id
+		                        LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
+		                        LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
                               WHERE 
 	                            tbl_investidor.id = @id";
 
@@ -141,15 +133,11 @@ namespace DUDS.Service
                 var query = @"SELECT 
 	                            tbl_investidor.*,
 	                            tbl_administrador.nome_administrador,
-	                            tbl_gestor.nome_gestor,
-	                            tbl_tipo_contrato.tipo_contrato,
-	                            tbl_grupo_rebate.nome_grupo_rebate
+	                            tbl_gestor.nome_gestor
                              FROM
 	                            tbl_investidor
-		                            LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
-		                            LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
-		                            INNER JOIN tbl_tipo_contrato ON tbl_investidor.cod_tipo_contrato = tbl_tipo_contrato.id
-		                            INNER JOIN tbl_grupo_rebate ON tbl_investidor.cod_grupo_rebate = tbl_grupo_rebate.id
+		                        LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
+		                        LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
                             WHERE 
 	                            tbl_investidor.cnpj = @cnpj";
 
@@ -175,15 +163,11 @@ namespace DUDS.Service
                 var query = @"SELECT 
 	                            tbl_investidor.*,
 	                            tbl_administrador.nome_administrador,
-	                            tbl_gestor.nome_gestor,
-	                            tbl_tipo_contrato.tipo_contrato,
-	                            tbl_grupo_rebate.nome_grupo_rebate
+	                            tbl_gestor.nome_gestor
                              FROM
 	                            tbl_investidor
-		                            LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
-		                            LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
-		                            INNER JOIN tbl_tipo_contrato ON tbl_investidor.cod_tipo_contrato = tbl_tipo_contrato.id
-		                            INNER JOIN tbl_grupo_rebate ON tbl_investidor.cod_grupo_rebate = tbl_grupo_rebate.id
+		                        LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
+		                        LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
                              WHERE
                                 tbl_investidor.data_criacao = @data_criacao";
 

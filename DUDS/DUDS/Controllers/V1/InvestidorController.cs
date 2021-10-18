@@ -229,24 +229,23 @@ namespace DUDS.Controllers.V1
         #region Investidor Distribuidor
         // GET: api/Investidor/GetInvestidorDistribuidor
         //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<TblInvestidorDistribuidor>>> GetInvestidorDistribuidor()
-        //{
-        //    try
-        //    {
-        //        List<TblInvestidorDistribuidor> investidorDistribuidores = await _context.TblInvestidorDistribuidor.AsNoTracking().ToListAsync();
+        public async Task<ActionResult<IEnumerable<InvestidorDistribuidorModel>>> GetInvestidorDistribuidor()
+        {
+            try
+            {
+                var InvestidorDistribuidor = await _investidorDistribuidorService.GetAllAsync();
 
-        //        if (investidorDistribuidores.Count == 0)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        return Ok(investidorDistribuidores);
-        //    }
-        //    catch (InvalidOperationException e)
-        //    {
-        //        return BadRequest(e.InnerException.Message);
-        //    }
-        //}
+                if (InvestidorDistribuidor == null)
+                {
+                    return NotFound();
+                }
+                return Ok(InvestidorDistribuidor);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
         // GET: api/Investidor/GetInvestidorDistribuidorByIds/codInvestidor/codDistribuidor/codAdministrador
         [HttpGet("{codInvestidor}/{codDistribuidor}/{codAdministrador}")]

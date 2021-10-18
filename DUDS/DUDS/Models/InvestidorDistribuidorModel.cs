@@ -15,6 +15,10 @@ namespace DUDS.Models
         public int CodInvestidor { get; set; }
         public int CodDistribuidor { get; set; }
         public int CodAdministrador { get; set; }
+
+        public int CodTipoContrato { get; set; }
+        public int CodGrupoRebate { get; set; }
+
         public DateTime DataCriacao { get; set; }
 
         [StringLength(100)]
@@ -23,5 +27,7 @@ namespace DUDS.Models
         public string NomeDistribuidor { get; set; }
         public string NomeAdministrador { get; set; }
         public string NomeInvestidor { get; set; }
+        public string TipoContrato { get; set; }
+        public string GrupoRebate { get; set; }
     }
 }
