@@ -143,7 +143,7 @@ namespace DUDS.Service
                                 sub_contrato.data_retroatividade,
                                 sub_contrato.data_vigencia_inicio,
                                 sub_contrato.data_vigencia_fim,
-                                contrato_alocador.cod_investidor,
+                                contrato_alocador.cod_investidor AS cod_investidor_contrato,
                                 contrato_fundo.cod_fundo,
                                 contrato_fundo.cod_tipo_condicao,
                                 investidor_distribuidor.cod_invest_administrador AS cod_investidor_distribuidor,

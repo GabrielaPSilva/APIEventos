@@ -30,7 +30,7 @@ namespace DUDS.Models
 
         public DateTime? DataVigenciaFim { get; set; }
         
-        public int? CodInvestidor { get; set; }
+        public int? CodInvestidorContrato { get; set; }
         
         public int CodFundo { get; set; }
         
