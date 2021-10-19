@@ -88,9 +88,9 @@ namespace DUDS.Service
 	                                    calculo_pgto_adm_pfee.competencia,
 	                                    calculo_pgto_adm_pfee.cod_investidor,
 	                                    investidor.nome_investidor,
-	                                    investidor.cod_grupo_rebate,
+	                                    investidor_distribuidor.cod_grupo_rebate,
 	                                    grupo_rebate.nome_grupo_rebate,
-	                                    investidor.cod_tipo_contrato,
+	                                    investidor_distribuidor.cod_tipo_contrato,
 	                                    tipo_contrato.tipo_contrato AS nome_tipo_contrato,
 	                                    calculo_pgto_adm_pfee.cod_fundo,
 	                                    fundo.nome_reduzido AS nome_fundo,
@@ -109,9 +109,10 @@ namespace DUDS.Service
                                     FROM
 	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
 	                                    INNER JOIN tbl_investidor investidor ON investidor.id = calculo_pgto_adm_pfee.cod_investidor
-	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor.cod_grupo_rebate
+										INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor.id = investidor_distribuidor.cod_investidor
+	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
 	                                    INNER JOIN tbl_fundo fundo ON fundo.id = calculo_pgto_adm_pfee.cod_fundo
-	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor.cod_tipo_contrato
+	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
                                     ORDER BY
 	                                    fundo.nome_reduzido,
 	                                    grupo_rebate.nome_grupo_rebate,
@@ -130,9 +131,9 @@ namespace DUDS.Service
 	                                    calculo_pgto_adm_pfee.competencia,
 	                                    calculo_pgto_adm_pfee.cod_investidor,
 	                                    investidor.nome_investidor,
-	                                    investidor.cod_grupo_rebate,
+	                                    investidor_distribuidor.cod_grupo_rebate,
 	                                    grupo_rebate.nome_grupo_rebate,
-	                                    investidor.cod_tipo_contrato,
+	                                    investidor_distribuidor.cod_tipo_contrato,
 	                                    tipo_contrato.tipo_contrato AS nome_tipo_contrato,
 	                                    calculo_pgto_adm_pfee.cod_fundo,
 	                                    fundo.nome_reduzido AS nome_fundo,
@@ -151,9 +152,10 @@ namespace DUDS.Service
                                     FROM
 	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
 	                                    INNER JOIN tbl_investidor investidor ON investidor.id = calculo_pgto_adm_pfee.cod_investidor
-	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor.cod_grupo_rebate
+										INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor.id = investidor_distribuidor.cod_investidor
+	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
 	                                    INNER JOIN tbl_fundo fundo ON fundo.id = calculo_pgto_adm_pfee.cod_fundo
-	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor.cod_tipo_contrato
+	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
                                     WHERE
 	                                    calculo_pgto_adm_pfee.competencia = @competencia
                                     ORDER BY
@@ -174,9 +176,9 @@ namespace DUDS.Service
 	                                    calculo_pgto_adm_pfee.competencia,
 	                                    calculo_pgto_adm_pfee.cod_investidor,
 	                                    investidor.nome_investidor,
-	                                    investidor.cod_grupo_rebate,
+	                                    investidor_distribuidor.cod_grupo_rebate,
 	                                    grupo_rebate.nome_grupo_rebate,
-	                                    investidor.cod_tipo_contrato,
+	                                    investidor_distribuidor.cod_tipo_contrato,
 	                                    tipo_contrato.tipo_contrato AS nome_tipo_contrato,
 	                                    calculo_pgto_adm_pfee.cod_fundo,
 	                                    fundo.nome_reduzido AS nome_fundo,
@@ -195,9 +197,10 @@ namespace DUDS.Service
                                     FROM
 	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
 	                                    INNER JOIN tbl_investidor investidor ON investidor.id = calculo_pgto_adm_pfee.cod_investidor
-	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor.cod_grupo_rebate
+										INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor.id = investidor_distribuidor.cod_investidor
+	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
 	                                    INNER JOIN tbl_fundo fundo ON fundo.id = calculo_pgto_adm_pfee.cod_fundo
-	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor.cod_tipo_contrato
+	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
                                     WHERE
 	                                    calculo_pgto_adm_pfee.id = @id
                                     ORDER BY

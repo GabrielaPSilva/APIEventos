@@ -196,9 +196,9 @@ namespace DUDS.Service
 	                                    investidor.nome_investidor,
 	                                    investidor.cnpj,
 	                                    investidor.tipo_investidor AS tipo_cliente,
-	                                    investidor.cod_tipo_contrato,
+	                                    investidor_distribuidor.cod_tipo_contrato,
 	                                    tipo_contrato.tipo_contrato,
-	                                    investidor.cod_grupo_rebate,
+	                                    investidor_distribuidor.cod_grupo_rebate,
 	                                    grupo_rebate.nome_grupo_rebate,
 	                                    investidor.cod_administrador AS cod_administrador_investidor,
 	                                    administrador_investidor.nome_administrador AS nome_administrador_investidor,
@@ -212,8 +212,8 @@ namespace DUDS.Service
 	                                    INNER JOIN tbl_administrador source_administrador ON source_administrador.id = pgto_adm_pfee.cod_administrador
 	                                    INNER JOIN tbl_distribuidor distribuidor_investidor ON distribuidor_investidor.id = investidor_distribuidor.cod_distribuidor
 	                                    INNER JOIN tbl_administrador administrador_codigo_investidor ON administrador_codigo_investidor.id = investidor_distribuidor.cod_administrador
-	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor.cod_tipo_contrato
-	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor.cod_grupo_rebate
+	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
+	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
 	                                    LEFT JOIN tbl_administrador administrador_investidor ON administrador_investidor.id = investidor.cod_administrador
 	                                    LEFT JOIN tbl_gestor gestor ON gestor.id = investidor.cod_gestor
                                     WHERE
