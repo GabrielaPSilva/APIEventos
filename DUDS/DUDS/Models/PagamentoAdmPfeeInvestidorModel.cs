@@ -24,7 +24,7 @@ namespace DUDS.Models
         
         public decimal TaxaPerformanceResgate { get; set; }
         
-        public string CodigoInvestidorAdministrador { get; set; }
+        public string CodInvestidorAdministrador { get; set; }
         
         public int CodInvestidor { get; set; }
         
