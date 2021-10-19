@@ -122,11 +122,11 @@ namespace DUDS.Service
             string whereClause;
             if (subContratoStatus == "Ativo")
             {
-                whereClause = "sub_contrato.status <> @Status";
+                whereClause = "sub_contrato.status = @Status";
             }
             else
             {
-                whereClause = "sub_contrato.status = @Status";
+                whereClause = "sub_contrato.status <> @Status";
             }
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
