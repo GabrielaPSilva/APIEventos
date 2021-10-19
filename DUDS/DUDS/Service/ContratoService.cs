@@ -132,14 +132,11 @@ namespace DUDS.Service
             {
                 string query = @"
                             SELECT 
-                                contrato_remuneracao.id AS cod_contrato_remuneracao,
                                 contrato_remuneracao.percentual_adm,
                                 contrato_remuneracao.percentual_pfee,
-                                contrato.id AS cod_contrato,
                                 contrato.cod_tipo_contrato,
                                 contrato.cod_gestor,
                                 contrato.cod_distribuidor,
-                                sub_contrato.id AS cod_sub_contrato,
                                 sub_contrato.versao,
                                 sub_contrato.status,
                                 sub_contrato.clausula_retroatividade,
@@ -147,12 +144,15 @@ namespace DUDS.Service
                                 sub_contrato.data_vigencia_inicio,
                                 sub_contrato.data_vigencia_fim,
                                 contrato_alocador.cod_investidor,
-                                contrato_fundo.id AS cod_contrato_fundo,
                                 contrato_fundo.cod_fundo,
                                 contrato_fundo.cod_tipo_condicao,
-                                investidor_distribuidor.cod_invest_administrador AS codigo_investidor_distribuidor,
+                                investidor_distribuidor.cod_invest_administrador AS cod_investidor_distribuidor,
                                 investidor_distribuidor.cod_administrador AS administrador_codigo_investidor,
-                                investidor_distribuidor.cod_distribuidor AS distribuidor_codigo_investidor
+                                investidor_distribuidor.cod_distribuidor AS distribuidor_codigo_investidor,
+                                contrato.id AS cod_contrato,
+                                sub_contrato.id AS cod_sub_contrato,
+                                contrato_fundo.id AS cod_contrato_fundo,
+                                contrato_remuneracao.id AS cod_contrato_remuneracao
                             FROM
                                 tbl_contrato contrato
                                 INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.cod_contrato = contrato.id

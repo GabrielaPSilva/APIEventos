@@ -14,7 +14,7 @@ namespace DUDS.Models
 
         public int CodTipoContrato { get; set; }
         
-        public int? Parceiro { get; set; }
+        public int? CodGestor { get; set; }
 
         public int? CodDistribuidor { get; set; }
 
@@ -30,7 +30,7 @@ namespace DUDS.Models
 
         public DateTime? DataVigenciaFim { get; set; }
         
-        public int? IdInvestidor { get; set; }
+        public int? CodInvestidor { get; set; }
         
         public int CodFundo { get; set; }
         

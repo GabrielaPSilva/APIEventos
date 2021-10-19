@@ -202,7 +202,7 @@ namespace DUDS.Service
 	                                    grupo_rebate.nome_grupo_rebate,
 	                                    investidor.cod_administrador AS cod_administrador_investidor,
 	                                    administrador_investidor.nome_administrador AS nome_administrador_investidor,
-	                                    investidor.cod_gestor AS cod_gestor_investirdor,
+	                                    investidor.cod_gestor AS cod_gestor_investidor,
 	                                    gestor.nome_gestor AS nome_gestor_investidor
                                     FROM
 	                                    tbl_pgto_adm_pfee pgto_adm_pfee
