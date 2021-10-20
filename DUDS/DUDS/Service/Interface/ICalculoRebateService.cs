@@ -12,5 +12,7 @@ namespace DUDS.Service.Interface
         Task<IEnumerable<CalculoRebateModel>> GetByCompetenciaAsync(string competencia);
         Task<bool> DeleteByCompetenciaAsync(string competencia);
         Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao, string codCondicaoRemuneracao);
+
+        Task<CalculoRebateModel> GetByIdAsync(Guid id);
     }
 }

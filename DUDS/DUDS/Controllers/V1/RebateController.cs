@@ -301,8 +301,8 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PagamentoTaxaAdminPfeeModel>> GetPgtoTaxaAdmPfeeById(int id)
+        [HttpGet("{guid}")]
+        public async Task<ActionResult<PagamentoTaxaAdminPfeeModel>> GetPgtoTaxaAdmPfeeById(Guid id)
         {
             try
             {
@@ -431,6 +431,24 @@ namespace DUDS.Controllers.V1
                     return Ok(calculoRebate);
                 }
                 return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpGet("{guid}")]
+        public async Task<ActionResult<CalculoRebateModel>> GetCalculoRebateById(Guid id)
+        {
+            try
+            {
+                var calculoRebate = await _calculoRebateService.GetByIdAsync(id);
+                if (calculoRebate == null)
+                {
+                    return NotFound();
+                }
+                return Ok(calculoRebate);
             }
             catch (Exception e)
             {

@@ -7,6 +7,7 @@ namespace DUDS.Models
 {
     public class CalculoRebateModel
     {
+        public Guid Id { get; set; }
         public string Competencia { get; set; }
         
         public int CodInvestidor { get; set; }

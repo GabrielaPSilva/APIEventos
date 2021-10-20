@@ -84,7 +84,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<PagamentoTaxaAdminPfeeModel> GetByIdAsync(int id)
+        public async Task<PagamentoTaxaAdminPfeeModel> GetByIdAsync(Guid id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -221,6 +221,11 @@ namespace DUDS.Service
 
                 return await connection.QueryAsync<PagamentoAdmPfeeInvestidorModel>(query, new { competencia });
             }
+        }
+
+        public Task<PagamentoTaxaAdminPfeeModel> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

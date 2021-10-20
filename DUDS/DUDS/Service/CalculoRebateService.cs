@@ -167,7 +167,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<CalculoRebateModel> GetByIdAsync(int id)
+        public async Task<CalculoRebateModel> GetByIdAsync(Guid id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -210,6 +210,11 @@ namespace DUDS.Service
 
                 return await connection.QueryFirstOrDefaultAsync<CalculoRebateModel>(query, new { id });
             }
+        }
+
+        public Task<CalculoRebateModel> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao, string codCondicaoRemuneracao)

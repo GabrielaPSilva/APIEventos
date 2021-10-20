@@ -13,6 +13,9 @@ namespace DUDS.Service.Interface
         Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByIdsAsync(string competencia, int codFundo, int codAdministrador, int codInvestidorDistribuidor);
         Task<bool> DeleteByCompetenciaAsync(string competencia);
         Task<IEnumerable<PagamentoAdmPfeeInvestidorModel>> GetPgtoAdmPfeeInvestByCompetenciaAsync(string competencia);
-        
+
+        Task<PagamentoTaxaAdminPfeeModel> GetByIdAsync(Guid id);
+
+
     }
 }

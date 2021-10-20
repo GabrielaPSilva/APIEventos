@@ -8,7 +8,8 @@ namespace DUDS.Models
 {
     public class PagamentoTaxaAdminPfeeModel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+
         [StringLength(7)]
         public string Competencia { get; set; }
         public int CodInvestidorDistribuidor { get; set; }
