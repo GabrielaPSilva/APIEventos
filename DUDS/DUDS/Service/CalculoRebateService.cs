@@ -85,6 +85,7 @@ namespace DUDS.Service
             {
                 const string query = @"
                                     SELECT
+										calculo_pgto_adm_pfee.id,
 	                                    calculo_pgto_adm_pfee.competencia,
 	                                    calculo_pgto_adm_pfee.cod_investidor,
 	                                    investidor.nome_investidor,
@@ -128,6 +129,7 @@ namespace DUDS.Service
             {
                 const string query = @"
                                     SELECT
+										calculo_pgto_adm_pfee.id,
 	                                    calculo_pgto_adm_pfee.competencia,
 	                                    calculo_pgto_adm_pfee.cod_investidor,
 	                                    investidor.nome_investidor,
@@ -173,6 +175,7 @@ namespace DUDS.Service
             {
                 const string query = @"
                                     SELECT
+										calculo_pgto_adm_pfee.id,
 	                                    calculo_pgto_adm_pfee.competencia,
 	                                    calculo_pgto_adm_pfee.cod_investidor,
 	                                    investidor.nome_investidor,
