@@ -21,8 +21,7 @@ namespace DUDS.Service
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
-
-        #region Investidor
+        #region Fundo
         public async Task<bool> ActivateAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())

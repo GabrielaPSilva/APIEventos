@@ -21,6 +21,7 @@ namespace DUDS.Controllers.V1
         private readonly ICalculoRebateService _calculoRebateService;
         private readonly IGrupoRebateService _grupoRebateService;
         private readonly IEmailGrupoRebateService _emailGrupoRebateService;
+        private readonly IControleRebateService _controleRebateService;
 
         public RebateController(IConfiguracaoService configService,
             IErrosPagamentoService errosPagamento,
@@ -28,6 +29,7 @@ namespace DUDS.Controllers.V1
             IPagamentoTaxaAdministracaoPerformanceService pagamentoTaxaAdministracaoPerformanceService,
             ICalculoRebateService calculoRebateService,
             IGrupoRebateService grupoRebateService,
+            IControleRebateService controleRebateService,
             IEmailGrupoRebateService emailGrupoRebateService)
         {
             _errosPagamento = errosPagamento;
@@ -36,8 +38,160 @@ namespace DUDS.Controllers.V1
             _pagamentoTaxaAdministracaoPerformanceService = pagamentoTaxaAdministracaoPerformanceService;
             _calculoRebateService = calculoRebateService;
             _grupoRebateService = grupoRebateService;
+            _controleRebateService = controleRebateService;
             _emailGrupoRebateService = emailGrupoRebateService;
         }
+
+        #region Controle Rebate
+
+        // GET: api/Rebate/GetControleRebate
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebate()
+        {
+            try
+            {
+                var listaControleRebate = await _controleRebateService.GetAllAsync();
+
+                if (listaControleRebate.Any())
+                {
+                    return Ok(listaControleRebate);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Rebate/GetControleRebateById/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ControleRebateModel>> GetControleRebateById(int id)
+        {
+            try
+            {
+                var controleRebate = await _controleRebateService.GetByIdAsync(id);
+
+                if (controleRebate == null)
+                {
+                    return NotFound();
+                }
+                return Ok(controleRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Rebate/GetControleRebateExistsBase/codGrupoRebate/Competencia
+        [HttpGet("{codGrupoRebate}, {Competencia}")]
+        public async Task<ActionResult<ControleRebateModel>> GetControleRebateExistsBase(int codGrupoRebate, string competencia)
+        {
+            try
+            {
+                var controleRebate = await _controleRebateService.GetGrupoRebateExistsBase(codGrupoRebate, competencia);
+
+                if (controleRebate == null)
+                {
+                    NotFound();
+                }
+                return Ok(controleRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //POST: api/Rebate/AddGestor/ControleRebateModel
+        [HttpPost]
+        public async Task<ActionResult<ControleRebateModel>> AddControleRebate(ControleRebateModel controleRebate)
+        {
+
+            try
+            {
+                bool retorno = await _controleRebateService.AddAsync(controleRebate);
+
+                return CreatedAtAction(nameof(GetControleRebateById), new { id = controleRebate.Id }, controleRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //PUT: api/Rebate/UpdateControleRebate/id
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ControleRebateModel>> UpdateControleRebate(int id, ControleRebateModel controleRebate)
+        {
+            try
+            {
+                ControleRebateModel retornoControleRebate = await _controleRebateService.GetByIdAsync(id);
+
+                if (controleRebate == null)
+                {
+                    return NotFound();
+                }
+
+                controleRebate.Id = id;
+                bool retorno = await _controleRebateService.UpdateAsync(controleRebate);
+
+                if (retorno)
+                {
+                    return Ok(controleRebate);
+                }
+                return NotFound();
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DELETE: api/Rebate/DeleteControleRebate/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteControleRebate(int id)
+        {
+            try
+            {
+                bool retorno = await _controleRebateService.DisableAsync(id);
+
+                if (retorno)
+                {
+                    return Ok();
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // ATIVAR: api/Rebate/ActivateControleRebate/id
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ControleRebateModel>> ActivateControleRebate(int id)
+        {
+            try
+            {
+                bool retorno = await _controleRebateService.ActivateAsync(id);
+
+                if (retorno)
+                {
+                    ControleRebateModel controleRebate = await _controleRebateService.GetByIdAsync(id);
+                    return Ok(controleRebate);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        #endregion
 
         #region Erros Pagamento Rebate
         // GET: api/ErrosPagamento/ErrosPagamento
