@@ -27,7 +27,9 @@ namespace DUDS.Models
         public string CodInvestidorAdministrador { get; set; }
         
         public int CodInvestidor { get; set; }
-        
+
+        public int CodInvestidorDistribuidor { get; set; }
+
         public int CodDistribuidorInvestidor { get; set; }
 
         public string NomeDistribuidorInvestidor { get; set; }

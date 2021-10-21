@@ -189,6 +189,7 @@ namespace DUDS.Service
 	                                    pgto_adm_pfee.taxa_performance_resgate,
 	                                    investidor_distribuidor.cod_invest_administrador AS cod_investidor_administrador,
 	                                    investidor_distribuidor.cod_investidor,
+                                        investidor_distribuidor.id AS cod_investidor_distribuidor,
 	                                    investidor_distribuidor.cod_distribuidor AS cod_distribuidor_investidor,
 	                                    distribuidor_investidor.nome_distribuidor AS nome_distribuidor_investidor,
 	                                    investidor_distribuidor.cod_administrador AS cod_administrador_codigo_investidor,

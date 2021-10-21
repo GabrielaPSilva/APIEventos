@@ -87,7 +87,7 @@ namespace DUDS.Service
                                     SELECT
 										calculo_pgto_adm_pfee.id,
 	                                    calculo_pgto_adm_pfee.competencia,
-	                                    calculo_pgto_adm_pfee.cod_investidor,
+	                                    calculo_pgto_adm_pfee.cod_investidor_distribuidor,
 	                                    investidor.nome_investidor,
 	                                    investidor_distribuidor.cod_grupo_rebate,
 	                                    grupo_rebate.nome_grupo_rebate,
@@ -103,10 +103,10 @@ namespace DUDS.Service
 	                                    calculo_pgto_adm_pfee.cod_administrador,
 	                                    calculo_pgto_adm_pfee.valor_adm,
 	                                    calculo_pgto_adm_pfee.valor_pfee_resgate,
-	                                    calculo_pgto_adm_pfee.valor_pfee_sementre,
+	                                    calculo_pgto_adm_pfee.valor_pfee_semestre,
 	                                    calculo_pgto_adm_pfee.rebate_adm,
 	                                    calculo_pgto_adm_pfee.rebate_pfee_resgate,
-	                                    calculo_pgto_adm_pfee.rebate_pfee_sementre
+	                                    calculo_pgto_adm_pfee.rebate_pfee_semestre
                                     FROM
 	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
 	                                    INNER JOIN tbl_investidor investidor ON investidor.id = calculo_pgto_adm_pfee.cod_investidor
@@ -131,7 +131,7 @@ namespace DUDS.Service
                                     SELECT
 										calculo_pgto_adm_pfee.id,
 	                                    calculo_pgto_adm_pfee.competencia,
-	                                    calculo_pgto_adm_pfee.cod_investidor,
+	                                    calculo_pgto_adm_pfee.cod_investidor_distribuidor,
 	                                    investidor.nome_investidor,
 	                                    investidor_distribuidor.cod_grupo_rebate,
 	                                    grupo_rebate.nome_grupo_rebate,
@@ -147,10 +147,10 @@ namespace DUDS.Service
 	                                    calculo_pgto_adm_pfee.cod_administrador,
 	                                    calculo_pgto_adm_pfee.valor_adm,
 	                                    calculo_pgto_adm_pfee.valor_pfee_resgate,
-	                                    calculo_pgto_adm_pfee.valor_pfee_sementre,
+	                                    calculo_pgto_adm_pfee.valor_pfee_semestre,
 	                                    calculo_pgto_adm_pfee.rebate_adm,
 	                                    calculo_pgto_adm_pfee.rebate_pfee_resgate,
-	                                    calculo_pgto_adm_pfee.rebate_pfee_sementre
+	                                    calculo_pgto_adm_pfee.rebate_pfee_semestre
                                     FROM
 	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
 	                                    INNER JOIN tbl_investidor investidor ON investidor.id = calculo_pgto_adm_pfee.cod_investidor
@@ -177,7 +177,7 @@ namespace DUDS.Service
                                     SELECT
 										calculo_pgto_adm_pfee.id,
 	                                    calculo_pgto_adm_pfee.competencia,
-	                                    calculo_pgto_adm_pfee.cod_investidor,
+	                                    calculo_pgto_adm_pfee.cod_investidor_distribuidor,
 	                                    investidor.nome_investidor,
 	                                    investidor_distribuidor.cod_grupo_rebate,
 	                                    grupo_rebate.nome_grupo_rebate,
@@ -193,10 +193,10 @@ namespace DUDS.Service
 	                                    calculo_pgto_adm_pfee.cod_administrador,
 	                                    calculo_pgto_adm_pfee.valor_adm,
 	                                    calculo_pgto_adm_pfee.valor_pfee_resgate,
-	                                    calculo_pgto_adm_pfee.valor_pfee_sementre,
+	                                    calculo_pgto_adm_pfee.valor_pfee_semestre,
 	                                    calculo_pgto_adm_pfee.rebate_adm,
 	                                    calculo_pgto_adm_pfee.rebate_pfee_resgate,
-	                                    calculo_pgto_adm_pfee.rebate_pfee_sementre
+	                                    calculo_pgto_adm_pfee.rebate_pfee_semestre
                                     FROM
 	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
 	                                    INNER JOIN tbl_investidor investidor ON investidor.id = calculo_pgto_adm_pfee.cod_investidor

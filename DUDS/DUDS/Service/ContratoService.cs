@@ -147,7 +147,7 @@ namespace DUDS.Service
                                 contrato_alocador.cod_investidor AS cod_investidor_contrato,
                                 contrato_fundo.cod_fundo,
                                 contrato_fundo.cod_tipo_condicao,
-                                investidor_distribuidor.cod_invest_administrador AS cod_investidor_distribuidor,
+                                investidor_distribuidor.cod_invest_administrador AS cod_invest_administrador,
                                 investidor_distribuidor.cod_administrador AS administrador_codigo_investidor,
                                 investidor_distribuidor.cod_distribuidor AS distribuidor_codigo_investidor,
                                 contrato.id AS cod_contrato,

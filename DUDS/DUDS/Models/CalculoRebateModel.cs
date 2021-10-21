@@ -10,7 +10,7 @@ namespace DUDS.Models
         public Guid Id { get; set; }
         public string Competencia { get; set; }
         
-        public int CodInvestidor { get; set; }
+        public int CodInvestidorDistribuidor { get; set; }
 
         public int CodFundo { get; set; }
 
@@ -30,13 +30,13 @@ namespace DUDS.Models
         
         public decimal ValorPfeeResgate { get; set; }
         
-        public decimal ValorPfeeSementre { get; set; }
+        public decimal ValorPfeeSemestre { get; set; }
         
         public decimal RebateAdm { get; set; }
         
         public decimal RebatePfeeResgate { get; set; }
         
-        public decimal RebatePfeeSementre { get; set; }
+        public decimal RebatePfeeSemestre { get; set; }
         
         public DateTime DataCriacao { get; set; }
 
