@@ -9,5 +9,7 @@ namespace DUDS.Service.Interface
     public interface IControleRebateService : IGenericOperationsService<ControleRebateModel>
     {
         Task<ControleRebateModel> GetGrupoRebateExistsBase(int codGrupoRebate, string Competencia);
+        Task<IEnumerable<ControleRebateModel>> GetByCompetenciaAsync(string competencia);
+        Task<IEnumerable<ControleRebateModel>> GetFiltroControleRebateAsync(int id, string nomeInvestidor, string competencia);
     }
 }

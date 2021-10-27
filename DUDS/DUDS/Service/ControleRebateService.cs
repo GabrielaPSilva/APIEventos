@@ -14,9 +14,9 @@ namespace DUDS.Service
         public ControleRebateService() : base(new ControleRebateModel(),
                                               "tbl_controle_rebate",
                                               new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                              new List<string> { "Id", "DataCriacao", "GrupoRebate" },
+                                              new List<string> { "Id", "DataCriacao", "NomeGrupoRebate", "NomeInvestidor", "Calculo" },
                                               new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                              new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "GrupoRebate" })
+                                              new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "NomeGrupoRebate", "NomeInvestidor", "Calculo" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -53,35 +53,52 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ControleRebateModel>> GetAllAsync()
+        public async Task<IEnumerable<ControleRebateModel>> GetByCompetenciaAsync(string competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT 
-	                             tbl_controle_rebate.*,
-	                             tbl_grupo_rebate.nome_grupo_rebate
-                             FROM
-	                             tbl_controle_rebate
-		                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id";
+                               tbl_controle_rebate.*,
+                               tbl_grupo_rebate.nome_grupo_rebate
+                            FROM
+                               tbl_controle_rebate
+	                             INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
+                            WHERE
+                               tbl_controle_rebate.competencia = @competencia";
 
-                return await connection.QueryAsync<ControleRebateModel>(query);
+                return await connection.QueryAsync<ControleRebateModel>(query, new { competencia });
             }
         }
 
-        public async Task<ControleRebateModel> GetByIdAsync(int id)
+        public async Task<IEnumerable<ControleRebateModel>> GetFiltroControleRebateAsync(int id, string nomeInvestidor, string competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                             tbl_controle_rebate.*,
-	                             tbl_grupo_rebate.nome_grupo_rebate
-                             FROM
-	                             tbl_controle_rebate
-		                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
-                              WHERE 
-	                             id = @id";
+                var query = @"SELECT
+	                            tbl_controle_rebate.*,
+	                            tbl_calculo_pgto_adm_pfee.*,
+	                            tbl_grupo_rebate.nome_grupo_rebate,
+	                            tbl_investidor.nome_investidor
+                            FROM
+	                            tbl_controle_rebate
+	                            INNER JOIN tbl_investidor_distribuidor ON tbl_controle_rebate.cod_grupo_rebate = tbl_investidor_distribuidor.cod_grupo_rebate
+	                            INNER JOIN tbl_calculo_pgto_adm_pfee ON tbl_calculo_pgto_adm_pfee.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
+	                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
+	                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
+                            WHERE
+	                            tbl_controle_rebate.cod_grupo_rebate = @id
+	                            AND tbl_investidor.nome_investidor = @nome_investidor
+	                            AND tbl_calculo_pgto_adm_pfee.competencia = @competencia";
 
-                return await connection.QueryFirstOrDefaultAsync<ControleRebateModel>(query, new { id });
+                return await connection.QueryAsync<ControleRebateModel, CalculoRebateModel, ControleRebateModel>(query,
+                   (controle, calculo) =>
+                   {
+                       controle.Calculo = calculo;
+
+                       return controle;
+                   }, splitOn: "Id");
+
+                //return await connection.QueryAsync<ControleRebateModel>(query, new { id, nome_investidor = nomeInvestidor, competencia });
             }
         }
 
@@ -116,6 +133,16 @@ namespace DUDS.Service
 
                 return await connection.QueryFirstOrDefaultAsync<ControleRebateModel>(query, new { cod_grupo_rebate = codGrupoRebate, competencia = Competencia });
             }
+        }
+
+        public Task<IEnumerable<ControleRebateModel>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ControleRebateModel> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
