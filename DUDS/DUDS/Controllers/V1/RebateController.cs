@@ -763,23 +763,32 @@ namespace DUDS.Controllers.V1
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGrupoRebate(int id)
         {
-            try
-            {
-                GrupoRebateModel retornoGrupoRebate = await _grupoRebateService.GetByIdAsync(id);
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_grupo_rebate");
 
-                if (retornoGrupoRebate != null)
-                {
-                    bool retorno = await _grupoRebateService.DeleteAsync(id);
-                    if (retorno)
-                    {
-                        return Ok();
-                    }
-                }
-                return NotFound();
-            }
-            catch (Exception e)
+            if (!existeRegistro)
             {
-                return BadRequest(e);
+                try
+                {
+                    GrupoRebateModel retornoGrupoRebate = await _grupoRebateService.GetByIdAsync(id);
+
+                    if (retornoGrupoRebate != null)
+                    {
+                        bool retorno = await _grupoRebateService.DeleteAsync(id);
+                        if (retorno)
+                        {
+                            return Ok();
+                        }
+                    }
+                    return NotFound();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            else
+            {
+                return NotFound();
             }
         }
 
@@ -799,7 +808,7 @@ namespace DUDS.Controllers.V1
                     }
                 }
                 return NotFound();
-                
+
             }
             catch (Exception e)
             {

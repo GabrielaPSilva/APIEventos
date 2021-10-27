@@ -163,7 +163,7 @@ namespace DUDS.Controllers.V1
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 

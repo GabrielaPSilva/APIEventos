@@ -22,9 +22,9 @@ namespace DUDS.Controllers.V1
         private readonly IContratoRemuneracaoService _contratoRemuneracao;
         private readonly ICondicaoRemuneracaoService _condicaoRemuneracao;
 
-        public ContratoController(IConfiguracaoService configService, 
-            IContratoService contratoService, 
-            ISubContratoService subContratoService, 
+        public ContratoController(IConfiguracaoService configService,
+            IContratoService contratoService,
+            ISubContratoService subContratoService,
             IContratoAlocadorService contratoAlocadorService,
             IContratoFundoService contratoFundoService,
             IContratoRemuneracaoService contratoRemuneracao,
@@ -124,18 +124,27 @@ namespace DUDS.Controllers.V1
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContrato(int id)
         {
-            try
+            bool existeRegistro = await _configService.GetValidacaoExisteIdOutrasTabelas(id, "tbl_contrato");
+
+            if (!existeRegistro)
             {
-                bool retorno = await _contratoService.DisableAsync(id);
-                if (retorno)
+                try
                 {
-                    return Ok();
+                    bool retorno = await _contratoService.DisableAsync(id);
+                    if (retorno)
+                    {
+                        return Ok();
+                    }
+                    return NotFound();
                 }
-                return NotFound();
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
             }
-            catch (Exception e)
+            else
             {
-                return BadRequest(e);
+                return NotFound();
             }
         }
 
@@ -159,7 +168,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        
+
         #endregion
 
         #region Sub Contrato
@@ -269,7 +278,7 @@ namespace DUDS.Controllers.V1
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -381,7 +390,7 @@ namespace DUDS.Controllers.V1
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -439,7 +448,7 @@ namespace DUDS.Controllers.V1
                     return CreatedAtAction(nameof(GetContratoFundoById), new { id = contratoFundo.Id }, contratoFundo);
                 }
                 return NotFound();
-                
+
             }
             catch (Exception e)
             {
@@ -497,7 +506,7 @@ namespace DUDS.Controllers.V1
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -613,7 +622,7 @@ namespace DUDS.Controllers.V1
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -727,7 +736,7 @@ namespace DUDS.Controllers.V1
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
