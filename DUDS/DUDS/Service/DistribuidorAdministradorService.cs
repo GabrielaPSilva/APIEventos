@@ -57,17 +57,17 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT
-                                distr_adm.*,
-                                distribuidor.nome_distribuidor,
-                                administrador.nome_administrador
+                                 distr_adm.*,
+                                 distribuidor.nome_distribuidor,
+                                 administrador.nome_administrador
                               FROM
-	                            tbl_distribuidor_administrador distr_adm
+	                             tbl_distribuidor_administrador distr_adm
                                     INNER JOIN tbl_distribuidor distribuidor ON distr_adm.cod_distribuidor = distribuidor.id
                                     INNER JOIN tbl_administrador administrador ON distr_adm.cod_administrador = administrador.id
-                            WHERE 
-	                            distr_adm.ativo = 1
-                            ORDER BY    
-                                distribuidor.nome_distribuidor";
+                              WHERE 
+	                              distribuidor.ativo = 1
+                              ORDER BY    
+                                  distribuidor.nome_distribuidor";
 
                 return await connection.QueryAsync<DistribuidorAdministradorModel>(query);
             }

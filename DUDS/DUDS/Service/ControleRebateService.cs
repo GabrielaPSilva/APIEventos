@@ -14,9 +14,9 @@ namespace DUDS.Service
         public ControleRebateService() : base(new ControleRebateModel(),
                                               "tbl_controle_rebate",
                                               new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                              new List<string> { "Id", "DataCriacao", "NomeGrupoRebate", "NomeInvestidor", "Calculo" },
+                                              new List<string> { "Id", "DataCriacao", "Calculo" },
                                               new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                              new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "NomeGrupoRebate", "NomeInvestidor", "Calculo" })
+                                              new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "Calculo" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -75,19 +75,23 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT
-	                            tbl_controle_rebate.*,
-	                            tbl_calculo_pgto_adm_pfee.*,
-	                            tbl_grupo_rebate.nome_grupo_rebate,
-	                            tbl_investidor.nome_investidor
+                                tbl_controle_rebate.*,
+                                tbl_calculo_pgto_adm_pfee.*,
+                                tbl_grupo_rebate.nome_grupo_rebate,
+                                tbl_investidor.nome_investidor,
+                                tbl_fundo.nome_reduzido AS NomeFundo,
+	                            tbl_tipo_contrato.tipo_contrato AS NomeTipoContrato
                             FROM
-	                            tbl_controle_rebate
-	                            INNER JOIN tbl_investidor_distribuidor ON tbl_controle_rebate.cod_grupo_rebate = tbl_investidor_distribuidor.cod_grupo_rebate
-	                            INNER JOIN tbl_calculo_pgto_adm_pfee ON tbl_calculo_pgto_adm_pfee.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
-	                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-	                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
+                                tbl_controle_rebate
+		                            INNER JOIN tbl_investidor_distribuidor ON tbl_controle_rebate.cod_grupo_rebate = tbl_investidor_distribuidor.cod_grupo_rebate
+		                            INNER JOIN tbl_calculo_pgto_adm_pfee ON tbl_calculo_pgto_adm_pfee.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
+		                            INNER JOIN tbl_fundo ON tbl_calculo_pgto_adm_pfee.cod_fundo = tbl_fundo.id
+		                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
+		                            INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.cod_tipo_contrato = tbl_tipo_contrato.id
+		                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
                             WHERE
 	                            tbl_controle_rebate.cod_grupo_rebate = @id
-	                            AND tbl_investidor.nome_investidor = @nome_investidor
+	                            AND tbl_investidor.nome_investidor COLLATE Latin1_general_CI_AI LIKE '%' + @nomeInvestidor + '%'
 	                            AND tbl_calculo_pgto_adm_pfee.competencia = @competencia";
 
                 return await connection.QueryAsync<ControleRebateModel, CalculoRebateModel, ControleRebateModel>(query,
@@ -96,6 +100,11 @@ namespace DUDS.Service
                        controle.Calculo = calculo;
 
                        return controle;
+                   }, new
+                   {
+                       id,
+                       nomeInvestidor,
+                       competencia
                    }, splitOn: "Id");
 
                 //return await connection.QueryAsync<ControleRebateModel>(query, new { id, nome_investidor = nomeInvestidor, competencia });
@@ -116,7 +125,7 @@ namespace DUDS.Service
                 return await connection.ExecuteAsync(query, item) > 0;
             }
         }
-        
+
         public async Task<ControleRebateModel> GetGrupoRebateExistsBase(int codGrupoRebate, string Competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
@@ -140,9 +149,21 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public Task<ControleRebateModel> GetByIdAsync(int id)
+        public async Task<ControleRebateModel> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query = @"SELECT 
+	                                     tbl_controle_rebate.*,
+	                                     tbl_grupo_rebate.nome_grupo_rebate
+                                      FROM
+	                                     tbl_controle_rebate
+                                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
+                                      WHERE
+                                         tbl_controle_rebate.id = @id";
+
+                return await connection.QueryFirstOrDefaultAsync<ControleRebateModel>(query, new { id });
+            }
         }
     }
 }

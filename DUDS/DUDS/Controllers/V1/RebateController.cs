@@ -44,13 +44,13 @@ namespace DUDS.Controllers.V1
 
         #region Controle Rebate
 
-        // GET: api/Rebate/GetControleRebate
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebate()
+        // GET: api/Rebate/GetControleRebateByCompetencia/competencia
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebateByCompetencia(string competencia)
         {
             try
             {
-                var listaControleRebate = await _controleRebateService.GetAllAsync();
+                var listaControleRebate = await _controleRebateService.GetByCompetenciaAsync(competencia);
 
                 if (listaControleRebate.Any())
                 {
@@ -70,13 +70,34 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var controleRebate = await _controleRebateService.GetByIdAsync(id);
+                var tblControleRebate = await _controleRebateService.GetByIdAsync(id);
 
-                if (controleRebate == null)
+                if (tblControleRebate == null)
                 {
                     return NotFound();
                 }
-                return Ok(controleRebate);
+
+                return Ok(tblControleRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        // GET: api/Rebate/GetControleRebate
+        [HttpGet("{id}/{nomeInvestidor}/{competencia}")]
+        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetFiltroControleRebate(int id, string nomeInvestidor, string competencia)
+        {
+            try
+            {
+                var listaControleRebate = await _controleRebateService.GetFiltroControleRebateAsync(id, nomeInvestidor, competencia);
+
+                if (listaControleRebate.Any())
+                {
+                    return Ok(listaControleRebate);
+                }
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -84,8 +105,8 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // GET: api/Rebate/GetControleRebateExistsBase/codGrupoRebate/Competencia
-        [HttpGet("{codGrupoRebate}, {Competencia}")]
+        // GET: api/Rebate/GetControleRebateExistsBase/codGrupoRebate/competencia
+        [HttpGet("{codGrupoRebate}/{competencia}")]
         public async Task<ActionResult<ControleRebateModel>> GetControleRebateExistsBase(int codGrupoRebate, string competencia)
         {
             try

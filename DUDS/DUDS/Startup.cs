@@ -152,6 +152,7 @@ namespace DUDS
             services.AddScoped<IPagamentoTaxaAdministracaoPerformanceService, PagamentoTaxaAdministracaoPerformanceService>();
             services.AddScoped<IGrupoRebateService, GrupoRebateService>();
             services.AddScoped<IEmailGrupoRebateService, EmailGrupoRebateService>();
+            services.AddScoped<IControleRebateService, ControleRebateService>();
 
         }
 
