@@ -15,6 +15,7 @@ namespace DUDS.Models
         public string UsuarioCriacao { get; set; }
         public DateTime DataCriacao { get; set; }
 
+        public string NomeGrupoRebate { get; set; }
         public CalculoRebateModel Calculo { get; set; }
     }
 }

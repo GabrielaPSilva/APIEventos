@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DUDS.Models;
+using DUDS.Models.Filtros;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -14,9 +15,9 @@ namespace DUDS.Service
         public ControleRebateService() : base(new ControleRebateModel(),
                                               "tbl_controle_rebate",
                                               new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                              new List<string> { "Id", "DataCriacao", "Calculo" },
+                                              new List<string> { "Id", "DataCriacao", "Calculo", "NomeGrupoRebate" },
                                               new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                              new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "Calculo" })
+                                              new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "Calculo", "NomeGrupoRebate" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -53,20 +54,30 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ControleRebateModel>> GetByCompetenciaAsync(string competencia)
+        public async Task<IEnumerable<ControleRebateModel>> GetByCompetenciaAsync(FiltroModel filtro, int pagina, int itensPorPagina)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT 
-                               tbl_controle_rebate.*,
-                               tbl_grupo_rebate.nome_grupo_rebate
-                            FROM
-                               tbl_controle_rebate
-	                             INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
-                            WHERE
-                               tbl_controle_rebate.competencia = @competencia";
+                                 tbl_controle_rebate.*,
+                                 tbl_grupo_rebate.nome_grupo_rebate
+                             FROM
+                                 tbl_controle_rebate
+	                               INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
+                             WHERE
+                                tbl_controle_rebate.competencia = @competencia
+                             OFFSET
+                                @itensPorPagina * (@pagina - 1)
+                             ROWS FETCH NEXT
+                                @itensPorPagina
+                             ROWS ONLY";
 
-                return await connection.QueryAsync<ControleRebateModel>(query, new { competencia });
+                return await connection.QueryAsync<ControleRebateModel>(query, new
+                {
+                    pagina,
+                    itensPorPagina,
+                    filtro.Competencia
+                });
             }
         }
 
@@ -164,6 +175,11 @@ namespace DUDS.Service
 
                 return await connection.QueryFirstOrDefaultAsync<ControleRebateModel>(query, new { id });
             }
+        }
+
+        public Task<IEnumerable<ControleRebateModel>> GetByCompetenciaAsync(string competencia)
+        {
+            throw new NotImplementedException();
         }
     }
 }
