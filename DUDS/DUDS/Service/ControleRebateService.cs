@@ -65,11 +65,13 @@ namespace DUDS.Service
                                  tbl_controle_rebate
 	                               INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
                              WHERE
-                                tbl_controle_rebate.competencia = @competencia
+                                (@Competencia IS NULL OR tbl_controle_rebate.competencia = @Competencia)
+                             ORDER BY
+								tbl_controle_rebate.cod_grupo_rebate
                              OFFSET
-                                @itensPorPagina * (@pagina - 1)
+                                 @itensPorPagina * (@pagina - 1)
                              ROWS FETCH NEXT
-                                @itensPorPagina
+                                 @itensPorPagina
                              ROWS ONLY";
 
                 return await connection.QueryAsync<ControleRebateModel>(query, new
@@ -177,9 +179,21 @@ namespace DUDS.Service
             }
         }
 
-        public Task<IEnumerable<ControleRebateModel>> GetByCompetenciaAsync(string competencia)
+        public async Task<int> GetCountControleRebateAsync(FiltroModel filtro)
         {
-            throw new NotImplementedException();
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                #region QUERY
+                var query = @"SELECT 
+                                 COUNT(*)
+                              FROM
+                                 tbl_controle_rebate
+	                               INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
+                             WHERE
+                                 tbl_controle_rebate.competencia = @competencia";
+                #endregion
+                return await connection.QueryFirstOrDefaultAsync<int>(query, new { filtro.Competencia });
+            }
         }
     }
 }

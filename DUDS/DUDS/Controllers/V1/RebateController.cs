@@ -1,4 +1,5 @@
 ﻿using DUDS.Models;
+using DUDS.Models.Filtros;
 using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -44,13 +45,13 @@ namespace DUDS.Controllers.V1
 
         #region Controle Rebate
 
-        // GET: api/Rebate/GetControleRebateByCompetencia/competencia
-        [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebateByCompetencia(string competencia)
+        // GET: api/Rebate/GetControleRebateByCompetencia
+        [HttpGet()]
+        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebateByCompetencia([FromQuery]FiltroModel filtro, int pagina, int itensPorPagina)
         {
             try
             {
-                var listaControleRebate = await _controleRebateService.GetByCompetenciaAsync(competencia);
+                var listaControleRebate = await _controleRebateService.GetByCompetenciaAsync(filtro, pagina, itensPorPagina);
 
                 if (listaControleRebate.Any())
                 {
@@ -114,6 +115,26 @@ namespace DUDS.Controllers.V1
                 var controleRebate = await _controleRebateService.GetGrupoRebateExistsBase(codGrupoRebate, competencia);
 
                 if (controleRebate == null)
+                {
+                    NotFound();
+                }
+                return Ok(controleRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Rebate/GetCountControleRebateAsync/filtro
+        [HttpGet()]
+        public async Task<ActionResult<ControleRebateModel>> GetCountControleRebateAsync([FromQuery]FiltroModel filtro)
+        {
+            try
+            {
+                var controleRebate = await _controleRebateService.GetCountControleRebateAsync(filtro);
+
+                if (controleRebate == 0)
                 {
                     NotFound();
                 }
