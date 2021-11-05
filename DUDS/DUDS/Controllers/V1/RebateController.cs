@@ -615,13 +615,13 @@ namespace DUDS.Controllers.V1
         #endregion
 
         #region Calculo Rebate
-        // GET: api/Pagamentos/GetCalculoPgtoTaxaAdminPfee
-        [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<CalculoRebateModel>>> GetCalculoRebate(string competencia)
+        // GET: api/Pagamentos/GetCalculoRebate/competencia/codGrupoRebate
+        [HttpGet("{competencia}/{codGrupoRebate}")]
+        public async Task<ActionResult<IEnumerable<CalculoRebateModel>>> GetCalculoRebate(string competencia, int codGrupoRebate)
         {
             try
             {
-                var calculoRebate = await _calculoRebateService.GetByCompetenciaAsync(competencia);
+                var calculoRebate = await _calculoRebateService.GetByCompetenciaAsync(competencia, codGrupoRebate);
                 if (calculoRebate.Any())
                 {
                     return Ok(calculoRebate);
