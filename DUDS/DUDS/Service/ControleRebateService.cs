@@ -189,7 +189,7 @@ namespace DUDS.Service
                                  tbl_controle_rebate
 	                               INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
                              WHERE
-                                 tbl_controle_rebate.competencia = @Competencia";
+                                 (@Competencia IS NULL OR tbl_controle_rebate.competencia = @Competencia)";
                 
                 return await connection.QueryFirstOrDefaultAsync<int>(query, new { filtro.Competencia });
             }
