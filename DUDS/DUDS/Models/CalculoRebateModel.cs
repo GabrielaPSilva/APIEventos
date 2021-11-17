@@ -31,7 +31,11 @@ namespace DUDS.Models
         public decimal ValorPfeeResgate { get; set; }
         
         public decimal ValorPfeeSemestre { get; set; }
-        
+
+        public decimal PercAdm { get; set; }
+
+        public decimal PercPfee { get; set; }
+
         public decimal RebateAdm { get; set; }
         
         public decimal RebatePfeeResgate { get; set; }
