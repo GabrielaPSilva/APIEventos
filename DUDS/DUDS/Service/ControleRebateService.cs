@@ -83,17 +83,18 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ControleRebateModel>> GetFiltroControleRebateAsync(int id, string nomeInvestidor, string competencia)
+        public async Task<IEnumerable<ControleRebateModel>> GetFiltroControleRebateAsync(int id, string nomeInvestidor, string competencia, string codMellon)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT
                                 tbl_controle_rebate.*,
                                 tbl_calculo_pgto_adm_pfee.*,
-                                tbl_grupo_rebate.nome_grupo_rebate,
-                                tbl_investidor.nome_investidor,
+                                tbl_grupo_rebate.nome_grupo_rebate AS NomeGrupoRebate,
+                                tbl_investidor.nome_investidor AS NomeInvestidor,
                                 tbl_fundo.nome_reduzido AS NomeFundo,
-	                            tbl_tipo_contrato.tipo_contrato AS NomeTipoContrato
+	                            tbl_tipo_contrato.tipo_contrato AS NomeTipoContrato,
+                                tbl_investidor_distribuidor.cod_invest_administrador AS CodMellon
                             FROM
                                 tbl_controle_rebate
 		                            INNER JOIN tbl_investidor_distribuidor ON tbl_controle_rebate.cod_grupo_rebate = tbl_investidor_distribuidor.cod_grupo_rebate
@@ -105,6 +106,7 @@ namespace DUDS.Service
                             WHERE
 	                            tbl_controle_rebate.cod_grupo_rebate = @id
 	                            AND tbl_investidor.nome_investidor COLLATE Latin1_general_CI_AI LIKE '%' + @nomeInvestidor + '%'
+                                AND (@codMellon IS NULL OR tbl_investidor_distribuidor.cod_invest_administrador = @codMellon)
 	                            AND tbl_calculo_pgto_adm_pfee.competencia = @competencia";
 
                 return await connection.QueryAsync<ControleRebateModel, CalculoRebateModel, ControleRebateModel>(query,
@@ -117,7 +119,8 @@ namespace DUDS.Service
                    {
                        id,
                        nomeInvestidor,
-                       competencia
+                       competencia,
+                       codMellon
                    }, splitOn: "Id");
 
                 //return await connection.QueryAsync<ControleRebateModel>(query, new { id, nome_investidor = nomeInvestidor, competencia });

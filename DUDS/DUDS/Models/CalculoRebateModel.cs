@@ -55,5 +55,6 @@ namespace DUDS.Models
         public string NomeTipoContrato { get; set; }
 
         public string NomeFundo { get; set; }
+        public string CodMellon { get; set; }
     }
 }

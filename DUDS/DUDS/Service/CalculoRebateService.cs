@@ -15,9 +15,9 @@ namespace DUDS.Service
         public CalculoRebateService() : base(new CalculoRebateModel(),
             "tbl_calculo_pgto_adm_pfee",
             new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "NomeInvestidor", "CodGrupoRebate", "NomeGrupoRebate", "CodTipoContrato", "NomeTipoContrato", "NomeFundo" },
+            new List<string> { "Id", "DataCriacao", "Ativo", "NomeInvestidor", "CodGrupoRebate", "NomeGrupoRebate", "CodTipoContrato", "NomeTipoContrato", "NomeFundo", "CodMellon" },
             new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "NomeInvestidor", "CodGrupoRebate", "NomeGrupoRebate", "CodTipoContrato", "NomeTipoContrato", "NomeFundo", "UsuarioCriacao" })
+            new List<string> { "Id", "DataCriacao", "Ativo", "NomeInvestidor", "CodGrupoRebate", "NomeGrupoRebate", "CodTipoContrato", "NomeTipoContrato", "NomeFundo", "CodMellon", "UsuarioCriacao" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
