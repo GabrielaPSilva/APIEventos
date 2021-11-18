@@ -30,7 +30,7 @@ namespace DUDS
                     Contact = new OpenApiContact()
                     {
                         Name = "Dahlia DevOps",
-                        Email = "dahlia.devops@dahliacapuital.com.br",
+                        Email = "dahlia.devops@dahliacapital.com.br",
                         Url = new Uri("http://www.dahliacapital.com.br")
                     }
                 });

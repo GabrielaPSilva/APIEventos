@@ -109,6 +109,8 @@ namespace DUDS.Service
 	                                     calculo_pgto_adm_pfee.valor_adm,
 	                                     calculo_pgto_adm_pfee.valor_pfee_resgate,
 	                                     calculo_pgto_adm_pfee.valor_pfee_semestre,
+                                         calculo_pgto_adm_pfee.perc_adm,
+                                         calculo_pgto_adm_pfee.perc_pfee,
 	                                     calculo_pgto_adm_pfee.rebate_adm,
 	                                     calculo_pgto_adm_pfee.rebate_pfee_resgate,
 	                                     calculo_pgto_adm_pfee.rebate_pfee_semestre
@@ -160,6 +162,8 @@ namespace DUDS.Service
 	                                    calculo_pgto_adm_pfee.valor_adm,
 	                                    calculo_pgto_adm_pfee.valor_pfee_resgate,
 	                                    calculo_pgto_adm_pfee.valor_pfee_semestre,
+                                        calculo_pgto_adm_pfee.perc_adm,
+                                        calculo_pgto_adm_pfee.perc_pfee,
 	                                    calculo_pgto_adm_pfee.rebate_adm,
 	                                    calculo_pgto_adm_pfee.rebate_pfee_resgate,
 	                                    calculo_pgto_adm_pfee.rebate_pfee_semestre

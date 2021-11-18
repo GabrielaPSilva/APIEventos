@@ -50,8 +50,5 @@ namespace DUDS.Models
 
         public int CodContratoRemuneracao { get; set; }
 
-
-
-
     }
 }
