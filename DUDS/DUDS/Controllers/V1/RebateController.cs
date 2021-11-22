@@ -692,8 +692,8 @@ namespace DUDS.Controllers.V1
         }
 
         // GET: api/Contrato/GetDescricaoCalculoPgtoTaxaAdmPfee
-        [HttpGet("{cod_contrato}/{cod_sub_contrato}/{cod_contrato_fundo}/{cod_contrato_remuneracao}")]
-        public async Task<ActionResult<IEnumerable<DescricaoCalculoRebateModel>>> GetDescricaoCalculoPgtoTaxaAdmPfee(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao, [FromQuery] string codCondicaoRemuneracao)
+        [HttpGet("{codContrato}/{codSubContrato}/{codContratoFundo}/{codContratoRemuneracao}")]
+        public async Task<ActionResult<IEnumerable<DescricaoCalculoRebateModel>>> GetDescricaoCalculoPgtoTaxaAdmPfee(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao, [FromQuery]string codCondicaoRemuneracao)
         {
             try
             {

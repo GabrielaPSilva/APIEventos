@@ -219,14 +219,14 @@ namespace DUDS.Service
 										contrato_remuneracao.id AS cod_contrato_remuneracao
 									FROM
 										tbl_contrato contrato
-										INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = contrato.cod_tipo_contrato
-										INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.cod_contrato = contrato.id
-										INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.cod_sub_contrato = sub_contrato.id
-										INNER JOIN tbl_tipo_condicao tipo_condicao ON tipo_condicao.id = contrato_fundo.cod_tipo_condicao
-										INNER JOIN tbl_fundo fundo ON fundo.id = contrato_fundo.cod_fundo
-										INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.cod_contrato_fundo = contrato_fundo.id
-										LEFT JOIN tbl_distribuidor distribuidor ON distribuidor.id = contrato.cod_distribuidor
-										LEFT JOIN tbl_gestor gestor ON gestor.id = contrato.cod_gestor
+										    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = contrato.cod_tipo_contrato
+										    INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.cod_contrato = contrato.id
+										    INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.cod_sub_contrato = sub_contrato.id
+										    INNER JOIN tbl_tipo_condicao tipo_condicao ON tipo_condicao.id = contrato_fundo.cod_tipo_condicao
+										    INNER JOIN tbl_fundo fundo ON fundo.id = contrato_fundo.cod_fundo
+										    INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.cod_contrato_fundo = contrato_fundo.id
+										    LEFT JOIN tbl_distribuidor distribuidor ON distribuidor.id = contrato.cod_distribuidor
+										    LEFT JOIN tbl_gestor gestor ON gestor.id = contrato.cod_gestor
 									WHERE
 										contrato.id = @cod_contrato
 										AND sub_contrato.id = @cod_sub_contrato
