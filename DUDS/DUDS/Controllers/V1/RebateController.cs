@@ -128,7 +128,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetCountControleRebate/filtro
         [HttpGet()]
-        public async Task<ActionResult<ControleRebateModel>> GetCountControleRebate([FromQuery]FiltroModel filtro)
+        public async Task<ActionResult<int>> GetCountControleRebate([FromQuery]FiltroModel filtro)
         {
             try
             {
