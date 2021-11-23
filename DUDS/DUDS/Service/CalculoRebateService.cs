@@ -195,28 +195,29 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = @"SELECT
-										tipo_contrato.id AS cod_tipo_contrato,
+		                                contrato.id AS CodContrato,
+										tipo_contrato.id AS CodTipoContrato,
 										tipo_contrato.tipo_contrato,
-										gestor.id AS cod_gestor,
-										gestor.nome_gestor,
-										distribuidor.id AS cod_distribuidor,
-										distribuidor.nome_distribuidor,
-										sub_contrato.versao AS versao_contrato,
-										sub_contrato.status AS status_contrato,
+                                        sub_contrato.id AS CodSubContrato,
+                                        sub_contrato.versao,
+										sub_contrato.status,
 										sub_contrato.id_docusign,
 										sub_contrato.data_vigencia_inicio,
 										sub_contrato.data_vigencia_fim,
 										sub_contrato.data_retroatividade,
-										fundo.id AS cod_fundo,
-										fundo.nome_reduzido AS nome_fundo,
-										tipo_condicao.id AS cod_tipo_condicao,
+                                        contrato_fundo.id AS CodContratoFundo,
+                                        tipo_condicao.id AS CodTipoCondicao,
 										tipo_condicao.tipo_condicao,
-										contrato_remuneracao.percentual_adm,
+                                        fundo.id AS CodFundo,
+										fundo.nome_reduzido,
+										contrato_remuneracao.id AS CodContratoRemuneracao,
+                                        contrato_remuneracao.percentual_adm,
 										contrato_remuneracao.percentual_pfee,
-										contrato.id AS cod_contrato,
-										sub_contrato.id AS cod_sub_contrato,
-										contrato_fundo.id AS cod_contrato_fundo,
-										contrato_remuneracao.id AS cod_contrato_remuneracao
+		                                distribuidor.id AS CodDistribuidor,
+										distribuidor.nome_distribuidor,
+										gestor.id AS CodGestor,
+										gestor.nome_gestor,
+										condicao.*
 									FROM
 										tbl_contrato contrato
 										    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = contrato.cod_tipo_contrato
@@ -227,21 +228,40 @@ namespace DUDS.Service
 										    INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.cod_contrato_fundo = contrato_fundo.id
 										    LEFT JOIN tbl_distribuidor distribuidor ON distribuidor.id = contrato.cod_distribuidor
 										    LEFT JOIN tbl_gestor gestor ON gestor.id = contrato.cod_gestor
+                                            LEFT JOIN tbl_condicao_remuneracao condicao ON condicao.cod_contrato_remuneracao = contrato_remuneracao.id
 									WHERE
 										contrato.id = @cod_contrato
 										AND sub_contrato.id = @cod_sub_contrato
 										AND contrato_fundo.id = @cod_contrato_fundo
-										AND contrato_remuneracao.id = @cod_contrato_remuneracao";
+										AND contrato_remuneracao.id = @cod_contrato_remuneracao
+                                        AND (@cod_condicao_remuneracao IS NULL OR condicao.id = @cod_condicao_remuneracao)";
 
-                return await connection.QueryAsync<DescricaoCalculoRebateModel>(query, new
-                {
-                    cod_contrato = codContrato,
-                    cod_sub_contrato = codSubContrato,
-                    cod_contrato_fundo = codContratoFundo,
-                    cod_contrato_remuneracao = codContratoRemuneracao,
-                    cod_condicao_remuneracao = codCondicaoRemuneracao
-                });
+                return await connection.QueryAsync<DescricaoCalculoRebateModel, CondicaoRemuneracaoModel, DescricaoCalculoRebateModel>(query,
+                  (descricao, condicaoRemuneracao) =>
+                  {
+                      descricao.CondicaoRemuneracao = condicaoRemuneracao;
+
+                      return descricao;
+                  }, new
+                  {
+                      cod_contrato = codContrato,
+                      cod_sub_contrato = codSubContrato,
+                      cod_contrato_fundo = codContratoFundo,
+                      cod_contrato_remuneracao = codContratoRemuneracao,
+                      cod_condicao_remuneracao = codCondicaoRemuneracao,
+                  }, splitOn: "CodContrato, CodTipoContrato, CodSubContrato, CodContratoFundo, CodTipoCondicao, CodFundo, CodContratoRemuneracao, CodDistribuidor, CodGestor, id");
+
             }
+
+            //return await connection.QueryAsync<DescricaoCalculoRebateModel>(query, new
+            //    {
+            //        cod_contrato = codContrato,
+            //        cod_sub_contrato = codSubContrato,
+            //        cod_contrato_fundo = codContratoFundo,
+            //        cod_contrato_remuneracao = codContratoRemuneracao,
+            //        cod_condicao_remuneracao = codCondicaoRemuneracao
+            //    });
+            //}
         }
 
         public async Task<int> GetCountCalculoRebateAsync(FiltroModel filtro)

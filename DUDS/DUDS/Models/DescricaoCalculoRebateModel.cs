@@ -17,7 +17,7 @@ namespace DUDS.Models
 
         public int? CodDistribuidor { get; set; }
         
-        public int NomeDistribuidor { get; set; }
+        public string NomeDistribuidor { get; set; }
 
         public string VersaoContrato { get; set; }
 
@@ -50,5 +50,7 @@ namespace DUDS.Models
         public int CodContratoFundo { get; set; }
 
         public int CodContratoRemuneracao { get; set; }
+
+        public CondicaoRemuneracaoModel CondicaoRemuneracao { get; set; }
     }
 }
