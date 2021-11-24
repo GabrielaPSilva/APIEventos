@@ -217,7 +217,6 @@ namespace DUDS.Service
 										distribuidor.nome_distribuidor,
 										gestor.id AS CodGestor,
 										gestor.nome_gestor
-										--condicao.*
 									FROM
 										tbl_contrato contrato
 										    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = contrato.cod_tipo_contrato
@@ -228,7 +227,6 @@ namespace DUDS.Service
 										    INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.cod_contrato_fundo = contrato_fundo.id
 										    LEFT JOIN tbl_distribuidor distribuidor ON distribuidor.id = contrato.cod_distribuidor
 										    LEFT JOIN tbl_gestor gestor ON gestor.id = contrato.cod_gestor
-                                            --LEFT JOIN tbl_condicao_remuneracao condicao ON condicao.cod_contrato_remuneracao = contrato_remuneracao.id
 									WHERE
 										contrato.id = @cod_contrato
 										AND sub_contrato.id = @cod_sub_contrato
@@ -258,32 +256,7 @@ namespace DUDS.Service
 
                 }
                 return descricoes;
-
-                //return await connection.QueryAsync<DescricaoCalculoRebateModel, List<CondicaoRemuneracaoModel>, DescricaoCalculoRebateModel>(query,
-                //  (descricao, listaCondicaoRemuneracao) =>
-                //  {
-                //      descricao.ListaCondicaoRemuneracao = listaCondicaoRemuneracao;
-
-                //      return descricao;
-                //  }, new
-                //  {
-                //      cod_contrato = codContrato,
-                //      cod_sub_contrato = codSubContrato,
-                //      cod_contrato_fundo = codContratoFundo,
-                //      cod_contrato_remuneracao = codContratoRemuneracao
-                //  }, splitOn: "CodContrato, CodTipoContrato, CodSubContrato, CodContratoFundo, CodTipoCondicao, CodFundo, CodContratoRemuneracao, CodDistribuidor, CodGestor, id");
-
             }
-
-            //return await connection.QueryAsync<DescricaoCalculoRebateModel>(query, new
-            //    {
-            //        cod_contrato = codContrato,
-            //        cod_sub_contrato = codSubContrato,
-            //        cod_contrato_fundo = codContratoFundo,
-            //        cod_contrato_remuneracao = codContratoRemuneracao,
-            //        cod_condicao_remuneracao = codCondicaoRemuneracao
-            //    });
-            //}
         }
 
         public async Task<int> GetCountCalculoRebateAsync(FiltroModel filtro)
