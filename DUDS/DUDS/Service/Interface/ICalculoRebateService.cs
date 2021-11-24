@@ -12,7 +12,7 @@ namespace DUDS.Service.Interface
         Task<bool> AddBulkAsync(List<CalculoRebateModel> calculoPgtoTaxaAdmPfee);
         Task<IEnumerable<CalculoRebateModel>> GetByCompetenciaAsync(string competencia, int codGrupoRebate);
         Task<bool> DeleteByCompetenciaAsync(string competencia);
-        Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao, string codCondicaoRemuneracao);
+        Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao);
 
         Task<CalculoRebateModel> GetByIdAsync(Guid id);
         Task<int> GetCountCalculoRebateAsync(FiltroModel filtro);

@@ -51,6 +51,6 @@ namespace DUDS.Models
 
         public int CodContratoRemuneracao { get; set; }
 
-        public CondicaoRemuneracaoModel CondicaoRemuneracao { get; set; }
+        public List<CondicaoRemuneracaoModel> ListaCondicaoRemuneracao { get; set; }
     }
 }

@@ -190,11 +190,11 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao, string codCondicaoRemuneracao)
+        public async Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT
+                const string Descricao = @"SELECT
 		                                contrato.id AS CodContrato,
 										tipo_contrato.id AS CodTipoContrato,
 										tipo_contrato.tipo_contrato,
@@ -216,8 +216,8 @@ namespace DUDS.Service
 		                                distribuidor.id AS CodDistribuidor,
 										distribuidor.nome_distribuidor,
 										gestor.id AS CodGestor,
-										gestor.nome_gestor,
-										condicao.*
+										gestor.nome_gestor
+										--condicao.*
 									FROM
 										tbl_contrato contrato
 										    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = contrato.cod_tipo_contrato
@@ -228,28 +228,50 @@ namespace DUDS.Service
 										    INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.cod_contrato_fundo = contrato_fundo.id
 										    LEFT JOIN tbl_distribuidor distribuidor ON distribuidor.id = contrato.cod_distribuidor
 										    LEFT JOIN tbl_gestor gestor ON gestor.id = contrato.cod_gestor
-                                            LEFT JOIN tbl_condicao_remuneracao condicao ON condicao.cod_contrato_remuneracao = contrato_remuneracao.id
+                                            --LEFT JOIN tbl_condicao_remuneracao condicao ON condicao.cod_contrato_remuneracao = contrato_remuneracao.id
 									WHERE
 										contrato.id = @cod_contrato
 										AND sub_contrato.id = @cod_sub_contrato
 										AND contrato_fundo.id = @cod_contrato_fundo
-										AND contrato_remuneracao.id = @cod_contrato_remuneracao
-                                        AND (@cod_condicao_remuneracao IS NULL OR condicao.id = @cod_condicao_remuneracao)";
+										AND contrato_remuneracao.id = @cod_contrato_remuneracao";
 
-                return await connection.QueryAsync<DescricaoCalculoRebateModel, CondicaoRemuneracaoModel, DescricaoCalculoRebateModel>(query,
-                  (descricao, condicaoRemuneracao) =>
-                  {
-                      descricao.CondicaoRemuneracao = condicaoRemuneracao;
+                const string Condicao = @"SELECT	
+	                                          * 
+                                          FROM 
+	                                          tbl_condicao_remuneracao
+                                          WHERE
+	                                          cod_contrato_remuneracao = @cod_contrato_remuneracao";
 
-                      return descricao;
-                  }, new
-                  {
-                      cod_contrato = codContrato,
-                      cod_sub_contrato = codSubContrato,
-                      cod_contrato_fundo = codContratoFundo,
-                      cod_contrato_remuneracao = codContratoRemuneracao,
-                      cod_condicao_remuneracao = codCondicaoRemuneracao,
-                  }, splitOn: "CodContrato, CodTipoContrato, CodSubContrato, CodContratoFundo, CodTipoCondicao, CodFundo, CodContratoRemuneracao, CodDistribuidor, CodGestor, id");
+                List<DescricaoCalculoRebateModel> descricoes = await connection.QueryAsync<DescricaoCalculoRebateModel>(Descricao, new
+                {
+                    cod_contrato = codContrato,
+                    cod_sub_contrato = codSubContrato,
+                    cod_contrato_fundo = codContratoFundo,
+                    cod_contrato_remuneracao = codContratoRemuneracao
+                }) as List<DescricaoCalculoRebateModel>;
+
+                foreach (var item in descricoes)
+                {
+                    List<CondicaoRemuneracaoModel> condicao = await connection.QueryAsync<CondicaoRemuneracaoModel>(Condicao, new { cod_contrato_remuneracao = codContratoRemuneracao }) as List<CondicaoRemuneracaoModel>;
+
+                    item.ListaCondicaoRemuneracao = condicao;
+
+                }
+                return descricoes;
+
+                //return await connection.QueryAsync<DescricaoCalculoRebateModel, List<CondicaoRemuneracaoModel>, DescricaoCalculoRebateModel>(query,
+                //  (descricao, listaCondicaoRemuneracao) =>
+                //  {
+                //      descricao.ListaCondicaoRemuneracao = listaCondicaoRemuneracao;
+
+                //      return descricao;
+                //  }, new
+                //  {
+                //      cod_contrato = codContrato,
+                //      cod_sub_contrato = codSubContrato,
+                //      cod_contrato_fundo = codContratoFundo,
+                //      cod_contrato_remuneracao = codContratoRemuneracao
+                //  }, splitOn: "CodContrato, CodTipoContrato, CodSubContrato, CodContratoFundo, CodTipoCondicao, CodFundo, CodContratoRemuneracao, CodDistribuidor, CodGestor, id");
 
             }
 
