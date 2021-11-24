@@ -633,7 +633,7 @@ namespace DUDS.Controllers.V1
         #endregion
 
         #region Calculo Rebate
-        // GET: api/Pagamentos/GetCalculoRebate/competencia/codGrupoRebate
+        // GET: api/Rebate/GetCalculoRebate/competencia/codGrupoRebate
         [HttpGet("{competencia}/{codGrupoRebate}")]
         public async Task<ActionResult<IEnumerable<CalculoRebateModel>>> GetCalculoRebate(string competencia, int codGrupoRebate)
         {
@@ -652,6 +652,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
+        // GET: api/Rebate/GetCalculoRebateById/id
         [HttpGet("{guid}")]
         public async Task<ActionResult<CalculoRebateModel>> GetCalculoRebateById(Guid id)
         {
@@ -670,7 +671,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //POST: api/Pagamentos/AddCalculoPgtoTaxaAdminPfee/List<CalculoPgtoTaxaAdmPfeeModel>
+        //POST: api/Rebate/AddCalculoRebate/List<CalculoPgtoTaxaAdmPfeeModel>
         [HttpPost]
         public async Task<ActionResult<IEnumerable<CalculoRebateModel>>> AddCalculoRebate(List<CalculoRebateModel> calculoRebate)
         {
@@ -690,7 +691,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // DELETE: api/Pagamentos/DeleteCalculoPgtoTaxaAdminPfee/competencia
+        // DELETE: api/Rebate/DeleteCalculoRebate/competencia
         [HttpDelete("{competencia}")]
         public async Task<IActionResult> DeleteCalculoRebate(string competencia)
         {
@@ -709,13 +710,13 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // GET: api/Contrato/GetDescricaoCalculoPgtoTaxaAdmPfee
+        // GET: api/Rebate/GetDescricaoCalculoPgtoTaxaAdmPfee
         [HttpGet("{codContrato}/{codSubContrato}/{codContratoFundo}/{codContratoRemuneracao}")]
-        public async Task<ActionResult<IEnumerable<DescricaoCalculoRebateModel>>> GetDescricaoCalculoPgtoTaxaAdmPfee(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao, [FromQuery]string codCondicaoRemuneracao)
+        public async Task<ActionResult<IEnumerable<DescricaoCalculoRebateModel>>> GetDescricaoCalculoPgtoTaxaAdmPfee(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao)
         {
             try
             {
-                var calculoRebate = await _calculoRebateService.GetDescricaoRebateAsync(codContrato, codSubContrato, codContratoFundo, codContratoRemuneracao, codCondicaoRemuneracao);
+                var calculoRebate = await _calculoRebateService.GetDescricaoRebateAsync(codContrato, codSubContrato, codContratoFundo, codContratoRemuneracao);
                 if (calculoRebate.Any())
                 {
                     return Ok(calculoRebate);
@@ -752,7 +753,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // GET: api/GrupoRebate/GetTblGrupoRebateById/id
+        // GET: api/Rebate/GetTblGrupoRebateById/id
         [HttpGet("{id}")]
         public async Task<ActionResult<GrupoRebateModel>> GetGrupoRebateById(int id)
         {
@@ -771,7 +772,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //POST: api/GrupoRebate/AddGrupoRebate/GrupoRebateModel
+        //POST: api/Rebate/AddGrupoRebate/GrupoRebateModel
         [HttpPost]
         public async Task<ActionResult<GrupoRebateModel>> AddGrupoRebate(GrupoRebateModel grupoRebate)
         {
@@ -791,7 +792,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //PUT: api/GrupoRebate/UpdateGrupoRebate/id
+        //PUT: api/Rebate/UpdateGrupoRebate/id
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGrupoRebate(int id, GrupoRebateModel grupoRebate)
         {
@@ -819,7 +820,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // DELETE: api/GrupoRebate/DeleteGrupoRebate/id
+        // DELETE: api/Rebate/DeleteGrupoRebate/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGrupoRebate(int id)
         {
@@ -852,7 +853,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // ATIVAR: api/GrupoRebate/ActivateGrupoRebate/id
+        // ATIVAR: api/Rebate/ActivateGrupoRebate/id
         [HttpPut("{id}")]
         public async Task<IActionResult> ActivateGrupoRebate(int id)
         {

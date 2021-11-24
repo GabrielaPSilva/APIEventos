@@ -190,33 +190,33 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao, string codCondicaoRemuneracao)
+        public async Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT
-										tipo_contrato.id AS cod_tipo_contrato,
+                const string Descricao = @"SELECT
+		                                contrato.id AS CodContrato,
+										tipo_contrato.id AS CodTipoContrato,
 										tipo_contrato.tipo_contrato,
-										gestor.id AS cod_gestor,
-										gestor.nome_gestor,
-										distribuidor.id AS cod_distribuidor,
-										distribuidor.nome_distribuidor,
-										sub_contrato.versao AS versao_contrato,
-										sub_contrato.status AS status_contrato,
+                                        sub_contrato.id AS CodSubContrato,
+                                        sub_contrato.versao,
+										sub_contrato.status,
 										sub_contrato.id_docusign,
 										sub_contrato.data_vigencia_inicio,
 										sub_contrato.data_vigencia_fim,
 										sub_contrato.data_retroatividade,
-										fundo.id AS cod_fundo,
-										fundo.nome_reduzido AS nome_fundo,
-										tipo_condicao.id AS cod_tipo_condicao,
+                                        contrato_fundo.id AS CodContratoFundo,
+                                        tipo_condicao.id AS CodTipoCondicao,
 										tipo_condicao.tipo_condicao,
-										contrato_remuneracao.percentual_adm,
+                                        fundo.id AS CodFundo,
+										fundo.nome_reduzido,
+										contrato_remuneracao.id AS CodContratoRemuneracao,
+                                        contrato_remuneracao.percentual_adm,
 										contrato_remuneracao.percentual_pfee,
-										contrato.id AS cod_contrato,
-										sub_contrato.id AS cod_sub_contrato,
-										contrato_fundo.id AS cod_contrato_fundo,
-										contrato_remuneracao.id AS cod_contrato_remuneracao
+		                                distribuidor.id AS CodDistribuidor,
+										distribuidor.nome_distribuidor,
+										gestor.id AS CodGestor,
+										gestor.nome_gestor
 									FROM
 										tbl_contrato contrato
 										    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = contrato.cod_tipo_contrato
@@ -233,14 +233,29 @@ namespace DUDS.Service
 										AND contrato_fundo.id = @cod_contrato_fundo
 										AND contrato_remuneracao.id = @cod_contrato_remuneracao";
 
-                return await connection.QueryAsync<DescricaoCalculoRebateModel>(query, new
+                const string Condicao = @"SELECT	
+	                                          * 
+                                          FROM 
+	                                          tbl_condicao_remuneracao
+                                          WHERE
+	                                          cod_contrato_remuneracao = @cod_contrato_remuneracao";
+
+                List<DescricaoCalculoRebateModel> descricoes = await connection.QueryAsync<DescricaoCalculoRebateModel>(Descricao, new
                 {
                     cod_contrato = codContrato,
                     cod_sub_contrato = codSubContrato,
                     cod_contrato_fundo = codContratoFundo,
-                    cod_contrato_remuneracao = codContratoRemuneracao,
-                    cod_condicao_remuneracao = codCondicaoRemuneracao
-                });
+                    cod_contrato_remuneracao = codContratoRemuneracao
+                }) as List<DescricaoCalculoRebateModel>;
+
+                foreach (var item in descricoes)
+                {
+                    List<CondicaoRemuneracaoModel> condicao = await connection.QueryAsync<CondicaoRemuneracaoModel>(Condicao, new { cod_contrato_remuneracao = codContratoRemuneracao }) as List<CondicaoRemuneracaoModel>;
+
+                    item.ListaCondicaoRemuneracao = condicao;
+
+                }
+                return descricoes;
             }
         }
 
