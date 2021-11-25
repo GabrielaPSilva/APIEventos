@@ -39,7 +39,7 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
         
@@ -60,7 +60,7 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
@@ -81,7 +81,7 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
@@ -100,7 +100,7 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
@@ -129,7 +129,7 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
