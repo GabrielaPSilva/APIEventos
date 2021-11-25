@@ -72,11 +72,16 @@ namespace DUDS.Service
 
                 DistribuidorAdministradorService distrAdmService = new DistribuidorAdministradorService();
 
-                foreach (DistribuidorModel distribuidor in distribuidores)
+                Parallel.ForEach(distribuidores, new ParallelOptions { MaxDegreeOfParallelism = maxParalleProcess }, async distribuidor =>
                 {
                     List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetDistribuidorByIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
                     distribuidor.ListaDistribuidorAdministrador = distrAdmList;
-                }
+                });
+                //foreach (DistribuidorModel distribuidor in distribuidores)
+                //{
+                //    List<DistribuidorAdministradorModel> distrAdmList = await distrAdmService.GetDistribuidorByIdAsync(distribuidor.Id) as List<DistribuidorAdministradorModel>;
+                //    distribuidor.ListaDistribuidorAdministrador = distrAdmList;
+                //}
 
                 return distribuidores;
             }

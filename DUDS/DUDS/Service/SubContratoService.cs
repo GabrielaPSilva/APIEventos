@@ -99,14 +99,22 @@ namespace DUDS.Service
                 ContratoAlocadorService contratoAlocadorService = new ContratoAlocadorService();
                 ContratoFundoService contratoFundoService = new ContratoFundoService();
 
-                foreach (SubContratoModel item in subContratoModels)
+                Parallel.ForEach(subContratoModels, new ParallelOptions { MaxDegreeOfParallelism = maxParalleProcess }, async item =>
                 {
                     List<ContratoFundoModel> contratoFundoModels = await contratoFundoService.GetSubContratoByIdAsync(item.Id) as List<ContratoFundoModel>;
                     item.ListaContratoFundo = contratoFundoModels;
 
                     List<ContratoAlocadorModel> contratoAlocadorModels = await contratoAlocadorService.GetSubContratoByIdAsync(item.Id) as List<ContratoAlocadorModel>;
                     item.ListaContratoAlocador = contratoAlocadorModels;
-                }
+                });
+                //foreach (SubContratoModel item in subContratoModels)
+                //{
+                //    List<ContratoFundoModel> contratoFundoModels = await contratoFundoService.GetSubContratoByIdAsync(item.Id) as List<ContratoFundoModel>;
+                //    item.ListaContratoFundo = contratoFundoModels;
+
+                //    List<ContratoAlocadorModel> contratoAlocadorModels = await contratoAlocadorService.GetSubContratoByIdAsync(item.Id) as List<ContratoAlocadorModel>;
+                //    item.ListaContratoAlocador = contratoAlocadorModels;
+                //}
 
                 return subContratoModels;
             }
