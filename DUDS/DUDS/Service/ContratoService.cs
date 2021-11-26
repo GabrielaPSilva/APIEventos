@@ -71,11 +71,19 @@ namespace DUDS.Service
 	                            tbl_contrato.ativo = 1";
                 List<ContratoModel> listaContratoModel = await connection.QueryAsync<ContratoModel>(query) as List<ContratoModel>;
                 SubContratoService subContratoService = new SubContratoService();
-                foreach (ContratoModel item in listaContratoModel)
+
+                Parallel.ForEach(listaContratoModel, new ParallelOptions { MaxDegreeOfParallelism = maxParalleProcess }, async x =>
                 {
-                    List<SubContratoModel> listaSubContrato = await subContratoService.GetContratoByIdAsync(item.Id) as List<SubContratoModel>;
-                    item.ListaSubContrato = listaSubContrato;
-                }
+                    List<SubContratoModel> listaSubContrato = await subContratoService.GetContratoByIdAsync(x.Id) as List<SubContratoModel>;
+                    x.ListaSubContrato = listaSubContrato;
+                });
+
+                //foreach (ContratoModel item in listaContratoModel)
+                //{
+                //    List<SubContratoModel> listaSubContrato = await subContratoService.GetContratoByIdAsync(item.Id) as List<SubContratoModel>;
+                //    item.ListaSubContrato = listaSubContrato;
+                //}
+                
                 return listaContratoModel;
             }
         }

@@ -79,11 +79,17 @@ namespace DUDS.Service
 
                 ContaService contaService = new ContaService();
 
-                foreach (FundoModel fundo in fundos)
+                Parallel.ForEach(fundos, new ParallelOptions { MaxDegreeOfParallelism = maxParalleProcess }, async fundo =>
                 {
                     List<ContaModel> contaList = await contaService.GetFundoByIdAsync(fundo.Id) as List<ContaModel>;
                     fundo.ListaConta = contaList;
-                }
+                });
+
+                //foreach (FundoModel fundo in fundos)
+                //{
+                //    List<ContaModel> contaList = await contaService.GetFundoByIdAsync(fundo.Id) as List<ContaModel>;
+                //    fundo.ListaConta = contaList;
+                //}
 
                 return fundos;
             }

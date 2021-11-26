@@ -11,7 +11,7 @@ namespace DUDS.Service
     public class ConfiguracaoService : IConfiguracaoService
     {
         private IConfiguration _config;
-        string Sistema = "DUDS";
+        // string Sistema = "DUDS";
 
         public ConfiguracaoService(IConfiguration config)
         {

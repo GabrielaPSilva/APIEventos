@@ -3,6 +3,7 @@ using DUDS.Models;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,14 +44,17 @@ namespace DUDS.Service
 
         public async Task<bool> AddInvestidores(List<InvestidorModel> investidor)
         {
+            ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                Parallel.ForEach(investidor, async x =>
-                {
-                    _ = await AddAsync(x);
-                });
+                _ = Parallel.ForEach(investidor, new ParallelOptions { MaxDegreeOfParallelism = maxParalleProcess }, x =>
+                    {
+                        var result = AddAsync(x);
+                        if (result.Result) { vs.Add(result.Result); }
+                    });
 
-                return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
+                // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
+                return vs.Count == investidor.Count;
             }
         }
 
@@ -90,11 +94,17 @@ namespace DUDS.Service
 
                 InvestidorDistribuidorService investDistriService = new InvestidorDistribuidorService();
 
-                foreach (InvestidorModel investidor in investidores)
+                Parallel.ForEach(investidores, async x =>
                 {
-                    List<InvestidorDistribuidorModel> investDistriList = await investDistriService.GetInvestidorByIdAsync(investidor.Id) as List<InvestidorDistribuidorModel>;
-                    investidor.ListaInvestDistribuidor = investDistriList;
-                }
+                    List<InvestidorDistribuidorModel> investDistriList = await investDistriService.GetInvestidorByIdAsync(x.Id) as List<InvestidorDistribuidorModel>;
+                    x.ListaInvestDistribuidor = investDistriList;
+                });
+
+                //foreach (InvestidorModel investidor in investidores)
+                //{
+                //    List<InvestidorDistribuidorModel> investDistriList = await investDistriService.GetInvestidorByIdAsync(investidor.Id) as List<InvestidorDistribuidorModel>;
+                //    investidor.ListaInvestDistribuidor = investDistriList;
+                //}
 
                 return investidores;
             }
@@ -142,7 +152,7 @@ namespace DUDS.Service
 	                            tbl_investidor.cnpj = @cnpj";
 
                 InvestidorModel investidor = await connection.QueryFirstOrDefaultAsync<InvestidorModel>(query, new { cnpj });
-                
+
                 if (investidor == null)
                 {
                     return null;

@@ -82,7 +82,7 @@ namespace DUDS.Controllers.V1
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
@@ -515,6 +515,24 @@ namespace DUDS.Controllers.V1
             }
         }
 
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<PagamentoTaxaAdminPfeeModel>>> GetPgtoTaxaAdmPfeeByCompetencia(string competencia)
+        {
+            try
+            {
+                var pagamentoTaxaAdministracaoPerformance = await _pagamentoTaxaAdministracaoPerformanceService.GetByCompetenciaAsync(competencia);
+                if (pagamentoTaxaAdministracaoPerformance.Any())
+                {
+                    return Ok(pagamentoTaxaAdministracaoPerformance); 
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
         // GET: api/Pagamentos/GetPgtoTaxaAdmPfeeByIds/competencia/cod_investidor_distribuidor/cod_administrador/cod_fundo
         [HttpGet("{competencia}/{cod_fundo}/{cod_administrador}/{cod_investidor_distribuidor}")]
         public async Task<ActionResult<IEnumerable<PagamentoTaxaAdminPfeeModel>>> GetPgtoTaxaAdmPfeeByIds(string competencia, int cod_fundo, int cod_administrador, int cod_investidor_distribuidor)
@@ -543,7 +561,7 @@ namespace DUDS.Controllers.V1
                 bool retorno = await _pagamentoTaxaAdministracaoPerformanceService.AddBulkAsync(pagamentoAdministracaoPerformance);
                 if (retorno)
                 {
-                    return CreatedAtAction(nameof(GetErrosPagamentoByCompetencia),
+                    return CreatedAtAction(nameof(GetPgtoTaxaAdmPfeeByCompetencia),
                         new { competencia = pagamentoAdministracaoPerformance.FirstOrDefault().Competencia }, pagamentoAdministracaoPerformance);
                 }
                 return NotFound();
