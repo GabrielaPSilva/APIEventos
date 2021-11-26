@@ -205,6 +205,7 @@ namespace DUDS.Service
 										sub_contrato.data_vigencia_inicio,
 										sub_contrato.data_vigencia_fim,
 										sub_contrato.data_retroatividade,
+		                                sub_contrato.clausula_retroatividade,
                                         contrato_fundo.id AS CodContratoFundo,
                                         tipo_condicao.id AS CodTipoCondicao,
 										tipo_condicao.tipo_condicao,
