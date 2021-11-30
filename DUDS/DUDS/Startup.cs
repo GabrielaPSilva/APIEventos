@@ -153,6 +153,7 @@ namespace DUDS
             services.AddScoped<IGrupoRebateService, GrupoRebateService>();
             services.AddScoped<IEmailGrupoRebateService, EmailGrupoRebateService>();
             services.AddScoped<IControleRebateService, ControleRebateService>();
+            services.AddScoped<IPosicaoClientePassivoService,PosicaoClientePassivoService>();
 
         }
 
