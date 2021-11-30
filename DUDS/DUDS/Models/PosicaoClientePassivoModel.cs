@@ -40,5 +40,9 @@ namespace DUDS.Models
         public string NomeFundo { get; set; }
 
         public string NomeAdministrador { get; set; }
+
+        public string NomeDistribuidor { get; set; }
+
+        public string NomeGestor { get; set; }
     }
 }

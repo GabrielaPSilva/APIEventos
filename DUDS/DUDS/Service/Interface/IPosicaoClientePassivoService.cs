@@ -16,5 +16,7 @@ namespace DUDS.Service.Interface
         // public Task<IEnumerable<PosicaoClientePassivoModel>> GetByDataRefAsync(DateTime dataRef);
 
         public Task<IEnumerable<PosicaoClientePassivoModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
+
+        public Task<PosicaoClientePassivoModel> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
     }
 }

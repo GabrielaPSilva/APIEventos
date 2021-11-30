@@ -14,9 +14,9 @@ namespace DUDS.Service
         public PosicaoClientePassivoService() : base(new PosicaoClientePassivoModel(),
                    "tbl_posicao_cliente",
                    new List<string> { "'id'" },
-                   new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" },
+                   new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador", "NomeDistribuidor", "NomeGestor" },
                    new List<string> { "'id'" },
-                   new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" })
+                   new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador", "NomeDistribuidor", "NomeGestor" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -143,7 +143,7 @@ namespace DUDS.Service
 
         public async Task<IEnumerable<PosicaoClientePassivoModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
         {
-            if (dataInicio == null && dataFim == null) return new List<PosicaoClientePassivoModel>();
+            //if (dataInicio == null && dataFim == null) return new List<PosicaoClientePassivoModel>();
             if (dataInicio != null && dataFim == null) dataFim = dataInicio;
             if (dataInicio == null && dataFim != null) dataInicio = dataFim;
 
@@ -154,18 +154,23 @@ namespace DUDS.Service
 	                            tbl_posicao_cliente.*,
 	                            tbl_fundo.nome_reduzido AS nome_fundo,
 	                            tbl_investidor.nome_investidor,
-	                            tbl_administrador.nome_administrador
+	                            tbl_administrador.nome_administrador,
+                                tbl_distribuidor.nome_distribuidor,
+                                tbl_gestor.nome_gestor
                             FROM
 	                            tbl_posicao_cliente
 		                        INNER JOIN tbl_fundo ON tbl_posicao_cliente.cod_fundo = tbl_fundo.id
                                 INNER JOIN tbl_investidor_distribuidor ON tbl_posicao_cliente.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
 		                        INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
 		                        INNER JOIN tbl_administrador ON tbl_posicao_cliente.cod_administrador = tbl_administrador.id
+                                INNER JOIN tbl_distribuidor ON tbl_investidor_distribuidor.cod_distribuidor = tbl_distribuidor.id
+                                INNER JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
                             WHERE
-                                tbl_posicao_cliente.data_ref between @data_inicio AND @data_fim
-                                AND (@cod_distribuidor is null or tbl_investidor_distribuidor.cod_distribuidor = @cod_distribuidor)
-                                AND (@cod_gestor is null or tbl_investidor.cod_gestor = @cod_gestor)
-                                AND (@cod_investidor_distribuidor is null or tbl_investidor_distribuidor.id = @cod_investidor_distribuidor)";
+                                (@data_inicio IS NULL OR tbl_posicao_cliente.data_ref >= @data_inicio) 
+                                AND (@data_fim IS NULL OR tbl_posicao_cliente.data_ref <= @data_fim)
+                                AND (@cod_distribuidor IS NULL OR tbl_investidor_distribuidor.cod_distribuidor = @cod_distribuidor)
+                                AND (@cod_gestor IS NULL OR tbl_investidor.cod_gestor = @cod_gestor)
+                                AND (@cod_investidor_distribuidor IS NULL OR tbl_investidor_distribuidor.id = @cod_investidor_distribuidor)";
 
                 return await connection.QueryAsync<PosicaoClientePassivoModel>(query, new
                 {
@@ -197,6 +202,43 @@ namespace DUDS.Service
                 }
                 query = query.Replace("VALORES", String.Join(",", str));
                 return await connection.ExecuteAsync(query, item) > 0;
+            }
+        }
+
+        public async Task<PosicaoClientePassivoModel> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
+        {
+            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue) return new PosicaoClientePassivoModel();
+
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = @"
+                            SELECT
+                                tbl_posicao_cliente.data_ref,
+	                            MAX(tbl_posicao_cliente.valor_bruto) AS valor_bruto,
+	                            tbl_fundo.nome_reduzido AS nome_fundo,
+	                            tbl_investidor.nome_investidor,
+	                            tbl_administrador.nome_administrador,
+                                tbl_distribuidor.nome_distribuidor,
+                                tbl_gestor.nome_gestor
+                            FROM
+	                            tbl_posicao_cliente
+		                        INNER JOIN tbl_fundo ON tbl_posicao_cliente.cod_fundo = tbl_fundo.id
+                                INNER JOIN tbl_investidor_distribuidor ON tbl_posicao_cliente.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
+		                        INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
+		                        INNER JOIN tbl_administrador ON tbl_posicao_cliente.cod_administrador = tbl_administrador.id
+                                INNER JOIN tbl_distribuidor ON tbl_investidor_distribuidor.cod_distribuidor = tbl_distribuidor.id
+                                INNER JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
+                            WHERE
+                                (@cod_distribuidor IS NULL or tbl_distribuidor.id = @cod_distribuidor)
+                                AND (@cod_gestor IS NULL or tbl_investidor.cod_gestor = @cod_gestor)
+                                AND (@cod_investidor_distribuidor IS NULL or tbl_investidor_distribuidor.id = @cod_investidor_distribuidor)";
+
+                return await connection.QueryFirstOrDefaultAsync<PosicaoClientePassivoModel>(query, new
+                {
+                    cod_distribuidor = codDistribuidor,
+                    cod_gestor = codGestor,
+                    cod_investidor_distribuidor = codInvestidorDistribuidor
+                });
             }
         }
     }
