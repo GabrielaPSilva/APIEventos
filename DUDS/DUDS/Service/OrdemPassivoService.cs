@@ -82,10 +82,10 @@ namespace DUDS.Service
 
         public Task<IEnumerable<OrdemPassivoModel>> GetAllAsync()
         {
-            throw new System.NotImplementedException();
+            return GetByDataEntradaAsync(null);
         }
 
-        public async Task<IEnumerable<OrdemPassivoModel>> GetByDataEntradaAsync(DateTime dataEntrada)
+        public async Task<IEnumerable<OrdemPassivoModel>> GetByDataEntradaAsync(DateTime? dataEntrada)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -103,7 +103,7 @@ namespace DUDS.Service
 		                        INNER JOIN tbl_administrador ON tbl_ordem_passivo.cod_administrador = tbl_administrador.id
                                 
                             WHERE
-                                tbl_ordem_passivo.data_entrada = @data_entrada
+                                (@data_entrada IS NULL OR tbl_ordem_passivo.data_entrada = @data_entrada)
                             ORDER BY
                                 tbl_fundo.nome_reduzido,
 	                            tbl_investidor.nome_investidor,

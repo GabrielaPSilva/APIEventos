@@ -11,6 +11,6 @@ namespace DUDS.Service.Interface
 
         public Task<bool> DeleteByDataRefAsync(DateTime dataMovimentacao);
 
-        public Task<IEnumerable<MovimentacaoPassivoModel>> GetByDataEntradaAsync(DateTime dataMovimentacao);
+        public Task<IEnumerable<MovimentacaoPassivoModel>> GetByDataEntradaAsync(DateTime? dataMovimentacao);
     }
 }
