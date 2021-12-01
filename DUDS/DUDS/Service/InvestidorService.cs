@@ -47,7 +47,7 @@ namespace DUDS.Service
             ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                _ = Parallel.ForEach(investidor, new ParallelOptions { MaxDegreeOfParallelism = maxParalleProcess }, x =>
+                _ = Parallel.ForEach(investidor, new ParallelOptions { MaxDegreeOfParallelism = _maxParalleProcess }, x =>
                     {
                         var result = AddAsync(x);
                         if (result.Result) { vs.Add(result.Result); }

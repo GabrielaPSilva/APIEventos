@@ -45,7 +45,7 @@ namespace DUDS.Service
             ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                _ = Parallel.ForEach(item, new ParallelOptions { MaxDegreeOfParallelism = maxParalleProcess }, x =>
+                _ = Parallel.ForEach(item, new ParallelOptions { MaxDegreeOfParallelism = _maxParalleProcess }, x =>
                 {
                     var result = AddAsync(x);
                     if (result.Result) { vs.Add(result.Result); }
@@ -73,9 +73,9 @@ namespace DUDS.Service
             */
         }
 
-        public async Task<bool> DeleteByDataRefAsync(DateTime? dataRef)
+        public async Task<bool> DeleteByDataRefAsync(DateTime dataRef)
         {
-            if (dataRef == null) return false;
+            // if (dataRef == null) return false;
 
             List<PosicaoClientePassivoModel> result = await GetByParametersAsync(dataInicio: dataRef, dataFim: null, codDistribuidor: null, codGestor: null, codInvestidorDistribuidor: null) as List<PosicaoClientePassivoModel>;
 

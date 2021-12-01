@@ -44,15 +44,35 @@ namespace DUDS.Controllers.V1
         }
         */
 
-        // GET: api/PosicaoCliente/GetByDateRange
+        // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PosicaoClientePassivoModel>>> GetByDateRange([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
+        public async Task<ActionResult<IEnumerable<PosicaoClientePassivoModel>>> GetPosicaoClientePassivo([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
         {
             try
             {
                 var listaControleRebate = await _posicaoClientePassivoService.GetByParametersAsync(dataInicio, dataFim, codDistribuidor, codGestor, codInvestidorDistribuidor);
 
                 if (listaControleRebate.Any())
+                {
+                    return Ok(listaControleRebate);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/PosicaoCliente/GetPosicaoClientePassivo
+        [HttpGet]
+        public async Task<ActionResult<PosicaoClientePassivoModel>> GetMaiorValorBruto([FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
+        {
+            try
+            {
+                var listaControleRebate = await _posicaoClientePassivoService.GetMaxValorBrutoAsync(codDistribuidor, codGestor, codInvestidorDistribuidor);
+
+                if (listaControleRebate != null)
                 {
                     return Ok(listaControleRebate);
                 }
@@ -72,7 +92,7 @@ namespace DUDS.Controllers.V1
                 bool retorno = await _posicaoClientePassivoService.AddBulkAsync(posicaoClientePassivo);
                 if (retorno)
                 {
-                    return CreatedAtAction(nameof(GetByDateRange),
+                    return CreatedAtAction(nameof(GetPosicaoClientePassivo),
                         new { dataInicio = posicaoClientePassivo.FirstOrDefault().DataRef }, posicaoClientePassivo);
                 }
                 return NotFound();
