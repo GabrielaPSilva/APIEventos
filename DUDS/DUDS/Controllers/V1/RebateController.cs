@@ -87,8 +87,8 @@ namespace DUDS.Controllers.V1
         }
 
         // GET: api/Rebate/GetControleRebate
-        [HttpGet("{id}/{nomeInvestidor}/{competencia}")]
-        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetFiltroControleRebate(int id, string nomeInvestidor, string competencia, string codMellon)
+        [HttpGet("{id}/{competencia}")]
+        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetFiltroControleRebate(int id, string competencia, string codMellon = null, string nomeInvestidor = null)
         {
             try
             {

@@ -67,7 +67,9 @@ namespace DUDS.Service
                              WHERE
                                 (@Competencia IS NULL OR tbl_controle_rebate.competencia = @Competencia)
                              ORDER BY
-								tbl_controle_rebate.cod_grupo_rebate
+                                tbl_controle_rebate.enviado,
+								tbl_controle_rebate.validado,
+								tbl_grupo_rebate.nome_grupo_rebate
                              OFFSET
                                  @itensPorPagina * (@pagina - 1)
                              ROWS FETCH NEXT
@@ -105,7 +107,7 @@ namespace DUDS.Service
 		                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
                             WHERE
 	                            tbl_controle_rebate.cod_grupo_rebate = @id
-	                            AND tbl_investidor.nome_investidor COLLATE Latin1_general_CI_AI LIKE '%' + @nomeInvestidor + '%'
+	                            AND (@nomeInvestidor IS NULL OR tbl_investidor.nome_investidor COLLATE Latin1_general_CI_AI LIKE '%' + @nomeInvestidor + '%')
                                 AND (@codMellon IS NULL OR tbl_investidor_distribuidor.cod_invest_administrador = @codMellon)
 	                            AND tbl_calculo_pgto_adm_pfee.competencia = @competencia";
 
