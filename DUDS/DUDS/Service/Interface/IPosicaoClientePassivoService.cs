@@ -9,7 +9,7 @@ namespace DUDS.Service.Interface
     {
         public Task<bool> AddBulkAsync(List<PosicaoClientePassivoModel> item);
 
-        public Task<bool> DeleteByDataRefAsync(DateTime? dataRef);
+        public Task<bool> DeleteByDataRefAsync(DateTime dataRef);
 
         public Task<bool> DeleteAsync(Guid id);
 

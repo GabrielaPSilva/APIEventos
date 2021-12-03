@@ -73,9 +73,9 @@ namespace DUDS.Service
             */
         }
 
-        public async Task<bool> DeleteByDataRefAsync(DateTime? dataRef)
+        public async Task<bool> DeleteByDataRefAsync(DateTime dataRef)
         {
-            if (dataRef == null) return false;
+            // if (dataRef == null) return false;
 
             List<PosicaoClientePassivoModel> result = await GetByParametersAsync(dataInicio: dataRef, dataFim: null, codDistribuidor: null, codGestor: null, codInvestidorDistribuidor: null) as List<PosicaoClientePassivoModel>;
 
