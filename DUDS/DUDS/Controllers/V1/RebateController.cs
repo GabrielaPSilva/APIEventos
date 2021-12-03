@@ -92,7 +92,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var listaControleRebate = await _controleRebateService.GetFiltroControleRebateAsync(id, nomeInvestidor, competencia, codMellon);
+                var listaControleRebate = await _controleRebateService.GetFiltroControleRebateAsync(id, competencia, nomeInvestidor, codMellon);
 
                 if (listaControleRebate.Any())
                 {

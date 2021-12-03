@@ -113,7 +113,7 @@ namespace DUDS.Service
                 List<ContratoFundoModel> contratoFundoModels = await connection.QueryAsync<ContratoFundoModel>(query, new { id }) as List<ContratoFundoModel>;
                 ContratoRemuneracaoService contratoRemuneracaoService = new ContratoRemuneracaoService();
 
-                Parallel.ForEach(contratoFundoModels, new ParallelOptions { MaxDegreeOfParallelism = maxParalleProcess }, async item =>
+                Parallel.ForEach(contratoFundoModels, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, async item =>
                 {
                     List<ContratoRemuneracaoModel> contratoRemuneracaoModels = await contratoRemuneracaoService.GetContratoFundoByIdAsync(item.Id) as List<ContratoRemuneracaoModel>;
                     item.ListaContratoRemuneracao = contratoRemuneracaoModels;

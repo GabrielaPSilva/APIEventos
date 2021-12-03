@@ -47,7 +47,7 @@ namespace DUDS.Service
             ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                _ = Parallel.ForEach(investidor, new ParallelOptions { MaxDegreeOfParallelism = maxParalleProcess }, x =>
+                _ = Parallel.ForEach(investidor, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
                     {
                         var result = AddAsync(x);
                         if (result.Result) { vs.Add(result.Result); }
@@ -94,18 +94,11 @@ namespace DUDS.Service
 
                 InvestidorDistribuidorService investDistriService = new InvestidorDistribuidorService();
 
-                Parallel.ForEach(investidores, async x =>
+                Parallel.ForEach(investidores, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, async x =>
                 {
                     List<InvestidorDistribuidorModel> investDistriList = await investDistriService.GetInvestidorByIdAsync(x.Id) as List<InvestidorDistribuidorModel>;
                     x.ListaInvestDistribuidor = investDistriList;
                 });
-
-                //foreach (InvestidorModel investidor in investidores)
-                //{
-                //    List<InvestidorDistribuidorModel> investDistriList = await investDistriService.GetInvestidorByIdAsync(investidor.Id) as List<InvestidorDistribuidorModel>;
-                //    investidor.ListaInvestDistribuidor = investDistriList;
-                //}
-
                 return investidores;
             }
         }
