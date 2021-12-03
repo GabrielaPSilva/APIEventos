@@ -85,7 +85,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ControleRebateModel>> GetFiltroControleRebateAsync(int id, string nomeInvestidor, string competencia, string codMellon)
+        public async Task<IEnumerable<ControleRebateModel>> GetFiltroControleRebateAsync(int grupoRebate, string investidor, string competencia, string codMellon)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -107,11 +107,11 @@ namespace DUDS.Service
 		                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
                             WHERE
 	                            tbl_controle_rebate.cod_grupo_rebate = @id
-	                            AND (@nomeInvestidor IS NULL OR tbl_investidor.nome_investidor COLLATE Latin1_general_CI_AI LIKE '%' + @nomeInvestidor + '%')
+	                            AND (@investidor IS NULL OR tbl_investidor.nome_investidor COLLATE Latin1_general_CI_AI LIKE '%' + @investidor + '%')
                                 AND (@codMellon IS NULL OR tbl_investidor_distribuidor.cod_invest_administrador = @codMellon)
 	                            AND tbl_calculo_pgto_adm_pfee.competencia = @competencia";
 
-                return await connection.QueryAsync<ControleRebateModel, CalculoRebateModel, ControleRebateModel>(query,
+                var a = await connection.QueryAsync<ControleRebateModel, CalculoRebateModel, ControleRebateModel>(query,
                    (controle, calculo) =>
                    {
                        controle.Calculo = calculo;
@@ -119,13 +119,14 @@ namespace DUDS.Service
                        return controle;
                    }, new
                    {
-                       id,
-                       nomeInvestidor,
+                       id = grupoRebate,
                        competencia,
+                       investidor,
                        codMellon
-                   }, splitOn: "Id");
+                   }, splitOn: "id");
 
-                //return await connection.QueryAsync<ControleRebateModel>(query, new { id, nome_investidor = nomeInvestidor, competencia });
+                return a;
+
             }
         }
 
