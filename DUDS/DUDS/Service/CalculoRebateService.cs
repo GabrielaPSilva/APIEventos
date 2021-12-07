@@ -89,7 +89,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT
+                const string query = @"	SELECT
 										 calculo_pgto_adm_pfee.id,
 	                                     calculo_pgto_adm_pfee.competencia,
 	                                     calculo_pgto_adm_pfee.cod_investidor_distribuidor,
@@ -116,8 +116,9 @@ namespace DUDS.Service
 	                                     calculo_pgto_adm_pfee.rebate_pfee_semestre
                                     FROM
 	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
-	                                    INNER JOIN tbl_investidor investidor ON investidor.id = calculo_pgto_adm_pfee.cod_investidor
-										INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor.id = investidor_distribuidor.cod_investidor
+	                                   
+										INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = calculo_pgto_adm_pfee.cod_investidor_distribuidor
+										INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
 	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
 	                                    INNER JOIN tbl_fundo fundo ON fundo.id = calculo_pgto_adm_pfee.cod_fundo
 	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
@@ -127,12 +128,7 @@ namespace DUDS.Service
                                     ORDER BY
 	                                    fundo.nome_reduzido,
 	                                    grupo_rebate.nome_grupo_rebate,
-	                                    tipo_contrato.tipo_contrato
-								    OFFSET
-									    @itensPorPagina * (@pagina - 1)
-									ROWS FETCH NEXT
-									    @itensPorPagina
-								    ROWS ONLY";
+	                                    tipo_contrato.tipo_contrato";
 
                 return await connection.QueryAsync<CalculoRebateModel>(query, new { competencia, id = codGrupoRebate });
             }
