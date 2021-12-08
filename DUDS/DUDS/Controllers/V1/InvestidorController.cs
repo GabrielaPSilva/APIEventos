@@ -247,6 +247,26 @@ namespace DUDS.Controllers.V1
             }
         }
 
+        // GET: api/Investidor/GetInvestidorDistribuidorByDataCriacao/dataCriacao
+        [HttpGet("{dataCriacao}")]
+        public async Task<ActionResult<IEnumerable<ErrosPagamentoModel>>> GetInvestidorDistribuidorByDataCriacao(DateTime dataCriacao)
+        {
+            try
+            {
+                var investidores = await _investidorDistribuidorService.GetInvestidorDistribuidorByDataCriacao(dataCriacao);
+
+                if (investidores.Any())
+                {
+                    return Ok(investidores);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
         // GET: api/Investidor/GetInvestidorDistribuidorByIds/codInvestidor/codDistribuidor/codAdministrador
         [HttpGet("{codInvestidor}/{codDistribuidor}/{codAdministrador}")]
         public async Task<ActionResult<InvestidorDistribuidorModel>> GetInvestidorDistribuidorByIds(int codInvestidor, int codDistribuidor, int codAdministrador)
@@ -286,29 +306,23 @@ namespace DUDS.Controllers.V1
         }
 
         //POST: api/Investidor/AddInvestidorDistribuidores/List<InvestidorDistribuidorModel>
-        //[HttpPost]
-        //public async Task<ActionResult<List<InvestidorDistribuidorModel>>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> tblListInvestidorDistribuidorModel)
-        //{
-        //    try
-        //    {
-        //        DistribuidorAdministradorModel retornoDistribuidorAdministrador = await _distribuidorAdministradorService.GetByIdAsync(distribuidorAdministrador.Id);
-        //        if (retornoDistribuidorAdministrador == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        distribuidorAdministrador.Id = id;
-        //        bool retorno = await _distribuidorAdministradorService.UpdateAsync(distribuidorAdministrador);
-        //        if (retorno)
-        //        {
-        //            return Ok(distribuidorAdministrador);
-        //        }
-        //        return NotFound();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e);
-        //    }
-        //}
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<InvestidorModel>>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investidorDistribuidor)
+        {
+            try
+            {
+                bool retorno = await _investidorDistribuidorService.AddInvestidorDistribuidores(investidorDistribuidor);
+                if (retorno)
+                {
+                    return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao),new { data_criacao = investidorDistribuidor.FirstOrDefault().DataCriacao }, investidorDistribuidor);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
         //PUT: api/Investidor/UpdateInvestidorDistribuidor/id
         [HttpPut("{id}")]

@@ -9,5 +9,9 @@ namespace DUDS.Service.Interface
     public interface IInvestidorDistribuidorService : IGenericOperationsService<InvestidorDistribuidorModel>
     {
         Task<IEnumerable<InvestidorDistribuidorModel>> GetByIdsAsync(int codInvestidor, int codDistribuidor, int codAdministrador);
+
+        public Task<bool> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investDistribuidor);
+
+        public Task<IEnumerable<InvestidorDistribuidorModel>> GetInvestidorDistribuidorByDataCriacao(DateTime dataCriacao);
     }
 }

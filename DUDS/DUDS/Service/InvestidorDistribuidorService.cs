@@ -3,6 +3,7 @@ using DUDS.Models;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,6 +37,22 @@ namespace DUDS.Service
             {
                 string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
                 return await connection.ExecuteAsync(query, investDistribuidor) > 0;
+            }
+        }
+
+        public async Task<bool> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investDistribuidor)
+        {
+            ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                _ = Parallel.ForEach(investDistribuidor, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
+                {
+                    var result = AddAsync(x);
+                    if (result.Result) { vs.Add(result.Result); }
+                });
+
+                // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
+                return vs.Count == investDistribuidor.Count;
             }
         }
 
@@ -150,6 +167,31 @@ namespace DUDS.Service
 	                            tbl_investidor_distribuidor.id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<InvestidorDistribuidorModel>(query, new { id });
+            }
+        }
+
+        public async Task<IEnumerable<InvestidorDistribuidorModel>> GetInvestidorDistribuidorByDataCriacao(DateTime dataCriacao)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = @"SELECT 
+	                            tbl_investidor_distribuidor.*,
+	                            tbl_investidor.nome_investidor,
+	                            tbl_distribuidor.nome_distribuidor,
+	                            tbl_administrador.nome_administrador,
+	                            tbl_tipo_contrato.tipo_contrato,
+	                            tbl_grupo_rebate.nome_grupo_rebate
+                            FROM 
+	                            tbl_investidor_distribuidor
+	                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
+	                            INNER JOIN tbl_distribuidor ON tbl_investidor_distribuidor.cod_distribuidor = tbl_distribuidor.id
+	                            INNER JOIN tbl_administrador ON tbl_investidor_distribuidor.cod_administrador = tbl_administrador.id
+                            INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.cod_tipo_contrato = tbl_tipo_contrato.id
+		                        INNER JOIN tbl_grupo_rebate ON tbl_investidor_distribuidor.cod_grupo_rebate = tbl_grupo_rebate.id
+                            WHERE 
+                                tbl_investidor_distribuidor.data_criacao = @data_criacao";
+
+                return await connection.QueryAsync<InvestidorDistribuidorModel>(query, new { data_criacao = dataCriacao });
             }
         }
 
