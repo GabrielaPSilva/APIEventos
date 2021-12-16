@@ -138,7 +138,6 @@ namespace DUDS.Service
                              ORDER BY
 	                            tbl_investidor.nome_investidor";
 
-
                 List<InvestidorModel> investidores = await connection.QueryAsync<InvestidorModel>(query) as List<InvestidorModel>;
 
                 InvestidorDistribuidorService investDistriService = new InvestidorDistribuidorService();
