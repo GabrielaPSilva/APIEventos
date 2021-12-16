@@ -195,8 +195,8 @@ namespace DUDS.Service
 										    tipo_contrato.id AS CodTipoContrato,
 										    tipo_contrato.tipo_contrato,
                                             sub_contrato.id AS CodSubContrato,
-                                            sub_contrato.versao,
-										    sub_contrato.status,
+                                            sub_contrato.versao AS VersaoContrato,
+										    sub_contrato.status AS StatusContrato,
 										    sub_contrato.id_docusign,
 										    sub_contrato.data_vigencia_inicio,
 										    sub_contrato.data_vigencia_fim,
@@ -206,14 +206,14 @@ namespace DUDS.Service
                                             tipo_condicao.id AS CodTipoCondicao,
 										    tipo_condicao.tipo_condicao,
                                             fundo.id AS CodFundo,
-										    fundo.nome_reduzido,
+										    fundo.nome_reduzido AS NomeFundo,
 										    contrato_remuneracao.id AS CodContratoRemuneracao,
                                             contrato_remuneracao.percentual_adm,
 										    contrato_remuneracao.percentual_pfee,
 		                                    distribuidor.id AS CodDistribuidor,
-										    distribuidor.nome_distribuidor,
+										    distribuidor.nome_distribuidor AS NomeDistribuidor,
 										    gestor.id AS CodGestor,
-										    gestor.nome_gestor
+										    gestor.nome_gestor AS NomeGestor
 									    FROM
 										    tbl_contrato contrato
 										        INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = contrato.cod_tipo_contrato

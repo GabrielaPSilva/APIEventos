@@ -16,7 +16,7 @@ namespace DUDS.Models
         public string VersaoContrato { get; set; }
         public string StatusContrato { get; set; }
         public string IdDocusign { get; set; }
-        public string ClausulaRetroatividade { get; set; }
+        public bool ClausulaRetroatividade { get; set; }
         public DateTime? DataVigenciaInicio { get; set; }
         public DateTime? DataVigenciaFim { get; set; }
         public DateTime? DataRetroatividade { get; set; }
