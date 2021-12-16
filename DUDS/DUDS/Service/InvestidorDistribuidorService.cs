@@ -35,24 +35,33 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                return await connection.ExecuteAsync(query, investDistribuidor) > 0;
+                try
+                {
+                    string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                    return await connection.ExecuteAsync(query, investDistribuidor) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
+                
             }
         }
 
-        public async Task<bool> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investDistribuidor)
+        public async Task<IEnumerable<InvestidorDistribuidorModel>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investDistribuidor)
         {
-            ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
+            ConcurrentBag<InvestidorDistribuidorModel> vs = new ConcurrentBag<InvestidorDistribuidorModel>();
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 _ = Parallel.ForEach(investDistribuidor, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
                 {
                     var result = AddAsync(x);
-                    if (result.Result) { vs.Add(result.Result); }
+                    if (!result.Result) { vs.Add(x); }
                 });
 
                 // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
-                return vs.Count == investDistribuidor.Count;
+                return vs;
             }
         }
 

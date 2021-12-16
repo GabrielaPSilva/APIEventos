@@ -49,6 +49,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Investidor/GetInvestidorById/id
         [HttpGet("{id}")]
+        
         public async Task<ActionResult<InvestidorModel>> GetInvestidorById(int id)
         {
             try
@@ -57,7 +58,7 @@ namespace DUDS.Controllers.V1
 
                 if (tblInvestidor == null)
                 {
-                    return NotFound();
+                    return NotFound("Gabriela tercerizou suas metas.");
                 }
 
                 return Ok(tblInvestidor);
@@ -134,8 +135,8 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _investidorService.AddInvestidores(investidores);
-                if (retorno)
+                var retorno = await _investidorService.AddInvestidores(investidores);
+                if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetInvestidorByDataCriacao),
                         new { data_criacao = investidores.FirstOrDefault().DataCriacao }, investidores);
@@ -274,7 +275,7 @@ namespace DUDS.Controllers.V1
             try
             {
                 var InvestidorDistribuidor = await _investidorDistribuidorService.GetByIdsAsync(codInvestidor, codDistribuidor, codAdministrador);
-               
+
                 if (InvestidorDistribuidor == null)
                 {
                     return NotFound();
@@ -294,27 +295,34 @@ namespace DUDS.Controllers.V1
             try
             {
                 bool retorno = await _investidorDistribuidorService.AddAsync(investidorDistribuidorModel);
-                return CreatedAtAction(nameof(GetInvestidorDistribuidorByIds), new { 
-                                                          codInvestidor = investidorDistribuidorModel.CodInvestidor,
-                                                          codAdministrador = investidorDistribuidorModel.CodAdministrador,
-                                                          codDistribuidor = investidorDistribuidorModel.CodDistribuidor}, investidorDistribuidorModel);
+                if (retorno)
+                {
+                    return CreatedAtAction(nameof(GetInvestidorDistribuidorByIds), new
+                    {
+                        codInvestidor = investidorDistribuidorModel.CodInvestidor,
+                        codAdministrador = investidorDistribuidorModel.CodAdministrador,
+                        codDistribuidor = investidorDistribuidorModel.CodDistribuidor
+                    }, investidorDistribuidorModel);
+                }
+                return NotFound();
+
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
         }
 
         //POST: api/Investidor/AddInvestidorDistribuidores/List<InvestidorDistribuidorModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<InvestidorModel>>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investidorDistribuidor)
+        public async Task<ActionResult<IEnumerable<InvestidorDistribuidorModel>>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investidorDistribuidor)
         {
             try
             {
-                bool retorno = await _investidorDistribuidorService.AddInvestidorDistribuidores(investidorDistribuidor);
-                if (retorno)
+                var retorno = await _investidorDistribuidorService.AddInvestidorDistribuidores(investidorDistribuidor);
+                if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao),new { data_criacao = investidorDistribuidor.FirstOrDefault().DataCriacao }, investidorDistribuidor);
+                    return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao), new { data_criacao = investidorDistribuidor.FirstOrDefault().DataCriacao }, investidorDistribuidor);
                 }
                 return NotFound();
             }
@@ -331,15 +339,15 @@ namespace DUDS.Controllers.V1
             try
             {
                 InvestidorDistribuidorModel retornoInvestidorDistribuidor = await _investidorDistribuidorService.GetByIdAsync(investidorDistribuidor.Id);
-                
+
                 if (retornoInvestidorDistribuidor == null)
                 {
                     return NotFound();
                 }
-                
+
                 investidorDistribuidor.Id = id;
                 bool retorno = await _investidorDistribuidorService.UpdateAsync(investidorDistribuidor);
-                
+
                 if (retorno)
                 {
                     return Ok(investidorDistribuidor);
@@ -364,7 +372,7 @@ namespace DUDS.Controllers.V1
                 try
                 {
                     bool retorno = await _investidorDistribuidorService.DeleteAsync(id);
-                    
+
                     if (retorno)
                     {
                         return Ok();

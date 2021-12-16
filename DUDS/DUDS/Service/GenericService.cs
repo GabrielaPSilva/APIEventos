@@ -2,6 +2,7 @@
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -63,6 +64,21 @@ namespace DUDS.Service
                     _fieldsUpdate.Add(res.name);
                 }
             }
+        }
+
+        public DataTable ToDataTable(IEnumerable<T> self)
+        {
+            var properties = typeof(T).GetProperties();
+
+            var dataTable = new DataTable();
+            foreach (var info in properties)
+                dataTable.Columns.Add(info.Name, Nullable.GetUnderlyingType(info.PropertyType)
+                   ?? info.PropertyType);
+
+            foreach (var entity in self)
+                dataTable.Rows.Add(properties.Select(p => p.GetValue(entity)).ToArray());
+
+            return dataTable;
         }
     }
 }

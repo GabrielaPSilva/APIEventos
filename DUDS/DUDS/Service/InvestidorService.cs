@@ -5,8 +5,10 @@ using DUDS.Service.SQL;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Z.Dapper.Plus;
 
 namespace DUDS.Service
 {
@@ -37,24 +39,71 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                return await connection.ExecuteAsync(query, investidor) > 0;
+                try
+                {
+                    string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                    return await connection.ExecuteAsync(query, investidor) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
+                
             }
         }
 
-        public async Task<bool> AddInvestidores(List<InvestidorModel> investidor)
+        public async Task<IEnumerable<InvestidorModel>> AddInvestidores(List<InvestidorModel> investidores)
         {
-            ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
+            ConcurrentBag<InvestidorModel> vs = new ConcurrentBag<InvestidorModel>();
+            //DapperPlusManager.Entity<InvestidorModel>().Table("tbl_investidor");
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                _ = Parallel.ForEach(investidor, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
+            {   
+                _ = Parallel.ForEach(investidores, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
                     {
                         var result = AddAsync(x);
-                        if (result.Result) { vs.Add(result.Result); }
+                        if (!result.Result) { vs.Add(x); }
                     });
 
                 // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
-                return vs.Count == investidor.Count;
+                return vs;
+                
+                //var result = connection.BulkInsert<InvestidorModel>(investidores);
+                //result.Actions.
+                /*
+                try
+                {
+                    using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
+                    {
+                        var filesInserted = 0L;
+
+                        sqlBulkCopy.DestinationTableName = "tbl_investidor";
+                        sqlBulkCopy.NotifyAfter = 1;
+                        sqlBulkCopy.SqlRowsCopied += (s, e) => filesInserted = e.RowsCopied;
+                        sqlBulkCopy.BatchSize = 1000;
+                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.NomeInvestidor), "nome_investidor");
+                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.Cnpj), "cnpj");
+                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.TipoInvestidor), "tipo_investidor");
+                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.CodAdministrador), "cod_administrador");
+                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.CodGestor), "cod_gestor");
+                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.UsuarioCriacao), "usuario_criacao");
+
+                        await sqlBulkCopy.WriteToServerAsync((System.Data.IDataReader)investidores);
+                        
+                        return filesInserted == investidores.Count;
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Console.Error.WriteLine(ex.Message);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(ex.Message);
+                    return false;
+                }
+                */
             }
         }
 
@@ -121,9 +170,12 @@ namespace DUDS.Service
 
                 InvestidorModel investidor = await connection.QueryFirstOrDefaultAsync<InvestidorModel>(query, new { id });
 
-                InvestidorDistribuidorService investDistribuidorService = new InvestidorDistribuidorService();
-                List<InvestidorDistribuidorModel> investDistribuidorList = await investDistribuidorService.GetInvestidorByIdAsync(investidor.Id) as List<InvestidorDistribuidorModel>;
-                investidor.ListaInvestDistribuidor = investDistribuidorList;
+                if (investidor != null)
+                {
+                    InvestidorDistribuidorService investDistribuidorService = new InvestidorDistribuidorService();
+                    List<InvestidorDistribuidorModel> investDistribuidorList = await investDistribuidorService.GetInvestidorByIdAsync(investidor.Id) as List<InvestidorDistribuidorModel>;
+                    investidor.ListaInvestDistribuidor = investDistribuidorList;
+                }
                 //return null;
                 return investidor;
             }
