@@ -10,6 +10,6 @@ namespace DUDS.Service.Interface
     {
         Task<InvestidorModel> GetInvestidorExistsBase(string cnpj);
         Task<IEnumerable<InvestidorModel>> GetInvestidorByDataCriacao(DateTime dataCriacao);
-        Task<bool> AddInvestidores(List<InvestidorModel> investidor);
+        Task<IEnumerable<InvestidorModel>> AddInvestidores(List<InvestidorModel> investidores);
     }
 }
