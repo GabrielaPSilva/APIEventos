@@ -164,7 +164,7 @@ namespace DUDS.Controllers.V1
         }
 
         //PUT: api/Rebate/UpdateControleRebate/id
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<ActionResult<ControleRebateModel>> UpdateControleRebate(int id, ControleRebateModel controleRebate)
         {
             try
