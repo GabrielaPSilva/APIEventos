@@ -37,22 +37,19 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddBulkAsync(List<PosicaoClientePassivoModel> item)
+        public async Task<IEnumerable<PosicaoClientePassivoModel>> AddBulkAsync(List<PosicaoClientePassivoModel> item)
         {
-            if (item == null) return false;
-            if (item.Count == 0) return false;
-
-            ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
+            ConcurrentBag<PosicaoClientePassivoModel> vs = new ConcurrentBag<PosicaoClientePassivoModel>();
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 _ = Parallel.ForEach(item, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
                 {
                     var result = AddAsync(x);
-                    if (result.Result) { vs.Add(result.Result); }
+                    if (result.Result) { vs.Add(x); }
                 });
 
                 // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
-                return vs.Count == item.Count;
+                return vs;
             }
         }
 

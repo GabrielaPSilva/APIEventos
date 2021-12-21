@@ -7,16 +7,16 @@ namespace DUDS.Service.Interface
 {
     public interface IPosicaoClientePassivoService : IGenericOperationsService<PosicaoClientePassivoModel>
     {
-        public Task<bool> AddBulkAsync(List<PosicaoClientePassivoModel> item);
+        Task<IEnumerable<PosicaoClientePassivoModel>> AddBulkAsync(List<PosicaoClientePassivoModel> item);
 
-        public Task<bool> DeleteByDataRefAsync(DateTime dataRef);
+        Task<bool> DeleteByDataRefAsync(DateTime dataRef);
 
-        public Task<bool> DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(Guid id);
 
         // public Task<IEnumerable<PosicaoClientePassivoModel>> GetByDataRefAsync(DateTime dataRef);
 
-        public Task<IEnumerable<PosicaoClientePassivoModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
+        Task<IEnumerable<PosicaoClientePassivoModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
 
-        public Task<PosicaoClientePassivoModel> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
+        Task<PosicaoClientePassivoModel> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
     }
 }
