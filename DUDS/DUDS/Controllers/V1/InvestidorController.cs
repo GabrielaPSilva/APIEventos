@@ -141,7 +141,7 @@ namespace DUDS.Controllers.V1
                     return CreatedAtAction(nameof(GetInvestidorByDataCriacao),
                         new { data_criacao = investidores.FirstOrDefault().DataCriacao }, investidores);
                 }
-                return NotFound();
+                return BadRequest(retorno);
             }
             catch (Exception e)
             {
@@ -324,7 +324,7 @@ namespace DUDS.Controllers.V1
                 {
                     return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao), new { data_criacao = investidorDistribuidor.FirstOrDefault().DataCriacao }, investidorDistribuidor);
                 }
-                return NotFound();
+                return BadRequest(retorno);
             }
             catch (Exception e)
             {

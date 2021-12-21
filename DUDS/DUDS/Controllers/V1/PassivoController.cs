@@ -94,13 +94,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _posicaoClientePassivoService.AddBulkAsync(posicaoClientePassivo);
-                if (retorno)
+                var retorno = await _posicaoClientePassivoService.AddBulkAsync(posicaoClientePassivo);
+                if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetPosicaoClientePassivo),
                         new { dataInicio = posicaoClientePassivo.FirstOrDefault().DataRef }, posicaoClientePassivo);
                 }
-                return NotFound();
+                return BadRequest(retorno);
             }
             catch (Exception e)
             {
