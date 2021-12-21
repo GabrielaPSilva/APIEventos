@@ -47,7 +47,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetControleRebateByCompetencia
         [HttpGet()]
-        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebateByCompetencia([FromQuery]FiltroModel filtro, int pagina, int itensPorPagina)
+        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebateByCompetencia([FromQuery] FiltroModel filtro, int pagina, int itensPorPagina)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetCountControleRebate/filtro
         [HttpGet()]
-        public async Task<ActionResult<int>> GetCountControleRebate([FromQuery]FiltroModel filtro)
+        public async Task<ActionResult<int>> GetCountControleRebate([FromQuery] FiltroModel filtro)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace DUDS.Controllers.V1
         }
 
         //PUT: api/Rebate/UpdateControleRebate/id
-        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<ControleRebateModel>> UpdateControleRebate(int id, ControleRebateModel controleRebate)
         {
             try
@@ -177,11 +177,15 @@ namespace DUDS.Controllers.V1
                 }
 
                 controleRebate.Id = id;
-                bool retorno = await _controleRebateService.UpdateAsync(controleRebate);
 
-                if (retorno)
+                if (ModelState.IsValid)
                 {
-                    return Ok(controleRebate);
+                    bool retorno = await _controleRebateService.UpdateAsync(controleRebate);
+
+                    if (retorno)
+                    {
+                        return Ok(controleRebate);
+                    }
                 }
                 return NotFound();
 
@@ -523,7 +527,7 @@ namespace DUDS.Controllers.V1
                 var pagamentoTaxaAdministracaoPerformance = await _pagamentoTaxaAdministracaoPerformanceService.GetByCompetenciaAsync(competencia);
                 if (pagamentoTaxaAdministracaoPerformance.Any())
                 {
-                    return Ok(pagamentoTaxaAdministracaoPerformance); 
+                    return Ok(pagamentoTaxaAdministracaoPerformance);
                 }
                 return NotFound();
             }
