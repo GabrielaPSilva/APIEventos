@@ -49,7 +49,7 @@ namespace DUDS.Service
                     Console.WriteLine(ex.Message);
                     return false;
                 }
-                
+
             }
         }
 
@@ -58,7 +58,7 @@ namespace DUDS.Service
             ConcurrentBag<InvestidorModel> vs = new ConcurrentBag<InvestidorModel>();
             //DapperPlusManager.Entity<InvestidorModel>().Table("tbl_investidor");
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {   
+            {
                 _ = Parallel.ForEach(investidores, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
                     {
                         var result = AddAsync(x);
@@ -67,7 +67,7 @@ namespace DUDS.Service
 
                 // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
                 return vs;
-                
+
                 //var result = connection.BulkInsert<InvestidorModel>(investidores);
                 //result.Actions.
                 /*
@@ -123,32 +123,56 @@ namespace DUDS.Service
 
         public async Task<IEnumerable<InvestidorModel>> GetAllAsync()
         {
+            List<InvestidorModel> investidores;
+
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
+                var query = @"SELECT
 	                            tbl_investidor.*,
-	                            tbl_administrador.nome_administrador,
-	                            tbl_gestor.nome_gestor
+	                            tbl_administrador.nome_administrador AS NomeAdministrador,
+	                            tbl_gestor.nome_gestor AS NomeGestor
                              FROM
 	                            tbl_investidor
-		                        LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
+                                LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
 		                        LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
                              WHERE
 	                            tbl_investidor.ativo = 1
                              ORDER BY
 	                            tbl_investidor.nome_investidor";
 
-                List<InvestidorModel> investidores = await connection.QueryAsync<InvestidorModel>(query) as List<InvestidorModel>;
+                investidores = await connection.QueryAsync<InvestidorModel>(query) as List<InvestidorModel>;
+                return investidores;
 
-                InvestidorDistribuidorService investDistriService = new InvestidorDistribuidorService();
-
-                Parallel.ForEach(investidores, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, async x =>
+                /*
+                Parallel.ForEach(investidores, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
                 {
-                    List<InvestidorDistribuidorModel> investDistriList = await investDistriService.GetInvestidorByIdAsync(x.Id) as List<InvestidorDistribuidorModel>;
+                    List<InvestidorDistribuidorModel> investDistriList = investDistriService.GetInvestidorByIdAsync(x.Id) as List<InvestidorDistribuidorModel>;
                     x.ListaInvestDistribuidor = investDistriList;
                 });
-                return investidores;
+
+                /*
+                var investidores = await connection.QueryAsync<InvestidorModel, List<InvestidorDistribuidorModel>, InvestidorModel>(query,
+                    (investidor, investidorDistribuidor) =>
+                    {
+                        investidor.ListaInvestDistribuidor = investidorDistribuidor;
+                        return investidor;
+                    }, new {},
+                    splitOn: "id"
+                );
+                */
             }
+            /*
+            InvestidorDistribuidorService investDistriService = new InvestidorDistribuidorService();
+
+            var tasks = investidores.Select(async invest =>
+            {
+                var result = await investDistriService.GetInvestidorByIdAsync(invest.Id) as List<InvestidorDistribuidorModel>;
+                invest.ListaInvestDistribuidor = result;
+            });
+            await Task.WhenAll(tasks);
+            
+            return investidores;
+            */
         }
 
         public async Task<InvestidorModel> GetByIdAsync(int id)

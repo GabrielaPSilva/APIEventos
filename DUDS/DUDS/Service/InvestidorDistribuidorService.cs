@@ -45,24 +45,32 @@ namespace DUDS.Service
                     Console.WriteLine(ex.Message);
                     return false;
                 }
-                
+
             }
         }
 
         public async Task<IEnumerable<InvestidorDistribuidorModel>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investDistribuidor)
         {
             ConcurrentBag<InvestidorDistribuidorModel> vs = new ConcurrentBag<InvestidorDistribuidorModel>();
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            //using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            //{
+            /*
+            _ = Parallel.ForEach(investDistribuidor, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
             {
-                _ = Parallel.ForEach(investDistribuidor, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
-                {
-                    var result = AddAsync(x);
-                    if (!result.Result) { vs.Add(x); }
-                });
+                var result = AddAsync(x);
+                if (!result.Result) { vs.Add(x); }
+            });
+            */
+            // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
 
-                // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
-                return vs;
-            }
+            var tasks = investDistribuidor.Select(async invest =>
+            {
+                var result = await AddAsync(invest);
+                if (!result) { vs.Add(invest); }
+            });
+            await Task.WhenAll(tasks);
+            return vs;
+            //}
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -93,7 +101,8 @@ namespace DUDS.Service
                             FROM 
 	                            tbl_investidor_distribuidor
 	                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-	                            INNER JOIN tbl_distribuidor ON tbl_investidor_distribuidor.cod_distribuidor = tbl_distribuidor.id
+	                            INNER JOIN tbl_distribuidor_administrador ON tbl_investidor_distribuidor.cod_distribuidor_administrador = tbl_distribuidor_administrador.id
+                                INNER JOIN tbl_distribuidor ON tbl_distribuidor.id = tbl_distribuidor_administrador.cod_distribuidor
 	                            INNER JOIN tbl_administrador ON tbl_investidor_distribuidor.cod_administrador = tbl_administrador.id
                                 INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.cod_tipo_contrato = tbl_tipo_contrato.id
 		                        INNER JOIN tbl_grupo_rebate ON tbl_investidor_distribuidor.cod_grupo_rebate = tbl_grupo_rebate.id";
@@ -116,7 +125,8 @@ namespace DUDS.Service
                             FROM 
 	                            tbl_investidor_distribuidor
 	                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-	                            INNER JOIN tbl_distribuidor ON tbl_investidor_distribuidor.cod_distribuidor = tbl_distribuidor.id
+	                            INNER JOIN tbl_distribuidor_administrador ON tbl_investidor_distribuidor.cod_distribuidor_administrador = tbl_distribuidor_administrador.id
+                                INNER JOIN tbl_distribuidor ON tbl_distribuidor.id = tbl_distribuidor_administrador.cod_distribuidor
 	                            INNER JOIN tbl_administrador ON tbl_investidor_distribuidor.cod_administrador = tbl_administrador.id
                                 INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.cod_tipo_contrato = tbl_tipo_contrato.id
 		                        INNER JOIN tbl_grupo_rebate ON tbl_investidor_distribuidor.cod_grupo_rebate = tbl_grupo_rebate.id
@@ -127,7 +137,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<InvestidorDistribuidorModel>> GetByIdsAsync(int codInvestidor, int codDistribuidor, int codAdministrador)
+        public async Task<IEnumerable<InvestidorDistribuidorModel>> GetByIdsAsync(int codInvestidor, int codDistribuidorAdministrador, int codAdministrador)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -141,16 +151,17 @@ namespace DUDS.Service
                             FROM 
 	                            tbl_investidor_distribuidor
 	                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-	                            INNER JOIN tbl_distribuidor ON tbl_investidor_distribuidor.cod_distribuidor = tbl_distribuidor.id
+	                            INNER JOIN tbl_distribuidor_administrador ON tbl_investidor_distribuidor.cod_distribuidor_administrador = tbl_distribuidor_administrador.id
+                                INNER JOIN tbl_distribuidor ON tbl_distribuidor.id = tbl_distribuidor_administrador.cod_distribuidor
 	                            INNER JOIN tbl_administrador ON tbl_investidor_distribuidor.cod_administrador = tbl_administrador.id
                                 INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.cod_tipo_contrato = tbl_tipo_contrato.id
 		                        INNER JOIN tbl_grupo_rebate ON tbl_investidor_distribuidor.cod_grupo_rebate = tbl_grupo_rebate.id
                             WHERE 
 	                            tbl_investidor_distribuidor.cod_investidor = @cod_investidor AND
-                                tbl_investidor_distribuidor.cod_distribuidor = @cod_distribuidor AND
+                                tbl_investidor_distribuidor.cod_distribuidor_administrador = @cod_distribuidor_administrador AND
                                 tbl_investidor_distribuidor.cod_administrador = @cod_administrador";
 
-                return await connection.QueryAsync<InvestidorDistribuidorModel>(query, new { cod_investidor = codInvestidor, cod_distribuidor = codDistribuidor, cod_administrador = codAdministrador });
+                return await connection.QueryAsync<InvestidorDistribuidorModel>(query, new { cod_investidor = codInvestidor, cod_distribuidor_administrador = codDistribuidorAdministrador, cod_administrador = codAdministrador });
             }
         }
 
@@ -168,7 +179,8 @@ namespace DUDS.Service
                             FROM 
 	                            tbl_investidor_distribuidor
 	                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-	                            INNER JOIN tbl_distribuidor ON tbl_investidor_distribuidor.cod_distribuidor = tbl_distribuidor.id
+	                            INNER JOIN tbl_distribuidor_administrador ON tbl_investidor_distribuidor.cod_distribuidor_administrador = tbl_distribuidor_administrador.id
+                                INNER JOIN tbl_distribuidor ON tbl_distribuidor.id = tbl_distribuidor_administrador.cod_distribuidor
 	                            INNER JOIN tbl_administrador ON tbl_investidor_distribuidor.cod_administrador = tbl_administrador.id
                             INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.cod_tipo_contrato = tbl_tipo_contrato.id
 		                        INNER JOIN tbl_grupo_rebate ON tbl_investidor_distribuidor.cod_grupo_rebate = tbl_grupo_rebate.id
@@ -193,7 +205,8 @@ namespace DUDS.Service
                             FROM 
 	                            tbl_investidor_distribuidor
 	                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-	                            INNER JOIN tbl_distribuidor ON tbl_investidor_distribuidor.cod_distribuidor = tbl_distribuidor.id
+	                            INNER JOIN tbl_distribuidor_administrador ON tbl_investidor_distribuidor.cod_distribuidor_administrador = tbl_distribuidor_administrador.id
+                                INNER JOIN tbl_distribuidor ON tbl_distribuidor.id = tbl_distribuidor_administrador.cod_distribuidor
 	                            INNER JOIN tbl_administrador ON tbl_investidor_distribuidor.cod_administrador = tbl_administrador.id
                             INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.cod_tipo_contrato = tbl_tipo_contrato.id
 		                        INNER JOIN tbl_grupo_rebate ON tbl_investidor_distribuidor.cod_grupo_rebate = tbl_grupo_rebate.id

@@ -2,6 +2,7 @@ using DUDS.Service;
 using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -155,6 +156,12 @@ namespace DUDS
             services.AddScoped<IControleRebateService, ControleRebateService>();
             services.AddScoped<IPosicaoClientePassivoService,PosicaoClientePassivoService>();
 
+            // Teste - Body Length
+            //services.Configure<FormOptions>(options =>
+            //{
+                // Set the limit to 256 MB
+            //    options.MultipartBodyLengthLimit = 268435456;
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

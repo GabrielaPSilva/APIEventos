@@ -13,7 +13,7 @@ namespace DUDS.Models
         [StringLength(50)]
         public string CodInvestAdministrador { get; set; }
         public int CodInvestidor { get; set; }
-        public int CodDistribuidor { get; set; }
+        public int CodDistribuidorAdministrador { get; set; }
         public int CodAdministrador { get; set; }
 
         public int CodTipoContrato { get; set; }
