@@ -22,8 +22,6 @@ namespace DUDS.Models
         
         public int CodContratoRemuneracao { get; set; }
         
-        public int? CodCondicaoRemuneracao { get; set; }
-        
         public int CodAdministrador { get; set; }
         
         public decimal ValorAdm { get; set; }
