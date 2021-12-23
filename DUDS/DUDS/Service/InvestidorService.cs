@@ -5,6 +5,7 @@ using DUDS.Service.SQL;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,8 +31,21 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id },transaction:transaction);
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -39,34 +53,28 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                try
+                using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                    return await connection.ExecuteAsync(query, investidor) > 0;
+                    try
+                    {
+                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                        var retorno = await connection.ExecuteAsync(sql: query, param: investidor, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return false;
-                }
-
             }
         }
 
         public async Task<IEnumerable<InvestidorModel>> AddInvestidores(List<InvestidorModel> investidores)
         {
             ConcurrentBag<InvestidorModel> vs = new ConcurrentBag<InvestidorModel>();
-            //DapperPlusManager.Entity<InvestidorModel>().Table("tbl_investidor");
-            // using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            //{
-            /*
-                _ = Parallel.ForEach(investidores, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
-                    {
-                        var result = AddAsync(x);
-                        if (!result.Result) { vs.Add(x); }
-                    });
-            */
-            // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
             ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
             await Parallel.ForEachAsync(investidores, parallelOptions, async (x, cancellationToken) =>
             {
@@ -75,44 +83,6 @@ namespace DUDS.Service
             }
             );
             return vs;
-
-            //var result = connection.BulkInsert<InvestidorModel>(investidores);
-            //result.Actions.
-            /*
-            try
-            {
-                using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
-                {
-                    var filesInserted = 0L;
-
-                    sqlBulkCopy.DestinationTableName = "tbl_investidor";
-                    sqlBulkCopy.NotifyAfter = 1;
-                    sqlBulkCopy.SqlRowsCopied += (s, e) => filesInserted = e.RowsCopied;
-                    sqlBulkCopy.BatchSize = 1000;
-                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.NomeInvestidor), "nome_investidor");
-                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.Cnpj), "cnpj");
-                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.TipoInvestidor), "tipo_investidor");
-                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.CodAdministrador), "cod_administrador");
-                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.CodGestor), "cod_gestor");
-                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.UsuarioCriacao), "usuario_criacao");
-
-                    await sqlBulkCopy.WriteToServerAsync((System.Data.IDataReader)investidores);
-
-                    return filesInserted == investidores.Count;
-                }
-            }
-            catch (SqlException ex)
-            {
-                Console.Error.WriteLine(ex.Message);
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex.Message);
-                return false;
-            }
-            */
-            //}
         }
 
         public Task<bool> DeleteAsync(int id)
@@ -124,8 +94,22 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -265,14 +249,28 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
-                List<string> str = new List<string>();
-                for (int i = 0; i < _propertiesUpdate.Count; i++)
+                using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
+                    try
+                    {
+                        string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
+                        List<string> str = new List<string>();
+                        for (int i = 0; i < _propertiesUpdate.Count; i++)
+                        {
+                            str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
+                        }
+                        query = query.Replace("VALORES", String.Join(",", str));
+                        var retorno = await connection.ExecuteAsync(sql: query, param: investidor, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
                 }
-                query = query.Replace("VALORES", String.Join(",", str));
-                return await connection.ExecuteAsync(query, investidor) > 0;
             }
         }
         #endregion

@@ -9,7 +9,7 @@ namespace DUDS.Service.Interface
 {
     public interface ICalculoRebateService : IGenericOperationsService<CalculoRebateModel>
     {
-        Task<bool> AddBulkAsync(List<CalculoRebateModel> calculoPgtoTaxaAdmPfee);
+        Task<IEnumerable<CalculoRebateModel>> AddBulkAsync(List<CalculoRebateModel> item);
         Task<IEnumerable<CalculoRebateModel>> GetByCompetenciaAsync(string competencia, int codGrupoRebate);
         Task<bool> DeleteByCompetenciaAsync(string competencia);
         Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao);

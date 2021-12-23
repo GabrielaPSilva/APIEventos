@@ -5,6 +5,7 @@ using DUDS.Service.SQL;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,25 +32,28 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                return await connection.ExecuteAsync(query, item) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
         public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> AddBulkAsync(List<PagamentoTaxaAdminPfeeModel> pgtoTaxaAdmimPerf)
         {
             ConcurrentBag<PagamentoTaxaAdminPfeeModel> vs = new ConcurrentBag<PagamentoTaxaAdminPfeeModel>();
-            /*
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                Parallel.ForEach(pgtoTaxaAdmimPerf, async x =>
-                {
-                    _ = await AddAsync(x);
-                });
-
-                return GetByCompetenciaAsync(pgtoTaxaAdmimPerf.FirstOrDefault().Competencia).Result.ToArray().Length == pgtoTaxaAdmimPerf.Count;
-            }
-            */
             ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
             await Parallel.ForEachAsync(pgtoTaxaAdmimPerf, parallelOptions, async (x, cancellationToken) =>
             {
@@ -64,8 +68,22 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -180,8 +198,22 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = "DELETE FROM tbl_pgto_adm_pfee WHERE competencia = @competencia";
-                return await connection.ExecuteAsync(query, new { competencia }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        const string query = "DELETE FROM tbl_pgto_adm_pfee WHERE competencia = @competencia";
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { competencia }, transaction:transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 

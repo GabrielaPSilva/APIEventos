@@ -10,7 +10,7 @@ namespace DUDS.Service.Interface
     {
         Task<bool> DeleteByCompetenciaAsync(string competencia);
         Task<IEnumerable<PagamentoServicoModel>> GetByIdsAsync(string competencia, int codFundo);
-        Task<bool> AddPagamentoServico(List<PagamentoServicoModel> pagamentoServicos);
+        Task<IEnumerable<PagamentoServicoModel>> AddPagamentoServico(List<PagamentoServicoModel> pagamentoServicos);
         Task<IEnumerable<PagamentoServicoModel>> GetPagamentoServicoByCompetencia(string competencia);
     }
 }

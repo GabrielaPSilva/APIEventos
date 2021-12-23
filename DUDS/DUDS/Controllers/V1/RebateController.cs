@@ -427,13 +427,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _pagamentoServicoService.AddPagamentoServico(pagamentoServico);
-                if (retorno)
+                var retorno = await _pagamentoServicoService.AddPagamentoServico(pagamentoServico);
+                if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetErrosPagamentoByCompetencia),
                         new { competencia = pagamentoServico.FirstOrDefault().Competencia }, pagamentoServico);
                 }
-                return NotFound();
+                return BadRequest(retorno);
             }
             catch (Exception e)
             {
@@ -681,13 +681,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _calculoRebateService.AddBulkAsync(calculoRebate);
-                if (retorno)
+                var retorno = await _calculoRebateService.AddBulkAsync(calculoRebate);
+                if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetCalculoRebate),
                         new { competencia = calculoRebate.FirstOrDefault().Competencia }, calculoRebate);
                 }
-                return NotFound();
+                return BadRequest(retorno);
             }
             catch (Exception e)
             {

@@ -3,7 +3,9 @@ using DUDS.Models;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,30 +32,58 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                return await connection.ExecuteAsync(query, item) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
-        public async Task<bool> AddPagamentoServico(List<PagamentoServicoModel> pagamentoServicos)
+        public async Task<IEnumerable<PagamentoServicoModel>> AddPagamentoServico(List<PagamentoServicoModel> pagamentoServicos)
         {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            ConcurrentBag<PagamentoServicoModel> vs = new ConcurrentBag<PagamentoServicoModel>();
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
+            await Parallel.ForEachAsync(pagamentoServicos, parallelOptions, async (x, cancellationToken) =>
             {
-                Parallel.ForEach(pagamentoServicos, async x =>
-                {
-                    _ = await AddAsync(x);
-                });
-
-                return GetPagamentoServicoByCompetencia(pagamentoServicos.FirstOrDefault().Competencia).Result.ToArray().Length == pagamentoServicos.Count;
+                var result = await AddAsync(x);
+                if (!result) { vs.Add(x); }
             }
+            );
+            return vs;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -61,8 +91,22 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = "DELETE FROM tbl_pagamento_servico WHERE competencia = @competencia";
-                return await connection.ExecuteAsync(query, new { competencia }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        const string query = "DELETE FROM tbl_pagamento_servico WHERE competencia = @competencia";
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { competencia }, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 

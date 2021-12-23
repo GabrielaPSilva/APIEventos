@@ -5,6 +5,7 @@ using DUDS.Service.SQL;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,8 +27,22 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -35,33 +50,28 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                try
+                using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                    return await connection.ExecuteAsync(query, investDistribuidor) > 0;
+                    try
+                    {
+                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                        var retorno = await connection.ExecuteAsync(sql: query, param: investDistribuidor, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return false;
-                }
-
             }
         }
 
         public async Task<IEnumerable<InvestidorDistribuidorModel>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investDistribuidor)
         {
             ConcurrentBag<InvestidorDistribuidorModel> vs = new ConcurrentBag<InvestidorDistribuidorModel>();
-            //using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            //{
-            /*
-            _ = Parallel.ForEach(investDistribuidor, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
-            {
-                var result = AddAsync(x);
-                if (!result.Result) { vs.Add(x); }
-            });
-            */
-
             ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
             await Parallel.ForEachAsync(investDistribuidor, parallelOptions, async (x, cancellationToken) =>
             {
@@ -69,27 +79,29 @@ namespace DUDS.Service
                 if (!result) { vs.Add(x); }
             }
             );
-
-            // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
-
-            /*
-            var tasks = investDistribuidor.Select(async invest =>
-            {
-                var result = await AddAsync(invest);
-                if (!result) { vs.Add(invest); }
-            });
-            await Task.WhenAll(tasks);
-            */
             return vs;
-            //}
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -232,14 +244,28 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
-                List<string> str = new List<string>();
-                for (int i = 0; i < _propertiesUpdate.Count; i++)
+                using (IDbTransaction transaction = connection.BeginTransaction())
                 {
-                    str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
+                    try
+                    {
+                        string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
+                        List<string> str = new List<string>();
+                        for (int i = 0; i < _propertiesUpdate.Count; i++)
+                        {
+                            str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
+                        }
+                        query = query.Replace("VALORES", String.Join(",", str));
+                        var retorno = await connection.ExecuteAsync(sql: query, param: investDistribuidor, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
                 }
-                query = query.Replace("VALORES", String.Join(",", str));
-                return await connection.ExecuteAsync(query, investDistribuidor) > 0;
             }
         }
     }

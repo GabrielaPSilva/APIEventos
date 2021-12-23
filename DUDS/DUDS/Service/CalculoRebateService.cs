@@ -4,7 +4,9 @@ using DUDS.Models.Filtros;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,30 +37,57 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                return await connection.ExecuteAsync(query, item) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
-        public async Task<bool> AddBulkAsync(List<CalculoRebateModel> calculoPgtoTaxaAdmPfee)
+        public async Task<IEnumerable<CalculoRebateModel>> AddBulkAsync(List<CalculoRebateModel> item)
         {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            ConcurrentBag<CalculoRebateModel> vs = new ConcurrentBag<CalculoRebateModel>();
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
+            await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
             {
-                Parallel.ForEach(calculoPgtoTaxaAdmPfee, async x =>
-                {
-                    _ = await AddAsync(x);
-                });
-
-                return await GetCountCalculoRebateAsync(new FiltroModel { Competencia = calculoPgtoTaxaAdmPfee.FirstOrDefault().Competencia }) == calculoPgtoTaxaAdmPfee.Count;
+                var result = await AddAsync(x);
+                if (!result) { vs.Add(x); }
             }
+            );
+            return vs;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -66,8 +95,22 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = "DELETE FROM tbl_calculo_pgto_adm_pfee WHERE competencia = @competencia";
-                return await connection.ExecuteAsync(query, new { competencia }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        const string query = "DELETE FROM tbl_calculo_pgto_adm_pfee WHERE competencia = @competencia";
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { competencia }, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -75,8 +118,22 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
+                using (IDbTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
+                        transaction.Commit();
+                        return retorno > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -268,7 +325,7 @@ namespace DUDS.Service
                                  tbl_calculo_pgto_adm_pfee
                               WHERE
                                  tbl_calculo_pgto_adm_pfee.competencia = @Competencia";
-               
+
                 return await connection.QueryFirstOrDefaultAsync<int>(query, new { filtro.Competencia });
             }
         }
