@@ -294,7 +294,7 @@ namespace DUDS.Service
 	                                          tbl_condicao_remuneracao
 												LEFT JOIN tbl_fundo ON tbl_fundo.id = tbl_condicao_remuneracao.cod_fundo
                                           WHERE
-	                                          cod_contrato_remuneracao = @cod_contrato_remuneracao";
+	                                          tbl_condicao_remuneracao.cod_contrato_remuneracao = @cod_contrato_remuneracao";
 
                 List<DescricaoCalculoRebateModel> descricoes = await connection.QueryAsync<DescricaoCalculoRebateModel>(Descricao, new
                 {
