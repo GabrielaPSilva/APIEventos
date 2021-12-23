@@ -57,54 +57,62 @@ namespace DUDS.Service
         {
             ConcurrentBag<InvestidorModel> vs = new ConcurrentBag<InvestidorModel>();
             //DapperPlusManager.Entity<InvestidorModel>().Table("tbl_investidor");
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
+            // using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            //{
+            /*
                 _ = Parallel.ForEach(investidores, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
                     {
                         var result = AddAsync(x);
                         if (!result.Result) { vs.Add(x); }
                     });
-
-                // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
-                return vs;
-
-                //var result = connection.BulkInsert<InvestidorModel>(investidores);
-                //result.Actions.
-                /*
-                try
-                {
-                    using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
-                    {
-                        var filesInserted = 0L;
-
-                        sqlBulkCopy.DestinationTableName = "tbl_investidor";
-                        sqlBulkCopy.NotifyAfter = 1;
-                        sqlBulkCopy.SqlRowsCopied += (s, e) => filesInserted = e.RowsCopied;
-                        sqlBulkCopy.BatchSize = 1000;
-                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.NomeInvestidor), "nome_investidor");
-                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.Cnpj), "cnpj");
-                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.TipoInvestidor), "tipo_investidor");
-                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.CodAdministrador), "cod_administrador");
-                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.CodGestor), "cod_gestor");
-                        sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.UsuarioCriacao), "usuario_criacao");
-
-                        await sqlBulkCopy.WriteToServerAsync((System.Data.IDataReader)investidores);
-                        
-                        return filesInserted == investidores.Count;
-                    }
-                }
-                catch (SqlException ex)
-                {
-                    Console.Error.WriteLine(ex.Message);
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    Console.Error.WriteLine(ex.Message);
-                    return false;
-                }
-                */
+            */
+            // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
+            await Parallel.ForEachAsync(investidores, parallelOptions, async (x, cancellationToken) =>
+            {
+                var result = await AddAsync(x);
+                if (!result) { vs.Add(x); }
             }
+            );
+            return vs;
+
+            //var result = connection.BulkInsert<InvestidorModel>(investidores);
+            //result.Actions.
+            /*
+            try
+            {
+                using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
+                {
+                    var filesInserted = 0L;
+
+                    sqlBulkCopy.DestinationTableName = "tbl_investidor";
+                    sqlBulkCopy.NotifyAfter = 1;
+                    sqlBulkCopy.SqlRowsCopied += (s, e) => filesInserted = e.RowsCopied;
+                    sqlBulkCopy.BatchSize = 1000;
+                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.NomeInvestidor), "nome_investidor");
+                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.Cnpj), "cnpj");
+                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.TipoInvestidor), "tipo_investidor");
+                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.CodAdministrador), "cod_administrador");
+                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.CodGestor), "cod_gestor");
+                    sqlBulkCopy.ColumnMappings.Add(nameof(InvestidorModel.UsuarioCriacao), "usuario_criacao");
+
+                    await sqlBulkCopy.WriteToServerAsync((System.Data.IDataReader)investidores);
+
+                    return filesInserted == investidores.Count;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return false;
+            }
+            */
+            //}
         }
 
         public Task<bool> DeleteAsync(int id)

@@ -7,10 +7,10 @@ namespace DUDS.Service.Interface
 {
     public interface IMovimentacaoPassivoService : IGenericOperationsService<MovimentacaoPassivoModel>
     {
-        public Task<bool> AddBulkAsync(List<MovimentacaoPassivoModel> item);
+        Task<IEnumerable<MovimentacaoPassivoModel>> AddBulkAsync(List<MovimentacaoPassivoModel> item);
 
-        public Task<bool> DeleteByDataRefAsync(DateTime dataMovimentacao);
+        Task<bool> DeleteByDataRefAsync(DateTime dataMovimentacao);
 
-        public Task<IEnumerable<MovimentacaoPassivoModel>> GetByDataEntradaAsync(DateTime? dataMovimentacao);
+        Task<IEnumerable<MovimentacaoPassivoModel>> GetByDataEntradaAsync(DateTime? dataMovimentacao);
     }
 }

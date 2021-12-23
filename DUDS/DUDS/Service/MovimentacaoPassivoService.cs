@@ -37,12 +37,19 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddBulkAsync(List<MovimentacaoPassivoModel> item)
+        public async Task<IEnumerable<MovimentacaoPassivoModel>> AddBulkAsync(List<MovimentacaoPassivoModel> item)
         {
-            if (item == null) return false;
-            if (item.Count == 0) return false;
 
-            ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
+            ConcurrentBag<MovimentacaoPassivoModel> vs = new ConcurrentBag<MovimentacaoPassivoModel>();
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
+            await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
+            {
+                var result = await AddAsync(x);
+                if (!result) { vs.Add(x); }
+            }
+            );
+            return vs;
+            /*
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 _ = Parallel.ForEach(item, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
@@ -54,6 +61,7 @@ namespace DUDS.Service
                 // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
                 return vs.Count == item.Count;
             }
+            */
         }
 
         public Task<bool> DeleteAsync(int id)

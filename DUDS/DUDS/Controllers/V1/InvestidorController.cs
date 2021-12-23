@@ -139,7 +139,7 @@ namespace DUDS.Controllers.V1
                 if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetInvestidorByDataCriacao),
-                        new { data_criacao = retorno.FirstOrDefault().DataCriacao }, investidores);
+                        new { data_criacao = DateTime.Today }, investidores);
                 }
                 return BadRequest(retorno);
             }
@@ -322,7 +322,8 @@ namespace DUDS.Controllers.V1
                 var retorno = await _investidorDistribuidorService.AddInvestidorDistribuidores(investidorDistribuidor);
                 if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao), new { data_criacao = retorno.FirstOrDefault().DataCriacao }, investidorDistribuidor);
+                    // return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao), new { data_criacao = retorno.FirstOrDefault().DataCriacao }, investidorDistribuidor);
+                    return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao), new { data_criacao = DateTime.Today }, investidorDistribuidor);
                 }
                 return BadRequest(retorno);
             }

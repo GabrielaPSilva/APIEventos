@@ -61,14 +61,25 @@ namespace DUDS.Service
                 if (!result.Result) { vs.Add(x); }
             });
             */
+
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
+            await Parallel.ForEachAsync(investDistribuidor, parallelOptions, async (x, cancellationToken) =>
+            {
+                var result = await AddAsync(x);
+                if (!result) { vs.Add(x); }
+            }
+            );
+
             // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
 
+            /*
             var tasks = investDistribuidor.Select(async invest =>
             {
                 var result = await AddAsync(invest);
                 if (!result) { vs.Add(invest); }
             });
             await Task.WhenAll(tasks);
+            */
             return vs;
             //}
         }
