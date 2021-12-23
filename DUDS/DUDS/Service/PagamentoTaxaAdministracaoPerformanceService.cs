@@ -3,6 +3,7 @@ using DUDS.Models;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,8 +36,10 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddBulkAsync(List<PagamentoTaxaAdminPfeeModel> pgtoTaxaAdmimPerf)
+        public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> AddBulkAsync(List<PagamentoTaxaAdminPfeeModel> pgtoTaxaAdmimPerf)
         {
+            ConcurrentBag<PagamentoTaxaAdminPfeeModel> vs = new ConcurrentBag<PagamentoTaxaAdminPfeeModel>();
+            /*
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 Parallel.ForEach(pgtoTaxaAdmimPerf, async x =>
@@ -46,6 +49,15 @@ namespace DUDS.Service
 
                 return GetByCompetenciaAsync(pgtoTaxaAdmimPerf.FirstOrDefault().Competencia).Result.ToArray().Length == pgtoTaxaAdmimPerf.Count;
             }
+            */
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
+            await Parallel.ForEachAsync(pgtoTaxaAdmimPerf, parallelOptions, async (x, cancellationToken) =>
+            {
+                var result = await AddAsync(x);
+                if (!result) { vs.Add(x); }
+            }
+            );
+            return vs;
         }
 
         public async Task<bool> DeleteAsync(int id)

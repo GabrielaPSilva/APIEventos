@@ -37,12 +37,10 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddBulkAsync(List<OrdemPassivoModel> item)
+        public async Task<IEnumerable<OrdemPassivoModel>> AddBulkAsync(List<OrdemPassivoModel> item)
         {
-            if (item == null) return false;
-            if (item.Count == 0) return false;
-
-            ConcurrentBag<bool> vs = new ConcurrentBag<bool>();
+            ConcurrentBag<OrdemPassivoModel> vs = new ConcurrentBag<OrdemPassivoModel>();
+            /*
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 _ = Parallel.ForEach(item, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
@@ -54,6 +52,15 @@ namespace DUDS.Service
                 // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
                 return vs.Count == item.Count;
             }
+            */
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
+            await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
+            {
+                var result = await AddAsync(x);
+                if (!result) { vs.Add(x); }
+            }
+            );
+            return vs;
         }
 
         public Task<bool> DeleteAsync(int id)

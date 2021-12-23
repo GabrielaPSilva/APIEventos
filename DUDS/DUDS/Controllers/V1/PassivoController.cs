@@ -153,13 +153,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _ordemPassivoService.AddBulkAsync(ordemPassivo);
-                if (retorno)
+                var retorno = await _ordemPassivoService.AddBulkAsync(ordemPassivo);
+                if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetOrdemPassivo),
-                        new { dataEntrada = ordemPassivo.FirstOrDefault().DataEntrada }, ordemPassivo);
+                        new { dataEntrada = DateTime.Today }, ordemPassivo);
                 }
-                return NotFound();
+                return BadRequest(retorno);
             }
             catch (Exception e)
             {
@@ -212,13 +212,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _movimentacaoPassivoService.AddBulkAsync(movimentacaoPassico);
-                if (retorno)
+                var retorno = await _movimentacaoPassivoService.AddBulkAsync(movimentacaoPassico);
+                if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetOrdemPassivo),
                         new { dataMovimentacao = movimentacaoPassico.FirstOrDefault().DataMovimentacao }, movimentacaoPassico);
                 }
-                return NotFound();
+                return BadRequest(retorno);
             }
             catch (Exception e)
             {

@@ -40,6 +40,7 @@ namespace DUDS.Service
         public async Task<IEnumerable<PosicaoClientePassivoModel>> AddBulkAsync(List<PosicaoClientePassivoModel> item)
         {
             ConcurrentBag<PosicaoClientePassivoModel> vs = new ConcurrentBag<PosicaoClientePassivoModel>();
+            /*
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 _ = Parallel.ForEach(item, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
@@ -51,6 +52,15 @@ namespace DUDS.Service
                 // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
                 return vs;
             }
+            */
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
+            await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
+            {
+                var result = await AddAsync(x);
+                if (!result) { vs.Add(x); }
+            }
+            );
+            return vs;
         }
 
         public Task<bool> DeleteAsync(int id)

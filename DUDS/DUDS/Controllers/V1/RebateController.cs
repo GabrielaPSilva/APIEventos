@@ -562,13 +562,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _pagamentoTaxaAdministracaoPerformanceService.AddBulkAsync(pagamentoAdministracaoPerformance);
-                if (retorno)
+                var retorno = await _pagamentoTaxaAdministracaoPerformanceService.AddBulkAsync(pagamentoAdministracaoPerformance);
+                if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetPgtoTaxaAdmPfeeByCompetencia),
                         new { competencia = pagamentoAdministracaoPerformance.FirstOrDefault().Competencia }, pagamentoAdministracaoPerformance);
                 }
-                return NotFound();
+                return BadRequest(retorno);
             }
             catch (Exception e)
             {
