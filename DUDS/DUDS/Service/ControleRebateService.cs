@@ -54,7 +54,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ControleRebateModel>> GetByCompetenciaAsync(FiltroModel filtro, int pagina, int itensPorPagina)
+        public async Task<IEnumerable<ControleRebateModel>> GetByCompetenciaAsync(FiltroModel filtro)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -70,17 +70,10 @@ namespace DUDS.Service
                              ORDER BY
                                 tbl_controle_rebate.enviado,
 								tbl_controle_rebate.validado,
-								tbl_grupo_rebate.nome_grupo_rebate
-                             OFFSET
-                                 @itensPorPagina * (@pagina - 1)
-                             ROWS FETCH NEXT
-                                 @itensPorPagina
-                             ROWS ONLY";
+								tbl_grupo_rebate.nome_grupo_rebate";
 
                 return await connection.QueryAsync<ControleRebateModel>(query, new
                 {
-                    pagina,
-                    itensPorPagina,
                     filtro.Competencia,
                     filtro.NomeGrupoRebate
                 });
