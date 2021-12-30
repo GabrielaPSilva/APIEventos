@@ -18,6 +18,7 @@ namespace DUDS.Models
         public decimal Servico { get; set; }
         public decimal SaldoParcial { get; set; }
         public decimal SaldoGestor { get; set; }
+        public int CodAdministrador { get; set; }
         public string NomeFundo { get; set; }
     }
 }

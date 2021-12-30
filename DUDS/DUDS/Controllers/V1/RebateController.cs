@@ -401,6 +401,27 @@ namespace DUDS.Controllers.V1
         }
 
         // GET: api/Pagamentos/GetPagamentoServicoByIds/competencia/cod_fundo
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<PagamentoServicoModel>>> GetPagamentoServicoByCompetencia(string competencia)
+        {
+            try
+            {
+                var pagamentoServicos = await _pagamentoServicoService.GetPagamentoServicoByCompetencia(competencia);
+
+                if (pagamentoServicos.Any())
+                {
+                    return Ok(pagamentoServicos);
+                }
+                return NotFound();
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Pagamentos/GetPagamentoServicoByIds/competencia/cod_fundo
         [HttpGet("{competencia}/{cod_fundo}")]
         public async Task<ActionResult<PagamentoServicoModel>> GetPagamentoServicoByIds(string competencia, int cod_fundo)
         {
