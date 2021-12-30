@@ -47,11 +47,11 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetControleRebateByCompetencia
         [HttpGet()]
-        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebateByCompetencia([FromQuery] FiltroModel filtro, int pagina, int itensPorPagina)
+        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebateByCompetencia([FromQuery] FiltroModel filtro)
         {
             try
             {
-                var listaControleRebate = await _controleRebateService.GetByCompetenciaAsync(filtro, pagina, itensPorPagina);
+                var listaControleRebate = await _controleRebateService.GetByCompetenciaAsync(filtro);
 
                 if (listaControleRebate.Any())
                 {
