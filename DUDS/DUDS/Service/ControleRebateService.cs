@@ -65,7 +65,8 @@ namespace DUDS.Service
                                  tbl_controle_rebate
 	                               INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
                              WHERE
-                                (@Competencia IS NULL OR tbl_controle_rebate.competencia = @Competencia)
+                                (@Competencia IS NULL OR tbl_controle_rebate.competencia = @Competencia) AND
+								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.nome_grupo_rebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%')
                              ORDER BY
                                 tbl_controle_rebate.enviado,
 								tbl_controle_rebate.validado,
@@ -80,7 +81,8 @@ namespace DUDS.Service
                 {
                     pagina,
                     itensPorPagina,
-                    filtro.Competencia
+                    filtro.Competencia,
+                    filtro.NomeGrupoRebate
                 });
             }
         }

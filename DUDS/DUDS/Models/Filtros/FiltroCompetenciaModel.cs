@@ -8,5 +8,6 @@ namespace DUDS.Models.Filtros
     public partial class FiltroModel
     {
         public string Competencia { get; set; }
+        public string NomeGrupoRebate { get; set; }
     }
 }
