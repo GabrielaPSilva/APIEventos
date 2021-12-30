@@ -49,7 +49,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Investidor/GetInvestidorById/id
         [HttpGet("{id}")]
-        
+
         public async Task<ActionResult<InvestidorModel>> GetInvestidorById(int id)
         {
             try
@@ -92,7 +92,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Investidor/GetInvestidorByDataCriacao/dataCriacao
         [HttpGet("{dataCriacao}")]
-        public async Task<ActionResult<IEnumerable<ErrosPagamentoModel>>> GetInvestidorByDataCriacao(DateTime dataCriacao)
+        public async Task<ActionResult<IEnumerable<InvestidorModel>>> GetInvestidorByDataCriacao(DateTime dataCriacao)
         {
             try
             {
@@ -138,8 +138,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _investidorService.AddInvestidores(investidores);
                 if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetInvestidorByDataCriacao),
-                        new { data_criacao = DateTime.Today }, investidores);
+                    return CreatedAtAction(nameof(GetInvestidorByDataCriacao), new { data_criacao = DateTime.Today }, investidores);
                 }
                 return BadRequest(retorno);
             }

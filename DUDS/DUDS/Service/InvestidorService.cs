@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using Z.Dapper.Plus;
 
 namespace DUDS.Service
@@ -36,7 +37,7 @@ namespace DUDS.Service
                     try
                     {
                         string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
-                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id },transaction:transaction);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
                         return retorno > 0;
                     }
                     catch (Exception ex)
@@ -53,22 +54,18 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                using (IDbTransaction transaction = connection.BeginTransaction())
-                {
                     try
                     {
                         string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        var retorno = await connection.ExecuteAsync(sql: query, param: investidor, transaction: transaction);
-                        transaction.Commit();
+                        var retorno = await connection.ExecuteAsync(sql: query, param: investidor);                        
                         return retorno > 0;
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        transaction.Rollback();
                         return false;
                     }
-                }
+                
             }
         }
 
