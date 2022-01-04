@@ -66,7 +66,8 @@ namespace DUDS.Service
 	                               INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
                              WHERE
                                 (@Competencia IS NULL OR tbl_controle_rebate.competencia = @Competencia) AND
-								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.nome_grupo_rebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%')
+								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.nome_grupo_rebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%') AND
+	                            tbl_controle_rebate.enviado = 0
                              ORDER BY
                                 tbl_controle_rebate.enviado,
 								tbl_controle_rebate.validado,
