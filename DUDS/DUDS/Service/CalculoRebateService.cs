@@ -161,7 +161,6 @@ namespace DUDS.Service
 	                                     calculo_pgto_adm_pfee.cod_sub_contrato,
 	                                     calculo_pgto_adm_pfee.cod_contrato_fundo,
 	                                     calculo_pgto_adm_pfee.cod_contrato_remuneracao,
-	                                     calculo_pgto_adm_pfee.cod_agrupador_remuneracao,
 	                                     calculo_pgto_adm_pfee.cod_administrador,
 	                                     calculo_pgto_adm_pfee.valor_adm,
 	                                     calculo_pgto_adm_pfee.valor_pfee_resgate,
