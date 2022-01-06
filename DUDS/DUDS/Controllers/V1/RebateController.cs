@@ -400,7 +400,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // GET: api/Pagamentos/GetPagamentoServicoByIds/competencia/cod_fundo
+        // GET: api/Pagamentos/GetPagamentoServicoByIds/competencia
         [HttpGet("{competencia}")]
         public async Task<ActionResult<IEnumerable<PagamentoServicoModel>>> GetPagamentoServicoByCompetencia(string competencia)
         {
