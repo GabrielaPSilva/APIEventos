@@ -146,11 +146,13 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"	SELECT
+                const string query = @"SELECT
 										 calculo_pgto_adm_pfee.id,
 	                                     calculo_pgto_adm_pfee.competencia,
 	                                     calculo_pgto_adm_pfee.cod_investidor_distribuidor,
 	                                     investidor.nome_investidor,
+										 investidor.cnpj,
+										 investidor_distribuidor.cod_invest_administrador AS cod_mellon,
 	                                     investidor_distribuidor.cod_grupo_rebate,
 	                                     grupo_rebate.nome_grupo_rebate,
 	                                     investidor_distribuidor.cod_tipo_contrato,
