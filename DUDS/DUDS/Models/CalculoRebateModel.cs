@@ -47,15 +47,11 @@ namespace DUDS.Models
         public bool Ativo { get; set; }
 
         public string NomeInvestidor { get; set; }
-
+        public string CNPJ { get; set; }
         public int CodGrupoRebate { get; set; }
-
         public string NomeGrupoRebate { get; set; }
-
         public int CodTipoContrato { get; set; }
-
         public string NomeTipoContrato { get; set; }
-
         public string NomeFundo { get; set; }
         public string CodMellon { get; set; }
     }
