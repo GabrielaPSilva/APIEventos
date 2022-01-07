@@ -215,7 +215,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _movimentacaoPassivoService.AddBulkAsync(movimentacaoPassico);
                 if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetOrdemPassivo),
+                    return CreatedAtAction(nameof(GetMovimentacaoPassivo),
                         new { dataMovimentacao = movimentacaoPassico.FirstOrDefault().DataMovimentacao }, movimentacaoPassico);
                 }
                 return BadRequest(retorno);

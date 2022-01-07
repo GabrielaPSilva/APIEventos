@@ -38,7 +38,7 @@ namespace DUDS.Service
                     try
                     {
                         string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction, commandTimeout: 180);
                         transaction.Commit();
                         return retorno > 0;
                     }

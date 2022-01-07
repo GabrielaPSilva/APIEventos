@@ -155,11 +155,14 @@ namespace DUDS
             services.AddScoped<IEmailGrupoRebateService, EmailGrupoRebateService>();
             services.AddScoped<IControleRebateService, ControleRebateService>();
             services.AddScoped<IPosicaoClientePassivoService,PosicaoClientePassivoService>();
+            services.AddScoped<IOrdemPassivoService, OrdemPassivoService>();
+            services.AddScoped<IMovimentacaoPassivoService, MovimentacaoPassivoService>();
+            services.AddScoped<IPosicaoClientePassivoService, PosicaoClientePassivoService>();
 
             // Teste - Body Length
             //services.Configure<FormOptions>(options =>
             //{
-                // Set the limit to 256 MB
+            // Set the limit to 256 MB
             //    options.MultipartBodyLengthLimit = 268435456;
             //});
         }

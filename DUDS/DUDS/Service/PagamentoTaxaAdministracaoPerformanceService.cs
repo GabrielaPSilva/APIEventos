@@ -21,6 +21,7 @@ namespace DUDS.Service
             new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" })
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
+            //Dapper.SqlMapper.Settings.CommandTimeout = 120;
         }
 
         public Task<bool> ActivateAsync(int id)
@@ -37,7 +38,7 @@ namespace DUDS.Service
                     try
                     {
                         string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction,commandTimeout:180);
                         transaction.Commit();
                         return retorno > 0;
                     }
@@ -203,7 +204,7 @@ namespace DUDS.Service
                     try
                     {
                         const string query = "DELETE FROM tbl_pgto_adm_pfee WHERE competencia = @competencia";
-                        var retorno = await connection.ExecuteAsync(sql: query, param: new { competencia }, transaction:transaction);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { competencia }, transaction:transaction,commandTimeout:180);
                         transaction.Commit();
                         return retorno > 0;
                     }

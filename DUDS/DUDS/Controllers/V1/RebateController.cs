@@ -451,7 +451,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _pagamentoServicoService.AddPagamentoServico(pagamentoServico);
                 if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetErrosPagamentoByCompetencia),
+                    return CreatedAtAction(nameof(GetPagamentoServicoByCompetencia),
                         new { competencia = pagamentoServico.FirstOrDefault().Competencia }, pagamentoServico);
                 }
                 return BadRequest(retorno);

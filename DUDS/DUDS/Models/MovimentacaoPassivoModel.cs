@@ -22,6 +22,8 @@ namespace DUDS.Models
 
         public double ValorCota { get; set; }
 
+        public double ValorBruto { get; set; }
+
         public double Irrf { get; set; }
 
         public double Iof { get; set; }
@@ -34,7 +36,7 @@ namespace DUDS.Models
 
         public double ValorPerformance { get; set; }
 
-        public int NumOrdem { get; set; }
+        public string NumOrdem { get; set; }
 
         public string TipoTransferencia { get; set; }
 
