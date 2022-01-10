@@ -147,39 +147,44 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = @"SELECT
-										 calculo_pgto_adm_pfee.id,
-	                                     calculo_pgto_adm_pfee.competencia,
-	                                     calculo_pgto_adm_pfee.cod_investidor_distribuidor,
-	                                     investidor.nome_investidor,
-										 investidor.cnpj,
-										 investidor_distribuidor.cod_invest_administrador AS cod_mellon,
-	                                     investidor_distribuidor.cod_grupo_rebate,
-	                                     grupo_rebate.nome_grupo_rebate,
-	                                     investidor_distribuidor.cod_tipo_contrato,
-	                                     tipo_contrato.tipo_contrato AS nome_tipo_contrato,
-	                                     calculo_pgto_adm_pfee.cod_fundo,
-	                                     fundo.nome_reduzido AS nome_fundo,
-	                                     calculo_pgto_adm_pfee.cod_contrato,
-	                                     calculo_pgto_adm_pfee.cod_sub_contrato,
-	                                     calculo_pgto_adm_pfee.cod_contrato_fundo,
-	                                     calculo_pgto_adm_pfee.cod_contrato_remuneracao,
-	                                     calculo_pgto_adm_pfee.cod_administrador,
-	                                     calculo_pgto_adm_pfee.valor_adm,
-	                                     calculo_pgto_adm_pfee.valor_pfee_resgate,
-	                                     calculo_pgto_adm_pfee.valor_pfee_semestre,
-                                         calculo_pgto_adm_pfee.perc_adm,
-                                         calculo_pgto_adm_pfee.perc_pfee,
-	                                     calculo_pgto_adm_pfee.rebate_adm,
-	                                     calculo_pgto_adm_pfee.rebate_pfee_resgate,
-	                                     calculo_pgto_adm_pfee.rebate_pfee_semestre
+	                                   	--calculo_pgto_adm_pfee.id,
+                                        calculo_pgto_adm_pfee.competencia,
+                                        --calculo_pgto_adm_pfee.cod_investidor_distribuidor,
+                                        investidor.nome_investidor,
+	                                    investidor.cnpj,
+	                                    investidor_distribuidor.cod_invest_administrador AS cod_mellon,
+                                        investidor_distribuidor.cod_grupo_rebate,
+                                        grupo_rebate.nome_grupo_rebate,
+                                        --investidor_distribuidor.cod_tipo_contrato,
+                                        tipo_contrato.tipo_contrato AS nome_tipo_contrato,
+                                        --calculo_pgto_adm_pfee.cod_fundo,
+                                        fundo.nome_reduzido AS nome_fundo,
+	                                    fundo.cnpj AS cnpj_fundo,
+	                                    distribuidor.nome_distribuidor,
+                                        --calculo_pgto_adm_pfee.cod_contrato,
+                                        --calculo_pgto_adm_pfee.cod_sub_contrato,
+                                        --calculo_pgto_adm_pfee.cod_contrato_fundo,
+                                        --calculo_pgto_adm_pfee.cod_contrato_remuneracao,
+                                        --calculo_pgto_adm_pfee.cod_administrador,
+	                                    administrador.nome_administrador,
+                                        calculo_pgto_adm_pfee.valor_adm,
+                                        calculo_pgto_adm_pfee.valor_pfee_resgate,
+                                        calculo_pgto_adm_pfee.valor_pfee_semestre,
+                                        calculo_pgto_adm_pfee.perc_adm,
+                                        calculo_pgto_adm_pfee.perc_pfee,
+                                        calculo_pgto_adm_pfee.rebate_adm,
+                                        calculo_pgto_adm_pfee.rebate_pfee_resgate,
+                                        calculo_pgto_adm_pfee.rebate_pfee_semestre
                                     FROM
-	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
-	                                   
-										INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = calculo_pgto_adm_pfee.cod_investidor_distribuidor
-										INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
-	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
-	                                    INNER JOIN tbl_fundo fundo ON fundo.id = calculo_pgto_adm_pfee.cod_fundo
-	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
+                                        tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
+		                                    INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = calculo_pgto_adm_pfee.cod_investidor_distribuidor
+		                                    INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
+		                                    INNER JOIN tbl_distribuidor_administrador distribuidor_administrador ON investidor_distribuidor.cod_distribuidor_administrador = distribuidor_administrador.id
+		                                    INNER JOIN tbl_distribuidor distribuidor ON distribuidor.id = distribuidor_administrador.cod_distribuidor
+		                                    INNER JOIN tbl_administrador administrador ON calculo_pgto_adm_pfee.cod_administrador = administrador.id
+		                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
+		                                    INNER JOIN tbl_fundo fundo ON fundo.id = calculo_pgto_adm_pfee.cod_fundo
+		                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
 								    WHERE
 										calculo_pgto_adm_pfee.competencia = @competencia AND
                                         grupo_rebate.id = @id
