@@ -28,6 +28,6 @@ namespace DUDS.Models
         public string NomeAdministrador { get; set; }
         public string NomeInvestidor { get; set; }
         public string TipoContrato { get; set; }
-        public string GrupoRebate { get; set; }
+        public string NomeGrupoRebate { get; set; }
     }
 }
