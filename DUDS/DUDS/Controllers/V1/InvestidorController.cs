@@ -235,11 +235,11 @@ namespace DUDS.Controllers.V1
             {
                 var InvestidorDistribuidor = await _investidorDistribuidorService.GetAllAsync();
 
-                if (InvestidorDistribuidor == null)
+                if (InvestidorDistribuidor.Any())
                 {
-                    return NotFound();
+                    return Ok(InvestidorDistribuidor); 
                 }
-                return Ok(InvestidorDistribuidor);
+                return NotFound();
             }
             catch (Exception e)
             {
