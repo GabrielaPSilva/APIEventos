@@ -9,41 +9,23 @@ namespace DUDS.Models
     {
         public Guid Id { get; set; }
         public string Competencia { get; set; }
-        
         public int CodInvestidorDistribuidor { get; set; }
-
         public int CodFundo { get; set; }
-
         public int CodContrato { get; set; }
-        
         public int CodSubContrato { get; set; }
-        
         public int CodContratoFundo { get; set; }
-        
         public int CodContratoRemuneracao { get; set; }
-        
         public int CodAdministrador { get; set; }
-        
         public decimal ValorAdm { get; set; }
-        
         public decimal ValorPfeeResgate { get; set; }
-        
         public decimal ValorPfeeSemestre { get; set; }
-
         public decimal PercAdm { get; set; }
-
         public decimal PercPfee { get; set; }
-
         public decimal RebateAdm { get; set; }
-        
         public decimal RebatePfeeResgate { get; set; }
-        
         public decimal RebatePfeeSemestre { get; set; }
-        
         public DateTime DataCriacao { get; set; }
-
         public string UsuarioCriacao { get; set; }
-
         public bool Ativo { get; set; }
 
         public string NomeInvestidor { get; set; }
