@@ -253,12 +253,13 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var investidores = await _investidorDistribuidorService.GetInvestidorDistribuidorByDataCriacao(dataCriacao);
+                var investidoreDistribuidor = await _investidorDistribuidorService.GetInvestidorDistribuidorByDataCriacao(dataCriacao);
 
-                if (investidores.Any())
+                if (investidoreDistribuidor.Any())
                 {
-                    return Ok(investidores);
+                    return Ok(investidoreDistribuidor);
                 }
+
                 return NotFound();
             }
             catch (Exception e)
