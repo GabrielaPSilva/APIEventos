@@ -13,7 +13,7 @@ namespace DUDS.Service
     public class MovimentacaoPassivoService : GenericService<MovimentacaoPassivoModel>, IMovimentacaoPassivoService
     {
         public MovimentacaoPassivoService() : base(new MovimentacaoPassivoModel(),
-                   "tbl_movimentacao_passivo",
+                   "tbl_movimentacao_nota",
                    new List<string> { "'id'" },
                    new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" },
                    new List<string> { "'id'" },
