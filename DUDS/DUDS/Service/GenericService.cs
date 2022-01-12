@@ -25,7 +25,9 @@ namespace DUDS.Service
         protected readonly List<string> _propertiesUpdate = new List<string>();
         protected readonly List<string> _fieldsUpdate = new List<string>();
 
-        protected readonly int maxParallProcess = 8; // Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.5) * 2.0));
+        protected readonly int maxParallProcess = Environment.GetEnvironmentVariable("MAX_PARALLEL_JOBS") != null ? 
+            Convert.ToInt32(Environment.GetEnvironmentVariable("MAX_PARALLEL_JOBS")) : 
+            4; // Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.5) * 2.0));
 
         public GenericService(T item, string tableName, List<string> ignoreFieldsInsert, List<string> ignorePropertiesInsert, List<string> ignoreFieldsUpdate, List<string> ignorePropertiesUpdate)
         {
