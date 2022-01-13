@@ -13,11 +13,11 @@ namespace DUDS.Service
     {
         protected readonly string _tableName;
 
-        protected readonly List<string> _ignoreFieldsInsert;
-        protected readonly List<string> _ignorePropertiesInsert;
+        protected readonly List<string> _ignoreFieldsInsert = new List<string> { "'id'", "'data_criacao'", "'ativo'" };
+        protected readonly List<string> _ignorePropertiesInsert = new List<string> { "Id", "DataCriacao", "Ativo"};
 
-        protected readonly List<string> _ignoreFieldsUpdate;
-        protected readonly List<string> _ignorePropertiesUpdate;
+        protected readonly List<string> _ignoreFieldsUpdate = new List<string> { "'id'", "'data_criacao'", "'usuario_criacao'" };
+        protected readonly List<string> _ignorePropertiesUpdate = new List<string> { "Id", "DataCriacao", "UsuarioCriacao"};
 
         protected readonly List<string> _propertiesInsert = new List<string>();
         protected readonly List<string> _fieldsInsert = new List<string>();
@@ -29,12 +29,8 @@ namespace DUDS.Service
             Convert.ToInt32(Environment.GetEnvironmentVariable("MAX_PARALLEL_JOBS")) : 
             4; // Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.5) * 2.0));
 
-        public GenericService(T item, string tableName, List<string> ignoreFieldsInsert, List<string> ignorePropertiesInsert, List<string> ignoreFieldsUpdate, List<string> ignorePropertiesUpdate)
+        public GenericService(T item, string tableName)
         {
-            _ignoreFieldsInsert = ignoreFieldsInsert;
-            _ignorePropertiesInsert = ignorePropertiesInsert;
-            _ignoreFieldsUpdate = ignoreFieldsUpdate;
-            _ignorePropertiesUpdate = ignorePropertiesUpdate;
             _tableName = tableName;
 
             PropertyInfo[] myPropertyInfo = item.GetType().GetProperties();

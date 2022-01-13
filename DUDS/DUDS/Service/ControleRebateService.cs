@@ -13,11 +13,7 @@ namespace DUDS.Service
     public class ControleRebateService : GenericService<ControleRebateModel>, IControleRebateService
     {
         public ControleRebateService() : base(new ControleRebateModel(),
-                                              "tbl_controle_rebate",
-                                              new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                              new List<string> { "Id", "DataCriacao", "Calculo", "NomeGrupoRebate" },
-                                              new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                              new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "Calculo", "NomeGrupoRebate" })
+                                              "tbl_controle_rebate")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
