@@ -87,8 +87,13 @@ namespace DUDS.Service
             {
                 var query = @"SELECT
                                 tbl_controle_rebate.*,
-								tbl_pgto_adm_pfee.*,
                                 tbl_calculo_pgto_adm_pfee.*,
+								tbl_pgto_adm_pfee.competencia,
+								tbl_pgto_adm_pfee.taxa_administracao AS ValorAdm,
+								tbl_pgto_adm_pfee.taxa_performance_apropriada AS ValorPfeeSemestre,
+								tbl_pgto_adm_pfee.taxa_performance_resgate AS ValorPfeeResgate,
+								tbl_contrato_remuneracao.percentual_adm AS PercAdm,
+								tbl_contrato_remuneracao.percentual_pfee AS PercPfee,
                                 tbl_grupo_rebate.nome_grupo_rebate AS NomeGrupoRebate,
                                 tbl_investidor.nome_investidor AS NomeInvestidor,
                                 tbl_fundo.nome_reduzido AS NomeFundo,
@@ -99,6 +104,7 @@ namespace DUDS.Service
 		                            INNER JOIN tbl_investidor_distribuidor ON tbl_controle_rebate.cod_grupo_rebate = tbl_investidor_distribuidor.cod_grupo_rebate
 									INNER JOIN tbl_pgto_adm_pfee ON tbl_pgto_adm_pfee.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
 		                            INNER JOIN tbl_calculo_pgto_adm_pfee ON tbl_calculo_pgto_adm_pfee.cod_pgto_adm_pfee = tbl_pgto_adm_pfee.id
+									INNER JOIN tbl_contrato_remuneracao ON tbl_calculo_pgto_adm_pfee.cod_contrato_remuneracao = tbl_contrato_remuneracao.id
 		                            INNER JOIN tbl_fundo ON tbl_pgto_adm_pfee.cod_fundo = tbl_fundo.id
 		                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
 		                            INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.cod_tipo_contrato = tbl_tipo_contrato.id
