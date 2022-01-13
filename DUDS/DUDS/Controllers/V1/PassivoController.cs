@@ -51,7 +51,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PosicaoClientePassivoModel>>> GetPosicaoClientePassivo([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
+        public async Task<ActionResult<IEnumerable<PosicaoClienteModel>>> GetPosicaoClientePassivo([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet]
-        public async Task<ActionResult<PosicaoClientePassivoModel>> GetMaiorValorBruto([FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
+        public async Task<ActionResult<PosicaoClienteModel>> GetMaiorValorBruto([FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace DUDS.Controllers.V1
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<PosicaoClientePassivoModel>>> AddPosicaoClientePassivo(List<PosicaoClientePassivoModel> posicaoClientePassivo)
+        public async Task<ActionResult<IEnumerable<PosicaoClienteModel>>> AddPosicaoClientePassivo(List<PosicaoClienteModel> posicaoClientePassivo)
         {
             try
             {

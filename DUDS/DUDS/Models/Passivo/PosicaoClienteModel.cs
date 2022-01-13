@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace DUDS.Models
+namespace DUDS.Models.Passivo
 {
-    public class PosicaoClientePassivoModel
+    public class PosicaoClienteModel
     {
         public Guid Id { get; set; }
 
@@ -34,17 +34,5 @@ namespace DUDS.Models
 
         public double ValorBrutoBloqueado { get; set; }
 
-        // Campos adicionais para facilitar acompanhar os respectivos codigos
-        public string NomeInvestidor { get; set; }
-
-        public string NomeFundo { get; set; }
-
-        public string NomeAdministradorInvestidor { get; set; }
-        
-        public string NomeAdministradorDados { get; set; }
-
-        public string NomeDistribuidor { get; set; }
-
-        public string NomeGestor { get; set; }
     }
 }

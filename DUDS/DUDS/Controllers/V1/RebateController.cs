@@ -363,7 +363,7 @@ namespace DUDS.Controllers.V1
         #region Pagamento Servico
         // GET: api/Pagamentos/GetPagamentoServico
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PagamentoServicoModel>>> GetPagamentoServico()
+        public async Task<ActionResult<IEnumerable<PgtoServicoModel>>> GetPagamentoServico()
         {
             try
             {
@@ -383,7 +383,7 @@ namespace DUDS.Controllers.V1
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PagamentoServicoModel>> GetPagamentoServicoById(int id)
+        public async Task<ActionResult<PgtoServicoModel>> GetPagamentoServicoById(int id)
         {
             try
             {
@@ -402,7 +402,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Pagamentos/GetPagamentoServicoByIds/competencia
         [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<PagamentoServicoModel>>> GetPagamentoServicoByCompetencia(string competencia)
+        public async Task<ActionResult<IEnumerable<PgtoServicoModel>>> GetPagamentoServicoByCompetencia(string competencia)
         {
             try
             {
@@ -423,7 +423,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Pagamentos/GetPagamentoServicoByIds/competencia/cod_fundo
         [HttpGet("{competencia}/{cod_fundo}")]
-        public async Task<ActionResult<PagamentoServicoModel>> GetPagamentoServicoByIds(string competencia, int cod_fundo)
+        public async Task<ActionResult<PgtoServicoModel>> GetPagamentoServicoByIds(string competencia, int cod_fundo)
         {
             try
             {
@@ -444,7 +444,7 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Pagamentos/AddPagamentoServico/List<PagamentoServicoModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<PagamentoServicoModel>>> AddPagamentoServico(List<PagamentoServicoModel> pagamentoServico)
+        public async Task<ActionResult<IEnumerable<PgtoServicoModel>>> AddPagamentoServico(List<PgtoServicoModel> pagamentoServico)
         {
             try
             {
@@ -503,7 +503,7 @@ namespace DUDS.Controllers.V1
         #region Pagamento Taxa Admin Pfee
         // GET: api/Pagamentos/GetPgtoTaxaAdmPfee
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PagamentoTaxaAdminPfeeModel>>> GetPgtoTaxaAdmPfee()
+        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeModel>>> GetPgtoTaxaAdmPfee()
         {
             try
             {
@@ -523,7 +523,7 @@ namespace DUDS.Controllers.V1
         }
 
         [HttpGet("{guid}")]
-        public async Task<ActionResult<PagamentoTaxaAdminPfeeModel>> GetPgtoTaxaAdmPfeeById(Guid id)
+        public async Task<ActionResult<PgtoTaxaAdmPfeeModel>> GetPgtoTaxaAdmPfeeById(Guid id)
         {
             try
             {
@@ -541,7 +541,7 @@ namespace DUDS.Controllers.V1
         }
 
         [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<PagamentoTaxaAdminPfeeModel>>> GetPgtoTaxaAdmPfeeByCompetencia(string competencia)
+        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeModel>>> GetPgtoTaxaAdmPfeeByCompetencia(string competencia)
         {
             try
             {
@@ -560,7 +560,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Pagamentos/GetPgtoTaxaAdmPfeeByIds/competencia/cod_investidor_distribuidor/cod_administrador/cod_fundo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PagamentoTaxaAdminPfeeModel>>> GetPgtoTaxaAdmPfeeByIds([FromQuery] string competencia, [FromQuery] int? cod_fundo, [FromQuery] int? cod_administrador, [FromQuery] int? cod_investidor_distribuidor)
+        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeModel>>> GetPgtoTaxaAdmPfeeByIds([FromQuery] string competencia, [FromQuery] int? cod_fundo, [FromQuery] int? cod_administrador, [FromQuery] int? cod_investidor_distribuidor)
         {
             try
             {
@@ -579,7 +579,7 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Pagamentos/AddPgtoTaxaAdminPfee/List<PagamentoTaxaAdminPfeeModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<PagamentoTaxaAdminPfeeModel>>> AddPgtoTaxaAdminPfee(List<PagamentoTaxaAdminPfeeModel> pagamentoAdministracaoPerformance)
+        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeModel>>> AddPgtoTaxaAdminPfee(List<PgtoTaxaAdmPfeeModel> pagamentoAdministracaoPerformance)
         {
             try
             {
@@ -639,7 +639,7 @@ namespace DUDS.Controllers.V1
         #region Pagamento Taxa Admin Pfee Com Dados do Investidor
         // GET: api/Pagamentos/GetPgtoTaxaAdmPfeeInvestidor
         [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<PagamentoAdmPfeeInvestidorModel>>> GetPgtoTaxaAdmPfeeInvestidor(string competencia)
+        public async Task<ActionResult<IEnumerable<PgtoAdmPfeeInvestidorViewModel>>> GetPgtoTaxaAdmPfeeInvestidor(string competencia)
         {
             try
             {
@@ -705,8 +705,9 @@ namespace DUDS.Controllers.V1
                 var retorno = await _calculoRebateService.AddBulkAsync(calculoRebate);
                 if (!retorno.Any())
                 {
+                    // TODO - Verificar este retorno sobre como pegar a competência
                     return CreatedAtAction(nameof(GetCalculoRebate),
-                        new { competencia = calculoRebate.FirstOrDefault().Competencia }, calculoRebate);
+                        new { competencia = DateTime.Now }, calculoRebate);
                 }
                 return BadRequest(retorno);
             }

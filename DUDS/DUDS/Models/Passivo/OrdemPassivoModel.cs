@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DUDS.Models
+namespace DUDS.Models.Passivo
 {
     public class OrdemPassivoModel
     {
@@ -34,10 +34,5 @@ namespace DUDS.Models
 
         public int CodAdministrador { get; set; }
 
-        public string NomeInvestidor  { get; set; }
-
-        public string NomeFundo { get; set; }
-
-        public string NomeAdministrador { get; set; }
     }
 }

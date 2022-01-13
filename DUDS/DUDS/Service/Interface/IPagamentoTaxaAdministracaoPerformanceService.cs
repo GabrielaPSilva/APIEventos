@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service.Interface
 {
-    public interface IPagamentoTaxaAdministracaoPerformanceService : IGenericOperationsService<PagamentoTaxaAdminPfeeModel>
+    public interface IPagamentoTaxaAdministracaoPerformanceService : IGenericOperationsService<PgtoTaxaAdmPfeeModel>
     {
-        Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> AddBulkAsync(List<PagamentoTaxaAdminPfeeModel> pgtoTaxaAdmimPerf);
-        Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByCompetenciaAsync(string competencia);
-        Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByIdsAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor);
+        Task<IEnumerable<PgtoTaxaAdmPfeeModel>> AddBulkAsync(List<PgtoTaxaAdmPfeeModel> pgtoTaxaAdmimPerf);
+        Task<IEnumerable<PgtoTaxaAdmPfeeModel>> GetByCompetenciaAsync(string competencia);
+        Task<IEnumerable<PgtoTaxaAdmPfeeModel>> GetByIdsAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor);
         Task<bool> DeleteByCompetenciaAsync(string competencia);
-        Task<IEnumerable<PagamentoAdmPfeeInvestidorModel>> GetPgtoAdmPfeeInvestByCompetenciaAsync(string competencia);
+        Task<IEnumerable<PgtoAdmPfeeInvestidorViewModel>> GetPgtoAdmPfeeInvestByCompetenciaAsync(string competencia);
 
-        Task<PagamentoTaxaAdminPfeeModel> GetByIdAsync(Guid id);
+        Task<PgtoTaxaAdmPfeeModel> GetByIdAsync(Guid id);
 
 
     }

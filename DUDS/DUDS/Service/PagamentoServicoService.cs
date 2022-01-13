@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class PagamentoServicoService : GenericService<PagamentoServicoModel>, IPagamentoServicoService
+    public class PagamentoServicoService : GenericService<PgtoServicoModel>, IPagamentoServicoService
     {
-        public PagamentoServicoService() : base(new PagamentoServicoModel(),
+        public PagamentoServicoService() : base(new PgtoServicoModel(),
             "tbl_pagamento_servico",
             new List<string> { "'id'" },
             new List<string> { "Id", "NomeFundo" },
@@ -28,7 +28,7 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<bool> AddAsync(PagamentoServicoModel item)
+        public async Task<bool> AddAsync(PgtoServicoModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -51,9 +51,9 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<PagamentoServicoModel>> AddPagamentoServico(List<PagamentoServicoModel> pagamentoServicos)
+        public async Task<IEnumerable<PgtoServicoModel>> AddPagamentoServico(List<PgtoServicoModel> pagamentoServicos)
         {
-            ConcurrentBag<PagamentoServicoModel> vs = new ConcurrentBag<PagamentoServicoModel>();
+            ConcurrentBag<PgtoServicoModel> vs = new ConcurrentBag<PgtoServicoModel>();
             ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
             await Parallel.ForEachAsync(pagamentoServicos, parallelOptions, async (x, cancellationToken) =>
             {
@@ -115,7 +115,7 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<PagamentoServicoModel>> GetAllAsync()
+        public async Task<IEnumerable<PgtoServicoModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -129,11 +129,11 @@ namespace DUDS.Service
                                         pagamento_servico.competencia,
                                         fundo.nome_reduzido";
 
-                return await connection.QueryAsync<PagamentoServicoModel>(query);
+                return await connection.QueryAsync<PgtoServicoModel>(query);
             }
         }
 
-        public async Task<PagamentoServicoModel> GetByIdAsync(int id)
+        public async Task<PgtoServicoModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -146,11 +146,11 @@ namespace DUDS.Service
                                      WHERE
                                         pagamento_servico.id = @id";
 
-                return await connection.QueryFirstOrDefaultAsync<PagamentoServicoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<PgtoServicoModel>(query, new { id });
             }
         }
 
-        public async Task<IEnumerable<PagamentoServicoModel>> GetByIdsAsync(string competencia, int codFundo)
+        public async Task<IEnumerable<PgtoServicoModel>> GetByIdsAsync(string competencia, int codFundo)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -164,11 +164,11 @@ namespace DUDS.Service
                                         pagamento_servico.cod_fundo = @cod_fundo
                                         AND pagamento_servico.competencia = @competencia";
 
-                return await connection.QueryAsync<PagamentoServicoModel>(query, new { cod_fundo = codFundo, competencia });
+                return await connection.QueryAsync<PgtoServicoModel>(query, new { cod_fundo = codFundo, competencia });
             }
         }
 
-        public async Task<IEnumerable<PagamentoServicoModel>> GetPagamentoServicoByCompetencia(string competencia)
+        public async Task<IEnumerable<PgtoServicoModel>> GetPagamentoServicoByCompetencia(string competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -181,11 +181,11 @@ namespace DUDS.Service
                                      WHERE
                                         pagamento_servico.competencia = @competencia";
 
-                return await connection.QueryAsync<PagamentoServicoModel>(query, new { competencia });
+                return await connection.QueryAsync<PgtoServicoModel>(query, new { competencia });
             }
         }
 
-        public Task<bool> UpdateAsync(PagamentoServicoModel item)
+        public Task<bool> UpdateAsync(PgtoServicoModel item)
         {
             throw new NotImplementedException();
         }

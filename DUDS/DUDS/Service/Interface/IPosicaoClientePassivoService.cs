@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service.Interface
 {
-    public interface IPosicaoClientePassivoService : IGenericOperationsService<PosicaoClientePassivoModel>
+    public interface IPosicaoClientePassivoService : IGenericOperationsService<PosicaoClienteModel>
     {
-        Task<IEnumerable<PosicaoClientePassivoModel>> AddBulkAsync(List<PosicaoClientePassivoModel> item);
+        Task<IEnumerable<PosicaoClienteModel>> AddBulkAsync(List<PosicaoClienteModel> item);
 
         Task<bool> DeleteByDataRefAsync(DateTime dataRef);
 
@@ -15,8 +15,8 @@ namespace DUDS.Service.Interface
 
         // public Task<IEnumerable<PosicaoClientePassivoModel>> GetByDataRefAsync(DateTime dataRef);
 
-        Task<IEnumerable<PosicaoClientePassivoModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
+        Task<IEnumerable<PosicaoClienteModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
 
-        Task<PosicaoClientePassivoModel> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
+        Task<PosicaoClienteModel> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
     }
 }

@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class PagamentoTaxaAdministracaoPerformanceService : GenericService<PagamentoTaxaAdminPfeeModel>, IPagamentoTaxaAdministracaoPerformanceService
+    public class PagamentoTaxaAdministracaoPerformanceService : GenericService<PgtoTaxaAdmPfeeModel>, IPagamentoTaxaAdministracaoPerformanceService
     {
-        public PagamentoTaxaAdministracaoPerformanceService() : base(new PagamentoTaxaAdminPfeeModel(),
+        public PagamentoTaxaAdministracaoPerformanceService() : base(new PgtoTaxaAdmPfeeModel(),
             "tbl_pgto_adm_pfee",
             new List<string> { "'id'" },
             new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" },
@@ -29,7 +29,7 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<bool> AddAsync(PagamentoTaxaAdminPfeeModel item)
+        public async Task<bool> AddAsync(PgtoTaxaAdmPfeeModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -52,9 +52,9 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> AddBulkAsync(List<PagamentoTaxaAdminPfeeModel> pgtoTaxaAdmimPerf)
+        public async Task<IEnumerable<PgtoTaxaAdmPfeeModel>> AddBulkAsync(List<PgtoTaxaAdmPfeeModel> pgtoTaxaAdmimPerf)
         {
-            ConcurrentBag<PagamentoTaxaAdminPfeeModel> vs = new ConcurrentBag<PagamentoTaxaAdminPfeeModel>();
+            ConcurrentBag<PgtoTaxaAdmPfeeModel> vs = new ConcurrentBag<PgtoTaxaAdmPfeeModel>();
             ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
             await Parallel.ForEachAsync(pgtoTaxaAdmimPerf, parallelOptions, async (x, cancellationToken) =>
             {
@@ -93,7 +93,7 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetAllAsync()
+        public async Task<IEnumerable<PgtoTaxaAdmPfeeModel>> GetAllAsync()
         {
             /*
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
@@ -117,7 +117,7 @@ namespace DUDS.Service
             return await GetByIdsAsync(competencia: null, codFundo: null, codAdministrador: null, codInvestidorDistribuidor: null);
         }
 
-        public async Task<PagamentoTaxaAdminPfeeModel> GetByIdAsync(Guid id)
+        public async Task<PgtoTaxaAdmPfeeModel> GetByIdAsync(Guid id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -137,11 +137,11 @@ namespace DUDS.Service
                                         fundo.nome_reduzido,
                                         investidor.nome_investidor";
 
-                return await connection.QueryFirstOrDefaultAsync<PagamentoTaxaAdminPfeeModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<PgtoTaxaAdmPfeeModel>(query, new { id });
             }
         }
 
-        public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByIdsAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor)
+        public async Task<IEnumerable<PgtoTaxaAdmPfeeModel>> GetByIdsAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -164,11 +164,11 @@ namespace DUDS.Service
                                         fundo.nome_reduzido,
                                         investidor.nome_investidor";
 
-                return await connection.QueryAsync<PagamentoTaxaAdminPfeeModel>(query, new { competencia, cod_fundo = codFundo, cod_administrador = codAdministrador, cod_investidor_distribuidor = codInvestidorDistribuidor });
+                return await connection.QueryAsync<PgtoTaxaAdmPfeeModel>(query, new { competencia, cod_fundo = codFundo, cod_administrador = codAdministrador, cod_investidor_distribuidor = codInvestidorDistribuidor });
             }
         }
 
-        public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByCompetenciaAsync(string competencia)
+        public async Task<IEnumerable<PgtoTaxaAdmPfeeModel>> GetByCompetenciaAsync(string competencia)
         {
             /*
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
@@ -195,7 +195,7 @@ namespace DUDS.Service
             return await GetByIdsAsync(competencia:competencia,codFundo:null,codAdministrador:null,codInvestidorDistribuidor:null);
         }
 
-        public Task<bool> UpdateAsync(PagamentoTaxaAdminPfeeModel item)
+        public Task<bool> UpdateAsync(PgtoTaxaAdmPfeeModel item)
         {
             throw new NotImplementedException();
         }
@@ -223,7 +223,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<PagamentoAdmPfeeInvestidorModel>> GetPgtoAdmPfeeInvestByCompetenciaAsync(string competencia)
+        public async Task<IEnumerable<PgtoAdmPfeeInvestidorViewModel>> GetPgtoAdmPfeeInvestByCompetenciaAsync(string competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -270,11 +270,11 @@ namespace DUDS.Service
                                     WHERE
 	                                    pgto_adm_pfee.competencia = @competencia";
 
-                return await connection.QueryAsync<PagamentoAdmPfeeInvestidorModel>(query, new { competencia });
+                return await connection.QueryAsync<PgtoAdmPfeeInvestidorViewModel>(query, new { competencia });
             }
         }
 
-        public Task<PagamentoTaxaAdminPfeeModel> GetByIdAsync(int id)
+        public Task<PgtoTaxaAdmPfeeModel> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

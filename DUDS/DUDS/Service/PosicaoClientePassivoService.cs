@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class PosicaoClientePassivoService : GenericService<PosicaoClientePassivoModel>, IPosicaoClientePassivoService
+    public class PosicaoClientePassivoService : GenericService<PosicaoClienteModel>, IPosicaoClientePassivoService
     {
-        public PosicaoClientePassivoService() : base(new PosicaoClientePassivoModel(),
+        public PosicaoClientePassivoService() : base(new PosicaoClienteModel(),
                    "tbl_posicao_cliente",
                    new List<string> { "'id'" },
                    new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministradorInvestidor", "NomeAdministradorDados", "NomeDistribuidor", "NomeGestor" },
@@ -27,7 +27,7 @@ namespace DUDS.Service
             throw new System.NotImplementedException();
         }
 
-        public async Task<bool> AddAsync(PosicaoClientePassivoModel item)
+        public async Task<bool> AddAsync(PosicaoClienteModel item)
         {
             if (item == null) return false;
 
@@ -52,9 +52,9 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<PosicaoClientePassivoModel>> AddBulkAsync(List<PosicaoClientePassivoModel> item)
+        public async Task<IEnumerable<PosicaoClienteModel>> AddBulkAsync(List<PosicaoClienteModel> item)
         {
-            ConcurrentBag<PosicaoClientePassivoModel> vs = new ConcurrentBag<PosicaoClientePassivoModel>();
+            ConcurrentBag<PosicaoClienteModel> vs = new ConcurrentBag<PosicaoClienteModel>();
             ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
             await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
             {
@@ -77,7 +77,7 @@ namespace DUDS.Service
 
         public async Task<bool> DeleteByDataRefAsync(DateTime dataRef)
         {
-            List<PosicaoClientePassivoModel> result = await GetByParametersAsync(dataInicio: dataRef, dataFim: null, codDistribuidor: null, codGestor: null, codInvestidorDistribuidor: null) as List<PosicaoClientePassivoModel>;
+            List<PosicaoClienteModel> result = await GetByParametersAsync(dataInicio: dataRef, dataFim: null, codDistribuidor: null, codGestor: null, codInvestidorDistribuidor: null) as List<PosicaoClienteModel>;
             if (result == null) return false;
             if (result.Count == 0) return false;
 
@@ -107,7 +107,7 @@ namespace DUDS.Service
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<PosicaoClientePassivoModel>> GetAllAsync()
+        public Task<IEnumerable<PosicaoClienteModel>> GetAllAsync()
         {
             throw new System.NotImplementedException();
             /*
@@ -156,7 +156,7 @@ namespace DUDS.Service
         }
         */
 
-        public async Task<IEnumerable<PosicaoClientePassivoModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
+        public async Task<IEnumerable<PosicaoClienteModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
         {
             //if (dataInicio == null && dataFim == null) return new List<PosicaoClientePassivoModel>();
             if (dataInicio != null && dataFim == null) dataFim = dataInicio;
@@ -199,7 +199,7 @@ namespace DUDS.Service
 	                            tbl_gestor.nome_gestor,
 	                            tbl_distribuidor.nome_distribuidor";
 
-                return await connection.QueryAsync<PosicaoClientePassivoModel>(query, new
+                return await connection.QueryAsync<PosicaoClienteModel>(query, new
                 {
                     data_inicio = dataInicio,
                     data_fim = dataFim,
@@ -210,12 +210,12 @@ namespace DUDS.Service
             }
         }
 
-        public Task<PosicaoClientePassivoModel> GetByIdAsync(int id)
+        public Task<PosicaoClienteModel> GetByIdAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<bool> UpdateAsync(PosicaoClientePassivoModel item)
+        public async Task<bool> UpdateAsync(PosicaoClienteModel item)
         {
             if (item == null) return false;
 
@@ -246,9 +246,9 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<PosicaoClientePassivoModel> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
+        public async Task<PosicaoClienteModel> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
         {
-            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue) return new PosicaoClientePassivoModel();
+            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue) return new PosicaoClienteModel();
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -274,7 +274,7 @@ namespace DUDS.Service
                                 AND (@cod_gestor IS NULL or tbl_investidor.cod_gestor = @cod_gestor)
                                 AND (@cod_investidor_distribuidor IS NULL or tbl_investidor_distribuidor.id = @cod_investidor_distribuidor)";
 
-                return await connection.QueryFirstOrDefaultAsync<PosicaoClientePassivoModel>(query, new
+                return await connection.QueryFirstOrDefaultAsync<PosicaoClienteModel>(query, new
                 {
                     cod_distribuidor = codDistribuidor,
                     cod_gestor = codGestor,
