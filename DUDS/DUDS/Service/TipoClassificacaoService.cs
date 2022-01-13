@@ -12,11 +12,7 @@ namespace DUDS.Service
     public class TipoClassificacaoService : GenericService<TipoClassificacaoModel>, ITipoClassificacaoService
     {
         public TipoClassificacaoService() : base(new TipoClassificacaoModel(),
-                                                "tbl_tipo_classificacao",
-                                                new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                                new List<string> { "Id", "DataCriacao", "Ativo" },
-                                                new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                                new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
+                                                "tbl_tipo_classificacao")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

@@ -705,8 +705,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _calculoRebateService.AddBulkAsync(calculoRebate);
                 if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetCalculoRebate),
-                        new { competencia = calculoRebate.FirstOrDefault().Competencia }, calculoRebate);
+                    return CreatedAtAction(nameof(GetCalculoRebate), calculoRebate);
                 }
                 return BadRequest(retorno);
             }

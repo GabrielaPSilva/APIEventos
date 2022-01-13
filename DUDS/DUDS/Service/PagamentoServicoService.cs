@@ -14,11 +14,7 @@ namespace DUDS.Service
     public class PagamentoServicoService : GenericService<PagamentoServicoModel>, IPagamentoServicoService
     {
         public PagamentoServicoService() : base(new PagamentoServicoModel(),
-            "tbl_pagamento_servico",
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeFundo" },
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeFundo" })
+            "tbl_pagamento_servico")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

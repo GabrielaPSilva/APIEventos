@@ -14,11 +14,7 @@ namespace DUDS.Service
     public class PagamentoTaxaAdministracaoPerformanceService : GenericService<PagamentoTaxaAdminPfeeModel>, IPagamentoTaxaAdministracaoPerformanceService
     {
         public PagamentoTaxaAdministracaoPerformanceService() : base(new PagamentoTaxaAdminPfeeModel(),
-            "tbl_pgto_adm_pfee",
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" },
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" })
+            "tbl_pgto_adm_pfee")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
             //Dapper.SqlMapper.Settings.CommandTimeout = 120;

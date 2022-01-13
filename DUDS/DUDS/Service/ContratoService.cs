@@ -12,11 +12,7 @@ namespace DUDS.Service
     public class ContratoService : GenericService<ContratoModel>, IContratoService
     {
         public ContratoService() : base(new ContratoModel(),
-            "tbl_contrato",
-            new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "NomeDistribuidor", "NomeGestor", "TipoContrato", "ListaSubContrato" },
-            new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao", "NomeDistribuidor", "NomeGestor", "TipoContrato", "ListaSubContrato" })
+            "tbl_contrato")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

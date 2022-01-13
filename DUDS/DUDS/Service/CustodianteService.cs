@@ -11,11 +11,7 @@ namespace DUDS.Service
     public class CustodianteService : GenericService<CustodianteModel>, ICustodianteService
     {
         public CustodianteService() : base(new CustodianteModel(),
-            "tbl_custodiante",
-            new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-            new List<string> { "Id", "DataCriacao", "Ativo" },
-            new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
+            "tbl_custodiante")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

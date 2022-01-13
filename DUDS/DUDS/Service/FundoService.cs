@@ -12,11 +12,7 @@ namespace DUDS.Service
     public class FundoService : GenericService<FundoModel>, IFundoService
     {
         public FundoService() : base(new FundoModel(),
-                                         "tbl_fundo",
-                                         new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                         new List<string> { "Id", "DataCriacao", "Ativo", "TipoContrato", "GrupoRebate", "NomeAdministrador", "NomeGestor", "ListaInvestDistribuidor" },
-                                         new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                         new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao", "TipoContrato", "GrupoRebate", "NomeAdministrador", "NomeGestor", "ListaInvestDistribuidor" })
+                                         "tbl_fundo")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

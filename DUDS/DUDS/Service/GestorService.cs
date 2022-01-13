@@ -14,11 +14,7 @@ namespace DUDS.Service
     public class GestorService : GenericService<GestorModel>, IGestorService
     {
         public GestorService() : base(new GestorModel(),
-            "tbl_gestor",
-            new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "Classificacao" },
-            new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "Classificacao","UsuarioCriacao" })
+            "tbl_gestor")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

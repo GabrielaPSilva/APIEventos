@@ -12,11 +12,7 @@ namespace DUDS.Service
     public class TipoEstrategiaService : GenericService<TipoEstrategiaModel>, ITipoEstrategiaService
     {
         public TipoEstrategiaService() : base(new TipoEstrategiaModel(),
-                                    "tbl_tipo_estrategia",
-                                    new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                    new List<string> { "Id", "DataCriacao", "Ativo" },
-                                    new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                    new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
+                                    "tbl_tipo_estrategia")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

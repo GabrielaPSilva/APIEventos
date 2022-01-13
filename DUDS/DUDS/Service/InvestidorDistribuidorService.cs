@@ -14,11 +14,7 @@ namespace DUDS.Service
     public class InvestidorDistribuidorService : GenericService<InvestidorDistribuidorModel>, IInvestidorDistribuidorService
     {
         public InvestidorDistribuidorService() : base(new InvestidorDistribuidorModel(),
-                                                         "tbl_investidor_distribuidor",
-                                                         new List<string> { "'id'", "'data_criacao'" },
-                                                         new List<string> { "Id", "DataCriacao", "NomeDistribuidor", "NomeAdministrador", "NomeInvestidor", "TipoContrato", "NomeGrupoRebate" },
-                                                         new List<string> { "'id'", "'data_criacao'", "'usuario_criacao'" },
-                                                         new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "NomeDistribuidor", "NomeAdministrador", "NomeInvestidor", "TipoContrato", "NomeGrupoRebate" })
+                                                         "tbl_investidor_distribuidor")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
