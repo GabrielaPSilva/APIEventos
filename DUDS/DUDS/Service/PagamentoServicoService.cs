@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DUDS.Models;
+using DUDS.Models.PgtoServico;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -13,7 +14,7 @@ namespace DUDS.Service
 {
     public class PagamentoServicoService : GenericService<PgtoServicoModel>, IPagamentoServicoService
     {
-        public PagamentoServicoService() : base(new PagamentoServicoModel(),
+        public PagamentoServicoService() : base(new PgtoServicoModel(),
             "tbl_pagamento_servico",
             new List<string> { "'id'" },
             new List<string> { "Id", "NomeFundo" },

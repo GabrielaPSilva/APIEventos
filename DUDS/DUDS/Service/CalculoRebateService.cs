@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DUDS.Models;
+using DUDS.Models.CalculoRebate;
 using DUDS.Models.Filtros;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;

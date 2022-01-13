@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DUDS.Models;
+using DUDS.Models.PgtoTaxaAdmPfee;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -13,7 +14,7 @@ namespace DUDS.Service
 {
     public class PagamentoTaxaAdministracaoPerformanceService : GenericService<PgtoTaxaAdmPfeeModel>, IPagamentoTaxaAdministracaoPerformanceService
     {
-        public PagamentoTaxaAdministracaoPerformanceService() : base(new PagamentoTaxaAdminPfeeModel(),
+        public PagamentoTaxaAdministracaoPerformanceService() : base(new PgtoTaxaAdmPfeeModel(),
             "tbl_pgto_adm_pfee",
             new List<string> { "'id'" },
             new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" },

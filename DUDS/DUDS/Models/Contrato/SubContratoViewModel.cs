@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DUDS.Models.SubContrato
+namespace DUDS.Models.Contrato
 {
     public class SubContratoViewModel : SubContratoModel
     {

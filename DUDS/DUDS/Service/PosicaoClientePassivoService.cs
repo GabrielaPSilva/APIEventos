@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DUDS.Models;
+using DUDS.Models.Passivo;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -12,7 +13,7 @@ namespace DUDS.Service
 {
     public class PosicaoClientePassivoService : GenericService<PosicaoClienteModel>, IPosicaoClientePassivoService
     {
-        public PosicaoClientePassivoService() : base(new PosicaoClientePassivoModel(),
+        public PosicaoClientePassivoService() : base(new PosicaoClienteModel(),
                    "tbl_posicao_cliente",
                    new List<string> { "'id'" },
                    new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministradorInvestidor", "NomeAdministradorDados", "NomeDistribuidor", "NomeGestor" },
