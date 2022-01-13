@@ -559,8 +559,8 @@ namespace DUDS.Controllers.V1
         }
 
         // GET: api/Pagamentos/GetPgtoTaxaAdmPfeeByIds/competencia/cod_investidor_distribuidor/cod_administrador/cod_fundo
-        [HttpGet("{competencia}/{cod_fundo}/{cod_administrador}/{cod_investidor_distribuidor}")]
-        public async Task<ActionResult<IEnumerable<PagamentoTaxaAdminPfeeModel>>> GetPgtoTaxaAdmPfeeByIds(string competencia, int cod_fundo, int cod_administrador, int cod_investidor_distribuidor)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PagamentoTaxaAdminPfeeModel>>> GetPgtoTaxaAdmPfeeByIds([FromQuery] string competencia, [FromQuery] int? cod_fundo, [FromQuery] int? cod_administrador, [FromQuery] int? cod_investidor_distribuidor)
         {
             try
             {

@@ -95,6 +95,7 @@ namespace DUDS.Service
 
         public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetAllAsync()
         {
+            /*
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = @"SELECT 
@@ -112,7 +113,8 @@ namespace DUDS.Service
                                         investidor.nome_investidor";
 
                 return await connection.QueryAsync<PagamentoTaxaAdminPfeeModel>(query);
-            }
+            }*/
+            return await GetByIdsAsync(competencia: null, codFundo: null, codAdministrador: null, codInvestidorDistribuidor: null);
         }
 
         public async Task<PagamentoTaxaAdminPfeeModel> GetByIdAsync(Guid id)
@@ -139,7 +141,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByIdsAsync(string competencia, int codFundo, int codAdministrador, int codInvestidorDistribuidor)
+        public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByIdsAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -153,10 +155,10 @@ namespace DUDS.Service
                                         INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pgto_adm_pfee.cod_investidor_distribuidor
                                         INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
                                      WHERE
-                                        pgto_adm_pfee.competencia = @competencia
-                                        AND pgto_adm_pfee.cod_fundo = @cod_fundo
-                                        AND pgto_adm_pfee.cod_administrador = @cod_administrador
-                                        AND pgto_adm_pfee.cod_investidor_distribuidor = @cod_investidor_distribuidor
+                                        (@competencia IS NULL OR pgto_adm_pfee.competencia = @competencia)
+                                        AND (@cod_fundo IS NULL OR pgto_adm_pfee.cod_fundo = @cod_fundo)
+                                        AND (@cod_administrador IS NULL OR pgto_adm_pfee.cod_administrador = @cod_administrador)
+                                        AND (@cod_investidor_distribuidor IS NULL OR pgto_adm_pfee.cod_investidor_distribuidor = @cod_investidor_distribuidor)
                                      ORDER BY
                                         pgto_adm_pfee.competencia,
                                         fundo.nome_reduzido,
@@ -168,6 +170,7 @@ namespace DUDS.Service
 
         public async Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByCompetenciaAsync(string competencia)
         {
+            /*
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = @"SELECT 
@@ -188,6 +191,8 @@ namespace DUDS.Service
 
                 return await connection.QueryAsync<PagamentoTaxaAdminPfeeModel>(query, new { competencia });
             }
+            */
+            return await GetByIdsAsync(competencia:competencia,codFundo:null,codAdministrador:null,codInvestidorDistribuidor:null);
         }
 
         public Task<bool> UpdateAsync(PagamentoTaxaAdminPfeeModel item)
