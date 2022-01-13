@@ -74,7 +74,7 @@ namespace DUDS.Service
                     try
                     {
                         string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
-                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction,commandTimeout:180);
                         transaction.Commit();
                         return retorno > 0;
                     }
@@ -82,7 +82,7 @@ namespace DUDS.Service
                     {
                         Console.WriteLine(ex.Message);
                         transaction.Rollback();
-                        return false;
+                        throw;
                     }
                 }
             }
