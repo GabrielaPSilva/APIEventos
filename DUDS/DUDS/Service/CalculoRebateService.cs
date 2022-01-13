@@ -147,46 +147,39 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = @"SELECT
-	                                   	--calculo_pgto_adm_pfee.id,
-                                        calculo_pgto_adm_pfee.competencia,
-                                        --calculo_pgto_adm_pfee.cod_investidor_distribuidor,
+	                                   	pagamento.competencia,
                                         investidor.nome_investidor,
 	                                    investidor.cnpj,
 	                                    investidor_distribuidor.cod_invest_administrador AS cod_mellon,
                                         investidor_distribuidor.cod_grupo_rebate,
                                         grupo_rebate.nome_grupo_rebate,
-                                        --investidor_distribuidor.cod_tipo_contrato,
                                         tipo_contrato.tipo_contrato AS nome_tipo_contrato,
-                                        --calculo_pgto_adm_pfee.cod_fundo,
                                         fundo.nome_reduzido AS nome_fundo,
 	                                    fundo.cnpj AS cnpj_fundo,
 	                                    distribuidor.nome_distribuidor,
-                                        --calculo_pgto_adm_pfee.cod_contrato,
-                                        --calculo_pgto_adm_pfee.cod_sub_contrato,
-                                        --calculo_pgto_adm_pfee.cod_contrato_fundo,
-                                        --calculo_pgto_adm_pfee.cod_contrato_remuneracao,
-                                        --calculo_pgto_adm_pfee.cod_administrador,
 	                                    administrador.nome_administrador,
-                                        calculo_pgto_adm_pfee.valor_adm,
-                                        calculo_pgto_adm_pfee.valor_pfee_resgate,
-                                        calculo_pgto_adm_pfee.valor_pfee_semestre,
-                                        calculo_pgto_adm_pfee.perc_adm,
-                                        calculo_pgto_adm_pfee.perc_pfee,
+                                        pagamento.taxa_administracao AS valor_adm,
+                                        pagamento.taxa_performance_resgate AS valor_pfee_resgate,
+                                        pagamento.taxa_performance_apropriada AS valor_pfee_semestre,
+                                        contrato_remuneracao.percentual_adm AS perc_adm,
+                                        contrato_remuneracao.percentual_pfee AS perc_pfee,
                                         calculo_pgto_adm_pfee.rebate_adm,
                                         calculo_pgto_adm_pfee.rebate_pfee_resgate,
                                         calculo_pgto_adm_pfee.rebate_pfee_semestre
                                     FROM
                                         tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
-		                                    INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = calculo_pgto_adm_pfee.cod_investidor_distribuidor
+											INNER JOIN tbl_pgto_adm_pfee pagamento ON pagamento.id = calculo_pgto_adm_pfee.cod_pgto_adm_pfee
+		                                    INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pagamento.cod_investidor_distribuidor
 		                                    INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
 		                                    INNER JOIN tbl_distribuidor_administrador distribuidor_administrador ON investidor_distribuidor.cod_distribuidor_administrador = distribuidor_administrador.id
 		                                    INNER JOIN tbl_distribuidor distribuidor ON distribuidor.id = distribuidor_administrador.cod_distribuidor
-		                                    INNER JOIN tbl_administrador administrador ON calculo_pgto_adm_pfee.cod_administrador = administrador.id
+											INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON calculo_pgto_adm_pfee.cod_contrato_remuneracao = contrato_remuneracao.id
+		                                    INNER JOIN tbl_administrador administrador ON pagamento.cod_administrador = administrador.id
 		                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
-		                                    INNER JOIN tbl_fundo fundo ON fundo.id = calculo_pgto_adm_pfee.cod_fundo
+		                                    INNER JOIN tbl_fundo fundo ON fundo.id = pagamento.cod_fundo
 		                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
 								    WHERE
-										calculo_pgto_adm_pfee.competencia = @competencia AND
+										pagamento.competencia = @competencia AND
                                         grupo_rebate.id = @id
                                     ORDER BY
 	                                    fundo.nome_reduzido,
@@ -203,36 +196,37 @@ namespace DUDS.Service
             {
                 const string query = @"SELECT
 										calculo_pgto_adm_pfee.id,
-	                                    calculo_pgto_adm_pfee.competencia,
-	                                    calculo_pgto_adm_pfee.cod_investidor_distribuidor,
+	                                    pagamento.competencia,
+	                                    pagamento.cod_investidor_distribuidor,
 	                                    investidor.nome_investidor,
 	                                    investidor_distribuidor.cod_grupo_rebate,
 	                                    grupo_rebate.nome_grupo_rebate,
 	                                    investidor_distribuidor.cod_tipo_contrato,
 	                                    tipo_contrato.tipo_contrato AS nome_tipo_contrato,
-	                                    calculo_pgto_adm_pfee.cod_fundo,
+	                                    pagamento.cod_fundo,
 	                                    fundo.nome_reduzido AS nome_fundo,
 	                                    calculo_pgto_adm_pfee.cod_contrato,
 	                                    calculo_pgto_adm_pfee.cod_sub_contrato,
 	                                    calculo_pgto_adm_pfee.cod_contrato_fundo,
 	                                    calculo_pgto_adm_pfee.cod_contrato_remuneracao,
-	                                    calculo_pgto_adm_pfee.cod_condicao_remuneracao,
-	                                    calculo_pgto_adm_pfee.cod_administrador,
-	                                    calculo_pgto_adm_pfee.valor_adm,
-	                                    calculo_pgto_adm_pfee.valor_pfee_resgate,
-	                                    calculo_pgto_adm_pfee.valor_pfee_semestre,
-                                        calculo_pgto_adm_pfee.perc_adm,
-                                        calculo_pgto_adm_pfee.perc_pfee,
+	                                    pagamento.cod_administrador,
+	                                    pagamento.taxa_administracao AS valor_adm,
+	                                    pagamento.taxa_performance_resgate AS valor_pfee_resgate,
+	                                    pagamento.taxa_performance_apropriada AS valor_pfee_semestre,
+                                        contrato_remuneracao.percentual_adm AS perc_adm,
+                                        contrato_remuneracao.percentual_pfee AS perc_pfee,
 	                                    calculo_pgto_adm_pfee.rebate_adm,
 	                                    calculo_pgto_adm_pfee.rebate_pfee_resgate,
 	                                    calculo_pgto_adm_pfee.rebate_pfee_semestre
                                     FROM
 	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
-	                                    INNER JOIN tbl_investidor investidor ON investidor.id = calculo_pgto_adm_pfee.cod_investidor
-										INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor.id = investidor_distribuidor.cod_investidor
-	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
-	                                    INNER JOIN tbl_fundo fundo ON fundo.id = calculo_pgto_adm_pfee.cod_fundo
-	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
+											INNER JOIN tbl_pgto_adm_pfee pagamento ON calculo_pgto_adm_pfee.cod_pgto_adm_pfee = pagamento.id
+											INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pagamento.cod_investidor_distribuidor
+		                                    INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
+											INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
+											INNER JOIN tbl_fundo fundo ON fundo.id = pagamento.cod_fundo
+											INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON calculo_pgto_adm_pfee.cod_contrato_remuneracao = contrato_remuneracao.id
+											INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
                                     WHERE
 	                                    calculo_pgto_adm_pfee.id = @id
                                     ORDER BY
@@ -329,8 +323,9 @@ namespace DUDS.Service
                                  COUNT(1)
                               FROM
                                  tbl_calculo_pgto_adm_pfee
+									INNER JOIN tbl_pgto_adm_pfee ON tbl_calculo_pgto_adm_pfee.cod_pgto_adm_pfee = tbl_pgto_adm_pfee.id
                               WHERE
-                                 tbl_calculo_pgto_adm_pfee.competencia = @Competencia";
+                                 tbl_pgto_adm_pfee.competencia = @Competencia";
 
                 return await connection.QueryFirstOrDefaultAsync<int>(query, new { filtro.Competencia });
             }

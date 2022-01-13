@@ -80,15 +80,14 @@ namespace DUDS
             //    options.IncludeXmlComments(xmlFilePath);
             //});
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("EnableCORS", builder =>
-                {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyHeader()
-                           .AllowAnyMethod();
-                });
-            });
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+                         builder =>
+                         {
+                             builder.AllowAnyMethod()
+                                    .AllowAnyHeader()
+                                    .AllowAnyOrigin()
+                                    .AllowCredentials();
+                         }));
 
             services.AddSwaggerGen(c =>
             {
@@ -125,39 +124,39 @@ namespace DUDS
             });
             services.AddSwaggerGenNewtonsoftSupport();
 
-            services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
-            services.AddScoped<IAdministradorService, AdministradorService>();
-            services.AddScoped<IGestorService, GestorService>();
-            services.AddScoped<ICustodianteService, CustodianteService>();
-            services.AddScoped<IErrosPagamentoService, ErrosPagamentoService>();
-            services.AddScoped<ILogErrosService, LogErrosService>();
-            services.AddScoped<IDistribuidorService, DistribuidorService>();
-            services.AddScoped<IDistribuidorAdministradorService, DistribuidorAdministradorService>();
-            services.AddScoped<IContratoService, ContratoService>();
-            services.AddScoped<ISubContratoService, SubContratoService>();
-            services.AddScoped<IContratoAlocadorService, ContratoAlocadorService>();
-            services.AddScoped<IContratoFundoService, ContratoFundoService>();
-            services.AddScoped<IContratoRemuneracaoService, ContratoRemuneracaoService>();
             services.AddScoped<IContaService, ContaService>();
             services.AddScoped<IFundoService, FundoService>();
-            services.AddScoped<IInvestidorService, InvestidorService>();
-            services.AddScoped<IInvestidorDistribuidorService, InvestidorDistribuidorService>();
-            services.AddScoped<ITipoClassificacaoService, TipoClassificacaoService>();
-            services.AddScoped<ITipoCondicaoService, TipoCondicaoService>();
+            services.AddScoped<IGestorService, GestorService>();
+            services.AddScoped<IContratoService, ContratoService>();
+            services.AddScoped<ILogErrosService, LogErrosService>();
             services.AddScoped<ITipoContaService, TipoContaService>();
-            services.AddScoped<ITipoContratoService, TipoContratoService>();
-            services.AddScoped<ITipoEstrategiaService, TipoEstrategiaService>();
-            services.AddScoped<ICondicaoRemuneracaoService, CondicaoRemuneracaoService>();
-            services.AddScoped<ICalculoRebateService, CalculoRebateService>();
-            services.AddScoped<IPagamentoServicoService, PagamentoServicoService>();
-            services.AddScoped<IPagamentoTaxaAdministracaoPerformanceService, PagamentoTaxaAdministracaoPerformanceService>();
+            services.AddScoped<IInvestidorService, InvestidorService>();
+            services.AddScoped<ICustodianteService, CustodianteService>();
             services.AddScoped<IGrupoRebateService, GrupoRebateService>();
-            services.AddScoped<IEmailGrupoRebateService, EmailGrupoRebateService>();
-            services.AddScoped<IControleRebateService, ControleRebateService>();
-            services.AddScoped<IPosicaoClientePassivoService,PosicaoClientePassivoService>();
+            services.AddScoped<ISubContratoService, SubContratoService>();
+            services.AddScoped<IDistribuidorService, DistribuidorService>();
+            services.AddScoped<ITipoCondicaoService, TipoCondicaoService>();
+            services.AddScoped<ITipoContratoService, TipoContratoService>();
             services.AddScoped<IOrdemPassivoService, OrdemPassivoService>();
+            services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
+            services.AddScoped<ICalculoRebateService, CalculoRebateService>();
+            services.AddScoped<IAdministradorService, AdministradorService>();
+            services.AddScoped<IContratoFundoService, ContratoFundoService>();
+            services.AddScoped<ITipoEstrategiaService, TipoEstrategiaService>();
+            services.AddScoped<IControleRebateService, ControleRebateService>();
+            services.AddScoped<IErrosPagamentoService, ErrosPagamentoService>();
+            services.AddScoped<IContratoAlocadorService, ContratoAlocadorService>();
+            services.AddScoped<IPagamentoServicoService, PagamentoServicoService>();
+            services.AddScoped<IEmailGrupoRebateService, EmailGrupoRebateService>();
+            services.AddScoped<ITipoClassificacaoService, TipoClassificacaoService>();
             services.AddScoped<IMovimentacaoPassivoService, MovimentacaoPassivoService>();
+            services.AddScoped<ICondicaoRemuneracaoService, CondicaoRemuneracaoService>();
+            services.AddScoped<IContratoRemuneracaoService, ContratoRemuneracaoService>();
             services.AddScoped<IPosicaoClientePassivoService, PosicaoClientePassivoService>();
+            services.AddScoped<IPosicaoClientePassivoService, PosicaoClientePassivoService>();
+            services.AddScoped<IInvestidorDistribuidorService, InvestidorDistribuidorService>();
+            services.AddScoped<IDistribuidorAdministradorService, DistribuidorAdministradorService>();
+            services.AddScoped<IPagamentoTaxaAdministracaoPerformanceService, PagamentoTaxaAdministracaoPerformanceService>();
 
             // Teste - Body Length
             //services.Configure<FormOptions>(options =>

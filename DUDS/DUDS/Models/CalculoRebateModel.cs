@@ -8,14 +8,12 @@ namespace DUDS.Models
     public class CalculoRebateModel
     {
         public Guid Id { get; set; }
-        public string Competencia { get; set; }
+        public int CodPgtoAdmPfee { get; set; }
         public int CodInvestidorDistribuidor { get; set; }
-        public int CodFundo { get; set; }
         public int CodContrato { get; set; }
         public int CodSubContrato { get; set; }
         public int CodContratoFundo { get; set; }
         public int CodContratoRemuneracao { get; set; }
-        public int CodAdministrador { get; set; }
         public decimal ValorAdm { get; set; }
         public decimal ValorPfeeResgate { get; set; }
         public decimal ValorPfeeSemestre { get; set; }
