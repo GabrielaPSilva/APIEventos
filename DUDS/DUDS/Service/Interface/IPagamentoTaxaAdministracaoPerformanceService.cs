@@ -10,7 +10,7 @@ namespace DUDS.Service.Interface
     {
         Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> AddBulkAsync(List<PagamentoTaxaAdminPfeeModel> pgtoTaxaAdmimPerf);
         Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByCompetenciaAsync(string competencia);
-        Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByIdsAsync(string competencia, int codFundo, int codAdministrador, int codInvestidorDistribuidor);
+        Task<IEnumerable<PagamentoTaxaAdminPfeeModel>> GetByIdsAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor);
         Task<bool> DeleteByCompetenciaAsync(string competencia);
         Task<IEnumerable<PagamentoAdmPfeeInvestidorModel>> GetPgtoAdmPfeeInvestByCompetenciaAsync(string competencia);
 
