@@ -12,11 +12,7 @@ namespace DUDS.Service
     public class CondicaoRemuneracaoService : GenericService<CondicaoRemuneracaoModel>, ICondicaoRemuneracaoService
     {
         public CondicaoRemuneracaoService() : base(new CondicaoRemuneracaoModel(),
-            "tbl_condicao_remuneracao",
-            new List<string> { "'id'", "'data_criacao'" },
-            new List<string> { "Id", "DataCriacao", "NomeFundo" },
-            new List<string> { "'id'", "'data_criacao'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "UsuarioCriacao", "NomeFundo" })
+            "tbl_condicao_remuneracao")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

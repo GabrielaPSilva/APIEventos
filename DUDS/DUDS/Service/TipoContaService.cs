@@ -12,11 +12,7 @@ namespace DUDS.Service
     public class TipoContaService : GenericService<TipoContaModel>, ITipoContaService
     {
         public TipoContaService() : base(new TipoContaModel(),
-                                              "tbl_tipo_conta",
-                                              new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                                              new List<string> { "Id", "DataCriacao", "Ativo" },
-                                              new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                                              new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
+                                              "tbl_tipo_conta")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

@@ -705,9 +705,8 @@ namespace DUDS.Controllers.V1
                 var retorno = await _calculoRebateService.AddBulkAsync(calculoRebate);
                 if (!retorno.Any())
                 {
-                    // TODO - Verificar este retorno sobre como pegar a competência
                     return CreatedAtAction(nameof(GetCalculoRebate),
-                        new { competencia = DateTime.Now }, calculoRebate);
+                        new { competencia = calculoRebate.FirstOrDefault().Competencia }, calculoRebate);
                 }
                 return BadRequest(retorno);
             }

@@ -12,11 +12,7 @@ namespace DUDS.Service
     public class AdministradorService : GenericService<AdministradorModel>, IAdministradorService
     {
         public AdministradorService() : base(new AdministradorModel(),
-                   "tbl_administrador",
-                   new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-                   new List<string> { "Id", "DataCriacao", "Ativo" },
-                   new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-                   new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
+                   "tbl_administrador")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

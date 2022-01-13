@@ -12,7 +12,7 @@ namespace DUDS.Service
 {
     public class PosicaoClientePassivoService : GenericService<PosicaoClienteModel>, IPosicaoClientePassivoService
     {
-        public PosicaoClientePassivoService() : base(new PosicaoClienteModel(),
+        public PosicaoClientePassivoService() : base(new PosicaoClientePassivoModel(),
                    "tbl_posicao_cliente",
                    new List<string> { "'id'" },
                    new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministradorInvestidor", "NomeAdministradorDados", "NomeDistribuidor", "NomeGestor" },

@@ -13,11 +13,7 @@ namespace DUDS.Service
     public class OrdemPassivoService : GenericService<OrdemPassivoModel>, IOrdemPassivoService
     {
         public OrdemPassivoService() : base(new OrdemPassivoModel(),
-                   "tbl_ordem_passivo",
-                   new List<string> { "'id'" },
-                   new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" },
-                   new List<string> { "'id'" },
-                   new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" })
+                   "tbl_ordem_passivo")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

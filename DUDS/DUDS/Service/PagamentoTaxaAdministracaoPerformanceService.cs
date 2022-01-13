@@ -13,7 +13,7 @@ namespace DUDS.Service
 {
     public class PagamentoTaxaAdministracaoPerformanceService : GenericService<PgtoTaxaAdmPfeeModel>, IPagamentoTaxaAdministracaoPerformanceService
     {
-        public PagamentoTaxaAdministracaoPerformanceService() : base(new PgtoTaxaAdmPfeeModel(),
+        public PagamentoTaxaAdministracaoPerformanceService() : base(new PagamentoTaxaAdminPfeeModel(),
             "tbl_pgto_adm_pfee",
             new List<string> { "'id'" },
             new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" },

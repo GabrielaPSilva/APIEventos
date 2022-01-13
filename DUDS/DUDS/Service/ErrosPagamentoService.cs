@@ -13,11 +13,7 @@ namespace DUDS.Service
     {
 
         public ErrosPagamentoService() : base(new ErrosPagamentoModel(),
-            "tbl_erros_pagamento",
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeFundo" },
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeFundo" })
+            "tbl_erros_pagamento")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

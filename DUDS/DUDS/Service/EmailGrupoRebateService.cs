@@ -12,11 +12,7 @@ namespace DUDS.Service
     public class EmailGrupoRebateService : GenericService<EmailGrupoRebateModel>, IEmailGrupoRebateService
     {
         public EmailGrupoRebateService() : base(new EmailGrupoRebateModel(),
-            "tbl_email_grupo_rebate",
-            new List<string> { "'id'", "'data_criacao'", "'ativo'" },
-            new List<string> { "Id", "DataCriacao", "Ativo" },
-            new List<string> { "'id'", "'data_criacao'", "'ativo'", "'usuario_criacao'" },
-            new List<string> { "Id", "DataCriacao", "Ativo", "UsuarioCriacao" })
+            "tbl_email_grupo_rebate")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
