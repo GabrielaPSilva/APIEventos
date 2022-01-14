@@ -146,17 +146,17 @@ namespace DUDS
             services.AddScoped<IControleRebateService, ControleRebateService>();
             services.AddScoped<IErrosPagamentoService, ErrosPagamentoService>();
             services.AddScoped<IContratoAlocadorService, ContratoAlocadorService>();
-            services.AddScoped<IPagamentoServicoService, PagamentoServicoService>();
+            services.AddScoped<IPgtoServicoService, PgtoServicoService>();
             services.AddScoped<IEmailGrupoRebateService, EmailGrupoRebateService>();
             services.AddScoped<ITipoClassificacaoService, TipoClassificacaoService>();
             services.AddScoped<IMovimentacaoPassivoService, MovimentacaoPassivoService>();
             services.AddScoped<ICondicaoRemuneracaoService, CondicaoRemuneracaoService>();
             services.AddScoped<IContratoRemuneracaoService, ContratoRemuneracaoService>();
-            services.AddScoped<IPosicaoClientePassivoService, PosicaoClientePassivoService>();
-            services.AddScoped<IPosicaoClientePassivoService, PosicaoClientePassivoService>();
+            services.AddScoped<IPosicaoClienteService, PosicaoClienteService>();
+            services.AddScoped<IPosicaoClienteService, PosicaoClienteService>();
             services.AddScoped<IInvestidorDistribuidorService, InvestidorDistribuidorService>();
             services.AddScoped<IDistribuidorAdministradorService, DistribuidorAdministradorService>();
-            services.AddScoped<IPagamentoTaxaAdministracaoPerformanceService, PagamentoTaxaAdministracaoPerformanceService>();
+            services.AddScoped<IPgtoTaxaAdmPfeeService, PgtoTaxaAdmPfeeService>();
 
             // Teste - Body Length
             //services.Configure<FormOptions>(options =>

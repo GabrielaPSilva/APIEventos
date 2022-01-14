@@ -15,11 +15,11 @@ namespace DUDS.Controllers.V1
     [ApiController]
     public class PassivoController : ControllerBase
     {
-        private readonly IPosicaoClientePassivoService _posicaoClientePassivoService;
+        private readonly IPosicaoClienteService _posicaoClientePassivoService;
         private readonly IOrdemPassivoService _ordemPassivoService;
         private readonly IMovimentacaoPassivoService _movimentacaoPassivoService;
 
-        public PassivoController(IPosicaoClientePassivoService posicaoClientePassivoService, IOrdemPassivoService ordemPassivoService, IMovimentacaoPassivoService movimentacaoPassivoService)
+        public PassivoController(IPosicaoClienteService posicaoClientePassivoService, IOrdemPassivoService ordemPassivoService, IMovimentacaoPassivoService movimentacaoPassivoService)
         {
             _posicaoClientePassivoService = posicaoClientePassivoService;
             _ordemPassivoService= ordemPassivoService;

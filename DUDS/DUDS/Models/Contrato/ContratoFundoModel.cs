@@ -16,7 +16,5 @@ namespace DUDS.Models.Contrato
 
         public DateTime DataCriacao { get; set; }
 
-        }
-
     }
 }

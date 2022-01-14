@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using DUDS.Models;
 using DUDS.Models.PgtoTaxaAdmPfee;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
@@ -7,22 +6,15 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class PagamentoTaxaAdministracaoPerformanceService : GenericService<PgtoTaxaAdmPfeeModel>, IPagamentoTaxaAdministracaoPerformanceService
+    public class PgtoTaxaAdmPfeeService : GenericService<PgtoTaxaAdmPfeeModel>, IPgtoTaxaAdmPfeeService
     {
-        public PagamentoTaxaAdministracaoPerformanceService() : base(new PgtoTaxaAdmPfeeModel(),
-            "tbl_pgto_adm_pfee",
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" },
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeInvestidor", "NomeFundo", "NomeAdministrador" })
+        public PgtoTaxaAdmPfeeService() : base(new PgtoTaxaAdmPfeeModel(),"tbl_pgto_adm_pfee")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
-            //Dapper.SqlMapper.Settings.CommandTimeout = 120;
         }
 
         public Task<bool> ActivateAsync(int id)
@@ -94,106 +86,51 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<PgtoTaxaAdmPfeeModel>> GetAllAsync()
+        public async Task<IEnumerable<PgtoTaxaAdmPfeeViewModel>> GetAllAsync()
         {
-            /*
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                const string query = @"SELECT 
-	                                    pgto_adm_pfee.*,
-                                        fundo.nome_reduzido as nome_fundo,
-                                        investidor.nome_investidor
-                                     FROM
-	                                    tbl_pgto_adm_pfee pgto_adm_pfee
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = pgto_adm_pfee.cod_fundo
-                                        INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pgto_adm_pfee.cod_investidor_distribuidor
-                                        INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
-                                     ORDER BY
-                                        pgto_adm_pfee.competencia,
-                                        fundo.nome_reduzido,
-                                        investidor.nome_investidor";
-
-                return await connection.QueryAsync<PagamentoTaxaAdminPfeeModel>(query);
-            }*/
-            return await GetByIdsAsync(competencia: null, codFundo: null, codAdministrador: null, codInvestidorDistribuidor: null);
+            return await GetByParametersAsync(competencia: null, codFundo: null, codAdministrador: null, codInvestidorDistribuidor: null);
         }
 
-        public async Task<PgtoTaxaAdmPfeeModel> GetByIdAsync(Guid id)
+        public async Task<PgtoTaxaAdmPfeeViewModel> GetByIdAsync(Guid id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    pgto_adm_pfee.*,
-                                        fundo.nome_reduzido as nome_fundo,
-                                        investidor.nome_investidor
-                                     FROM
-	                                    tbl_pgto_adm_pfee pgto_adm_pfee
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = pgto_adm_pfee.cod_fundo
-                                        INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pgto_adm_pfee.cod_investidor_distribuidor
-                                        INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
-                                     WHERE
-                                        pgto_adm_pfee.id = @id
-                                     ORDER BY
-                                        pgto_adm_pfee.competencia,
-                                        fundo.nome_reduzido,
-                                        investidor.nome_investidor";
+                const string query = IPgtoTaxaAdmPfeeService.QUERY_BASE +
+                    @"
+                    WHERE
+                        pgto_adm_pfee.id = @id
+                    ORDER BY
+                        pgto_adm_pfee.competencia,
+                        fundo.nome_reduzido,
+                        investidor.nome_investidor";
 
-                return await connection.QueryFirstOrDefaultAsync<PgtoTaxaAdmPfeeModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<PgtoTaxaAdmPfeeViewModel>(query, new { id });
             }
         }
 
-        public async Task<IEnumerable<PgtoTaxaAdmPfeeModel>> GetByIdsAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor)
+        private async Task<IEnumerable<PgtoTaxaAdmPfeeViewModel>> GetByParametersAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    pgto_adm_pfee.*,
-                                        fundo.nome_reduzido as nome_fundo,
-                                        investidor.nome_investidor
-                                     FROM
-	                                    tbl_pgto_adm_pfee pgto_adm_pfee
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = pgto_adm_pfee.cod_fundo
-                                        INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pgto_adm_pfee.cod_investidor_distribuidor
-                                        INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
-                                     WHERE
-                                        (@competencia IS NULL OR pgto_adm_pfee.competencia = @competencia)
-                                        AND (@cod_fundo IS NULL OR pgto_adm_pfee.cod_fundo = @cod_fundo)
-                                        AND (@cod_administrador IS NULL OR pgto_adm_pfee.cod_administrador = @cod_administrador)
-                                        AND (@cod_investidor_distribuidor IS NULL OR pgto_adm_pfee.cod_investidor_distribuidor = @cod_investidor_distribuidor)
-                                     ORDER BY
-                                        pgto_adm_pfee.competencia,
-                                        fundo.nome_reduzido,
-                                        investidor.nome_investidor";
+                const string query = IPgtoTaxaAdmPfeeService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        (@competencia IS NULL OR pgto_adm_pfee.competencia = @competencia)
+                        AND (@cod_fundo IS NULL OR pgto_adm_pfee.cod_fundo = @cod_fundo)
+                        AND (@cod_administrador IS NULL OR pgto_adm_pfee.cod_administrador = @cod_administrador)
+                        AND (@cod_investidor_distribuidor IS NULL OR pgto_adm_pfee.cod_investidor_distribuidor = @cod_investidor_distribuidor)
+                    ORDER BY
+                        pgto_adm_pfee.competencia,
+                        fundo.nome_reduzido,
+                        investidor.nome_investidor";
 
-                return await connection.QueryAsync<PgtoTaxaAdmPfeeModel>(query, new { competencia, cod_fundo = codFundo, cod_administrador = codAdministrador, cod_investidor_distribuidor = codInvestidorDistribuidor });
+                return await connection.QueryAsync<PgtoTaxaAdmPfeeViewModel>(query, new { competencia, cod_fundo = codFundo, cod_administrador = codAdministrador, cod_investidor_distribuidor = codInvestidorDistribuidor });
             }
         }
 
-        public async Task<IEnumerable<PgtoTaxaAdmPfeeModel>> GetByCompetenciaAsync(string competencia)
+        public async Task<IEnumerable<PgtoTaxaAdmPfeeViewModel>> GetByCompetenciaAsync(string competencia)
         {
-            /*
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                const string query = @"SELECT 
-	                                    pgto_adm_pfee.*,
-                                        fundo.nome_reduzido as nome_fundo,
-                                        investidor.nome_investidor
-                                     FROM
-	                                    tbl_pgto_adm_pfee pgto_adm_pfee
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = pgto_adm_pfee.cod_fundo
-                                        INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pgto_adm_pfee.cod_investidor_distribuidor
-                                        INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
-                                     WHERE
-                                        pgto_adm_pfee.competencia = @competencia
-                                     ORDER BY
-                                        pgto_adm_pfee.competencia,
-                                        fundo.nome_reduzido,
-                                        investidor.nome_investidor";
-
-                return await connection.QueryAsync<PagamentoTaxaAdminPfeeModel>(query, new { competencia });
-            }
-            */
-            return await GetByIdsAsync(competencia:competencia,codFundo:null,codAdministrador:null,codInvestidorDistribuidor:null);
+            return await GetByParametersAsync(competencia:competencia,codFundo:null,codAdministrador:null,codInvestidorDistribuidor:null);
         }
 
         public Task<bool> UpdateAsync(PgtoTaxaAdmPfeeModel item)
@@ -273,11 +210,6 @@ namespace DUDS.Service
 
                 return await connection.QueryAsync<PgtoAdmPfeeInvestidorViewModel>(query, new { competencia });
             }
-        }
-
-        public Task<PgtoTaxaAdmPfeeModel> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

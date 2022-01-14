@@ -76,7 +76,7 @@ namespace DUDS.Service
 
                 //foreach (ContratoModel item in listaContratoModel)
                 //{
-                //    List<SubContratoModel> listaSubContrato = await subContratoService.GetContratoByIdAsync(item.Id) as List<SubContratoModel>;
+                //    List<SubContratoModel> listaSubContrato = await subContratoService.GetSubContratoCompletoByIdAsync(item.Id) as List<SubContratoModel>;
                 //    item.ListaSubContrato = listaSubContrato;
                 //}
                 

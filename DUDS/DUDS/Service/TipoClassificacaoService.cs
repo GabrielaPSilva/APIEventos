@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Tipos;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -54,14 +53,12 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
 
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_classificacao
-                              WHERE 
-	                             ativo = 1
-                              ORDER BY    
-                                 classificacao";
+                var query = ITipoClassificacaoService.QUERY_BASE +
+                    @"
+                    WHERE 
+                        ativo = 1
+                    ORDER BY    
+                        classificacao";
 
                 return await connection.QueryAsync<TipoClassificacaoModel>(query);
             }
@@ -71,12 +68,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_classificacao
-                              WHERE 
-	                             id = @id";
+                var query = ITipoClassificacaoService.QUERY_BASE + 
+                    @"
+                    WHERE 
+                        id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<TipoClassificacaoModel>(query, new { id });
             }
@@ -86,12 +81,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                              *
-                              FROM
-	                             tbl_tipo_classificacao
-                              WHERE 
-                                 classificacao = @classificacao";
+                var query = ITipoClassificacaoService.QUERY_BASE + 
+                    @"
+                    WHERE 
+                        classificacao = @classificacao";
 
                 return await connection.QueryFirstOrDefaultAsync<TipoClassificacaoModel>(query, new { classificacao });
             }

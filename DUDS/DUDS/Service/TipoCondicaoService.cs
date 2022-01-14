@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Tipos;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -54,14 +53,12 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
 
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_condicao
-                              WHERE 
-	                             ativo = 1
-                              ORDER BY    
-                                 tipo_condicao";
+                var query = ITipoCondicaoService.QUERY_BASE + 
+                    @"
+                    WHERE 
+	                    ativo = 1
+                    ORDER BY    
+                        tipo_condicao";
 
                 return await connection.QueryAsync<TipoCondicaoModel>(query);
             }
@@ -71,12 +68,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_condicao
-                              WHERE 
-	                             id = @id";
+                var query = ITipoCondicaoService.QUERY_BASE + 
+                    @"
+                    WHERE 
+                        id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<TipoCondicaoModel>(query, new { id });
             }
@@ -86,12 +81,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                              *
-                              FROM
-	                             tbl_tipo_condicao
-                              WHERE 
-                                 tipo_condicao = @tipo_condicao";
+                var query = ITipoCondicaoService.QUERY_BASE + 
+                    @"
+                    WHERE 
+                        tipo_condicao = @tipo_condicao";
 
                 return await connection.QueryFirstOrDefaultAsync<TipoCondicaoModel>(query, new { tipo_condicao = tipoCondicao });
             }
