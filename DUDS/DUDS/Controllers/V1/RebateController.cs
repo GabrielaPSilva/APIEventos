@@ -49,7 +49,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetControleRebateByCompetencia
         [HttpGet()]
-        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetControleRebateByCompetencia([FromQuery] FiltroModel filtro)
+        public async Task<ActionResult<IEnumerable<ControleRebateViewModel>>> GetControleRebateByCompetencia([FromQuery] FiltroModel filtro)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetControleRebateById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<ControleRebateModel>> GetControleRebateById(int id)
+        public async Task<ActionResult<ControleRebateViewModel>> GetControleRebateById(int id)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetControleRebate
         [HttpGet("{grupoRebate}/{competencia}")]
-        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetFiltroControleRebate(int grupoRebate, string competencia, string codMellon = null, string investidor = null)
+        public async Task<ActionResult<IEnumerable<ControleRebateViewModel>>> GetFiltroControleRebate(int grupoRebate, string competencia, string codMellon = null, string investidor = null)
         {
             try
             {
@@ -100,6 +100,7 @@ namespace DUDS.Controllers.V1
                 {
                     return Ok(listaControleRebate);
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -110,7 +111,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetControleRebateExistsBase/codGrupoRebate/competencia
         [HttpGet("{codGrupoRebate}/{competencia}")]
-        public async Task<ActionResult<ControleRebateModel>> GetControleRebateExistsBase(int codGrupoRebate, string competencia)
+        public async Task<ActionResult<ControleRebateViewModel>> GetControleRebateExistsBase(int codGrupoRebate, string competencia)
         {
             try
             {
@@ -120,6 +121,7 @@ namespace DUDS.Controllers.V1
                 {
                     NotFound();
                 }
+
                 return Ok(controleRebate);
             }
             catch (Exception e)
@@ -150,7 +152,7 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Rebate/AddGestor/ControleRebateModel
         [HttpPost]
-        public async Task<ActionResult<ControleRebateModel>> AddControleRebate(ControleRebateModel controleRebate)
+        public async Task<ActionResult<ControleRebateViewModel>> AddControleRebate(ControleRebateModel controleRebate)
         {
 
             try
@@ -189,8 +191,8 @@ namespace DUDS.Controllers.V1
                         return Ok(controleRebate);
                     }
                 }
-                return NotFound();
 
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -365,7 +367,7 @@ namespace DUDS.Controllers.V1
         #region Pagamento Servico
         // GET: api/Pagamentos/GetPagamentoServico
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PgtoServicoModel>>> GetPagamentoServico()
+        public async Task<ActionResult<IEnumerable<PgtoServicoViewModel>>> GetPagamentoServico()
         {
             try
             {
@@ -375,8 +377,8 @@ namespace DUDS.Controllers.V1
                 {
                     return Ok(pagamentoServicos);
                 }
-                return NotFound();
 
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -385,15 +387,17 @@ namespace DUDS.Controllers.V1
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PgtoServicoModel>> GetPagamentoServicoById(int id)
+        public async Task<ActionResult<PgtoServicoViewModel>> GetPagamentoServicoById(int id)
         {
             try
             {
                 var pagamentoServico = await _pagamentoServicoService.GetByIdAsync(id);
+
                 if (pagamentoServico == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(pagamentoServico);
             }
             catch (Exception e)
@@ -404,7 +408,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Pagamentos/GetPagamentoServicoByIds/competencia
         [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<PgtoServicoModel>>> GetPagamentoServicoByCompetencia(string competencia)
+        public async Task<ActionResult<IEnumerable<PgtoServicoViewModel>>> GetPagamentoServicoByCompetencia(string competencia)
         {
             try
             {
@@ -414,8 +418,8 @@ namespace DUDS.Controllers.V1
                 {
                     return Ok(pagamentoServicos);
                 }
-                return NotFound();
 
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -425,7 +429,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Pagamentos/GetPagamentoServicoByIds/competencia/cod_fundo
         [HttpGet("{competencia}/{cod_fundo}")]
-        public async Task<ActionResult<PgtoServicoModel>> GetPagamentoServicoByIds(string competencia, int cod_fundo)
+        public async Task<ActionResult<PgtoServicoViewModel>> GetPagamentoServicoByIds(string competencia, int cod_fundo)
         {
             try
             {
@@ -435,8 +439,8 @@ namespace DUDS.Controllers.V1
                 {
                     return Ok(pagamentoServicos);
                 }
-                return NotFound();
 
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -446,16 +450,18 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Pagamentos/AddPgtoServico/List<PagamentoServicoModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<PgtoServicoModel>>> AddPagamentoServico(List<PgtoServicoModel> pagamentoServico)
+        public async Task<ActionResult<IEnumerable<PgtoServicoViewModel>>> AddPagamentoServico(List<PgtoServicoModel> pagamentoServico)
         {
             try
             {
-                var retorno = await _pagamentoServicoService.AddPagamentoServico(pagamentoServico);
+                var retorno = await _pagamentoServicoService.AddPgtoServico(pagamentoServico);
+
                 if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetPagamentoServicoByCompetencia),
                         new { competencia = pagamentoServico.FirstOrDefault().Competencia }, pagamentoServico);
                 }
+
                 return BadRequest(retorno);
             }
             catch (Exception e)
@@ -471,10 +477,12 @@ namespace DUDS.Controllers.V1
             try
             {
                 bool retorno = await _pagamentoServicoService.DeleteByCompetenciaAsync(competencia);
+
                 if (retorno)
                 {
                     return Ok();
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -489,10 +497,12 @@ namespace DUDS.Controllers.V1
             try
             {
                 bool retorno = await _pagamentoServicoService.DeleteAsync(id);
+
                 if (retorno)
                 {
                     return Ok();
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -505,7 +515,7 @@ namespace DUDS.Controllers.V1
         #region Pagamento Taxa Admin Pfee
         // GET: api/Pagamentos/GetPgtoTaxaAdmPfee
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeModel>>> GetPgtoTaxaAdmPfee()
+        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeViewModel>>> GetPgtoTaxaAdmPfee()
         {
             try
             {
@@ -515,8 +525,8 @@ namespace DUDS.Controllers.V1
                 {
                     return Ok(pagamentoTaxaAdministracaoPerformance);
                 }
-                return NotFound();
 
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -525,15 +535,17 @@ namespace DUDS.Controllers.V1
         }
 
         [HttpGet("{guid}")]
-        public async Task<ActionResult<PgtoTaxaAdmPfeeModel>> GetPgtoTaxaAdmPfeeById(Guid id)
+        public async Task<ActionResult<PgtoTaxaAdmPfeeViewModel>> GetPgtoTaxaAdmPfeeById(Guid id)
         {
             try
             {
                 var pagamentoTaxaAdministracaoPerformance = await _pagamentoTaxaAdministracaoPerformanceService.GetByIdAsync(id);
+                
                 if (pagamentoTaxaAdministracaoPerformance == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(pagamentoTaxaAdministracaoPerformance);
             }
             catch (Exception e)
@@ -543,15 +555,17 @@ namespace DUDS.Controllers.V1
         }
 
         [HttpGet("{competencia}")]
-        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeModel>>> GetPgtoTaxaAdmPfeeByCompetencia(string competencia)
+        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeViewModel>>> GetPgtoTaxaAdmPfeeByCompetencia(string competencia)
         {
             try
             {
                 var pagamentoTaxaAdministracaoPerformance = await _pagamentoTaxaAdministracaoPerformanceService.GetByCompetenciaAsync(competencia);
+                
                 if (pagamentoTaxaAdministracaoPerformance.Any())
                 {
                     return Ok(pagamentoTaxaAdministracaoPerformance);
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -562,11 +576,11 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Pagamentos/GetPgtoTaxaAdmPfeeByIds/competencia/cod_investidor_distribuidor/cod_administrador/cod_fundo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeModel>>> GetPgtoTaxaAdmPfeeByIds([FromQuery] string competencia, [FromQuery] int? cod_fundo, [FromQuery] int? cod_administrador, [FromQuery] int? cod_investidor_distribuidor)
+        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeViewModel>>> GetPgtoTaxaAdmPfeeByIds([FromQuery] string competencia, [FromQuery] int? cod_fundo, [FromQuery] int? cod_administrador, [FromQuery] int? cod_investidor_distribuidor)
         {
             try
             {
-                var pagamentoTaxaAdministracaoPerformance = await _pagamentoTaxaAdministracaoPerformanceService.GetByIdsAsync(competencia, cod_fundo, cod_administrador, cod_investidor_distribuidor);
+                var pagamentoTaxaAdministracaoPerformance = await _pagamentoTaxaAdministracaoPerformanceService.GetByParametersAsync(competencia, cod_fundo, cod_administrador, cod_investidor_distribuidor);
                 if (pagamentoTaxaAdministracaoPerformance.Any())
                 {
                     return Ok(pagamentoTaxaAdministracaoPerformance);

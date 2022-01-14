@@ -13,7 +13,7 @@ namespace DUDS.Service
     {
 
         public ErrosPagamentoService() : base(new ErrosPagamentoModel(),
-            "tbl_erros_pagamento")
+                                         "tbl_erros_pagamento")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -40,15 +40,25 @@ namespace DUDS.Service
             }
         }
 
+        public async Task<bool> DeleteAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
+
         public async Task<bool> DeleteErrosPagamentoByDataAgendamento(DateTime dataAgendamento)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = @"
-                                DELETE FROM
-                                    tbl_erros_pagamento
-                                WHERE
-                                   data_agendamento = @dataAgendamento";
+                                        DELETE FROM
+                                            tbl_erros_pagamento
+                                        WHERE
+                                            data_agendamento = @dataAgendamento";
+
                 return await connection.ExecuteAsync(query, new { dataAgendamento }) > 0;
             }
         }
@@ -57,12 +67,8 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                erros_pagamento.*,
-                                fundo.nome_reduzido as NomeFundo
-                              FROM
-	                            tbl_erros_pagamento erros_pagamento
-                                inner join tbl_fundo fundo on erros_pagamento.cod_fundo = fundo.id
+                const string query = IErrosPagamentoService.QUERY_BASE + 
+                          @"
                             ORDER BY    
                                 erros_pagamento.data_agendamento";
 
@@ -74,14 +80,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                erros_pagamento.*,
-                                fundo.nome_reduzido as NomeFundo
-                              FROM
-	                            tbl_erros_pagamento erros_pagamento
-                                inner join tbl_fundo fundo on erros_pagamento.cod_fundo = fundo.id
-                            WHERE
-                                erros_pagamento.competencia = @competencia";
+                const string query = IErrosPagamentoService.QUERY_BASE + 
+                             @"
+                                WHERE
+                                    erros_pagamento.competencia = @competencia";
 
                 return await connection.QueryAsync<ErrosPagamentoModel>(query, new { competencia });
             }
@@ -91,14 +93,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                erros_pagamento.*,
-                                fundo.nome_reduzido as NomeFundo
-                              FROM
-	                            tbl_erros_pagamento erros_pagamento
-                                inner join tbl_fundo fundo on erros_pagamento.cod_fundo = fundo.id
-                            WHERE
-                                erros_pagamento.id = @id";
+                const string query = IErrosPagamentoService.QUERY_BASE +
+                            @"
+                              WHERE
+                                 erros_pagamento.id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<ErrosPagamentoModel>(query, new { id });
             }
@@ -117,15 +115,6 @@ namespace DUDS.Service
         public Task<bool> UpdateAsync(ErrosPagamentoModel item)
         {
             throw new NotImplementedException();
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
-            }
         }
     }
 }

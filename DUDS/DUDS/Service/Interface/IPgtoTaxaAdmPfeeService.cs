@@ -29,5 +29,6 @@ namespace DUDS.Service.Interface
         Task<PgtoTaxaAdmPfeeViewModel> GetByIdAsync(Guid id);
 
         Task<IEnumerable<PgtoTaxaAdmPfeeViewModel>> GetAllAsync();
+        Task<IEnumerable<PgtoTaxaAdmPfeeViewModel>> GetByParametersAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor);
     }
 }
