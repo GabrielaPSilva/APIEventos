@@ -108,25 +108,14 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"
-                            SELECT
-	                            tbl_ordem_passivo.*,
-	                            tbl_fundo.nome_reduzido AS nome_fundo,
-	                            tbl_investidor.nome_investidor,
-	                            tbl_administrador.nome_administrador
-                            FROM
-	                            tbl_ordem_passivo
-		                        INNER JOIN tbl_fundo ON tbl_ordem_passivo.cod_fundo = tbl_fundo.id
-                                INNER JOIN tbl_investidor_distribuidor ON tbl_ordem_passivo.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
-		                        INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-		                        INNER JOIN tbl_administrador ON tbl_ordem_passivo.cod_administrador = tbl_administrador.id
-                                
-                            WHERE
-                                (@data_entrada IS NULL OR tbl_ordem_passivo.data_entrada = @data_entrada)
-                            ORDER BY
-                                tbl_fundo.nome_reduzido,
-	                            tbl_investidor.nome_investidor,
-                                tbl_ordem_passivo.descricao_operacao";
+                var query = IOrdemPassivoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        (@data_entrada IS NULL OR tbl_ordem_passivo.data_entrada = @data_entrada)
+                    ORDER BY
+                        tbl_fundo.nome_reduzido,
+	                    tbl_investidor.nome_investidor,
+                        tbl_ordem_passivo.descricao_operacao";
 
                 return await connection.QueryAsync<OrdemPassivoViewModel>(query, new { data_entrada = dataEntrada });
             }

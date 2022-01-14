@@ -7,7 +7,7 @@ namespace DUDS.Service.Interface
 {
     public interface IOrdemPassivoService : IGenericOperationsService<OrdemPassivoModel>
     {
-        const string query =
+        const string QUERY_BASE =
             @"
             SELECT
 	            tbl_ordem_passivo.*,

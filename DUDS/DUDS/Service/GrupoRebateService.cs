@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DUDS.Models;
+using DUDS.Models.Rebate;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -11,8 +12,7 @@ namespace DUDS.Service
 {
     public class GrupoRebateService : GenericService<GrupoRebateModel>, IGrupoRebateService
     {
-        public GrupoRebateService() : base(new GrupoRebateModel(),
-            "tbl_grupo_rebate")
+        public GrupoRebateService() : base(new GrupoRebateModel(),"tbl_grupo_rebate")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -53,14 +53,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                 *
-                              FROM
-                                 tbl_grupo_rebate
-                              WHERE 
-	                             ativo = 1
-                              ORDER BY    
-                                 nome_grupo_rebate";
+                const string query = IGrupoRebateService.QUERY_BASE + 
+                    @"
+                    WHERE 
+	                    ativo = 1
+                    ORDER BY    
+                        nome_grupo_rebate";
 
                 return await connection.QueryAsync<GrupoRebateModel>(query);
             }
@@ -70,12 +68,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                 *
-                              FROM
-                                 tbl_grupo_rebate
-                              WHERE 
-	                             id = @id";
+                const string query = IGrupoRebateService.QUERY_BASE + 
+                    @"
+                    WHERE 
+	                    id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<GrupoRebateModel>(query, new { id });
             }

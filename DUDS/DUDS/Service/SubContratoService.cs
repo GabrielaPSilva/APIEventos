@@ -64,7 +64,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ISubContratoService.QUERY_BASE + 
+                const string query = ISubContratoService.QUERY_BASE +
                     @"
                     WHERE
                         id = @id";
@@ -80,12 +80,14 @@ namespace DUDS.Service
                 const string query = ISubContratoService.QUERY_BASE +
                     @"
                     WHERE
-                        contrato.id = @codContrato
+                        contrato.id = @cod_contrato
                     ORDER BY
                         contrato.id";
 
                 // TODO - VOLTAR AQUI SEM FALTA
-                List<SubContratoViewModel> subContratoModels = await connection.QueryAsync<SubContratoViewModel>(query, new { codContrato }) as List<SubContratoViewModel>;
+                List<SubContratoViewModel> subContratoModels = await connection.QueryAsync<SubContratoViewModel>(query, new { cod_contrato = codContrato }) as List<SubContratoViewModel>;
+
+                /*
                 ContratoAlocadorService contratoAlocadorService = new ContratoAlocadorService();
                 ContratoFundoService contratoFundoService = new ContratoFundoService();
 
@@ -97,15 +99,7 @@ namespace DUDS.Service
                     List<ContratoAlocadorModel> contratoAlocadorModels = await contratoAlocadorService.GetSubContratoByIdAsync(item.Id) as List<ContratoAlocadorModel>;
                     item.ListaContratoAlocador = contratoAlocadorModels;
                 });
-                //foreach (SubContratoModel item in subContratoModels)
-                //{
-                //    List<ContratoFundoModel> contratoFundoModels = await contratoFundoService.GetSubContratoByIdAsync(item.Id) as List<ContratoFundoModel>;
-                //    item.ListaContratoFundo = contratoFundoModels;
-
-                //    List<ContratoAlocadorModel> contratoAlocadorModels = await contratoAlocadorService.GetSubContratoByIdAsync(item.Id) as List<ContratoAlocadorModel>;
-                //    item.ListaContratoAlocador = contratoAlocadorModels;
-                //}
-
+                */
                 return subContratoModels;
             }
         }

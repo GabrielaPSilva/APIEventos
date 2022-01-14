@@ -1,23 +1,18 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Investidor;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
-using Z.Dapper.Plus;
 
 namespace DUDS.Service
 {
     public class InvestidorService : GenericService<InvestidorModel>, IInvestidorService
     {
-        public InvestidorService() : base(new InvestidorModel(),
-                                            "tbl_investidor")
+        public InvestidorService() : base(new InvestidorModel(), "tbl_investidor")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -50,18 +45,18 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                    try
-                    {
-                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        var retorno = await connection.ExecuteAsync(sql: query, param: investidor);                        
-                        return retorno > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        return false;
-                    }
-                
+                try
+                {
+                    string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                    var retorno = await connection.ExecuteAsync(sql: query, param: investidor);
+                    return retorno > 0;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
+
             }
         }
 
@@ -112,113 +107,69 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-	                            tbl_investidor.*,
-	                            tbl_administrador.nome_administrador AS NomeAdministrador,
-	                            tbl_gestor.nome_gestor AS NomeGestor
-                             FROM
-	                            tbl_investidor
-                                LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
-		                        LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
-                             WHERE
-	                            tbl_investidor.ativo = 1
-                             ORDER BY
-	                            tbl_investidor.nome_investidor";
+                var query = IInvestidorService.QUERY_BASE + 
+                    @"
+                    WHERE
+	                    tbl_investidor.ativo = 1
+                    ORDER BY
+	                    tbl_investidor.nome_investidor";
 
                 investidores = await connection.QueryAsync<InvestidorModel>(query) as List<InvestidorModel>;
                 return investidores;
-
-                /*
-                Parallel.ForEach(investidores, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
-                {
-                    List<InvestidorDistribuidorModel> investDistriList = investDistriService.GetInvestidorByIdAsync(x.Id) as List<InvestidorDistribuidorModel>;
-                    x.ListaInvestDistribuidor = investDistriList;
-                });
-
-                /*
-                var investidores = await connection.QueryAsync<InvestidorModel, List<InvestidorDistribuidorModel>, InvestidorModel>(query,
-                    (investidor, investidorDistribuidor) =>
-                    {
-                        investidor.ListaInvestDistribuidor = investidorDistribuidor;
-                        return investidor;
-                    }, new {},
-                    splitOn: "id"
-                );
-                */
             }
-            /*
-            InvestidorDistribuidorService investDistriService = new InvestidorDistribuidorService();
-
-            var tasks = investidores.Select(async invest =>
-            {
-                var result = await investDistriService.GetInvestidorByIdAsync(invest.Id) as List<InvestidorDistribuidorModel>;
-                invest.ListaInvestDistribuidor = result;
-            });
-            await Task.WhenAll(tasks);
-            
-            return investidores;
-            */
         }
 
-        public async Task<InvestidorModel> GetByIdAsync(int id)
+        public async Task<InvestidorViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            tbl_investidor.*,
-	                            tbl_administrador.nome_administrador,
-	                            tbl_gestor.nome_gestor
-                             FROM
-	                            tbl_investidor
-		                        LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
-		                        LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
-                              WHERE 
-	                            tbl_investidor.id = @id";
+                var query = IInvestidorService.QUERY_BASE + 
+                    @"
+                    WHERE 
+	                    tbl_investidor.id = @id";
 
+                InvestidorViewModel investidor = await connection.QueryFirstOrDefaultAsync<InvestidorViewModel>(query, new { id });
 
-                InvestidorModel investidor = await connection.QueryFirstOrDefaultAsync<InvestidorModel>(query, new { id });
-
+                /*
                 if (investidor != null)
                 {
                     InvestidorDistribuidorService investDistribuidorService = new InvestidorDistribuidorService();
-                    List<InvestidorDistribuidorModel> investDistribuidorList = await investDistribuidorService.GetInvestidorByIdAsync(investidor.Id) as List<InvestidorDistribuidorModel>;
+                    List<InvestidorDistribuidorModel> investDistribuidorList = await investDistribuidorService.GetInvestidorDistribuidorByCodInvestidorAsync(investidor.Id) as List<InvestidorDistribuidorModel>;
                     investidor.ListaInvestDistribuidor = investDistribuidorList;
                 }
                 //return null;
+                */
                 return investidor;
             }
         }
 
-        public async Task<InvestidorModel> GetInvestidorExistsBase(string cnpj)
+        public async Task<InvestidorViewModel> GetInvestidorExistsBase(string cnpj)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            tbl_investidor.*,
-	                            tbl_administrador.nome_administrador,
-	                            tbl_gestor.nome_gestor
-                             FROM
-	                            tbl_investidor
-		                        LEFT JOIN tbl_administrador ON tbl_investidor.cod_administrador = tbl_administrador.id
-		                        LEFT JOIN tbl_gestor ON tbl_investidor.cod_gestor = tbl_gestor.id
-                            WHERE 
-	                            tbl_investidor.cnpj = @cnpj";
+                var query = IInvestidorService.QUERY_BASE + 
+                    @"
+                    WHERE 
+	                    tbl_investidor.cnpj = @cnpj";
 
-                InvestidorModel investidor = await connection.QueryFirstOrDefaultAsync<InvestidorModel>(query, new { cnpj });
+                InvestidorViewModel investidor = await connection.QueryFirstOrDefaultAsync<InvestidorViewModel>(query, new { cnpj });
 
                 if (investidor == null)
                 {
                     return null;
                 }
 
+                /*
                 InvestidorDistribuidorService investDistribuidorService = new InvestidorDistribuidorService();
-                List<InvestidorDistribuidorModel> investDistribuidorList = await investDistribuidorService.GetInvestidorByIdAsync(investidor.Id) as List<InvestidorDistribuidorModel>;
+                List<InvestidorDistribuidorModel> investDistribuidorList = await investDistribuidorService.GetInvestidorDistribuidorByCodInvestidorAsync(investidor.Id) as List<InvestidorDistribuidorModel>;
                 investidor.ListaInvestDistribuidor = investDistribuidorList;
+                */
 
                 return investidor;
             }
         }
 
+        /*
         public async Task<IEnumerable<InvestidorModel>> GetInvestidorByDataCriacao(DateTime dataCriacao)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
@@ -237,6 +188,7 @@ namespace DUDS.Service
                 return await connection.QueryAsync<InvestidorModel>(query, new { data_criacao = dataCriacao });
             }
         }
+        */
 
         public async Task<bool> UpdateAsync(InvestidorModel investidor)
         {

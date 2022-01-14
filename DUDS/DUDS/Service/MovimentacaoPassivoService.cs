@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Passivo;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -109,42 +109,26 @@ namespace DUDS.Service
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<MovimentacaoPassivoModel>> GetAllAsync()
+        public Task<IEnumerable<MovimentacaoPassivoViewModel>> GetAllAsync()
         {
             return GetByDataEntradaAsync(null);
         }
 
-        public async Task<IEnumerable<MovimentacaoPassivoModel>> GetByDataEntradaAsync(DateTime? dataMovimentacao)
+        public async Task<IEnumerable<MovimentacaoPassivoViewModel>> GetByDataEntradaAsync(DateTime? dataMovimentacao)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"
-                            SELECT
-	                            tbl_movimentacao_passivo.*,
-	                            tbl_fundo.nome_reduzido AS nome_fundo,
-	                            tbl_investidor.nome_investidor,
-	                            tbl_administrador.nome_administrador
-                            FROM
-	                            tbl_movimentacao_passivo
-		                        INNER JOIN tbl_fundo ON tbl_movimentacao_passivo.cod_fundo = tbl_fundo.id
-                                INNER JOIN tbl_investidor_distribuidor ON tbl_movimentacao_passivo.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
-		                        INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-		                        INNER JOIN tbl_administrador ON tbl_ordem_passivo.cod_administrador = tbl_administrador.id
-                                
-                            WHERE
-                                (@data_movimentacao IS NULL OR tbl_ordem_passivo.data_movimentacao = @data_movimentacao)
-                            ORDER BY
-                                tbl_fundo.nome_reduzido,
-	                            tbl_investidor.nome_investidor,
-                                tbl_ordem_passivo.tipo_movimentacao";
+                var query = IMovimentacaoPassivoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        (@data_movimentacao IS NULL OR tbl_ordem_passivo.data_movimentacao = @data_movimentacao)
+                    ORDER BY
+                        tbl_fundo.nome_reduzido,
+	                    tbl_investidor.nome_investidor,
+                        tbl_ordem_passivo.tipo_movimentacao";
 
-                return await connection.QueryAsync<MovimentacaoPassivoModel>(query, new { data_movimentacao = dataMovimentacao });
+                return await connection.QueryAsync<MovimentacaoPassivoViewModel>(query, new { data_movimentacao = dataMovimentacao });
             }
-        }
-
-        public Task<MovimentacaoPassivoModel> GetByIdAsync(int id)
-        {
-            throw new System.NotImplementedException();
         }
 
         public async Task<bool> UpdateAsync(MovimentacaoPassivoModel item)
