@@ -632,7 +632,7 @@ namespace DUDS.Controllers.V1
         #region Condição Remuneração
         // GET: api/Condicao/GetCondicaoRemuneracao
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CondicaoRemuneracaoModel>>> GetCondicaoRemuneracao()
+        public async Task<ActionResult<IEnumerable<CondicaoRemuneracaoViewModel>>> GetCondicaoRemuneracao()
         {
             try
             {
@@ -746,7 +746,7 @@ namespace DUDS.Controllers.V1
         #region Estrutura de Contratos Ativos e Inativos
         // GET: api/Contrato/GetEstruturaContrato
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EstruturaContratoModel>>> GetEstruturaContratoValidos()
+        public async Task<ActionResult<IEnumerable<EstruturaContratoViewModel>>> GetEstruturaContratoValidos()
         {
             try
             {
@@ -767,7 +767,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Contrato/GetEstruturaContrato
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EstruturaContratoModel>>> GetEstruturaContratoInativos()
+        public async Task<ActionResult<IEnumerable<EstruturaContratoViewModel>>> GetEstruturaContratoInativos()
         {
             try
             {

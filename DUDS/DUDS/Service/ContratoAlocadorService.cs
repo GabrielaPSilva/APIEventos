@@ -1,18 +1,16 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Contrato;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
     public class ContratoAlocadorService : GenericService<ContratoAlocadorModel>, IContratoAlocadorService
     {
-        public ContratoAlocadorService() : base(new ContratoAlocadorModel(),
-            "tbl_contrato_alocador")
+        public ContratoAlocadorService() : base(new ContratoAlocadorModel(),"tbl_contrato_alocador")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -45,61 +43,45 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<ContratoAlocadorModel>> GetAllAsync()
+        public async Task<IEnumerable<ContratoAlocadorViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            contrato_alocador.*,
-                                investidor.nome_investidor
-                             FROM
-	                            tbl_contrato_alocador contrato_alocador
-                                INNER JOIN tbl_investidor investidor ON contrato.id = contrato_alocador.cod_investidor
-                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_alocador.cod_sub_contrato
-                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                             WHERE
-                                contrato.ativo = 1
-                             ORDER BY
-                                investidor.nome_investidor";
+                const string query = IContratoAlocadorService.QUERY_BASE +
+                    @"
+                    WHERE
+                        contrato.ativo = 1
+                    ORDER BY
+                        investidor.nome_investidor";
 
-                return await connection.QueryAsync<ContratoAlocadorModel>(query);
+                return await connection.QueryAsync<ContratoAlocadorViewModel>(query);
             }
         }
 
-        public async Task<ContratoAlocadorModel> GetByIdAsync(int id)
+        public async Task<ContratoAlocadorViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    contrato_alocador.*,
-                                        investidor.nome_investidor
-                                     FROM
-	                                    tbl_contrato_alocador contrato_alocador
-                                        inner join tbl_investidor investidor on contrato.id = contrato_alocador.cod_investidor
-                                       WHERE
-                                        id = @id";
-                return await connection.QueryFirstOrDefaultAsync<ContratoAlocadorModel>(query, new { id });
+                const string query = IContratoAlocadorService.QUERY_BASE +
+                    @"
+                    WHERE
+                        contrato_alocador.id = @id";
+                return await connection.QueryFirstOrDefaultAsync<ContratoAlocadorViewModel>(query, new { id });
             }
         }
 
-        public async Task<IEnumerable<ContratoAlocadorModel>> GetSubContratoByIdAsync(int id)
+        public async Task<IEnumerable<ContratoAlocadorViewModel>> GetContratoAlocadorByCodSubContratoAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            contrato_alocador.*,
-                                investidor.nome_investidor
-                             FROM
-	                            tbl_contrato_alocador contrato_alocador
-                                INNER JOIN tbl_investidor investidor ON contrato.id = contrato_alocador.cod_investidor
-                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_alocador.cod_sub_contrato
-                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                             WHERE
-                                sub_contrato.id = @id
-                             ORDER BY
-                                investidor.nome_investidor";
+                var query = IContratoAlocadorService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        sub_contrato.id = @id
+                    ORDER BY
+                        investidor.nome_investidor";
 
-                return await connection.QueryAsync<ContratoAlocadorModel>(query,new { id });
+                return await connection.QueryAsync<ContratoAlocadorViewModel>(query,new { id });
             }
         }
 

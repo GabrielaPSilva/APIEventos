@@ -93,10 +93,10 @@ namespace DUDS.Service
 
                 Parallel.ForEach(subContratoModels, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, async item =>
                 {
-                    List<ContratoFundoModel> contratoFundoModels = await contratoFundoService.GetSubContratoByIdAsync(item.Id) as List<ContratoFundoModel>;
+                    List<ContratoFundoModel> contratoFundoModels = await contratoFundoService.GetContratoAlocadorByCodSubContratoAsync(item.Id) as List<ContratoFundoModel>;
                     item.ListaContratoFundo = contratoFundoModels;
 
-                    List<ContratoAlocadorModel> contratoAlocadorModels = await contratoAlocadorService.GetSubContratoByIdAsync(item.Id) as List<ContratoAlocadorModel>;
+                    List<ContratoAlocadorModel> contratoAlocadorModels = await contratoAlocadorService.GetContratoAlocadorByCodSubContratoAsync(item.Id) as List<ContratoAlocadorModel>;
                     item.ListaContratoAlocador = contratoAlocadorModels;
                 });
                 */

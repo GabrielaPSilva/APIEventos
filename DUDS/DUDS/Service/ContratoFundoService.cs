@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DUDS.Models;
+using DUDS.Models.Contrato;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -11,8 +12,7 @@ namespace DUDS.Service
 {
     public class ContratoFundoService: GenericService<ContratoFundoModel>, IContratoFundoService
     {
-        public ContratoFundoService() : base(new ContratoFundoModel(),
-            "tbl_contrato_fundo")
+        public ContratoFundoService() : base(new ContratoFundoModel(),"tbl_contrato_fundo")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -45,79 +45,59 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<ContratoFundoModel>> GetAllAsync()
+        public async Task<IEnumerable<ContratoFundoViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    contrato_fundo.*,
-                                        fundo.nome_reduzido as nome_fundo,
-                                        tipo_condicao.tipo_condicao
-                                     FROM
-	                                    tbl_contrato_fundo contrato_fundo
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = contrato_fundo.cod_fundo
-                                        INNER JOIN tbl_tipo_condicao tipo_condicao ON tipo_condicao.id = contrato_fundo.cod_tipo_condicao
-                                        INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrado.id = contrato_fundo.cod_sub_contrato
-                                        INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                                     WHERE
-                                        contrato.ativo = 1
-                                     ORDER BY
-                                        fundo.nome_reduzido";
+                const string query = IContratoFundoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        contrato.ativo = 1
+                    ORDER BY
+                        fundo.nome_reduzido";
 
-                return await connection.QueryAsync<ContratoFundoModel>(query);
+                return await connection.QueryAsync<ContratoFundoViewModel>(query);
             }
         }
 
-        public async Task<ContratoFundoModel> GetByIdAsync(int id)
+        public async Task<ContratoFundoViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    contrato_fundo.*,
-                                        fundo.nome_reduzido as nome_fundo,
-                                        tipo_condicao.tipo_condicao
-                                     FROM
-	                                    tbl_contrato_fundo contrato_fundo
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = contrato_fundo.cod_fundo
-                                        INNER JOIN tbl_tipo_condicao tipo_condicao ON tipo_condicao.id = contrato_fundo.cod_tipo_condicao
-                                       WHERE
-                                        contrato_fundo.id = @id
-                                       ORDER BY
-                                        fundo.nome_reduzido";
-                return await connection.QueryFirstOrDefaultAsync<ContratoFundoModel>(query, new { id });
+                const string query = IContratoFundoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        contrato_fundo.id = @id
+                    ORDER BY
+                        fundo.nome_reduzido";
+                return await connection.QueryFirstOrDefaultAsync<ContratoFundoViewModel>(query, new { id });
             }
         }
 
-        public async Task<IEnumerable<ContratoFundoModel>> GetSubContratoByIdAsync(int id)
+        public async Task<IEnumerable<ContratoFundoViewModel>> GetContratoFundoBySubContratoAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    contrato_fundo.*,
-                                        fundo.nome_reduzido as nome_fundo,
-                                        tipo_condicao.tipo_condicao
-                                     FROM
-	                                    tbl_contrato_fundo contrato_fundo
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = contrato_fundo.cod_fundo
-                                        INNER JOIN tbl_tipo_condicao tipo_condicao ON tipo_condicao.id = contrato_fundo.cod_tipo_condicao
-                                        INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrado.id = contrato_fundo.cod_sub_contrato
-                                        INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                                     WHERE
-                                        sub_contrato.id = @id
-                                     ORDER BY
-                                        fundo.nome_reduzido";
-                List<ContratoFundoModel> contratoFundoModels = await connection.QueryAsync<ContratoFundoModel>(query, new { id }) as List<ContratoFundoModel>;
+                const string query = IContratoFundoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        sub_contrato.id = @id
+                    ORDER BY
+                        fundo.nome_reduzido";
+                List<ContratoFundoViewModel> contratoFundoModels = await connection.QueryAsync<ContratoFundoViewModel>(query, new { id }) as List<ContratoFundoViewModel>;
+                
+                /*
                 ContratoRemuneracaoService contratoRemuneracaoService = new ContratoRemuneracaoService();
-
                 Parallel.ForEach(contratoFundoModels, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, async item =>
                 {
                     List<ContratoRemuneracaoModel> contratoRemuneracaoModels = await contratoRemuneracaoService.GetContratoFundoByIdAsync(item.Id) as List<ContratoRemuneracaoModel>;
                     item.ListaContratoRemuneracao = contratoRemuneracaoModels;
                 });
+                */
 
                 //foreach (var item in contratoFundoModels)
                 //{
-                //    List<ContratoRemuneracaoModel> contratoRemuneracaoModels = await contratoRemuneracaoService.GetContratoFundoByIdAsync(item.Id) as List<ContratoRemuneracaoModel>;
+                //    List<ContratoRemuneracaoModel> contratoRemuneracaoModels = await contratoRemuneracaoService.GetContratoRemuneracaoByContratoFundoAsync(item.Id) as List<ContratoRemuneracaoModel>;
                 //    item.ListaContratoRemuneracao = contratoRemuneracaoModels;
                 //}
 
