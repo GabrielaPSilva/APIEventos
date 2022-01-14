@@ -17,8 +17,8 @@ namespace DUDS.Service.Interface
                                             INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_fundo.cod_sub_contrato
                                             INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato";
 
-        Task<IEnumerable<CondicaoRemuneracaoViewModel>> GetAllAsync();
-        Task<CondicaoRemuneracaoViewModel> GetByIdAsync(int id);
         Task<IEnumerable<CondicaoRemuneracaoViewModel>> GetContratoRemuneracaoByIdAsync(int id);
+        Task<CondicaoRemuneracaoViewModel> GetByIdAsync(int id);
+        Task<IEnumerable<CondicaoRemuneracaoViewModel>> GetAllAsync();
     }
 }
