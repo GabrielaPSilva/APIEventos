@@ -595,7 +595,7 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Pagamentos/AddPgtoTaxaAdminPfee/List<PagamentoTaxaAdminPfeeModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeModel>>> AddPgtoTaxaAdminPfee(List<PgtoTaxaAdmPfeeModel> pagamentoAdministracaoPerformance)
+        public async Task<ActionResult<IEnumerable<PgtoTaxaAdmPfeeViewModel>>> AddPgtoTaxaAdminPfee(List<PgtoTaxaAdmPfeeModel> pagamentoAdministracaoPerformance)
         {
             try
             {
@@ -676,15 +676,17 @@ namespace DUDS.Controllers.V1
         #region Calculo Rebate
         // GET: api/Rebate/GetCalculoRebate/competencia/codGrupoRebate
         [HttpGet("{competencia}/{codGrupoRebate}")]
-        public async Task<ActionResult<IEnumerable<CalculoRebateModel>>> GetCalculoRebate(string competencia, int codGrupoRebate)
+        public async Task<ActionResult<IEnumerable<CalculoRebateViewModel>>> GetCalculoRebate(string competencia, int codGrupoRebate)
         {
             try
             {
                 var calculoRebate = await _calculoRebateService.GetByCompetenciaAsync(competencia, codGrupoRebate);
+
                 if (calculoRebate.Any())
                 {
                     return Ok(calculoRebate);
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -695,15 +697,17 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetCalculoRebateById/id
         [HttpGet("{guid}")]
-        public async Task<ActionResult<CalculoRebateModel>> GetCalculoRebateById(Guid id)
+        public async Task<ActionResult<CalculoRebateViewModel>> GetCalculoRebateById(Guid id)
         {
             try
             {
                 var calculoRebate = await _calculoRebateService.GetByIdAsync(id);
+
                 if (calculoRebate == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(calculoRebate);
             }
             catch (Exception e)
@@ -714,16 +718,17 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Rebate/AddCalculoRebate/List<CalculoPgtoTaxaAdmPfeeModel>
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<CalculoRebateModel>>> AddCalculoRebate(List<CalculoRebateModel> calculoRebate)
+        public async Task<ActionResult<IEnumerable<CalculoRebateViewModel>>> AddCalculoRebate(List<CalculoRebateModel> calculoRebate)
         {
             try
             {
                 var retorno = await _calculoRebateService.AddBulkAsync(calculoRebate);
+
                 if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetCalculoRebate),
-                        new { competencia = calculoRebate.FirstOrDefault().Competencia }, calculoRebate);
+                    return CreatedAtAction(nameof(GetCalculoRebate), calculoRebate);
                 }
+
                 return BadRequest(retorno);
             }
             catch (Exception e)
@@ -739,10 +744,12 @@ namespace DUDS.Controllers.V1
             try
             {
                 bool retorno = await _calculoRebateService.DeleteByCompetenciaAsync(competencia);
+
                 if (retorno)
                 {
                     return Ok();
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -758,10 +765,12 @@ namespace DUDS.Controllers.V1
             try
             {
                 var calculoRebate = await _calculoRebateService.GetDescricaoRebateAsync(codContrato, codSubContrato, codContratoFundo, codContratoRemuneracao);
+                
                 if (calculoRebate.Any())
                 {
                     return Ok(calculoRebate);
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -923,7 +932,7 @@ namespace DUDS.Controllers.V1
         #region Email Grupo Rebate
         // GET: api/GrupoRebate/GetEmailGrupoRebate
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmailGrupoRebateModel>>> GetEmailGrupoRebate()
+        public async Task<ActionResult<IEnumerable<EmailGrupoRebateViewModel>>> GetEmailGrupoRebate()
         {
             try
             {
@@ -944,7 +953,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/GrupoRebate/GetTblGrupoRebateById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<EmailGrupoRebateModel>> GetEmailGrupoRebateById(int id)
+        public async Task<ActionResult<EmailGrupoRebateViewModel>> GetEmailGrupoRebateById(int id)
         {
             try
             {
@@ -953,6 +962,7 @@ namespace DUDS.Controllers.V1
                 {
                     return NotFound();
                 }
+
                 return Ok(emailGrupoRebate);
             }
             catch (Exception e)
@@ -963,16 +973,18 @@ namespace DUDS.Controllers.V1
 
         //POST: api/GrupoRebate/AddGrupoRebate/GrupoRebateModel
         [HttpPost]
-        public async Task<ActionResult<EmailGrupoRebateModel>> AddEmailGrupoRebate(EmailGrupoRebateModel emailGrupoRebate)
+        public async Task<ActionResult<EmailGrupoRebateViewModel>> AddEmailGrupoRebate(EmailGrupoRebateModel emailGrupoRebate)
         {
             try
             {
                 bool retorno = await _emailGrupoRebateService.AddAsync(emailGrupoRebate);
+
                 if (retorno)
                 {
                     return CreatedAtAction(nameof(GetEmailGrupoRebateById),
                         new { id = emailGrupoRebate.Id }, emailGrupoRebate);
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -1039,7 +1051,8 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                EmailGrupoRebateModel retornoEmailGrupoRebate = await _emailGrupoRebateService.GetByIdAsync(id);
+                var retornoEmailGrupoRebate = await _emailGrupoRebateService.GetByIdAsync(id);
+
                 if (retornoEmailGrupoRebate != null)
                 {
                     bool retorno = await _emailGrupoRebateService.ActivateAsync(id);

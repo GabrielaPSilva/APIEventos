@@ -108,7 +108,7 @@ namespace DUDS.Service
             }
         }
 
-        private async Task<IEnumerable<PgtoTaxaAdmPfeeViewModel>> GetByParametersAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor)
+        public async Task<IEnumerable<PgtoTaxaAdmPfeeViewModel>> GetByParametersAsync(string competencia, int? codFundo, int? codAdministrador, int? codInvestidorDistribuidor)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
