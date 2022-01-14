@@ -118,7 +118,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IMovimentacaoPassivoService.QUERY_BASE + 
+                const string query = IMovimentacaoPassivoService.QUERY_BASE + 
                     @"
                     WHERE
                         (@data_movimentacao IS NULL OR tbl_ordem_passivo.data_movimentacao = @data_movimentacao)

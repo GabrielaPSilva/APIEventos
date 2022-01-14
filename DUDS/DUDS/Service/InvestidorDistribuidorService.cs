@@ -118,7 +118,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IInvestidorDistribuidorService.QUERY_BASE +
+                const string query = IInvestidorDistribuidorService.QUERY_BASE +
                     @"
                     WHERE 
 	                    tbl_investidor_distribuidor.cod_investidor = @cod_investidor";
@@ -131,7 +131,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IInvestidorDistribuidorService.QUERY_BASE +
+                const string query = IInvestidorDistribuidorService.QUERY_BASE +
                     @"
                     WHERE 
 	                    tbl_investidor_distribuidor.cod_invest_administrador = @cod_invest_administrador";
@@ -144,7 +144,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IInvestidorDistribuidorService.QUERY_BASE + 
+                const string query = IInvestidorDistribuidorService.QUERY_BASE +
                     @"
                     WHERE 
 	                    tbl_investidor_distribuidor.cod_investidor = @cod_investidor AND
@@ -159,7 +159,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IInvestidorDistribuidorService.QUERY_BASE + 
+                const string query = IInvestidorDistribuidorService.QUERY_BASE +
                     @"
                     WHERE 
 	                    tbl_investidor_distribuidor.id = @id";

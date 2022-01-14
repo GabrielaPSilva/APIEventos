@@ -53,7 +53,7 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
 
-                var query = ITipoCondicaoService.QUERY_BASE + 
+                const string query = ITipoCondicaoService.QUERY_BASE + 
                     @"
                     WHERE 
 	                    ativo = 1
@@ -68,7 +68,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = ITipoCondicaoService.QUERY_BASE + 
+                const string query = ITipoCondicaoService.QUERY_BASE + 
                     @"
                     WHERE 
                         id = @id";
@@ -81,7 +81,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = ITipoCondicaoService.QUERY_BASE + 
+                const string query = ITipoCondicaoService.QUERY_BASE + 
                     @"
                     WHERE 
                         tipo_condicao = @tipo_condicao";

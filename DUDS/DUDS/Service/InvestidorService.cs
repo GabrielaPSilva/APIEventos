@@ -107,7 +107,7 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IInvestidorService.QUERY_BASE + 
+                const string query = IInvestidorService.QUERY_BASE + 
                     @"
                     WHERE
 	                    tbl_investidor.ativo = 1
@@ -123,7 +123,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IInvestidorService.QUERY_BASE + 
+                const string query = IInvestidorService.QUERY_BASE + 
                     @"
                     WHERE 
 	                    tbl_investidor.id = @id";
@@ -147,7 +147,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IInvestidorService.QUERY_BASE + 
+                const string query = IInvestidorService.QUERY_BASE + 
                     @"
                     WHERE 
 	                    tbl_investidor.cnpj = @cnpj";

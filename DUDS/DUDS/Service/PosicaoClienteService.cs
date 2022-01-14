@@ -105,7 +105,7 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IPosicaoClienteService.QUERY_BASE+ 
+                const string query = IPosicaoClienteService.QUERY_BASE+ 
                     @"
                     WHERE
                         (@data_inicio IS NULL OR tbl_posicao_cliente.data_ref >= @data_inicio) 
@@ -176,7 +176,7 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = "SELECT MAX(valor_bruto) AS maior_valor_posicao FROM (" + IPosicaoClienteService.QUERY_BASE + 
+                const string query = "SELECT MAX(valor_bruto) AS maior_valor_posicao FROM (" + IPosicaoClienteService.QUERY_BASE + 
                     @"
                     WHERE
                         (@cod_distribuidor IS NULL or tbl_distribuidor.id = @cod_distribuidor)

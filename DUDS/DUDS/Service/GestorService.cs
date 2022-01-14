@@ -67,7 +67,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IGestorService.QUERY_BASE + 
+                const string query = IGestorService.QUERY_BASE + 
                            @"
                              WHERE 
 	                            gestor.ativo = 1
@@ -82,7 +82,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IGestorService.QUERY_BASE + 
+                const string query = IGestorService.QUERY_BASE + 
                             @"
                               WHERE 
 	                             gestor.id = @id";
@@ -95,7 +95,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IGestorService.QUERY_BASE +
+                const string query = IGestorService.QUERY_BASE +
                             @"
                               WHERE 
 	                              gestor.cnpj = @cnpj";

@@ -1,12 +1,9 @@
 ﻿using Dapper;
-using DUDS.Models;
-using DUDS.Models.Conta;
 using DUDS.Models.Fundo;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -55,7 +52,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IFundoService.QUERY_BASE +
+                const string query = IFundoService.QUERY_BASE +
                     @"
                     WHERE
 	                    tbl_fundo.ativo = 1
@@ -88,7 +85,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IFundoService.QUERY_BASE + 
+                const string query = IFundoService.QUERY_BASE + 
                     @"
                     WHERE 
 	                    tbl_fundo.id = @id";
@@ -110,8 +107,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IFundoService.QUERY_BASE +
-                    @"
+                const string query = $@"{IFundoService.QUERY_BASE}
                     WHERE 
 	                    tbl_fundo.cnpj = @cnpj";
 

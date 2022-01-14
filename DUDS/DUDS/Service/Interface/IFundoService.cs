@@ -1,8 +1,5 @@
-﻿using DUDS.Models;
-using DUDS.Models.Fundo;
-using System;
+﻿using DUDS.Models.Fundo;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service.Interface
