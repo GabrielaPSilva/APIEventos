@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DUDS.Models;
 using DUDS.Service.Interface;
+using DUDS.Models.Conta;
 
 namespace DUDS.Controllers.V1
 {
@@ -26,7 +26,7 @@ namespace DUDS.Controllers.V1
         #region Conta
         // GET: api/Contas/GetContas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContaModel>>> GetContas()
+        public async Task<ActionResult<IEnumerable<ContaViewModel>>> GetContas()
         {
             try
             {
@@ -47,7 +47,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Contas/GetContasById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<ContaModel>> GetContaById(int id)
+        public async Task<ActionResult<ContaViewModel>> GetContaById(int id)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Contas/GetContasExistsBase/cod_fundo/cod_investidor/cod_tipo_conta
         [HttpGet("{cod_tipo_conta}")]
-        public async Task<ActionResult<ContaModel>> GetContasExistsBase(int codFundo, int codInvestidor, int codTipoConta)
+        public async Task<ActionResult<ContaViewModel>> GetContasExistsBase(int codFundo, int codInvestidor, int codTipoConta)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                ContaModel retornoConta = await _contaService.GetByIdAsync(conta.Id);
+                var retornoConta = await _contaService.GetByIdAsync(conta.Id);
 
                 if (retornoConta == null)
                 {

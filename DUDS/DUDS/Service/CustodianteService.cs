@@ -16,20 +16,26 @@ namespace DUDS.Service
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
-        public async Task<bool> ActivateAsync(int id)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
-            }
-        }
-
         public async Task<bool> AddAsync(CustodianteModel item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                return await connection.ExecuteAsync(query, item) > 0;
+            }
+        }
+
+        public async Task<bool> UpdateAsync(CustodianteModel item)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
+                List<string> str = new List<string>();
+                for (int i = 0; i < _propertiesUpdate.Count; i++)
+                {
+                    str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
+                }
+                query = query.Replace("VALORES", String.Join(",", str));
                 return await connection.ExecuteAsync(query, item) > 0;
             }
         }
@@ -48,18 +54,25 @@ namespace DUDS.Service
             }
         }
 
+        public async Task<bool> ActivateAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
+
         public async Task<IEnumerable<CustodianteModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                custodiante.*
-                              FROM
-	                            tbl_custodiante custodiante
-                            WHERE 
-	                            custodiante.ativo = 1
-                            ORDER BY    
-                                custodiante.nome_custodiante";
+                var query = ICustodianteService.QUERY_BASE + 
+                            @"
+                              WHERE 
+	                              custodiante.ativo = 1
+                              ORDER BY    
+                                  custodiante.nome_custodiante";
 
                 return await connection.QueryAsync<CustodianteModel>(query);
             }
@@ -69,12 +82,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                custodiante.*
-                              FROM
-	                            tbl_custodiante custodiante
-                            WHERE 
-	                            custodiante.id = @id";
+                var query = ICustodianteService.QUERY_BASE + 
+                        @"
+                           WHERE 
+	                          custodiante.id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<CustodianteModel>(query, new { id });
             }
@@ -84,29 +95,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            tbl_custodiante custodiante.*
-                              FROM
-	                            tbl_custodiante custodiante
-                            WHERE 
-	                            gestor.cnpj = @cnpj";
+                var query = ICustodianteService.QUERY_BASE + 
+                        @"
+                           WHERE 
+	                           gestor.cnpj = @cnpj";
 
                 return await connection.QueryFirstOrDefaultAsync<CustodianteModel>(query, new { cnpj });
-            }
-        }
-
-        public async Task<bool> UpdateAsync(CustodianteModel item)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
-                List<string> str = new List<string>();
-                for (int i = 0; i < _propertiesUpdate.Count; i++)
-                {
-                    str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
-                }
-                query = query.Replace("VALORES", String.Join(",", str));
-                return await connection.ExecuteAsync(query, item) > 0;
             }
         }
     }

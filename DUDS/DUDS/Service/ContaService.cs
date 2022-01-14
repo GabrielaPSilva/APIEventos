@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Conta;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -17,121 +17,12 @@ namespace DUDS.Service
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
-        public async Task<bool> ActivateAsync(int id)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
-            }
-        }
-
         public async Task<bool> AddAsync(ContaModel conta)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
                 return await connection.ExecuteAsync(query, conta) > 0;
-            }
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
-            }
-        }
-
-        public Task<bool> DisableAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<ContaModel>> GetAllAsync()
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                var query = @"SELECT
-	                              tbl_contas.*,
-	                              tbl_fundo.nome_reduzido,
-	                              tbl_investidor.nome_investidor,
-	                              tbl_tipo_conta.tipo_conta
-                              FROM
-	                              tbl_contas
-		                              LEFT JOIN tbl_fundo ON tbl_contas.cod_fundo = tbl_fundo.id
-		                              LEFT JOIN tbl_investidor ON tbl_contas.cod_investidor = tbl_investidor.id
-		                              INNER JOIN tbl_tipo_conta ON tbl_contas.cod_tipo_conta = tbl_tipo_conta.id
-                              WHERE
-	                              tbl_contas.ativo = 1";
-
-                return await connection.QueryAsync<ContaModel>(query);
-            }
-        }
-
-        public async Task<ContaModel> GetByIdAsync(int id)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                var query = @"SELECT
-	                              tbl_contas.*,
-	                              tbl_fundo.nome_reduzido,
-	                              tbl_investidor.nome_investidor,
-	                              tbl_tipo_conta.tipo_conta
-                              FROM
-	                              tbl_contas
-		                              LEFT JOIN tbl_fundo ON tbl_contas.cod_fundo = tbl_fundo.id
-		                              LEFT JOIN tbl_investidor ON tbl_contas.cod_investidor = tbl_investidor.id
-		                              INNER JOIN tbl_tipo_conta ON tbl_contas.cod_tipo_conta = tbl_tipo_conta.id
-                              WHERE 
-	                              tbl_contas.id = @id";
-
-                return await connection.QueryFirstOrDefaultAsync<ContaModel>(query, new { id });
-            }
-        }
-
-        public async Task<GestorModel> GetContaExistsBase(int codFundo, int codInvestidor, int codTipoConta)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                var query = @"SELECT
-	                              tbl_contas.*,
-	                              tbl_fundo.nome_reduzido,
-	                              tbl_investidor.nome_investidor,
-	                              tbl_tipo_conta.tipo_conta
-                              FROM
-	                              tbl_contas
-		                              LEFT JOIN tbl_fundo ON tbl_contas.cod_fundo = tbl_fundo.id
-		                              LEFT JOIN tbl_investidor ON tbl_contas.cod_investidor = tbl_investidor.id
-		                              INNER JOIN tbl_tipo_conta ON tbl_contas.cod_tipo_conta = tbl_tipo_conta.id
-                             WHERE 
-	                             (tbl_contas.cod_fundo = @cod_fundo OR
-                                 tbl_contas.cod_investidor = @cod_investidor) AND
-                                 tbl_contas.cod_tipo_conta = @cod_tipo_conta";
-
-                return await connection.QueryFirstOrDefaultAsync<GestorModel>(query, new { cod_fundo = codFundo, cod_investidor = codInvestidor, cod_tipo_conta = codTipoConta });
-            }
-        }
-
-        public async Task<IEnumerable<ContaModel>> GetFundoByIdAsync(int id)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                var query = @"SELECT
-	                              tbl_contas.*,
-	                              tbl_fundo.nome_reduzido,
-	                              tbl_investidor.nome_investidor,
-	                              tbl_tipo_conta.tipo_conta
-                              FROM
-	                              tbl_contas
-		                              LEFT JOIN tbl_fundo ON tbl_contas.cod_fundo = tbl_fundo.id
-		                              LEFT JOIN tbl_investidor ON tbl_contas.cod_investidor = tbl_investidor.id
-		                              INNER JOIN tbl_tipo_conta ON tbl_contas.cod_tipo_conta = tbl_tipo_conta.id
-                              WHERE 
-	                              tbl_contas.cod_fundo = @cod_fundo";
-
-                return await connection.QueryAsync<ContaModel>(query, new { cod_fundo = id });
             }
         }
 
@@ -147,6 +38,83 @@ namespace DUDS.Service
                 }
                 query = query.Replace("VALORES", String.Join(",", str));
                 return await connection.ExecuteAsync(query, conta) > 0;
+            }
+        }
+        
+        public async Task<bool> ActivateAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
+        
+        public Task<bool> DisableAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<ContaViewModel>> GetAllAsync()
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = IContaService.QUERY_BASE + 
+                            @"
+                              WHERE
+	                              tbl_contas.ativo = 1";
+
+                return await connection.QueryAsync<ContaViewModel>(query);
+            }
+        }
+
+        public async Task<ContaViewModel> GetByIdAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = IContaService.QUERY_BASE + 
+                            @"
+                              WHERE 
+	                              tbl_contas.id = @id";
+
+                return await connection.QueryFirstOrDefaultAsync<ContaViewModel>(query, new { id });
+            }
+        }
+
+        public async Task<ContaViewModel> GetContaExistsBase(int codFundo, int codInvestidor, int codTipoConta)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = IContaService.QUERY_BASE + 
+                            @"
+                              WHERE 
+	                             (tbl_contas.cod_fundo = @cod_fundo OR
+                                 tbl_contas.cod_investidor = @cod_investidor) AND
+                                 tbl_contas.cod_tipo_conta = @cod_tipo_conta";
+
+                return await connection.QueryFirstOrDefaultAsync<ContaViewModel>(query, new { cod_fundo = codFundo, cod_investidor = codInvestidor, cod_tipo_conta = codTipoConta });
+            }
+        }
+
+        public async Task<IEnumerable<ContaViewModel>> GetFundoByIdAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = IContaService.QUERY_BASE + 
+                            @"
+                              WHERE 
+	                              tbl_contas.cod_fundo = @cod_fundo";
+
+                return await connection.QueryAsync<ContaViewModel>(query, new { cod_fundo = id });
             }
         }
     }
