@@ -1,5 +1,7 @@
 ﻿using Dapper;
 using DUDS.Models;
+using DUDS.Models.Conta;
+using DUDS.Models.Fundo;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -11,8 +13,7 @@ namespace DUDS.Service
 {
     public class FundoService : GenericService<FundoModel>, IFundoService
     {
-        public FundoService() : base(new FundoModel(),
-                                         "tbl_fundo")
+        public FundoService() : base(new FundoModel(),"tbl_fundo")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -50,36 +51,28 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<FundoModel>> GetAllAsync()
+        public async Task<IEnumerable<FundoViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                             tbl_fundo.*,
-	                             tbl_administrador.nome_administrador,
-	                             tbl_custodiante.nome_custodiante,
-	                             tbl_gestor.nome_gestor,
-	                             tbl_tipo_estrategia.estrategia
-                             FROM
-	                             tbl_fundo
-		                            INNER JOIN tbl_administrador ON tbl_fundo.cod_administrador = tbl_administrador.id
-		                            INNER JOIN tbl_custodiante ON tbl_fundo.cod_custodiante = tbl_custodiante.id
-		                            INNER JOIN tbl_gestor ON tbl_fundo.cod_gestor = tbl_gestor.id
-		                            INNER JOIN tbl_tipo_estrategia ON tbl_fundo.cod_tipo_estrategia = tbl_tipo_estrategia.id
-                             WHERE
-	                             tbl_fundo.ativo = 1
-                             ORDER BY
-	                             tbl_fundo.nome_reduzido";
+                var query = IFundoService.QUERY_BASE +
+                    @"
+                    WHERE
+	                    tbl_fundo.ativo = 1
+                    ORDER BY
+	                    tbl_fundo.nome_reduzido";
 
-                List<FundoModel> fundos = await connection.QueryAsync<FundoModel>(query) as List<FundoModel>;
+                List<FundoViewModel> fundos = await connection.QueryAsync<FundoViewModel>(query) as List<FundoViewModel>;
 
+                /*
                 ContaService contaService = new ContaService();
 
                 Parallel.ForEach(fundos, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, async fundo =>
                 {
-                    List<ContaModel> contaList = await contaService.GetFundoByIdAsync(fundo.Id) as List<ContaModel>;
+                    List<ContaViewModel> contaList = await contaService.GetFundoByIdAsync(fundo.Id) as List<ContaViewModel>;
                     fundo.ListaConta = contaList;
                 });
+                */
 
                 //foreach (FundoModel fundo in fundos)
                 //{
@@ -91,66 +84,50 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<FundoModel> GetByIdAsync(int id)
+        public async Task<FundoViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                             tbl_fundo.*,
-	                             tbl_administrador.nome_administrador,
-	                             tbl_custodiante.nome_custodiante,
-	                             tbl_gestor.nome_gestor,
-	                             tbl_tipo_estrategia.estrategia
-                             FROM
-	                             tbl_fundo
-		                            INNER JOIN tbl_administrador ON tbl_fundo.cod_administrador = tbl_administrador.id
-		                            INNER JOIN tbl_custodiante ON tbl_fundo.cod_custodiante = tbl_custodiante.id
-		                            INNER JOIN tbl_gestor ON tbl_fundo.cod_gestor = tbl_gestor.id
-		                            INNER JOIN tbl_tipo_estrategia ON tbl_fundo.cod_tipo_estrategia = tbl_tipo_estrategia.id
-                              WHERE 
-	                             tbl_fundo.id = @id";
+                var query = IFundoService.QUERY_BASE + 
+                    @"
+                    WHERE 
+	                    tbl_fundo.id = @id";
 
 
-                FundoModel fundo = await connection.QueryFirstOrDefaultAsync<FundoModel>(query, new { id });
+                FundoViewModel fundo = await connection.QueryFirstOrDefaultAsync<FundoViewModel>(query, new { id });
 
+                /*
                 ContaService contaService = new ContaService();
-                List<ContaModel> contaList = await contaService.GetFundoByIdAsync(fundo.Id) as List<ContaModel>;
+                List<ContaViewModel> contaList = await contaService.GetFundoByIdAsync(fundo.Id) as List<ContaViewModel>;
                 fundo.ListaConta = contaList;
                 //return null;
+                */
                 return fundo;
             }
         }
 
-        public async Task<FundoModel> GetFundoExistsBase(string cnpj)
+        public async Task<FundoViewModel> GetFundoExistsBase(string cnpj)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                             tbl_fundo.*,
-	                             tbl_administrador.nome_administrador,
-	                             tbl_custodiante.nome_custodiante,
-	                             tbl_gestor.nome_gestor,
-	                             tbl_tipo_estrategia.estrategia
-                             FROM
-	                             tbl_fundo
-		                            INNER JOIN tbl_administrador ON tbl_fundo.cod_administrador = tbl_administrador.id
-		                            INNER JOIN tbl_custodiante ON tbl_fundo.cod_custodiante = tbl_custodiante.id
-		                            INNER JOIN tbl_gestor ON tbl_fundo.cod_gestor = tbl_gestor.id
-		                            INNER JOIN tbl_tipo_estrategia ON tbl_fundo.cod_tipo_estrategia = tbl_tipo_estrategia.id
-                            WHERE 
-	                            tbl_fundo.cnpj = @cnpj";
+                var query = IFundoService.QUERY_BASE +
+                    @"
+                    WHERE 
+	                    tbl_fundo.cnpj = @cnpj";
 
-                FundoModel fundo = await connection.QueryFirstOrDefaultAsync<FundoModel>(query, new { cnpj });
+                FundoViewModel fundo = await connection.QueryFirstOrDefaultAsync<FundoViewModel>(query, new { cnpj });
 
                 if (fundo == null)
                 {
                     return null;
                 }
-
+                
+                /*
                 ContaService contaService = new ContaService();
-                List<ContaModel> contaList = await contaService.GetFundoByIdAsync(fundo.Id) as List<ContaModel>;
+                List<ContaViewModel> contaList = await contaService.GetFundoByIdAsync(fundo.Id) as List<ContaViewModel>;
                 fundo.ListaConta = contaList;
-
+                */
+                
                 return fundo;
             }
         }
