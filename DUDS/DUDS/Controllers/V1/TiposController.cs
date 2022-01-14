@@ -1,4 +1,4 @@
-﻿using DUDS.Models;
+﻿using DUDS.Models.Tipos;
 using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -81,7 +81,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Tipos/GetTipoClassificacaoExistsBase/classificacao
         [HttpGet("{classificacao}")]
-        public async Task<ActionResult<AdministradorModel>> GetTipoClassificacaoExistsBase(string classificacao)
+        public async Task<ActionResult<TipoClassificacaoModel>> GetTipoClassificacaoExistsBase(string classificacao)
         {
             try
             {
@@ -242,7 +242,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Tipos/GetTipoCondicaoExistsBase/tipoCondicao
         [HttpGet("{tipoCondicao}")]
-        public async Task<ActionResult<AdministradorModel>> GetTipoCondicaoExistsBase(string tipoCondicao)
+        public async Task<ActionResult<TipoCondicaoModel>> GetTipoCondicaoExistsBase(string tipoCondicao)
         {
             try
             {
@@ -402,7 +402,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Tipos/GetTipoContaExistsBase/tipoConta/descricaoConta
         [HttpGet("{tipoConta}/{descricaoConta}")]
-        public async Task<ActionResult<AdministradorModel>> GetTipoContaExistsBase(string tipoConta, string descricaoConta)
+        public async Task<ActionResult<TipoContaModel>> GetTipoContaExistsBase(string tipoConta, string descricaoConta)
         {
             try
             {

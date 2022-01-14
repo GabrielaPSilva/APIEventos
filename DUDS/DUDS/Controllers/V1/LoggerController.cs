@@ -1,4 +1,4 @@
-﻿using DUDS.Models;
+﻿using DUDS.Models.LogErros;
 using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System;

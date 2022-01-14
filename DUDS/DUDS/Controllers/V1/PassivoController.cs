@@ -1,4 +1,5 @@
 ﻿using DUDS.Models;
+using DUDS.Models.Passivo;
 using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +29,13 @@ namespace DUDS.Controllers.V1
 
         #region Posicao Passivo
         // GET: api/PosicaoCliente/GetControleRebate
-        /*
+        
         [HttpGet("{data_ref}")]
-        public async Task<ActionResult<IEnumerable<PosicaoClientePassivoModel>>> GetAllByDate(DateTime dataRef)
+        public async Task<ActionResult<IEnumerable<PosicaoClienteViewModel>>> GetAllByDate(DateTime dataRef)
         {
             try
             {
-                var listaControleRebate = await _posicaoClientePassivoService.GetByDataRefAsync(dataRef);
+                var listaControleRebate = await _posicaoClientePassivoService.GetByParametersAsync(dataInicio: dataRef, dataFim: dataRef, codDistribuidor:null, codGestor:null, codInvestidorDistribuidor:null);
 
                 if (listaControleRebate.Any())
                 {
@@ -47,11 +48,11 @@ namespace DUDS.Controllers.V1
                 return BadRequest(e);
             }
         }
-        */
+        
 
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PosicaoClienteModel>>> GetPosicaoClientePassivo([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
+        public async Task<ActionResult<IEnumerable<PosicaoClienteViewModel>>> GetPosicaoClientePassivo([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
         {
             try
             {
@@ -71,15 +72,15 @@ namespace DUDS.Controllers.V1
 
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet]
-        public async Task<ActionResult<PosicaoClienteModel>> GetMaiorValorBruto([FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
+        public async Task<ActionResult<double>> GetMaiorValorBruto([FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
         {
             try
             {
-                var listaControleRebate = await _posicaoClientePassivoService.GetMaxValorBrutoAsync(codDistribuidor, codGestor, codInvestidorDistribuidor);
+                var maxValorBruto = await _posicaoClientePassivoService.GetMaxValorBrutoAsync(codDistribuidor, codGestor, codInvestidorDistribuidor);
 
-                if (listaControleRebate != null)
+                if (maxValorBruto != null)
                 {
-                    return Ok(listaControleRebate);
+                    return Ok(maxValorBruto);
                 }
                 return NotFound();
             }
@@ -130,7 +131,7 @@ namespace DUDS.Controllers.V1
         #region Ordem Passivo
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrdemPassivoModel>>> GetOrdemPassivo([FromQuery] DateTime? dataEntrada)
+        public async Task<ActionResult<IEnumerable<OrdemPassivoViewModel>>> GetOrdemPassivo([FromQuery] DateTime? dataEntrada)
         {
             try
             {
@@ -189,7 +190,7 @@ namespace DUDS.Controllers.V1
         #region Movimentacao Passivo
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovimentacaoPassivoModel>>> GetMovimentacaoPassivo([FromQuery] DateTime? dataMovimentacao)
+        public async Task<ActionResult<IEnumerable<MovimentacaoPassivoViewModel>>> GetMovimentacaoPassivo([FromQuery] DateTime? dataMovimentacao)
         {
             try
             {

@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DUDS.Models;
+using DUDS.Models.Contrato;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -11,8 +12,7 @@ namespace DUDS.Service
 {
     public class ContratoService : GenericService<ContratoModel>, IContratoService
     {
-        public ContratoService() : base(new ContratoModel(),
-            "tbl_contrato")
+        public ContratoService() : base(new ContratoModel(),"tbl_contrato")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -121,7 +121,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<EstruturaContratoModel>> GetContratosRebateAsync(string subContratoStatus)
+        public async Task<IEnumerable<EstruturaContratoViewModel>> GetContratosRebateAsync(string subContratoStatus)
         {
             string whereClause;
             if (subContratoStatus == "Ativo")

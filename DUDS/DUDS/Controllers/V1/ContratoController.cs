@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DUDS.Models;
 using DUDS.Service.Interface;
+using DUDS.Models.Contrato;
 
 namespace DUDS.Controllers.V1
 {
@@ -42,7 +43,7 @@ namespace DUDS.Controllers.V1
         #region Contrato
         // GET: api/Contrato/GetContrato
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContratoModel>>> GetContratos()
+        public async Task<ActionResult<IEnumerable<ContratoViewModel>>> GetContratos()
         {
             try
             {
