@@ -1,18 +1,21 @@
-﻿using DUDS.Models;
+﻿using DUDS.Models.Distribuidor;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DUDS.Service.Interface
 {
     public interface IDistribuidorService : IGenericOperationsService<DistribuidorModel>
     {
-        //Task<IEnumerable<DistribuidorModel>> GetDistribuidor();
-        //Task<DistribuidorModel> GetDistribuidorById(int id);
-        Task<DistribuidorModel> GetDistribuidorExistsBase(string cnpj);
-        //Task<bool> AddDistribuidor(DistribuidorModel distribuidor);
-        //Task<bool> AddDistribuidorAdministrador(DistribuidorAdministradorModel distribuidorAdministrador);
-        //Task<bool> UpdateDistribuidor(DistribuidorModel distribuidor);
-        //Task<bool> UpdateDistribuidorAdministrador(DistribuidorAdministradorModel distribuidorAdministrador);
-        //Task<bool> DisableDistribuidorr(int id);
-        //Task<bool> ActivateDistribuidor(int id);
+        const string QUERY_BASE = @"SELECT
+                                        distribuidor.*,
+                                        tipo_classificacao.classificacao
+                                    FROM
+	                                    tbl_distribuidor distribuidor
+                                            INNER JOIN tbl_tipo_classificacao tipo_classificacao 
+                                                ON distribuidor.cod_tipo_classificacao = tipo_classificacao.id";
+
+        Task<IEnumerable<DistribuidorViewModel>> GetAllAsync();
+        Task<DistribuidorViewModel> GetByIdAsync(int id);
+        Task<DistribuidorViewModel> GetDistribuidorExistsBase(string cnpj);
     }
 }

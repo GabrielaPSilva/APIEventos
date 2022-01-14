@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DUDS.Models;
 using DUDS.Service.Interface;
+using DUDS.Models.Gestor;
 
 namespace DUDS.Controllers.V1
 {
@@ -25,7 +25,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Gestor/GetGestor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GestorModel>>> GetGestores()
+        public async Task<ActionResult<IEnumerable<GestorViewModel>>> GetGestores()
         {
             try
             {
@@ -35,6 +35,7 @@ namespace DUDS.Controllers.V1
                 {
                     return Ok(listaGestores);
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -45,7 +46,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Gestor/GetGestorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<GestorModel>> GetGestorById(int id)
+        public async Task<ActionResult<GestorViewModel>> GetGestorById(int id)
         {
             try
             {
@@ -55,6 +56,7 @@ namespace DUDS.Controllers.V1
                 {
                     return NotFound();
                 }
+
                 return Ok(gestor);
             }
             catch (Exception e)
@@ -65,15 +67,17 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Gestor/GetGestorExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<GestorModel>> GetGestorExistsBase(string cnpj)
+        public async Task<ActionResult<GestorViewModel>> GetGestorExistsBase(string cnpj)
         {
             try
             {
                 var gestor = await _gestorService.GetGestorExistsBase(cnpj);
+
                 if (gestor == null)
                 {
                     NotFound();
                 }
+
                 return Ok(gestor);
             }
             catch (Exception e)
@@ -84,12 +88,12 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Gestor/AddGestor/GestorModel
         [HttpPost]
-        public async Task<ActionResult<GestorModel>> AddGestor(GestorModel gestor)
+        public async Task<ActionResult<GestorViewModel>> AddGestor(GestorModel gestor)
         {
-
             try
             {
                 bool retorno = await _gestorService.AddAsync(gestor);
+
                 return CreatedAtAction(nameof(GetGestorById), new { id = gestor.Id }, gestor);
             }
             catch (Exception e)
@@ -104,19 +108,22 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                GestorModel retornoGestor = await _gestorService.GetByIdAsync(id);
+                var retornoGestor = await _gestorService.GetByIdAsync(id);
+
                 if (retornoGestor == null)
                 {
                     return NotFound();
                 }
+
                 gestor.Id = id;
                 bool retorno = await _gestorService.UpdateAsync(gestor);
+
                 if (retorno)
                 {
                     return Ok(gestor);
                 }
-                return NotFound();
 
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -131,10 +138,12 @@ namespace DUDS.Controllers.V1
             try
             {
                 bool retorno = await _gestorService.DisableAsync(id);
+
                 if (retorno)
                 {
                     return Ok();
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -145,16 +154,19 @@ namespace DUDS.Controllers.V1
 
         // ATIVAR: api/Gestor/ActivateGestor/id
         [HttpPut("{id}")]
-        public async Task<ActionResult<GestorModel>> ActivateGestor(int id)
+        public async Task<ActionResult<GestorViewModel>> ActivateGestor(int id)
         {
             try
             {
                 bool retorno = await _gestorService.ActivateAsync(id);
+
                 if (retorno)
                 {
-                    GestorModel gestor = await _gestorService.GetByIdAsync(id);
+                    var gestor = await _gestorService.GetByIdAsync(id);
+
                     return Ok(gestor);
                 }
+
                 return NotFound();
             }
             catch (Exception e)

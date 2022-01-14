@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DUDS.Models;
 using DUDS.Service.Interface;
+using DUDS.Models.Distribuidor;
 
 namespace DUDS.Controllers.V1
 {
@@ -28,7 +28,7 @@ namespace DUDS.Controllers.V1
         #region Distribuidor
         // GET: api/Distribuidor/GetDistribuidor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DistribuidorModel>>> GetDistribuidor()
+        public async Task<ActionResult<IEnumerable<DistribuidorViewModel>>> GetDistribuidor()
         {
             try
             {
@@ -49,15 +49,17 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Distribuidor/GetDistribuidorById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<DistribuidorModel>> GetDistribuidorById(int id)
+        public async Task<ActionResult<DistribuidorViewModel>> GetDistribuidorById(int id)
         {
             try
             {
                 var distribuidor = await _distribuidorService.GetByIdAsync(id);
+
                 if (distribuidor == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(distribuidor);
             }
             catch (Exception e)
@@ -68,15 +70,17 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Distribuidor/GetDistribuidorExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<DistribuidorModel>> GetDistribuidorExistsBase(string cnpj)
+        public async Task<ActionResult<DistribuidorViewModel>> GetDistribuidorExistsBase(string cnpj)
         {
             try
             {
                 var distribuidor = await _distribuidorService.GetDistribuidorExistsBase(cnpj);
+
                 if (distribuidor == null)
                 {
                     NotFound();
                 }
+
                 return Ok(distribuidor);
             }
             catch (Exception e)
@@ -87,11 +91,12 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Distribuidor/AddDistribuidor/DistribuidorModel
         [HttpPost]
-        public async Task<ActionResult<DistribuidorModel>> AddDistribuidor(DistribuidorModel distribuidor)
+        public async Task<ActionResult<DistribuidorViewModel>> AddDistribuidor(DistribuidorModel distribuidor)
         {
             try
             {
                 bool retorno = await _distribuidorService.AddAsync(distribuidor);
+
                 return CreatedAtAction(nameof(GetDistribuidorById), new { id = distribuidor.Id }, distribuidor);
             }
             catch (Exception e)
@@ -106,13 +111,16 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                DistribuidorModel retornoDistribuidor = await _distribuidorService.GetByIdAsync(distribuidor.Id);
+                var retornoDistribuidor = await _distribuidorService.GetByIdAsync(distribuidor.Id);
+
                 if (retornoDistribuidor == null)
                 {
                     return NotFound();
                 }
+
                 distribuidor.Id = id;
                 bool retorno = await _distribuidorService.UpdateAsync(distribuidor);
+
                 if (retorno)
                 {
                     return Ok(distribuidor);
@@ -132,10 +140,12 @@ namespace DUDS.Controllers.V1
             try
             {
                 bool retorno = await _distribuidorService.DisableAsync(id);
+
                 if (retorno)
                 {
                     return Ok();
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -151,11 +161,13 @@ namespace DUDS.Controllers.V1
             try
             {
                 bool retorno = await _distribuidorService.ActivateAsync(id);
+
                 if (retorno)
                 {
                     DistribuidorModel distribuidor = await _distribuidorService.GetByIdAsync(id);
                     return Ok(distribuidor);
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -170,7 +182,7 @@ namespace DUDS.Controllers.V1
         // GET: api/Distribuidor/GetDistribuidorAdministrador
         
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DistribuidorAdministradorModel>>> GetDistribuidorAdministrador()
+        public async Task<ActionResult<IEnumerable<DistribuidorAdministradorViewModel>>> GetDistribuidorAdministrador()
         {
             try
             {
@@ -180,8 +192,8 @@ namespace DUDS.Controllers.V1
                 {
                     return Ok(distribuidorAdministrador);
                 }
-                return NotFound();
 
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -192,15 +204,17 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Distribuidor/GetDistribuidorAdministradorByIds/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<DistribuidorAdministradorModel>> GetDistribuidorAdministradorById(int id)
+        public async Task<ActionResult<DistribuidorAdministradorViewModel>> GetDistribuidorAdministradorById(int id)
         {
             try
             {
                 var distribuidorAdministrador = await _distribuidorAdministradorService.GetByIdAsync(id);
+
                 if (distribuidorAdministrador == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(distribuidorAdministrador);
             }
             catch (Exception e)
@@ -211,11 +225,12 @@ namespace DUDS.Controllers.V1
 
         //POST: api/Distribuidor/AddDistribuidorAdministrador/DistribuidorAdministradorModel
         [HttpPost]
-        public async Task<ActionResult<DistribuidorAdministradorModel>> AddDistribuidorAdministrador(DistribuidorAdministradorModel distribuidorAdministrador)
+        public async Task<ActionResult<DistribuidorAdministradorViewModel>> AddDistribuidorAdministrador(DistribuidorAdministradorModel distribuidorAdministrador)
         {
             try
             {
                 bool retorno = await _distribuidorAdministradorService.AddAsync(distribuidorAdministrador);
+
                 return CreatedAtAction(nameof(GetDistribuidorAdministradorById), new { id = distribuidorAdministrador.Id }, distribuidorAdministrador);
             }
             catch (Exception e)
@@ -230,17 +245,21 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                DistribuidorAdministradorModel retornoDistribuidorAdministrador = await _distribuidorAdministradorService.GetByIdAsync(distribuidorAdministrador.Id);
+                var retornoDistribuidorAdministrador = await _distribuidorAdministradorService.GetByIdAsync(distribuidorAdministrador.Id);
+                
                 if (retornoDistribuidorAdministrador == null)
                 {
                     return NotFound();
                 }
+
                 distribuidorAdministrador.Id = id;
                 bool retorno = await _distribuidorAdministradorService.UpdateAsync(distribuidorAdministrador);
+
                 if (retorno)
                 {
                     return Ok(distribuidorAdministrador);
                 }
+
                 return NotFound();
             }
             catch (Exception e)
@@ -260,10 +279,12 @@ namespace DUDS.Controllers.V1
                 try
                 {
                     bool retorno = await _distribuidorAdministradorService.DeleteAsync(id);
+
                     if (retorno)
                     {
                         return Ok();
                     }
+
                     return NotFound();
                 }
                 catch (Exception e)
