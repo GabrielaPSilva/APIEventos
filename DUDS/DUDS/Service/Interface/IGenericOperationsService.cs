@@ -9,8 +9,6 @@ namespace DUDS.Service.Interface
     {
         Task<bool> DisableAsync(int id);
         Task<bool> ActivateAsync(int id);
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T> GetByIdAsync(int id);
         Task<bool> AddAsync(T item);
         Task<bool> UpdateAsync(T item);
         Task<bool> DeleteAsync(int id);
