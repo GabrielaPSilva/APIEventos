@@ -1,5 +1,5 @@
-﻿using DUDS.Models;
-using DUDS.Models.Filtros;
+﻿using DUDS.Models.Filtros;
+using DUDS.Models.Rebate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,17 @@ namespace DUDS.Service.Interface
 {
     public interface IControleRebateService : IGenericOperationsService<ControleRebateModel>
     {
-        Task<ControleRebateModel> GetGrupoRebateExistsBase(int codGrupoRebate, string Competencia);
-        Task<IEnumerable<ControleRebateModel>> GetByCompetenciaAsync(FiltroModel filtro);
-        Task<IEnumerable<ControleRebateModel>> GetFiltroControleRebateAsync(int grupoRebate, string investidor, string competencia, string codMellon);
+        const string QUERY_BASE = @"SELECT 
+	                                     tbl_controle_rebate.*,
+	                                     tbl_grupo_rebate.nome_grupo_rebate
+                                      FROM
+	                                     tbl_controle_rebate
+                                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id";
+
+        Task<ControleRebateViewModel> GetByIdAsync(int id);
+        Task<ControleRebateViewModel> GetGrupoRebateExistsBase(int codGrupoRebate, string Competencia);
+        Task<IEnumerable<ControleRebateViewModel>> GetFiltroControleRebateAsync(int grupoRebate, string investidor, string competencia, string codMellon);
         Task<int> GetCountControleRebateAsync(FiltroModel filtro);
+        Task<IEnumerable<ControleRebateViewModel>> GetByCompetenciaAsync(FiltroModel filtro);
     }
 }
