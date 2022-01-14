@@ -1,11 +1,11 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Tipos;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Z.Dapper.Plus;
 
 namespace DUDS.Service
 {
@@ -33,6 +33,7 @@ namespace DUDS.Service
                 string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
                 return await connection.ExecuteAsync(query, tipoEstrategia) > 0;
             }
+            
         }
 
         public Task<bool> DeleteAsync(int id)

@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Tipos;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
