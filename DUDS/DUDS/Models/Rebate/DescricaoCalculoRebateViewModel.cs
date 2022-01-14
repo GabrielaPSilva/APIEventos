@@ -52,6 +52,6 @@ namespace DUDS.Models.Rebate
         
         public int CodContratoRemuneracao { get; set; }
 
-        public List<CondicaoRemuneracaoModel> ListaCondicaoRemuneracao { get; set; }
+        public List<CondicaoRemuneracaoViewModel> ListaCondicaoRemuneracao { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using DUDS.Models.Contrato;
 using DUDS.Models.Filtros;
 using DUDS.Models.Rebate;
 using DUDS.Service.Interface;
@@ -138,42 +139,12 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<CalculoRebateModel>> GetByCompetenciaAsync(string competencia, int codGrupoRebate)
+        public async Task<IEnumerable<CalculoRebateViewModel>> GetByCompetenciaAsync(string competencia, int codGrupoRebate)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT
-	                                   	pagamento.competencia,
-                                        investidor.nome_investidor,
-	                                    investidor.cnpj,
-	                                    investidor_distribuidor.cod_invest_administrador AS cod_mellon,
-                                        investidor_distribuidor.cod_grupo_rebate,
-                                        grupo_rebate.nome_grupo_rebate,
-                                        tipo_contrato.tipo_contrato AS nome_tipo_contrato,
-                                        fundo.nome_reduzido AS nome_fundo,
-	                                    fundo.cnpj AS cnpj_fundo,
-	                                    distribuidor.nome_distribuidor,
-	                                    administrador.nome_administrador,
-                                        pagamento.taxa_administracao AS valor_adm,
-                                        pagamento.taxa_performance_resgate AS valor_pfee_resgate,
-                                        pagamento.taxa_performance_apropriada AS valor_pfee_semestre,
-                                        contrato_remuneracao.percentual_adm AS perc_adm,
-                                        contrato_remuneracao.percentual_pfee AS perc_pfee,
-                                        calculo_pgto_adm_pfee.rebate_adm,
-                                        calculo_pgto_adm_pfee.rebate_pfee_resgate,
-                                        calculo_pgto_adm_pfee.rebate_pfee_semestre
-                                    FROM
-                                        tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
-											INNER JOIN tbl_pgto_adm_pfee pagamento ON pagamento.id = calculo_pgto_adm_pfee.cod_pgto_adm_pfee
-		                                    INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pagamento.cod_investidor_distribuidor
-		                                    INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
-		                                    INNER JOIN tbl_distribuidor_administrador distribuidor_administrador ON investidor_distribuidor.cod_distribuidor_administrador = distribuidor_administrador.id
-		                                    INNER JOIN tbl_distribuidor distribuidor ON distribuidor.id = distribuidor_administrador.cod_distribuidor
-											INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON calculo_pgto_adm_pfee.cod_contrato_remuneracao = contrato_remuneracao.id
-		                                    INNER JOIN tbl_administrador administrador ON pagamento.cod_administrador = administrador.id
-		                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
-		                                    INNER JOIN tbl_fundo fundo ON fundo.id = pagamento.cod_fundo
-		                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
+                var query = ICalculoRebateService.QUERY_BASE + 
+                                  @"
 								    WHERE
 										pagamento.competencia = @competencia AND
                                         grupo_rebate.id = @id
@@ -182,47 +153,16 @@ namespace DUDS.Service
 	                                    grupo_rebate.nome_grupo_rebate,
 	                                    tipo_contrato.tipo_contrato";
 
-                return await connection.QueryAsync<CalculoRebateModel>(query, new { competencia, id = codGrupoRebate });
+                return await connection.QueryAsync<CalculoRebateViewModel>(query, new { competencia, id = codGrupoRebate });
             }
         }
 
-        public async Task<CalculoRebateModel> GetByIdAsync(Guid id)
+        public async Task<CalculoRebateViewModel> GetByIdAsync(Guid id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT
-										calculo_pgto_adm_pfee.id,
-	                                    pagamento.competencia,
-	                                    pagamento.cod_investidor_distribuidor,
-	                                    investidor.nome_investidor,
-	                                    investidor_distribuidor.cod_grupo_rebate,
-	                                    grupo_rebate.nome_grupo_rebate,
-	                                    investidor_distribuidor.cod_tipo_contrato,
-	                                    tipo_contrato.tipo_contrato AS nome_tipo_contrato,
-	                                    pagamento.cod_fundo,
-	                                    fundo.nome_reduzido AS nome_fundo,
-	                                    calculo_pgto_adm_pfee.cod_contrato,
-	                                    calculo_pgto_adm_pfee.cod_sub_contrato,
-	                                    calculo_pgto_adm_pfee.cod_contrato_fundo,
-	                                    calculo_pgto_adm_pfee.cod_contrato_remuneracao,
-	                                    pagamento.cod_administrador,
-	                                    pagamento.taxa_administracao AS valor_adm,
-	                                    pagamento.taxa_performance_resgate AS valor_pfee_resgate,
-	                                    pagamento.taxa_performance_apropriada AS valor_pfee_semestre,
-                                        contrato_remuneracao.percentual_adm AS perc_adm,
-                                        contrato_remuneracao.percentual_pfee AS perc_pfee,
-	                                    calculo_pgto_adm_pfee.rebate_adm,
-	                                    calculo_pgto_adm_pfee.rebate_pfee_resgate,
-	                                    calculo_pgto_adm_pfee.rebate_pfee_semestre
-                                    FROM
-	                                    tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
-											INNER JOIN tbl_pgto_adm_pfee pagamento ON calculo_pgto_adm_pfee.cod_pgto_adm_pfee = pagamento.id
-											INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pagamento.cod_investidor_distribuidor
-		                                    INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
-											INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
-											INNER JOIN tbl_fundo fundo ON fundo.id = pagamento.cod_fundo
-											INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON calculo_pgto_adm_pfee.cod_contrato_remuneracao = contrato_remuneracao.id
-											INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
+                var query = ICalculoRebateService.QUERY_BASE + 
+                                 @"
                                     WHERE
 	                                    calculo_pgto_adm_pfee.id = @id
                                     ORDER BY
@@ -230,13 +170,8 @@ namespace DUDS.Service
 	                                    grupo_rebate.nome_grupo_rebate,
 	                                    tipo_contrato.tipo_contrato";
 
-                return await connection.QueryFirstOrDefaultAsync<CalculoRebateModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<CalculoRebateViewModel>(query, new { id });
             }
-        }
-
-        public Task<CalculoRebateModel> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<DescricaoCalculoRebateViewModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao)
@@ -283,12 +218,8 @@ namespace DUDS.Service
 										    AND contrato_fundo.id = @cod_contrato_fundo
 										    AND contrato_remuneracao.id = @cod_contrato_remuneracao";
 
-                const string Condicao = @"SELECT	
-	                                          tbl_condicao_remuneracao.*,
-											  tbl_fundo.nome_reduzido AS NomeFundo
-                                          FROM 
-	                                          tbl_condicao_remuneracao
-												LEFT JOIN tbl_fundo ON tbl_fundo.id = tbl_condicao_remuneracao.cod_fundo
+                var Condicao = ICondicaoRemuneracaoService.QUERY_BASE + 
+                                        @"
                                           WHERE
 	                                          tbl_condicao_remuneracao.cod_contrato_remuneracao = @cod_contrato_remuneracao";
 
@@ -302,10 +233,9 @@ namespace DUDS.Service
 
                 foreach (var item in descricoes)
                 {
-                    List<CondicaoRemuneracaoModel> condicao = await connection.QueryAsync<CondicaoRemuneracaoModel>(Condicao, new { cod_contrato_remuneracao = codContratoRemuneracao }) as List<CondicaoRemuneracaoModel>;
+                    List<CondicaoRemuneracaoViewModel> condicao = await connection.QueryAsync<CondicaoRemuneracaoViewModel>(Condicao, new { cod_contrato_remuneracao = codContratoRemuneracao }) as List<CondicaoRemuneracaoViewModel>;
 
                     item.ListaCondicaoRemuneracao = condicao;
-
                 }
                 return descricoes;
             }
