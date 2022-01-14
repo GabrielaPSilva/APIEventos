@@ -1,7 +1,6 @@
 ﻿using Dapper;
-using DUDS.Models;
-using DUDS.Models.CalculoRebate;
 using DUDS.Models.Filtros;
+using DUDS.Models.Rebate;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -16,18 +15,9 @@ namespace DUDS.Service
     public class CalculoRebateService : GenericService<CalculoRebateModel>, ICalculoRebateService
     {
         public CalculoRebateService() : base(new CalculoRebateModel(),
-            "tbl_calculo_pgto_adm_pfee")
+                                        "tbl_calculo_pgto_adm_pfee")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
-        }
-
-        public async Task<bool> ActivateAsync(int id)
-        {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
-            }
         }
 
         public async Task<bool> AddAsync(CalculoRebateModel item)
@@ -63,6 +53,11 @@ namespace DUDS.Service
             }
             );
             return vs;
+        }
+
+        public Task<bool> UpdateAsync(CalculoRebateModel item)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -111,6 +106,15 @@ namespace DUDS.Service
             }
         }
 
+        public async Task<bool> ActivateAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
+                return await connection.ExecuteAsync(query, new { id }) > 0;
+            }
+        }
+
         public async Task<bool> DisableAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
@@ -132,11 +136,6 @@ namespace DUDS.Service
                     }
                 }
             }
-        }
-
-        public Task<IEnumerable<CalculoRebateModel>> GetAllAsync()
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<CalculoRebateModel>> GetByCompetenciaAsync(string competencia, int codGrupoRebate)
@@ -326,11 +325,6 @@ namespace DUDS.Service
 
                 return await connection.QueryFirstOrDefaultAsync<int>(query, new { filtro.Competencia });
             }
-        }
-
-        public Task<bool> UpdateAsync(CalculoRebateModel item)
-        {
-            throw new NotImplementedException();
         }
     }
 }

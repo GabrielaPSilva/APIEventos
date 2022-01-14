@@ -1,5 +1,7 @@
-﻿using DUDS.Models;
-using DUDS.Models.Filtros;
+﻿using DUDS.Models.Filtros;
+using DUDS.Models.PgtoServico;
+using DUDS.Models.PgtoTaxaAdmPfee;
+using DUDS.Models.Rebate;
 using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System;

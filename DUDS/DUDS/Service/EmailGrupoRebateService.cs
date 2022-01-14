@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Rebate;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
