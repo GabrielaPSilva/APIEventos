@@ -4,15 +4,13 @@ using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
     public class CondicaoRemuneracaoService : GenericService<CondicaoRemuneracaoModel>, ICondicaoRemuneracaoService
     {
-        public CondicaoRemuneracaoService() : base(new CondicaoRemuneracaoModel(),
-            "tbl_condicao_remuneracao")
+        public CondicaoRemuneracaoService() : base(new CondicaoRemuneracaoModel(),"tbl_condicao_remuneracao")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -45,70 +43,45 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<CondicaoRemuneracaoModel>> GetAllAsync()
+        public async Task<IEnumerable<CondicaoRemuneracaoViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            condicao_remuneracao.*,
-	                            fundo.nome_reduzido as nome_fundo
-                             FROM
-	                            tbl_condicao_remuneracao condicao_remuneracao
-	                            INNER JOIN tbl_fundo fundo ON fundo.id = condicao_remuneracao.cod_fundo
-                                INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.id = condicao_remuneracao.cod_contrato_remuneracao
-                                INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.id = contrato_remuneracao.cod_contrato_fundo
-                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_fundo.cod_sub_contrato
-                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                             WHERE
-	                            contrato.ativo = 1";
+                const string query = ICondicaoRemuneracaoService.QUERY_BASE + 
+                    @"
+                    WHERE
+	                    contrato.ativo = 1";
 
-                return await connection.QueryAsync<CondicaoRemuneracaoModel>(query);
+                return await connection.QueryAsync<CondicaoRemuneracaoViewModel>(query);
             }
         }
 
-        public async Task<CondicaoRemuneracaoModel> GetByIdAsync(int id)
+        public async Task<CondicaoRemuneracaoViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"
-                                        SELECT 
-	                                        condicao_remuneracao.*,
-	                                        fundo.nome_reduzido as nome_fundo
-                                         FROM
-	                                        tbl_condicao_remuneracao condicao_remuneracao
-	                                        INNER JOIN tbl_fundo fundo ON fundo.id = condicao_remuneracao.cod_fundo
-                                            INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.id = condicao_remuneracao.cod_contrato_remuneracao
-                                            INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.id = contrato_remuneracao.cod_contrato_fundo
-                                            INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_fundo.cod_sub_contrato
-                                            INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                                        WHERE
-                                            condicao_remuneracao.id = @id";
+                const string query = ICondicaoRemuneracaoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        condicao_remuneracao.id = @id";
 
-                return await connection.QueryFirstOrDefaultAsync<CondicaoRemuneracaoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<CondicaoRemuneracaoViewModel>(query, new { id });
             }
         }
 
-        public async Task<IEnumerable<CondicaoRemuneracaoModel>> GetContratoRemuneracaoByIdAsync(int id)
+        public async Task<IEnumerable<CondicaoRemuneracaoViewModel>> GetCondicaoRemuneracaoByContratoRemuneracaoAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            condicao_remuneracao.*,
-	                            fundo.nome_reduzido as nome_fundo
-                             FROM
-	                            tbl_condicao_remuneracao condicao_remuneracao
-	                            INNER JOIN tbl_fundo fundo ON fundo.id = condicao_remuneracao.cod_fundo
-                                INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.id = condicao_remuneracao.cod_contrato_remuneracao
-                                INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.id = contrato_remuneracao.cod_contrato_fundo
-                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_fundo.cod_sub_contrato
-                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                             WHERE
-	                            contrato_remuneracao.id = @id
-                             ORDER BY
-                                condicao_remuneracao.id,
-                                fundo.nome_reduzido";
+                var query = ICondicaoRemuneracaoService.QUERY_BASE + 
+                    @"
+                    WHERE
+	                    contrato_remuneracao.id = @id
+                    ORDER BY
+                        condicao_remuneracao.id,
+                        fundo.nome_reduzido";
 
-                return await connection.QueryAsync<CondicaoRemuneracaoModel>(query, new { id });
+                return await connection.QueryAsync<CondicaoRemuneracaoViewModel>(query, new { id });
             }
         }
 

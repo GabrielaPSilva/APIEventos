@@ -1,11 +1,9 @@
 ﻿using Dapper;
-using DUDS.Models;
 using DUDS.Models.Contrato;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -49,60 +47,44 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ContratoModel>> GetAllAsync()
+        public async Task<IEnumerable<ContratoViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            tbl_contrato.*,
-	                            tbl_distribuidor.nome_distribuidor,
-	                            tbl_gestor.nome_gestor,
-	                            tbl_tipo_contrato.tipo_contrato
-                             FROM
-	                            tbl_contrato
-	                            LEFT JOIN tbl_distribuidor ON tbl_contrato.cod_distribuidor = tbl_distribuidor.id
-	                            LEFT JOIN tbl_gestor ON tbl_contrato.cod_gestor = tbl_gestor.id
-	                            INNER JOIN tbl_tipo_contrato ON tbl_contrato.cod_tipo_contrato = tbl_tipo_contrato.id
-                             WHERE
-	                            tbl_contrato.ativo = 1";
-                List<ContratoModel> listaContratoModel = await connection.QueryAsync<ContratoModel>(query) as List<ContratoModel>;
-                SubContratoService subContratoService = new SubContratoService();
+                const string query = IContratoService.QUERY_BASE +
+                    @"
+                    WHERE
+	                    tbl_contrato.ativo = 1";
+                List<ContratoViewModel> listaContratoModel = await connection.QueryAsync<ContratoViewModel>(query) as List<ContratoViewModel>;
 
+                /*
+                SubContratoService subContratoService = new SubContratoService();
                 Parallel.ForEach(listaContratoModel, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, async x =>
                 {
                     List<SubContratoModel> listaSubContrato = await subContratoService.GetContratoByIdAsync(x.Id) as List<SubContratoModel>;
                     x.ListaSubContrato = listaSubContrato;
                 });
-
+                */
                 //foreach (ContratoModel item in listaContratoModel)
                 //{
                 //    List<SubContratoModel> listaSubContrato = await subContratoService.GetSubContratoCompletoByIdAsync(item.Id) as List<SubContratoModel>;
                 //    item.ListaSubContrato = listaSubContrato;
                 //}
-                
+
                 return listaContratoModel;
             }
         }
 
-        public async Task<ContratoModel> GetByIdAsync(int id)
+        public async Task<ContratoViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"
-                                       SELECT 
-	                                    tbl_contrato.*,
-	                                    tbl_distribuidor.nome_distribuidor,
-	                                    tbl_gestor.nome_gestor,
-	                                    tbl_tipo_contrato.tipo_contrato
-                                     FROM
-	                                    tbl_contrato
-	                                    LEFT JOIN tbl_distribuidor ON tbl_contrato.cod_distribuidor = tbl_distribuidor.id
-	                                    LEFT JOIN tbl_gestor ON tbl_contrato.cod_gestor = tbl_gestor.id
-	                                    INNER JOIN tbl_tipo_contrato ON tbl_contrato.cod_tipo_contrato = tbl_tipo_contrato.id
-                                     WHERE
-                                        id = @id";
+                const string query = IContratoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        id = @id";
 
-                return await connection.QueryFirstOrDefaultAsync<ContratoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<ContratoViewModel>(query, new { id });
             }
         }
 
@@ -169,7 +151,7 @@ namespace DUDS.Service
                                 WHERE_CLAUSE";
                 query = query.Replace("WHERE_CLAUSE", whereClause);
 
-                List<EstruturaContratoModel> listaContratoModel = await connection.QueryAsync<EstruturaContratoModel>(query, new { Status = subContratoStatus }) as List<EstruturaContratoModel>;
+                List<EstruturaContratoViewModel> listaContratoModel = await connection.QueryAsync<EstruturaContratoViewModel>(query, new { Status = subContratoStatus }) as List<EstruturaContratoViewModel>;
                 return listaContratoModel;
             }
         }

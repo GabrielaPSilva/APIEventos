@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Contrato;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -45,73 +44,58 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<ContratoRemuneracaoModel>> GetAllAsync()
+        public async Task<IEnumerable<ContratoRemuneracaoViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    contrato_remuneracao.*
-                                     FROM
-	                                    tbl_contrato_remuneração contrato_remuneracao
-                                        INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.id = contrato_remuneracao.cod_contrato_fundo
-                                        INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_fundo.cod_sub_contrato
-                                        INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                                     WHERE
-                                        contrato.ativo = 1
-                                     ORDER BY
-                                        contrato_remuneracao.id";
+                const string query = IContratoRemuneracaoService.QUERIY_BASE + 
+                    @"
+                    WHERE
+                        contrato.ativo = 1
+                    ORDER BY
+                        contrato_remuneracao.id";
 
-                return await connection.QueryAsync<ContratoRemuneracaoModel>(query);
+                return await connection.QueryAsync<ContratoRemuneracaoViewModel>(query);
             }
         }
 
-        public async Task<ContratoRemuneracaoModel> GetByIdAsync(int id)
+        public async Task<ContratoRemuneracaoViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                        contrato_remuneracao.*
-                                       FROM
-	                                        tbl_contrato_remuneração contrato_remuneracao
-                                            INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.id = contrato_remuneracao.cod_contrato_fundo
-                                            INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_fundo.cod_sub_contrato
-                                            INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                                       WHERE
-                                            contrato_remuneracao.id = @id
-                                       ORDER BY
-                                            contrato_remuneracao.id";
-                return await connection.QueryFirstOrDefaultAsync<ContratoRemuneracaoModel>(query, new { id });
+                const string query = IContratoRemuneracaoService.QUERIY_BASE + 
+                    @"
+                    WHERE
+                        contrato_remuneracao.id = @id
+                    ORDER BY
+                        contrato_remuneracao.id";
+                return await connection.QueryFirstOrDefaultAsync<ContratoRemuneracaoViewModel>(query, new { id });
             }
         }
 
-        public async Task<IEnumerable<ContratoRemuneracaoModel>> GetContratoFundoByIdAsync(int id)
+        public async Task<IEnumerable<ContratoRemuneracaoViewModel>> GetContratoRemuneracaoByContratoFundoAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    contrato_remuneracao.*
-                                     FROM
-	                                    tbl_contrato_remuneração contrato_remuneracao
-                                        INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.id = contrato_remuneracao.cod_contrato_fundo
-                                        INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_fundo.cod_sub_contrato
-                                        INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato
-                                     WHERE
-                                        contrato_fundo.id = @id
-                                     ORDER BY
-                                        contrato_remuneracao.id";
+                const string query = IContratoRemuneracaoService.QUERIY_BASE + 
+                    @"
+                    WHERE
+                        contrato_fundo.id = @id
+                    ORDER BY
+                        contrato_remuneracao.id";
 
-                List<ContratoRemuneracaoModel> contratoRemuneracaoModels = await connection.QueryAsync<ContratoRemuneracaoModel>(query, new { id }) as List<ContratoRemuneracaoModel>;
+                List<ContratoRemuneracaoViewModel> contratoRemuneracaoModels = await connection.QueryAsync<ContratoRemuneracaoViewModel>(query, new { id }) as List<ContratoRemuneracaoViewModel>;
+                /*
                 CondicaoRemuneracaoService condicaoRemuneracaoService = new CondicaoRemuneracaoService();
-
                 Parallel.ForEach(contratoRemuneracaoModels, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, async item =>
                 {
-                    List<CondicaoRemuneracaoModel> condicaoRemuneracaoModels = await condicaoRemuneracaoService.GetContratoRemuneracaoByIdAsync(item.Id) as List<CondicaoRemuneracaoModel>;
+                    List<CondicaoRemuneracaoModel> condicaoRemuneracaoModels = await condicaoRemuneracaoService.GetCondicaoRemuneracaoByContratoRemuneracaoAsync(item.Id) as List<CondicaoRemuneracaoModel>;
                     item.ListaCondicaoRemuneracao = condicaoRemuneracaoModels;
                 });
-
+                */
                 //foreach (ContratoRemuneracaoModel item in contratoRemuneracaoModels)
                 //{
-                //    List<CondicaoRemuneracaoModel> condicaoRemuneracaoModels = await condicaoRemuneracaoService.GetContratoRemuneracaoByIdAsync(item.Id) as List<CondicaoRemuneracaoModel>;
+                //    List<CondicaoRemuneracaoModel> condicaoRemuneracaoModels = await condicaoRemuneracaoService.GetCondicaoRemuneracaoByContratoRemuneracaoAsync(item.Id) as List<CondicaoRemuneracaoModel>;
                 //    item.ListaCondicaoRemuneracao = condicaoRemuneracaoModels;
                 //}
 
