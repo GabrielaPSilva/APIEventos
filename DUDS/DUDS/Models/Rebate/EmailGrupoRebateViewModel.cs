@@ -1,6 +1,6 @@
 ﻿namespace DUDS.Models.Rebate
 {
-    public class EmailGrupoRebateView : EmailGrupoRebateModel
+    public class EmailGrupoRebateViewModel : EmailGrupoRebateModel
     {
         public string GrupoRebate { get; set; }
     }

@@ -1,7 +1,6 @@
 ﻿using Dapper;
-using DUDS.Models;
-using DUDS.Models.CalculoRebate;
 using DUDS.Models.Filtros;
+using DUDS.Models.Rebate;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -16,7 +15,7 @@ namespace DUDS.Service
     public class CalculoRebateService : GenericService<CalculoRebateModel>, ICalculoRebateService
     {
         public CalculoRebateService() : base(new CalculoRebateModel(),
-            "tbl_calculo_pgto_adm_pfee")
+                                        "tbl_calculo_pgto_adm_pfee")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -139,7 +138,7 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<CalculoRebateModel>> GetByCompetenciaAsync(string competencia, int codGrupoRebate)
+        public async Task<IEnumerable<CalculoRebateViewModel>> GetByCompetenciaAsync(string competencia, int codGrupoRebate)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -183,7 +182,7 @@ namespace DUDS.Service
 	                                    grupo_rebate.nome_grupo_rebate,
 	                                    tipo_contrato.tipo_contrato";
 
-                return await connection.QueryAsync<CalculoRebateModel>(query, new { competencia, id = codGrupoRebate });
+                return await connection.QueryAsync<CalculoRebateViewModel>(query, new { competencia, id = codGrupoRebate });
             }
         }
 
