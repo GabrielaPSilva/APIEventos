@@ -1,5 +1,5 @@
-﻿using DUDS.Models.Filtros;
-using DUDS.Models.Rebate;
+﻿using DUDS.Models;
+using DUDS.Models.Filtros;
 using System;
 using System.Collections.Generic;
 using System.Linq;

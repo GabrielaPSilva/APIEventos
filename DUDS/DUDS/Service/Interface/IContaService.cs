@@ -1,5 +1,4 @@
-﻿using DUDS.Models.Conta;
-using DUDS.Models.Gestor;
+﻿using DUDS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ namespace DUDS.Service.Interface
 {
     public interface IContaService : IGenericOperationsService<ContaModel>
     {
-        Task<ContaModel> GetContaExistsBase(int codFundo, int codInvestidor, int codTipoConta);
+        Task<GestorModel> GetContaExistsBase(int codFundo, int codInvestidor, int codTipoConta);
         Task<IEnumerable<ContaModel>> GetFundoByIdAsync(int id);
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using DUDS.Models;
 using DUDS.Service.Interface;
-using DUDS.Models.Administrador;
 
 namespace DUDS.Controllers.V1
 {

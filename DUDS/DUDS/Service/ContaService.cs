@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using DUDS.Models.Conta;
+using DUDS.Models;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -91,7 +91,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<ContaModel> GetContaExistsBase(int codFundo, int codInvestidor, int codTipoConta)
+        public async Task<GestorModel> GetContaExistsBase(int codFundo, int codInvestidor, int codTipoConta)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -110,7 +110,7 @@ namespace DUDS.Service
                                  tbl_contas.cod_investidor = @cod_investidor) AND
                                  tbl_contas.cod_tipo_conta = @cod_tipo_conta";
 
-                return await connection.QueryFirstOrDefaultAsync<ContaModel>(query, new { cod_fundo = codFundo, cod_investidor = codInvestidor, cod_tipo_conta = codTipoConta });
+                return await connection.QueryFirstOrDefaultAsync<GestorModel>(query, new { cod_fundo = codFundo, cod_investidor = codInvestidor, cod_tipo_conta = codTipoConta });
             }
         }
 

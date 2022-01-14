@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using DUDS.Models.Administrador;
+using DUDS.Models;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -12,7 +12,7 @@ namespace DUDS.Service
     public class AdministradorService : GenericService<AdministradorModel>, IAdministradorService
     {
         public AdministradorService() : base(new AdministradorModel(),
-                                        "tbl_administrador")
+                   "tbl_administrador")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
