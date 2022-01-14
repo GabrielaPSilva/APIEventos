@@ -37,8 +37,4 @@
     <PackageReference Include="Z.Dapper.Plus" Version="4.0.20" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\PosicaoCliente\" />
-  </ItemGroup>
-
 </Project>

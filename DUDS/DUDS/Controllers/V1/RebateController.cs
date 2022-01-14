@@ -737,7 +737,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetDescricaoCalculoPgtoTaxaAdmPfee
         [HttpGet("{codContrato}/{codSubContrato}/{codContratoFundo}/{codContratoRemuneracao}")]
-        public async Task<ActionResult<IEnumerable<DescricaoCalculoRebateModel>>> GetDescricaoCalculoPgtoTaxaAdmPfee(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao)
+        public async Task<ActionResult<IEnumerable<DescricaoCalculoRebateViewModel>>> GetDescricaoCalculoPgtoTaxaAdmPfee(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao)
         {
             try
             {

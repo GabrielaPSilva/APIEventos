@@ -1,4 +1,4 @@
-﻿namespace DUDS.Models.GrupoRebate
+﻿namespace DUDS.Models.Rebate
 {
     public class EmailGrupoRebateView : EmailGrupoRebateModel
     {

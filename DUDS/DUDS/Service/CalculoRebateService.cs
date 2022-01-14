@@ -240,7 +240,7 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<DescricaoCalculoRebateModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao)
+        public async Task<IEnumerable<DescricaoCalculoRebateViewModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -293,13 +293,13 @@ namespace DUDS.Service
                                           WHERE
 	                                          tbl_condicao_remuneracao.cod_contrato_remuneracao = @cod_contrato_remuneracao";
 
-                List<DescricaoCalculoRebateModel> descricoes = await connection.QueryAsync<DescricaoCalculoRebateModel>(Descricao, new
+                List<DescricaoCalculoRebateViewModel> descricoes = await connection.QueryAsync<DescricaoCalculoRebateViewModel>(Descricao, new
                 {
                     cod_contrato = codContrato,
                     cod_sub_contrato = codSubContrato,
                     cod_contrato_fundo = codContratoFundo,
                     cod_contrato_remuneracao = codContratoRemuneracao
-                }) as List<DescricaoCalculoRebateModel>;
+                }) as List<DescricaoCalculoRebateViewModel>;
 
                 foreach (var item in descricoes)
                 {

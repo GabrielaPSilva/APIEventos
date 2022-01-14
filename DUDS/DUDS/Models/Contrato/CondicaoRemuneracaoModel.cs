@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DUDS.Models
+namespace DUDS.Models.Contrato
 {
     public class CondicaoRemuneracaoModel
     {
@@ -23,7 +23,5 @@ namespace DUDS.Models
         public DateTime DataCriacao { get; set; }
 
         public string UsuarioCriacao { get; set; }
-
-        public string NomeFundo { get; set; }
     }
 }

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace DUDS.Models
+namespace DUDS.Models.Contrato
 {
-    public class EstruturaContratoModel
+    public class EstruturaContratoViewModel
     {
         public double PercentualAdm { get; set; }
         
