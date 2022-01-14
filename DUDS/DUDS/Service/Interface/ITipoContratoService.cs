@@ -12,6 +12,9 @@ namespace DUDS.Service.Interface
 	                             tbl_tipo_contrato";
 
         Task<TipoContratoModel> GetTipoContaExistsBase(string tipoContrato);
+        
         Task<IEnumerable<TipoContratoModel>> GetAllAsync();
+        
+        Task<TipoContratoModel> GetByIdAsync(int id);
     }
 }

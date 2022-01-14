@@ -12,8 +12,7 @@ namespace DUDS.Service
 {
     public class MovimentacaoPassivoService : GenericService<MovimentacaoPassivoModel>, IMovimentacaoPassivoService
     {
-        public MovimentacaoPassivoService() : base(new MovimentacaoPassivoModel(),
-                   "tbl_movimentacao_nota")
+        public MovimentacaoPassivoService() : base(new MovimentacaoPassivoModel(),"tbl_movimentacao_nota")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }

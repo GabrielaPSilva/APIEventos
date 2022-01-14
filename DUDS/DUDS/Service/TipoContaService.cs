@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Tipos;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -54,15 +53,13 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
 
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_conta
-                              WHERE 
-	                             ativo = 1
-                              ORDER BY    
-                                 tipo_conta,
-                                 descricao_conta";
+                var query = ITipoContaService.QUERY_BASE +
+                    @"
+                    WHERE 
+                        ativo = 1
+                    ORDER BY    
+                         tipo_conta,
+                         descricao_conta";
 
                 return await connection.QueryAsync<TipoContaModel>(query);
             }
@@ -72,12 +69,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_conta
-                              WHERE 
-	                             id = @id";
+                var query = ITipoContaService.QUERY_BASE +
+                    @"
+                    WHERE 
+                         id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<TipoContaModel>(query, new { id });
             }
@@ -87,13 +82,11 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_conta
-                              WHERE 
-	                             tipo_conta = @tipo_conta AND
-                                 descricao_conta = @descricao_conta";
+                var query = ITipoContaService.QUERY_BASE + 
+                    @"
+                    WHERE 
+                        tipo_conta = @tipo_conta AND
+                        descricao_conta = @descricao_conta";
 
                 return await connection.QueryFirstOrDefaultAsync<TipoContaModel>(query, new { tipo_conta = tipoConta, descricao_conta = descricaoConta });
             }

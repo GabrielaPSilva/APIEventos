@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using DUDS.Models;
 using DUDS.Models.PgtoServico;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
@@ -7,19 +6,13 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class PagamentoServicoService : GenericService<PgtoServicoModel>, IPagamentoServicoService
+    public class PgtoServicoService : GenericService<PgtoServicoModel>, IPgtoServicoService
     {
-        public PagamentoServicoService() : base(new PgtoServicoModel(),
-            "tbl_pagamento_servico",
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeFundo" },
-            new List<string> { "'id'" },
-            new List<string> { "Id", "NomeFundo" })
+        public PgtoServicoService() : base(new PgtoServicoModel(),"tbl_pagamento_servico")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -52,7 +45,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<PgtoServicoModel>> AddPagamentoServico(List<PgtoServicoModel> pagamentoServicos)
+        public async Task<IEnumerable<PgtoServicoModel>> AddPgtoServico(List<PgtoServicoModel> pagamentoServicos)
         {
             ConcurrentBag<PgtoServicoModel> vs = new ConcurrentBag<PgtoServicoModel>();
             ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
@@ -116,73 +109,57 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<PgtoServicoModel>> GetAllAsync()
+        public async Task<IEnumerable<PgtoServicoViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    pagamento_servico.*,
-                                        fundo.nome_reduzido as nome_fundo
-                                     FROM
-	                                    tbl_pagamento_servico pagamento_servico
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = pagamento_servico.cod_fundo
-                                     ORDER BY
-                                        pagamento_servico.competencia,
-                                        fundo.nome_reduzido";
+                const string query = IPgtoServicoService.QUERY_BASE + 
+                    @"
+                    ORDER BY
+                        pagamento_servico.competencia,
+                        fundo.nome_reduzido";
 
-                return await connection.QueryAsync<PgtoServicoModel>(query);
+                return await connection.QueryAsync<PgtoServicoViewModel>(query);
             }
         }
 
-        public async Task<PgtoServicoModel> GetByIdAsync(int id)
+        public async Task<PgtoServicoViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    pagamento_servico.*,
-                                        fundo.nome_reduzido as nome_fundo
-                                     FROM
-	                                    tbl_pagamento_servico pagamento_servico
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = pagamento_servico.cod_fundo
-                                     WHERE
-                                        pagamento_servico.id = @id";
+                const string query = IPgtoServicoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        pagamento_servico.id = @id";
 
-                return await connection.QueryFirstOrDefaultAsync<PgtoServicoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<PgtoServicoViewModel>(query, new { id });
             }
         }
 
-        public async Task<IEnumerable<PgtoServicoModel>> GetByIdsAsync(string competencia, int codFundo)
+        public async Task<IEnumerable<PgtoServicoViewModel>> GetByIdsAsync(string competencia, int codFundo)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    pagamento_servico.*,
-                                        fundo.nome_reduzido as nome_fundo
-                                     FROM
-	                                    tbl_pagamento_servico pagamento_servico
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = pagamento_servico.cod_fundo
-                                     WHERE
-                                        pagamento_servico.cod_fundo = @cod_fundo
-                                        AND pagamento_servico.competencia = @competencia";
+                const string query = IPgtoServicoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        pagamento_servico.cod_fundo = @cod_fundo
+                        AND pagamento_servico.competencia = @competencia";
 
-                return await connection.QueryAsync<PgtoServicoModel>(query, new { cod_fundo = codFundo, competencia });
+                return await connection.QueryAsync<PgtoServicoViewModel>(query, new { cod_fundo = codFundo, competencia });
             }
         }
 
-        public async Task<IEnumerable<PgtoServicoModel>> GetPagamentoServicoByCompetencia(string competencia)
+        public async Task<IEnumerable<PgtoServicoViewModel>> GetPgtoServicoByCompetencia(string competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-	                                    pagamento_servico.*,
-                                        fundo.nome_reduzido as nome_fundo
-                                     FROM
-	                                    tbl_pagamento_servico pagamento_servico
-                                        INNER JOIN tbl_fundo fundo ON fundo.id = pagamento_servico.cod_fundo
-                                     WHERE
-                                        pagamento_servico.competencia = @competencia";
+                const string query = IPgtoServicoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        pagamento_servico.competencia = @competencia";
 
-                return await connection.QueryAsync<PgtoServicoModel>(query, new { competencia });
+                return await connection.QueryAsync<PgtoServicoViewModel>(query, new { competencia });
             }
         }
 

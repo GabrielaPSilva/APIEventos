@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Contrato;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -45,53 +44,48 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<SubContratoModel>> GetAllAsync()
+        public async Task<IEnumerable<SubContratoViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            sub_contrato.*,
-                             FROM
-	                            tbl_sub_contrato sub_contrato
-                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrado.cod_contrato
-                             WHERE
-	                            contrato.ativo = 1 AND
-                                sub_contrato.status = 'Ativo'
-                             ORDER BY
-                                contrato.id";
+                const string query = ISubContratoService.QUERY_BASE +
+                    @"
+                    WHERE
+                        contrato.ativo = 1 AND
+                        sub_contrato.status = 'Ativo'
+                    ORDER BY
+                        contrato.id";
 
-                return await connection.QueryAsync<SubContratoModel>(query);
+                return await connection.QueryAsync<SubContratoViewModel>(query);
             }
         }
 
-        public async Task<SubContratoModel> GetByIdAsync(int id)
+        public async Task<SubContratoViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = @"SELECT 
-                                        sub_contrato.*,
-                                       FROM
-                                        tbl_sub_contrato sub_contrato
-                                       WHERE
-                                        id = @id";
-                return await connection.QueryFirstOrDefaultAsync<SubContratoModel>(query, new { id });
+                const string query = ISubContratoService.QUERY_BASE + 
+                    @"
+                    WHERE
+                        id = @id";
+
+                return await connection.QueryFirstOrDefaultAsync<SubContratoViewModel>(query, new { id });
             }
         }
 
-        public async Task<IEnumerable<SubContratoModel>> GetContratoByIdAsync(int id)
+        public async Task<IEnumerable<SubContratoViewModel>> GetSubContratoCompletoByIdAsync(int codContrato)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT 
-	                            sub_contrato.*,
-                             FROM
-	                            tbl_sub_contrato sub_contrato
-                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrado.cod_contrato
-                             WHERE
-	                            contrato.id = @id
-                             ORDER BY
-                                contrato.id";
-                List<SubContratoModel> subContratoModels = await connection.QueryAsync<SubContratoModel>(query, new { id }) as List<SubContratoModel>;
+                const string query = ISubContratoService.QUERY_BASE +
+                    @"
+                    WHERE
+                        contrato.id = @codContrato
+                    ORDER BY
+                        contrato.id";
+
+                // TODO - VOLTAR AQUI SEM FALTA
+                List<SubContratoViewModel> subContratoModels = await connection.QueryAsync<SubContratoViewModel>(query, new { codContrato }) as List<SubContratoViewModel>;
                 ContratoAlocadorService contratoAlocadorService = new ContratoAlocadorService();
                 ContratoFundoService contratoFundoService = new ContratoFundoService();
 

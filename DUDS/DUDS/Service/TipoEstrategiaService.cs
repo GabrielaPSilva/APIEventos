@@ -5,7 +5,6 @@ using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Z.Dapper.Plus;
 
 namespace DUDS.Service
 {
@@ -55,14 +54,12 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
 
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_estrategia
-                              WHERE 
-	                             ativo = 1
-                              ORDER BY    
-                                 estrategia";
+                var query = ITipoEstrategiaService.QUERY_BASE + 
+                    @"
+                    WHERE 
+                        ativo = 1
+                    ORDER BY    
+                        estrategia";
 
                 return await connection.QueryAsync<TipoEstrategiaModel>(query);
             }
@@ -72,12 +69,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_estrategia
-                              WHERE 
-	                             id = @id";
+                var query = ITipoEstrategiaService.QUERY_BASE + 
+                    @"
+                    WHERE 
+                        id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<TipoEstrategiaModel>(query, new { id });
             }
@@ -87,12 +82,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = @"SELECT
-                                 *
-                              FROM
-	                             tbl_tipo_estrategia
-                              WHERE 
-	                             estrategia = @estrategia";
+                var query = ITipoEstrategiaService.QUERY_BASE + 
+                    @"
+                    WHERE 
+                        estrategia = @estrategia";
 
                 return await connection.QueryFirstOrDefaultAsync<TipoEstrategiaModel>(query, new { estrategia });
             }

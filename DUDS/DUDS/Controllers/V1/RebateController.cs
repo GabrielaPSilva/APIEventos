@@ -17,8 +17,8 @@ namespace DUDS.Controllers.V1
     {
         private readonly IErrosPagamentoService _errosPagamento;
         private readonly IConfiguracaoService _configService;
-        private readonly IPagamentoServicoService _pagamentoServicoService;
-        private readonly IPagamentoTaxaAdministracaoPerformanceService _pagamentoTaxaAdministracaoPerformanceService;
+        private readonly IPgtoServicoService _pagamentoServicoService;
+        private readonly IPgtoTaxaAdmPfeeService _pagamentoTaxaAdministracaoPerformanceService;
         private readonly ICalculoRebateService _calculoRebateService;
         private readonly IGrupoRebateService _grupoRebateService;
         private readonly IEmailGrupoRebateService _emailGrupoRebateService;
@@ -26,8 +26,8 @@ namespace DUDS.Controllers.V1
 
         public RebateController(IConfiguracaoService configService,
             IErrosPagamentoService errosPagamento,
-            IPagamentoServicoService pagamentoServicoService,
-            IPagamentoTaxaAdministracaoPerformanceService pagamentoTaxaAdministracaoPerformanceService,
+            IPgtoServicoService pagamentoServicoService,
+            IPgtoTaxaAdmPfeeService pagamentoTaxaAdministracaoPerformanceService,
             ICalculoRebateService calculoRebateService,
             IGrupoRebateService grupoRebateService,
             IControleRebateService controleRebateService,
@@ -406,7 +406,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var pagamentoServicos = await _pagamentoServicoService.GetPagamentoServicoByCompetencia(competencia);
+                var pagamentoServicos = await _pagamentoServicoService.GetPgtoServicoByCompetencia(competencia);
 
                 if (pagamentoServicos.Any())
                 {
@@ -442,7 +442,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        //POST: api/Pagamentos/AddPagamentoServico/List<PagamentoServicoModel>
+        //POST: api/Pagamentos/AddPgtoServico/List<PagamentoServicoModel>
         [HttpPost]
         public async Task<ActionResult<IEnumerable<PgtoServicoModel>>> AddPagamentoServico(List<PgtoServicoModel> pagamentoServico)
         {

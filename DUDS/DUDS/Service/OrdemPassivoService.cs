@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.Passivo;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
@@ -12,8 +12,7 @@ namespace DUDS.Service
 {
     public class OrdemPassivoService : GenericService<OrdemPassivoModel>, IOrdemPassivoService
     {
-        public OrdemPassivoService() : base(new OrdemPassivoModel(),
-                   "tbl_ordem_passivo")
+        public OrdemPassivoService() : base(new OrdemPassivoModel(),"tbl_ordem_passivo")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -100,12 +99,12 @@ namespace DUDS.Service
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<OrdemPassivoModel>> GetAllAsync()
+        public Task<IEnumerable<OrdemPassivoViewModel>> GetAllAsync()
         {
             return GetByDataEntradaAsync(null);
         }
 
-        public async Task<IEnumerable<OrdemPassivoModel>> GetByDataEntradaAsync(DateTime? dataEntrada)
+        public async Task<IEnumerable<OrdemPassivoViewModel>> GetByDataEntradaAsync(DateTime? dataEntrada)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -129,13 +128,8 @@ namespace DUDS.Service
 	                            tbl_investidor.nome_investidor,
                                 tbl_ordem_passivo.descricao_operacao";
 
-                return await connection.QueryAsync<OrdemPassivoModel>(query, new { data_entrada = dataEntrada });
+                return await connection.QueryAsync<OrdemPassivoViewModel>(query, new { data_entrada = dataEntrada });
             }
-        }
-
-        public Task<OrdemPassivoModel> GetByIdAsync(int id)
-        {
-            throw new System.NotImplementedException();
         }
 
         public async Task<bool> UpdateAsync(OrdemPassivoModel item)
