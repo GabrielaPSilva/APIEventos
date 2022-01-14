@@ -10,7 +10,12 @@ namespace DUDS.Service
 {
     public class CondicaoRemuneracaoService : GenericService<CondicaoRemuneracaoModel>, ICondicaoRemuneracaoService
     {
+<<<<<<< HEAD
+        public CondicaoRemuneracaoService() : base(new CondicaoRemuneracaoModel(),
+                                              "tbl_condicao_remuneracao")
+=======
         public CondicaoRemuneracaoService() : base(new CondicaoRemuneracaoModel(),"tbl_condicao_remuneracao")
+>>>>>>> d949a991f3b3e70af45e3c4181043077dae9152d
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -53,14 +58,29 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
+<<<<<<< HEAD
+        public Task<bool> ActivateAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+=======
+>>>>>>> d949a991f3b3e70af45e3c4181043077dae9152d
         public async Task<IEnumerable<CondicaoRemuneracaoViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
+<<<<<<< HEAD
+                var query = ICondicaoRemuneracaoService.QUERY_BASE + 
+                            @"
+                              WHERE
+	                             contrato.ativo = 1";
+=======
                 const string query = ICondicaoRemuneracaoService.QUERY_BASE + 
                     @"
                     WHERE
 	                    contrato.ativo = 1";
+>>>>>>> d949a991f3b3e70af45e3c4181043077dae9152d
 
                 return await connection.QueryAsync<CondicaoRemuneracaoViewModel>(query);
             }
@@ -70,15 +90,37 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
+<<<<<<< HEAD
+                var query = ICondicaoRemuneracaoService.QUERY_BASE +
+                                    @"
+                                       WHERE
+                                           condicao_remuneracao.id = @id";
+=======
                 const string query = ICondicaoRemuneracaoService.QUERY_BASE + 
                     @"
                     WHERE
                         condicao_remuneracao.id = @id";
+>>>>>>> d949a991f3b3e70af45e3c4181043077dae9152d
 
                 return await connection.QueryFirstOrDefaultAsync<CondicaoRemuneracaoViewModel>(query, new { id });
             }
         }
 
+<<<<<<< HEAD
+        public async Task<IEnumerable<CondicaoRemuneracaoViewModel>> GetContratoRemuneracaoByIdAsync(int id)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = ICondicaoRemuneracaoService.QUERY_BASE +
+                            @"
+                              WHERE
+	                              contrato_remuneracao.id = @id
+                              ORDER BY
+                                  condicao_remuneracao.id,
+                                  fundo.nome_reduzido";
+
+                return await connection.QueryAsync<CondicaoRemuneracaoViewModel>(query, new { id });
+=======
         public async Task<IEnumerable<CondicaoRemuneracaoViewModel>> GetCondicaoRemuneracaoByContratoRemuneracaoAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
@@ -95,9 +137,20 @@ namespace DUDS.Service
             }
         }
 
-        public Task<bool> ActivateAsync(int id)
+        public async Task<bool> UpdateAsync(CondicaoRemuneracaoModel item)
         {
-            throw new NotImplementedException();
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
+                List<string> str = new List<string>();
+                for (int i = 0; i < _propertiesUpdate.Count; i++)
+                {
+                    str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
+                }
+                query = query.Replace("VALORES", String.Join(",", str));
+                return await connection.ExecuteAsync(query, item) > 0;
+>>>>>>> d949a991f3b3e70af45e3c4181043077dae9152d
+            }
         }
     }
 }

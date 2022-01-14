@@ -17,7 +17,5 @@ namespace DUDS.Models.Rebate
         public string UsuarioCriacao { get; set; }
         
         public DateTime DataCriacao { get; set; }
-
-        
     }
 }
