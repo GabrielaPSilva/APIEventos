@@ -32,12 +32,12 @@ namespace DUDS.Service.Interface
 
         //Task<IEnumerable<InvestidorDistribuidorViewModel>> GetInvestidorDistribuidorByDataCriacao(DateTime dataCriacao);
 
-		Task<IEnumerable<InvestidorDistribuidorModel>> GetAllAsync();
+		Task<IEnumerable<InvestidorDistribuidorViewModel>> GetAllAsync();
 
 		Task<IEnumerable<InvestidorDistribuidorViewModel>> GetInvestidorDistribuidorByCodInvestidorAsync(int codInvestidor);
 
 		Task<IEnumerable<InvestidorDistribuidorViewModel>> GetInvestidorDistribuidorByCodAdministradorAsync(int codInvestidorAdministrador);
 
-		Task<InvestidorDistribuidorModel> GetByIdAsync(int id);
+		Task<InvestidorDistribuidorViewModel> GetByIdAsync(int id);
 	}
 }

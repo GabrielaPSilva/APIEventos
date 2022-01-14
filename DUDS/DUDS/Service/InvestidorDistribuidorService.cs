@@ -106,11 +106,11 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<InvestidorDistribuidorModel>> GetAllAsync()
+        public async Task<IEnumerable<InvestidorDistribuidorViewModel>> GetAllAsync()
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                return await connection.QueryAsync<InvestidorDistribuidorModel>(IInvestidorDistribuidorService.QUERY_BASE);
+                return await connection.QueryAsync<InvestidorDistribuidorViewModel>(IInvestidorDistribuidorService.QUERY_BASE);
             }
         }
 
@@ -155,7 +155,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<InvestidorDistribuidorModel> GetByIdAsync(int id)
+        public async Task<InvestidorDistribuidorViewModel> GetByIdAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -164,7 +164,7 @@ namespace DUDS.Service
                     WHERE 
 	                    tbl_investidor_distribuidor.id = @id";
 
-                return await connection.QueryFirstOrDefaultAsync<InvestidorDistribuidorModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<InvestidorDistribuidorViewModel>(query, new { id });
             }
         }
 

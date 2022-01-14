@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DUDS.Models;
 using DUDS.Service.Interface;
+using DUDS.Models.Fundo;
 
 namespace DUDS.Controllers.V1
 {
@@ -29,7 +29,7 @@ namespace DUDS.Controllers.V1
         #region Fundo
         // GET: api/InfoFundo/GetFundo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FundoModel>>> GetFundo()
+        public async Task<ActionResult<IEnumerable<FundoViewModel>>> GetFundo()
         {
             try
             {
@@ -50,7 +50,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/InfoFundo/GetFundoById/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<FundoModel>> GetFundoById(int id)
+        public async Task<ActionResult<FundoViewModel>> GetFundoById(int id)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Fundo/GetFundoExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<FundoModel>> GetFundoExistsBase(string cnpj)
+        public async Task<ActionResult<FundoViewModel>> GetFundoExistsBase(string cnpj)
         {
             try
             {

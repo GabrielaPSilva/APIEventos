@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DUDS.Models;
 using DUDS.Service.Interface;
+using DUDS.Models.Investidor;
 
 namespace DUDS.Controllers.V1
 {
@@ -28,7 +28,7 @@ namespace DUDS.Controllers.V1
         #region Investidor
         // GET: api/Investidor/GetInvestidor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InvestidorModel>>> GetInvestidor()
+        public async Task<ActionResult<IEnumerable<InvestidorViewModel>>> GetInvestidor()
         {
             try
             {
@@ -50,7 +50,7 @@ namespace DUDS.Controllers.V1
         // GET: api/Investidor/GetInvestidorById/id
         [HttpGet("{id}")]
 
-        public async Task<ActionResult<InvestidorModel>> GetInvestidorById(int id)
+        public async Task<ActionResult<InvestidorViewModel>> GetInvestidorById(int id)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Investidor/GetInvestidorExistsBase/cnpj
         [HttpGet("{cnpj}")]
-        public async Task<ActionResult<InvestidorModel>> GetInvestidorExistsBase(string cnpj)
+        public async Task<ActionResult<InvestidorViewModel>> GetInvestidorExistsBase(string cnpj)
         {
             try
             {
@@ -91,8 +91,9 @@ namespace DUDS.Controllers.V1
         }
 
         // GET: api/Investidor/GetInvestidorByDataCriacao/dataCriacao
+        /*
         [HttpGet("{dataCriacao}")]
-        public async Task<ActionResult<IEnumerable<InvestidorModel>>> GetInvestidorByDataCriacao(DateTime dataCriacao)
+        public async Task<ActionResult<IEnumerable<InvestidorViewModel>>> GetInvestidorByDataCriacao(DateTime dataCriacao)
         {
             try
             {
@@ -109,6 +110,7 @@ namespace DUDS.Controllers.V1
                 return BadRequest(e);
             }
         }
+        */
 
         // POST: api/Investidor/AddInvestidor/InvestidorModel
         [HttpPost]
@@ -138,7 +140,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _investidorService.AddInvestidores(investidores);
                 if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetInvestidorByDataCriacao), new { data_criacao = DateTime.Today }, investidores);
+                    return CreatedAtAction(nameof(GetInvestidor), null, investidores);
                 }
                 return BadRequest(retorno);
             }
@@ -229,7 +231,7 @@ namespace DUDS.Controllers.V1
         #region Investidor Distribuidor
         // GET: api/Investidor/GetInvestidorDistribuidor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InvestidorDistribuidorModel>>> GetInvestidorDistribuidor()
+        public async Task<ActionResult<IEnumerable<InvestidorDistribuidorViewModel>>> GetInvestidorDistribuidor()
         {
             try
             {
@@ -248,8 +250,9 @@ namespace DUDS.Controllers.V1
         }
 
         // GET: api/Investidor/GetInvestidorDistribuidorByDataCriacao/dataCriacao
+        /*
         [HttpGet("{dataCriacao}")]
-        public async Task<ActionResult<IEnumerable<ErrosPagamentoModel>>> GetInvestidorDistribuidorByDataCriacao(DateTime dataCriacao)
+        public async Task<ActionResult<IEnumerable<InvestidorDistribuidorViewModel>>> GetInvestidorDistribuidorByDataCriacao(DateTime dataCriacao)
         {
             try
             {
@@ -267,10 +270,11 @@ namespace DUDS.Controllers.V1
                 return BadRequest(e);
             }
         }
+        */
 
         // GET: api/Investidor/GetInvestidorDistribuidorByIds/codInvestidor/codDistribuidor/codAdministrador
         [HttpGet("{codInvestidor}/{codDistribuidor}/{codAdministrador}")]
-        public async Task<ActionResult<InvestidorDistribuidorModel>> GetInvestidorDistribuidorByIds(int codInvestidor, int codDistribuidor, int codAdministrador)
+        public async Task<ActionResult<InvestidorDistribuidorViewModel>> GetInvestidorDistribuidorByIds(int codInvestidor, int codDistribuidor, int codAdministrador)
         {
             try
             {
@@ -323,7 +327,7 @@ namespace DUDS.Controllers.V1
                 if (!retorno.Any())
                 {
                     // return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao), new { data_criacao = retorno.FirstOrDefault().DataCriacao }, investidorDistribuidor);
-                    return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao), new { data_criacao = DateTime.Today }, investidorDistribuidor);
+                    return CreatedAtAction(nameof(GetInvestidorDistribuidor), null, investidorDistribuidor);
                 }
                 return BadRequest(retorno);
             }
@@ -339,7 +343,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                InvestidorDistribuidorModel retornoInvestidorDistribuidor = await _investidorDistribuidorService.GetByIdAsync(investidorDistribuidor.Id);
+                InvestidorDistribuidorViewModel retornoInvestidorDistribuidor = await _investidorDistribuidorService.GetByIdAsync(investidorDistribuidor.Id);
 
                 if (retornoInvestidorDistribuidor == null)
                 {

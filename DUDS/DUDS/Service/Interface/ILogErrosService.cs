@@ -1,4 +1,4 @@
-﻿using DUDS.Models;
+﻿using DUDS.Models.LogErros;
 using System.Threading.Tasks;
 
 namespace DUDS.Service.Interface

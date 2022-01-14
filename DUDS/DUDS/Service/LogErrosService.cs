@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using DUDS.Models;
+using DUDS.Models.LogErros;
 using DUDS.Service.Interface;
 using System.Threading.Tasks;
 
