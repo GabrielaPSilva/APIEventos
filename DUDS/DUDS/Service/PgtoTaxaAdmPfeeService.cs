@@ -167,6 +167,7 @@ namespace DUDS.Service
             {
                 const string query = @"
                                     SELECT
+                                        pgto_adm_pfee.id,
 	                                    pgto_adm_pfee.competencia,
 	                                    pgto_adm_pfee.cod_fundo,
 	                                    fundo.nome_reduzido AS nome_fundo,
@@ -178,7 +179,8 @@ namespace DUDS.Service
 	                                    investidor_distribuidor.cod_invest_administrador AS cod_investidor_administrador,
 	                                    investidor_distribuidor.cod_investidor,
                                         investidor_distribuidor.id AS cod_investidor_distribuidor,
-	                                    investidor_distribuidor.cod_distribuidor AS cod_distribuidor_investidor,
+	                                    investidor_distribuidor.cod_distribuidor_administrador AS cod_distribuidor_administrador_investidor,
+                                        distribuidor_administrador_investidor.cod_distribuidor AS cod_distribuidor_investidor,
 	                                    distribuidor_investidor.nome_distribuidor AS nome_distribuidor_investidor,
 	                                    investidor_distribuidor.cod_administrador AS cod_administrador_codigo_investidor,
 	                                    administrador_codigo_investidor.nome_administrador AS nome_administrador_codigo_investidor,
@@ -199,7 +201,8 @@ namespace DUDS.Service
 	                                    INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
 	                                    INNER JOIN tbl_fundo fundo ON fundo.id = pgto_adm_pfee.cod_fundo
 	                                    INNER JOIN tbl_administrador source_administrador ON source_administrador.id = pgto_adm_pfee.cod_administrador
-	                                    INNER JOIN tbl_distribuidor distribuidor_investidor ON distribuidor_investidor.id = investidor_distribuidor.cod_distribuidor
+	                                    INNER JOIN tbl_distribuidor_administrador distribuidor_administrador_investidor ON distribuidor_administrador_investidor.id = investidor_distribuidor.cod_distribuidor_administrador
+                                        INNER JOIN tbl_distribuidor distribuidor_investidor ON distribuidor_investidor.id = distribuidor_administrador_investidor.cod_distribuidor
 	                                    INNER JOIN tbl_administrador administrador_codigo_investidor ON administrador_codigo_investidor.id = investidor_distribuidor.cod_administrador
 	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
 	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
