@@ -221,7 +221,7 @@ namespace DUDS.Service
                 var Condicao = ICondicaoRemuneracaoService.QUERY_BASE + 
                                         @"
                                           WHERE
-	                                          tbl_condicao_remuneracao.cod_contrato_remuneracao = @cod_contrato_remuneracao";
+	                                          condicao_remuneracao.cod_contrato_remuneracao = @cod_contrato_remuneracao";
 
                 List<DescricaoCalculoRebateViewModel> descricoes = await connection.QueryAsync<DescricaoCalculoRebateViewModel>(Descricao, new
                 {
@@ -233,7 +233,7 @@ namespace DUDS.Service
 
                 foreach (var item in descricoes)
                 {
-                    List<CondicaoRemuneracaoViewModel> condicao = await connection.QueryAsync<CondicaoRemuneracaoViewModel>(Condicao, new { cod_contrato_remuneracao = codContratoRemuneracao }) as List<CondicaoRemuneracaoViewModel>;
+                    List<CondicaoRemuneracaoViewModel> condicao = await connection.QueryAsync<CondicaoRemuneracaoViewModel>(Condicao, new { cod_contrato_remuneracao = item.CodContratoRemuneracao }) as List<CondicaoRemuneracaoViewModel>;
 
                     item.ListaCondicaoRemuneracao = condicao;
                 }
