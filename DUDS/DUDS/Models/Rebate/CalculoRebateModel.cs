@@ -8,8 +8,6 @@ namespace DUDS.Models.Rebate
         
         public Guid CodPgtoAdmPfee { get; set; }
         
-        public int CodInvestidorDistribuidor { get; set; }
-        
         public int CodContrato { get; set; }
         
         public int CodSubContrato { get; set; }

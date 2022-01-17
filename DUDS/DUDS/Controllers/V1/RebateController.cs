@@ -540,7 +540,7 @@ namespace DUDS.Controllers.V1
             try
             {
                 var pagamentoTaxaAdministracaoPerformance = await _pagamentoTaxaAdministracaoPerformanceService.GetByIdAsync(id);
-                
+
                 if (pagamentoTaxaAdministracaoPerformance == null)
                 {
                     return NotFound();
@@ -560,7 +560,7 @@ namespace DUDS.Controllers.V1
             try
             {
                 var pagamentoTaxaAdministracaoPerformance = await _pagamentoTaxaAdministracaoPerformanceService.GetByCompetenciaAsync(competencia);
-                
+
                 if (pagamentoTaxaAdministracaoPerformance.Any())
                 {
                     return Ok(pagamentoTaxaAdministracaoPerformance);
@@ -675,12 +675,13 @@ namespace DUDS.Controllers.V1
 
         #region Calculo Rebate
         // GET: api/Rebate/GetCalculoRebate/competencia/codGrupoRebate
-        [HttpGet("{competencia}/{codGrupoRebate}")]
-        public async Task<ActionResult<IEnumerable<CalculoRebateViewModel>>> GetCalculoRebate(string competencia, int codGrupoRebate)
+        //[HttpGet("{competencia}/{codGrupoRebate}")]
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<CalculoRebateViewModel>>> GetCalculoRebate(string competencia, int? codGrupoRebate)
         {
             try
             {
-                var calculoRebate = await _calculoRebateService.GetByCompetenciaAsync(competencia, codGrupoRebate);
+                var calculoRebate = await _calculoRebateService.GetCalculoRebate(competencia, codGrupoRebate);
 
                 if (calculoRebate.Any())
                 {
@@ -726,7 +727,7 @@ namespace DUDS.Controllers.V1
 
                 if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetCalculoRebate), calculoRebate);
+                    return CreatedAtAction(nameof(GetCalculoRebate), new { competencia = "2021-07" }, GetCalculoRebate("2021-07", null));
                 }
 
                 return BadRequest(retorno);
@@ -765,7 +766,7 @@ namespace DUDS.Controllers.V1
             try
             {
                 var calculoRebate = await _calculoRebateService.GetDescricaoRebateAsync(codContrato, codSubContrato, codContratoFundo, codContratoRemuneracao);
-                
+
                 if (calculoRebate.Any())
                 {
                     return Ok(calculoRebate);

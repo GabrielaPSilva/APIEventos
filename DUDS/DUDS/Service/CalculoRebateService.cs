@@ -23,6 +23,7 @@ namespace DUDS.Service
 
         public async Task<bool> AddAsync(CalculoRebateModel item)
         {
+            
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 using (IDbTransaction transaction = connection.BeginTransaction())
@@ -30,7 +31,10 @@ namespace DUDS.Service
                     try
                     {
                         string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                        Console.WriteLine(query);
+                        Console.WriteLine(item.ToString());
                         var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
+                        transaction.Commit();
                         return retorno > 0;
                     }
                     catch (Exception ex)
@@ -139,15 +143,15 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<CalculoRebateViewModel>> GetByCompetenciaAsync(string competencia, int codGrupoRebate)
+        public async Task<IEnumerable<CalculoRebateViewModel>> GetCalculoRebate(string competencia, int? codGrupoRebate)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = ICalculoRebateService.QUERY_BASE + 
+                var query = ICalculoRebateService.QUERY_BASE +
                                   @"
 								    WHERE
 										pagamento.competencia = @competencia AND
-                                        grupo_rebate.id = @id
+                                        (@id IS NULL OR grupo_rebate.id = @id)
                                     ORDER BY
 	                                    fundo.nome_reduzido,
 	                                    grupo_rebate.nome_grupo_rebate,
