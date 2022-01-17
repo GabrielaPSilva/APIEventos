@@ -1,6 +1,6 @@
 ﻿namespace DUDS.Models.Passivo
 {
-    public class PosicaoClienteViewModel :PosicaoClienteModel
+    public class PosicaoClienteViewModel : PosicaoClienteModel
     {
         public string NomeInvestidor { get; set; }
 

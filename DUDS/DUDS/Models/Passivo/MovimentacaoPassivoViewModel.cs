@@ -1,6 +1,6 @@
 ﻿namespace DUDS.Models.Passivo
 {
-    public class MovimentacaoPassivoViewModel:MovimentacaoPassivoModel
+    public class MovimentacaoPassivoViewModel : MovimentacaoPassivoModel
     {
         public string NomeFundo { get; set; }
 
