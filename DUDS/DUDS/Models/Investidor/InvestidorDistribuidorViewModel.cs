@@ -1,6 +1,6 @@
 ﻿namespace DUDS.Models.Investidor
 {
-    public class InvestidorDistribuidorViewModel
+    public class InvestidorDistribuidorViewModel :InvestidorDistribuidorModel
     {
         public string NomeDistribuidor { get; set; }
         public string NomeAdministrador { get; set; }

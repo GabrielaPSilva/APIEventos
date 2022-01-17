@@ -1,6 +1,6 @@
 ﻿namespace DUDS.Models.Gestor
 {
-    public class GestorViewModel
+    public class GestorViewModel : GestorModel
     {
         public string Classificacao { get; set; }
     }

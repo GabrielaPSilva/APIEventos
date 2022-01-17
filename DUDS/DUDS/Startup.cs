@@ -2,7 +2,6 @@ using DUDS.Service;
 using DUDS.Service.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,10 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 
 namespace DUDS
 {
@@ -124,6 +120,7 @@ namespace DUDS
             });
             services.AddSwaggerGenNewtonsoftSupport();
 
+            #region Service Block
             services.AddScoped<IContaService, ContaService>();
             services.AddScoped<IFundoService, FundoService>();
             services.AddScoped<IGestorService, GestorService>();
@@ -157,7 +154,7 @@ namespace DUDS
             services.AddScoped<IInvestidorDistribuidorService, InvestidorDistribuidorService>();
             services.AddScoped<IDistribuidorAdministradorService, DistribuidorAdministradorService>();
             services.AddScoped<IPgtoTaxaAdmPfeeService, PgtoTaxaAdmPfeeService>();
-
+            #endregion
             // Teste - Body Length
             //services.Configure<FormOptions>(options =>
             //{
