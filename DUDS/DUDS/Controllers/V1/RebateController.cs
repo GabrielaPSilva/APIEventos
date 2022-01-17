@@ -951,7 +951,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        // GET: api/GrupoRebate/GetTblGrupoRebateById/id
+        // GET: api/GrupoRebate/GetEmailGrupoRebateById/id
         [HttpGet("{id}")]
         public async Task<ActionResult<EmailGrupoRebateViewModel>> GetEmailGrupoRebateById(int id)
         {
@@ -964,6 +964,27 @@ namespace DUDS.Controllers.V1
                 }
 
                 return Ok(emailGrupoRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/GrupoRebate/GetEmailCodGrupoRebate
+        [HttpGet("{codGrupoRebate}")]
+        public async Task<ActionResult<IEnumerable<EmailGrupoRebateViewModel>>> GetEmailCodGrupoRebate(int codGrupoRebate)
+        {
+            try
+            {
+                var listEmailGrupoRebate = await _emailGrupoRebateService.GetByGrupoRebateAsync(codGrupoRebate);
+
+                if (listEmailGrupoRebate.Any())
+                {
+                    return Ok(listEmailGrupoRebate);
+                }
+                return NotFound();
+
             }
             catch (Exception e)
             {
