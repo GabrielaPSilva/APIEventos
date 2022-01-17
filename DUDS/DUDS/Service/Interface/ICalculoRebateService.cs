@@ -10,11 +10,7 @@ namespace DUDS.Service.Interface
     public interface ICalculoRebateService : IGenericOperationsService<CalculoRebateModel>
 	{
 		const string QUERY_BASE = @"SELECT
-										calculo_pgto_adm_pfee.id,
-										calculo_pgto_adm_pfee.cod_contrato,
-	                                    calculo_pgto_adm_pfee.cod_sub_contrato,
-	                                    calculo_pgto_adm_pfee.cod_contrato_fundo,
-	                                    calculo_pgto_adm_pfee.cod_contrato_remuneracao,
+										calculo_pgto_adm_pfee.*,
 	                                   	pagamento.competencia,
 										pagamento.cod_investidor_distribuidor,
                                         investidor.nome_investidor,
@@ -34,10 +30,7 @@ namespace DUDS.Service.Interface
 	                                    pagamento.taxa_performance_resgate AS valor_pfee_resgate,
 	                                    pagamento.taxa_performance_apropriada AS valor_pfee_semestre,
                                         contrato_remuneracao.percentual_adm AS perc_adm,
-                                        contrato_remuneracao.percentual_pfee AS perc_pfee,
-                                        calculo_pgto_adm_pfee.rebate_adm,
-                                        calculo_pgto_adm_pfee.rebate_pfee_resgate,
-                                        calculo_pgto_adm_pfee.rebate_pfee_semestre
+                                        contrato_remuneracao.percentual_pfee AS perc_pfee
                                     FROM
                                         tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
 											INNER JOIN tbl_pgto_adm_pfee pagamento ON pagamento.id = calculo_pgto_adm_pfee.cod_pgto_adm_pfee
@@ -54,7 +47,7 @@ namespace DUDS.Service.Interface
 		Task<IEnumerable<CalculoRebateModel>> AddBulkAsync(List<CalculoRebateModel> item);
 		Task<bool> DeleteByCompetenciaAsync(string competencia);
 		Task<CalculoRebateViewModel> GetByIdAsync(Guid id);
-		Task<IEnumerable<CalculoRebateViewModel>> GetByCompetenciaAsync(string competencia, int codGrupoRebate);
+		Task<IEnumerable<CalculoRebateViewModel>> GetCalculoRebate(string competencia, int? codGrupoRebate);
         Task<IEnumerable<DescricaoCalculoRebateViewModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao);
         Task<int> GetCountCalculoRebateAsync(FiltroModel filtro);
     }

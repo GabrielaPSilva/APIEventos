@@ -135,7 +135,7 @@ namespace DUDS.Service
                                 contrato_fundo.cod_tipo_condicao,
                                 investidor_distribuidor.cod_invest_administrador AS cod_invest_administrador,
                                 investidor_distribuidor.cod_administrador AS administrador_codigo_investidor,
-                                investidor_distribuidor.cod_distribuidor AS distribuidor_codigo_investidor,
+                                investidor_distribuidor.cod_distribuidor_administrador AS distribuidor_codigo_investidor,
                                 contrato.id AS cod_contrato,
                                 sub_contrato.id AS cod_sub_contrato,
                                 contrato_fundo.id AS cod_contrato_fundo,
