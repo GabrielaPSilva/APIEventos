@@ -2,6 +2,6 @@
 {
     public class EmailGrupoRebateViewModel : EmailGrupoRebateModel
     {
-        public string GrupoRebate { get; set; }
+        public string NomeGrupoRebate { get; set; }
     }
 }

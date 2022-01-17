@@ -68,12 +68,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IEmailGrupoRebateService.QUERY_BASE + 
+                const string query = IEmailGrupoRebateService.QUERY_BASE +
                             @"
                               WHERE 
-	                             ativo = 1
+	                             tbl_email_grupo_rebate.ativo = 1
                               ORDER BY    
-                                 nome_grupo_rebate";
+                                 tbl_grupo_rebate.nome_grupo_rebate";
 
                 return await connection.QueryAsync<EmailGrupoRebateViewModel>(query);
             }
@@ -83,12 +83,27 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IEmailGrupoRebateService.QUERY_BASE + 
+                const string query = IEmailGrupoRebateService.QUERY_BASE +
                              @"
                                WHERE 
-	                             id = @id";
+	                             tbl_email_grupo_rebate.id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<EmailGrupoRebateViewModel>(query, new { id });
+            }
+        }
+
+        public async Task<IEnumerable<EmailGrupoRebateViewModel>> GetByGrupoRebateAsync(int codGrupoRebate)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query = IEmailGrupoRebateService.QUERY_BASE +
+                             @"
+                               WHERE 
+	                             tbl_grupo_rebate.id = @cod_grupo_rebate
+                               ORDER BY    
+                                 tbl_grupo_rebate.nome_grupo_rebate";
+
+                return await connection.QueryAsync<EmailGrupoRebateViewModel>(query, new { cod_grupo_rebate = codGrupoRebate });
             }
         }
     }
