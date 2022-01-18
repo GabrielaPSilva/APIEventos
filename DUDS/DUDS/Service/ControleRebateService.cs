@@ -99,7 +99,7 @@ namespace DUDS.Service
                                 AND (@codMellon IS NULL OR tbl_investidor_distribuidor.cod_invest_administrador = @codMellon)
 	                            AND tbl_pgto_adm_pfee.competencia = @competencia";
 
-                var a = await connection.QueryAsync<ControleRebateViewModel, CalculoRebateModel, ControleRebateViewModel>(query,
+                var a = await connection.QueryAsync<ControleRebateViewModel, CalculoRebateViewModel, ControleRebateViewModel>(query,
                    (controle, calculo) =>
                    {
                        controle.Calculo = calculo;
