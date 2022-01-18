@@ -3,6 +3,8 @@
     public class CalculoRebateViewModel : CalculoRebateModel
     {
         public string NomeInvestidor { get; set; }
+
+        public string Competencia { get; set; }
         
         public string CNPJ { get; set; }
         
