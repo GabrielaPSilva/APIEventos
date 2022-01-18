@@ -780,6 +780,26 @@ namespace DUDS.Controllers.V1
             }
         }
 
+        // GET: api/Rebate/GetParametroControleRebate/filtro
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<ControleRebateModel>>> GetParametroControleRebate(string competencia)
+        {
+            try
+            {
+                var controleRebate = await _calculoRebateService.GetParametroControleRebateAsync(competencia);
+
+                if (!controleRebate.Any())
+                {
+                    NotFound();
+                }
+                return Ok(controleRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
         #endregion
 
         #region Grupo Rebate

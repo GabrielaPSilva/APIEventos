@@ -21,5 +21,7 @@ namespace DUDS.Service.Interface
         Task<IEnumerable<ControleRebateViewModel>> GetFiltroControleRebateAsync(int grupoRebate, string investidor, string competencia, string codMellon);
         Task<int> GetCountControleRebateAsync(FiltroModel filtro);
         Task<IEnumerable<ControleRebateViewModel>> GetByCompetenciaAsync(FiltroModel filtro);
+
+        Task<IEnumerable<ControleRebateModel>> AddBulkAsync(List<ControleRebateModel> item);
     }
 }
