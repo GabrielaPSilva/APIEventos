@@ -260,5 +260,24 @@ namespace DUDS.Service
                 return await connection.QueryFirstOrDefaultAsync<int>(query, new { filtro.Competencia });
             }
         }
+
+        public async Task<IEnumerable<ControleRebateModel>> GetParametroControleRebateAsync(string competencia)
+        {
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                var query = @"SELECT 
+	                            distinct tbl_investidor_distribuidor.cod_grupo_rebate, 
+                                tbl_pgto_adm_pfee.competencia,
+                                tbl_calculo_pgto_adm_pfee.usuario_criacao
+                            FROM 
+	                            tbl_calculo_pgto_adm_pfee
+	                            INNER JOIN tbl_pgto_adm_pfee ON tbl_pgto_adm_pfee.id = tbl_calculo_pgto_adm_pfee.cod_pgto_adm_pfee
+	                            INNER JOIN tbl_investidor_distribuidor ON tbl_investidor_distribuidor.id = tbl_pgto_adm_pfee.cod_investidor_distribuidor
+                            WHERE
+	                            tbl_pgto_adm_pfee.competencia = @competencia";
+
+                return await connection.QueryAsync<ControleRebateModel>(query, new { competencia });
+            }
+        }
     }
 }

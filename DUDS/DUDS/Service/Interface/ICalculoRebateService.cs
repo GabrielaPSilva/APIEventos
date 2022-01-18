@@ -50,5 +50,7 @@ namespace DUDS.Service.Interface
 		Task<IEnumerable<CalculoRebateViewModel>> GetCalculoRebate(string competencia, int? codGrupoRebate);
         Task<IEnumerable<DescricaoCalculoRebateViewModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao);
         Task<int> GetCountCalculoRebateAsync(FiltroModel filtro);
-    }
+		Task<IEnumerable<ControleRebateModel>> GetParametroControleRebateAsync(string competencia);
+
+	}
 }
