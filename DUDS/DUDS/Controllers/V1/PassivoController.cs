@@ -30,8 +30,8 @@ namespace DUDS.Controllers.V1
         #region Posicao Passivo
         // GET: api/PosicaoCliente/GetControleRebate
         
-        [HttpGet("{data_ref}")]
-        public async Task<ActionResult<IEnumerable<PosicaoClienteViewModel>>> GetAllByDate(DateTime dataRef)
+        [HttpGet("{dataRef}")]
+        public async Task<ActionResult<IEnumerable<PosicaoClienteViewModel>>> GetAllPosicaoClienteByDate(DateTime dataRef)
         {
             try
             {
@@ -48,11 +48,30 @@ namespace DUDS.Controllers.V1
                 return BadRequest(e);
             }
         }
-        
+
+        [HttpGet("{dataRef}")]
+        public async Task<ActionResult<int>> GetCountPosicaoClienteByDataRef(DateTime dataRef)
+        {
+            try
+            {
+                var listaControleRebate = await _posicaoClientePassivoService.GetCountByDataRefAsync(dataRef);
+
+                if (listaControleRebate != 0)
+                {
+                    return Ok(listaControleRebate);
+                }
+                return NotFound("Data de " + dataRef + " não possui posição.");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
 
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PosicaoClienteViewModel>>> GetPosicaoClientePassivo([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
+        public async Task<ActionResult<IEnumerable<PosicaoClienteViewModel>>> GetPosicaoCliente([FromQuery] DateTime? dataInicio, [FromQuery] DateTime? dataFim, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
         {
             try
             {
@@ -72,7 +91,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet]
-        public async Task<ActionResult<double>> GetMaiorValorBruto([FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
+        public async Task<ActionResult<double>> GetMaiorValorBrutoPosicaoCliente([FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
         {
             try
             {
@@ -98,7 +117,7 @@ namespace DUDS.Controllers.V1
                 var retorno = await _posicaoClientePassivoService.AddBulkAsync(posicaoClientePassivo);
                 if (!retorno.Any())
                 {
-                    return CreatedAtAction(nameof(GetPosicaoClientePassivo),
+                    return CreatedAtAction(nameof(GetPosicaoCliente),
                         new { dataInicio = posicaoClientePassivo.FirstOrDefault().DataRef }, posicaoClientePassivo);
                 }
                 return BadRequest(retorno);
@@ -109,7 +128,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        [HttpDelete("{data_ref}")]
+        [HttpDelete("{dataRef}")]
         public async Task<IActionResult> DeletePosicaoClientePassivo(DateTime dataRef)
         {
             try
@@ -168,7 +187,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        [HttpDelete("{data_entrada}")]
+        [HttpDelete("{dataEntrada}")]
         public async Task<IActionResult> DeleteOrdemPassivo(DateTime dataEntrada)
         {
             try
@@ -227,7 +246,7 @@ namespace DUDS.Controllers.V1
             }
         }
 
-        [HttpDelete("{data_movimentacao}")]
+        [HttpDelete("{dataMovimentacao}")]
         public async Task<IActionResult> DeleteMovimentacaoPassivo(DateTime dataMovimentacao)
         {
             try

@@ -134,9 +134,21 @@ namespace DUDS.Service
         }
         
 
-        public Task<PosicaoClienteModel> GetByIdAsync(int id)
+        public async Task<int> GetCountByDataRefAsync(DateTime dataRef)
         {
-            throw new System.NotImplementedException();
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
+            {
+                const string query =
+                    @"
+                    SELECT 
+                        COUNT(1)
+                    FROM
+                        tbl_posicao_cliente
+                    WHERE
+                        tbl_posicao_cliente.data_ref = @data_ref";
+
+                return await connection.QueryFirstOrDefaultAsync<int>(query, new { data_ref = dataRef });
+            }
         }
 
         public async Task<bool> UpdateAsync(PosicaoClienteModel item)

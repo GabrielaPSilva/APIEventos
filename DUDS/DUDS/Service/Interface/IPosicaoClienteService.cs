@@ -37,5 +37,8 @@ namespace DUDS.Service.Interface
         Task<IEnumerable<PosicaoClienteViewModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
 
         Task<double?> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor);
-    }
+
+		Task<int> GetCountByDataRefAsync(DateTime dataRef);
+
+	}
 }
