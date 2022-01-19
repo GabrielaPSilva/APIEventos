@@ -23,7 +23,7 @@ namespace DUDS.Service
 
         public async Task<bool> AddAsync(CalculoRebateModel item)
         {
-            
+
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 using (IDbTransaction transaction = connection.BeginTransaction())
@@ -148,7 +148,7 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = ICalculoRebateService.QUERY_BASE +
-                                  @"
+                                @"
 								    WHERE
 										pagamento.competencia = @competencia AND
                                         (@id IS NULL OR grupo_rebate.id = @id)
@@ -165,7 +165,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = ICalculoRebateService.QUERY_BASE + 
+                var query = ICalculoRebateService.QUERY_BASE +
                                  @"
                                     WHERE
 	                                    calculo_pgto_adm_pfee.id = @id
@@ -222,7 +222,7 @@ namespace DUDS.Service
 										    AND contrato_fundo.id = @cod_contrato_fundo
 										    AND contrato_remuneracao.id = @cod_contrato_remuneracao";
 
-                var Condicao = ICondicaoRemuneracaoService.QUERY_BASE + 
+                var Condicao = ICondicaoRemuneracaoService.QUERY_BASE +
                                         @"
                                           WHERE
 	                                          condicao_remuneracao.cod_contrato_remuneracao = @cod_contrato_remuneracao";
