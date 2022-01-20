@@ -1,20 +1,26 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
+using Dapper.FluentMap;
+using Dapper.FluentMap.Dommel;
 using DUDS.Models.Passivo;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Z.Dapper.Plus;
 
 namespace DUDS.Service
 {
     public class PosicaoClienteService : GenericService<PosicaoClienteModel>, IPosicaoClienteService
     {
-        public PosicaoClienteService() : base(new PosicaoClienteModel(),"tbl_posicao_cliente")
+        public PosicaoClienteService() : base(new PosicaoClienteModel(), "tbl_posicao_cliente")
         {
+
             DefaultTypeMap.MatchNamesWithUnderscores = true;
+
         }
 
         public Task<bool> ActivateAsync(int id)
@@ -49,15 +55,20 @@ namespace DUDS.Service
 
         public async Task<IEnumerable<PosicaoClienteModel>> AddBulkAsync(List<PosicaoClienteModel> item)
         {
-            ConcurrentBag<PosicaoClienteModel> vs = new ConcurrentBag<PosicaoClienteModel>();
-            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
-            await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var result = await AddAsync(x);
-                if (!result) { vs.Add(x); }
+                try
+                {
+                    DapperPlusManager.Entity<PosicaoClienteModel>().Table("tbl_posicao_cliente").Identity(x => x.Id);
+                    connection.BulkInsert(item);
+                    return item;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return new List<PosicaoClienteModel>();
+                }
             }
-            );
-            return vs;
         }
 
         public Task<bool> DeleteAsync(int id)
@@ -78,7 +89,7 @@ namespace DUDS.Service
                     try
                     {
                         const string query = "DELETE FROM tbl_posicao_cliente WHERE data_ref = @data_ref";
-                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { data_ref = dataRef }, transaction: transaction,commandTimeout:180);
+                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { data_ref = dataRef }, transaction: transaction, commandTimeout: 180);
                         transaction.Commit();
                         return rowsAffected > 0 && rowsAffected == result.Count;
                     }
@@ -96,7 +107,7 @@ namespace DUDS.Service
         {
             throw new System.NotImplementedException();
         }
-        
+
         public async Task<IEnumerable<PosicaoClienteViewModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
         {
             if (dataInicio == null && dataFim == null) return new List<PosicaoClienteViewModel>();
@@ -105,7 +116,7 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IPosicaoClienteService.QUERY_BASE+ 
+                const string query = IPosicaoClienteService.QUERY_BASE +
                     @"
                     WHERE
                         (@data_inicio IS NULL OR tbl_posicao_cliente.data_ref >= @data_inicio) 
@@ -132,7 +143,7 @@ namespace DUDS.Service
                 });
             }
         }
-        
+
 
         public async Task<int> GetCountByDataRefAsync(DateTime dataRef)
         {
@@ -168,7 +179,7 @@ namespace DUDS.Service
                             str.Add(_fieldsUpdate[i] + " = " + _propertiesUpdate[i]);
                         }
                         query = query.Replace("VALORES", String.Join(",", str));
-                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction:transaction);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
                         transaction.Commit();
                         return retorno > 0;
                     }
@@ -188,7 +199,7 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = "SELECT MAX(valor_bruto) AS maior_valor_posicao FROM (" + IPosicaoClienteService.QUERY_BASE + 
+                const string query = "SELECT MAX(valor_bruto) AS maior_valor_posicao FROM (" + IPosicaoClienteService.QUERY_BASE +
                     @"
                     WHERE
                         (@cod_distribuidor IS NULL or tbl_distribuidor.id = @cod_distribuidor)

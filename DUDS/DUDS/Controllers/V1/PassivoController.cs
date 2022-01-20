@@ -1,7 +1,5 @@
-﻿using DUDS.Models;
-using DUDS.Models.Passivo;
+﻿using DUDS.Models.Passivo;
 using DUDS.Service.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,19 +21,19 @@ namespace DUDS.Controllers.V1
         public PassivoController(IPosicaoClienteService posicaoClientePassivoService, IOrdemPassivoService ordemPassivoService, IMovimentacaoPassivoService movimentacaoPassivoService)
         {
             _posicaoClientePassivoService = posicaoClientePassivoService;
-            _ordemPassivoService= ordemPassivoService;
+            _ordemPassivoService = ordemPassivoService;
             _movimentacaoPassivoService = movimentacaoPassivoService;
         }
 
         #region Posicao Passivo
         // GET: api/PosicaoCliente/GetControleRebate
-        
+
         [HttpGet("{dataRef}")]
         public async Task<ActionResult<IEnumerable<PosicaoClienteViewModel>>> GetAllPosicaoClienteByDate(DateTime dataRef)
         {
             try
             {
-                var listaControleRebate = await _posicaoClientePassivoService.GetByParametersAsync(dataInicio: dataRef, dataFim: dataRef, codDistribuidor:null, codGestor:null, codInvestidorDistribuidor:null);
+                var listaControleRebate = await _posicaoClientePassivoService.GetByParametersAsync(dataInicio: dataRef, dataFim: dataRef, codDistribuidor: null, codGestor: null, codInvestidorDistribuidor: null);
 
                 if (listaControleRebate.Any())
                 {

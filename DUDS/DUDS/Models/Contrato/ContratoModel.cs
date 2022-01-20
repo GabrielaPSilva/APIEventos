@@ -9,7 +9,9 @@ namespace DUDS.Models.Contrato
         public int? CodDistribuidor { get; set; }
         
         public int? CodGestor { get; set; }
-        
+
+        public int? CodAdministrador { get; set; }
+
         public int CodTipoContrato { get; set; }
         
         public bool Ativo { get; set; }

@@ -727,6 +727,7 @@ namespace DUDS.Controllers.V1
 
                 if (!retorno.Any())
                 {
+                    // TODO - Arrumar esta coisa estranha
                     return CreatedAtAction(nameof(GetCalculoRebate), new { competencia = "2021-07" }, GetCalculoRebate("2021-07", null));
                 }
 
