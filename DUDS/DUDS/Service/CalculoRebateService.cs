@@ -30,7 +30,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
                         Console.WriteLine(query);
                         Console.WriteLine(item.ToString());
                         var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
@@ -73,7 +73,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", _tableName);
+                        string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", TableName);
                         var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
                         transaction.Commit();
                         return retorno > 0;
@@ -115,7 +115,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
+                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", TableName);
                 return await connection.ExecuteAsync(query, new { id }) > 0;
             }
         }
@@ -128,7 +128,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
+                        string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", TableName);
                         var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
                         transaction.Commit();
                         return retorno > 0;

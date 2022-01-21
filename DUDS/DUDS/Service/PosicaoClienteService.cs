@@ -1,7 +1,4 @@
 ﻿using Dapper;
-using Dapper.Contrib.Extensions;
-using Dapper.FluentMap;
-using Dapper.FluentMap.Dommel;
 using DUDS.Models.Passivo;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
@@ -10,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Z.BulkOperations;
 using Z.Dapper.Plus;
 
 namespace DUDS.Service
@@ -38,7 +36,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
                         var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction, commandTimeout: 180);
                         transaction.Commit();
                         return retorno > 0;
@@ -57,18 +55,34 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                try
+                using (BulkOperation<PosicaoClienteModel> bulkCopy = new BulkOperation<PosicaoClienteModel>((System.Data.Common.DbConnection)connection))
                 {
-                    DapperPlusManager.Entity<PosicaoClienteModel>().Table("tbl_posicao_cliente").Identity(x => x.Id);
-                    connection.BulkInsert(item);
-                    return item;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return new List<PosicaoClienteModel>();
+                    try
+                    {
+                        //var dataTable = ToDataTable(item);
+                        bulkCopy.DestinationTableName = TableName;
+                        //bulkCopy.AutoMapOutputIdentity = true;
+                        bulkCopy.IgnoreOnInsertExpression = c => new { c.Id };
+                        bulkCopy.BulkInsert(item);
+                        return item;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        return new List<PosicaoClienteModel>();
+                    }
+                    /*
+                    try
+                    {
+                        DapperPlusManager.Entity<PosicaoClienteModel>().Table("tbl_posicao_cliente").Identity(x => x.Id);
+                        connection.BulkInsert(item);
+                        return item;
+                    }
+
+                    */
                 }
             }
+
         }
 
         public Task<bool> DeleteAsync(int id)
@@ -172,7 +186,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
+                        string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", TableName);
                         List<string> str = new List<string>();
                         for (int i = 0; i < _propertiesUpdate.Count; i++)
                         {

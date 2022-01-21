@@ -19,7 +19,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", _tableName);
+                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", TableName);
                 return await connection.ExecuteAsync(query, new { id }) > 0;
             }
         }
@@ -28,7 +28,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
                 return await connection.ExecuteAsync(query, item) > 0;
             }
         }
@@ -42,7 +42,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", _tableName);
+                string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", TableName);
                 return await connection.ExecuteAsync(query, new { id }) > 0;
             }
         }
@@ -92,7 +92,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
+                string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", TableName);
                 List<string> str = new List<string>();
                 for (int i = 0; i < _propertiesUpdate.Count; i++)
                 {

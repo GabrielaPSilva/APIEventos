@@ -32,7 +32,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", _tableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
+                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
                         var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction, commandTimeout: 180);
                         transaction.Commit();
                         return retorno > 0;
@@ -141,7 +141,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", _tableName);
+                        string query = GenericSQLCommands.UPDATE_COMMAND.Replace("TABELA", TableName);
                         List<string> str = new List<string>();
                         for (int i = 0; i < _propertiesUpdate.Count; i++)
                         {
