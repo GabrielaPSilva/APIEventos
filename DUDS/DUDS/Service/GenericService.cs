@@ -83,7 +83,7 @@ namespace DUDS.Service
         {
             var properties = typeof(T).GetProperties();
             foreach (var info in properties)
-                if (!_ignoreFieldsInsert.Contains(info.Name)) sqlBulkCopy.ColumnMappings.Add(info.Name, info.Name) ;
+                if (_ignoreFieldsInsert.Contains(info.Name)) sqlBulkCopy.ColumnMappings.Add(info.Name, info.Name) ;
             sqlBulkCopy.DestinationTableName = TableName;
             return sqlBulkCopy;
         }

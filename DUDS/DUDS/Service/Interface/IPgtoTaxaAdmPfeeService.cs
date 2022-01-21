@@ -18,7 +18,7 @@ namespace DUDS.Service.Interface
                 INNER JOIN tbl_investidor_distribuidor ON tbl_investidor_distribuidor.Id = tbl_pgto_adm_pfee.CodInvestidorDistribuidor
                 INNER JOIN tbl_investidor ON tbl_investidor.Id = tbl_investidor_distribuidor.CodInvestidor";
 
-        Task<IEnumerable<PgtoTaxaAdmPfeeModel>> AddBulkAsync(List<PgtoTaxaAdmPfeeModel> pgtoTaxaAdmimPerf);
+        Task<IEnumerable<PgtoTaxaAdmPfeeModel>> AddBulkAsync(List<PgtoTaxaAdmPfeeModel> item);
 
         Task<IEnumerable<PgtoTaxaAdmPfeeViewModel>> GetByCompetenciaAsync(string competencia);
 

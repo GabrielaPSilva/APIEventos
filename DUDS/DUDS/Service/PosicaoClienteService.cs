@@ -7,8 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using Z.BulkOperations;
-using Z.Dapper.Plus;
+
 
 namespace DUDS.Service
 {
@@ -55,34 +54,28 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                using (BulkOperation<PosicaoClienteModel> bulkCopy = new BulkOperation<PosicaoClienteModel>((System.Data.Common.DbConnection)connection))
+                using(var transaction = connection.BeginTransaction())
                 {
                     try
                     {
-                        //var dataTable = ToDataTable(item);
-                        bulkCopy.DestinationTableName = TableName;
-                        //bulkCopy.AutoMapOutputIdentity = true;
-                        bulkCopy.IgnoreOnInsertExpression = c => new { c.Id };
-                        bulkCopy.BulkInsert(item);
+                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection, 
+                            copyOptions: SqlBulkCopyOptions.Default, 
+                            externalTransaction: (SqlTransaction)transaction);
+
+                        var dataTable = ToDataTable(item);
+                        bulkCopy = SqlBulkCopyMapping(bulkCopy);
+                        bulkCopy.WriteToServer(dataTable);
+                        transaction.Commit();
                         return item;
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
+                        transaction.Rollback();
                         return new List<PosicaoClienteModel>();
                     }
-                    /*
-                    try
-                    {
-                        DapperPlusManager.Entity<PosicaoClienteModel>().Table("tbl_posicao_cliente").Identity(x => x.Id);
-                        connection.BulkInsert(item);
-                        return item;
-                    }
-
-                    */
                 }
             }
-
         }
 
         public Task<bool> DeleteAsync(int id)

@@ -23,7 +23,7 @@ namespace DUDS.Service.Interface
         
         //Task<IEnumerable<InvestidorViewModel>> GetInvestidorByDataCriacao(DateTime dataCriacao);
         
-        Task<IEnumerable<InvestidorModel>> AddInvestidores(List<InvestidorModel> investidores);
+        Task<IEnumerable<InvestidorModel>> AddInvestidores(List<InvestidorModel> item);
 
         Task<InvestidorViewModel> GetByIdAsync(int id);
 

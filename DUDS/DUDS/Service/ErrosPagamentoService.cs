@@ -4,6 +4,7 @@ using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,16 +28,31 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddErrosPagamento(List<ErrosPagamentoModel> errosPagamento)
+        public async Task<IEnumerable<ErrosPagamentoModel>> AddErrosPagamento(List<ErrosPagamentoModel> item)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                Parallel.ForEach(errosPagamento, async x =>
+                using (var transaction = connection.BeginTransaction())
                 {
-                    _ = await AddAsync(x);
-                });
+                    try
+                    {
+                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection,
+                            copyOptions: SqlBulkCopyOptions.Default,
+                            externalTransaction: (SqlTransaction)transaction);
 
-                return GetErrosPagamentoByCompetencia(errosPagamento.FirstOrDefault().Competencia).Result.ToArray().Length == errosPagamento.Count;
+                        var dataTable = ToDataTable(item);
+                        bulkCopy = SqlBulkCopyMapping(bulkCopy);
+                        bulkCopy.WriteToServer(dataTable);
+                        transaction.Commit();
+                        return item;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return new List<ErrosPagamentoModel>();
+                    }
+                }
             }
         }
 
@@ -80,7 +96,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IErrosPagamentoService.QUERY_BASE + 
+                const string query = IErrosPagamentoService.QUERY_BASE +
                              @"
                                 WHERE
                                     erros_pagamento.Competencia = @competencia";

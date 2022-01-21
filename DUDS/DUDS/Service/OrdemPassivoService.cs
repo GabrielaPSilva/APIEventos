@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -49,15 +50,30 @@ namespace DUDS.Service
 
         public async Task<IEnumerable<OrdemPassivoModel>> AddBulkAsync(List<OrdemPassivoModel> item)
         {
-            ConcurrentBag<OrdemPassivoModel> vs = new ConcurrentBag<OrdemPassivoModel>();
-            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
-            await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var result = await AddAsync(x);
-                if (!result) { vs.Add(x); }
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection,
+                            copyOptions: SqlBulkCopyOptions.Default,
+                            externalTransaction: (SqlTransaction)transaction);
+
+                        var dataTable = ToDataTable(item);
+                        bulkCopy = SqlBulkCopyMapping(bulkCopy);
+                        bulkCopy.WriteToServer(dataTable);
+                        transaction.Commit();
+                        return item;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return new List<OrdemPassivoModel>();
+                    }
+                }
             }
-            );
-            return vs;
         }
 
         public Task<bool> DeleteAsync(int id)

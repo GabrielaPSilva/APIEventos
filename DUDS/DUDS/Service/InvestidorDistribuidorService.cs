@@ -7,6 +7,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -65,17 +66,32 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<InvestidorDistribuidorModel>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> investDistribuidor)
+        public async Task<IEnumerable<InvestidorDistribuidorModel>> AddInvestidorDistribuidores(List<InvestidorDistribuidorModel> item)
         {
-            ConcurrentBag<InvestidorDistribuidorModel> vs = new ConcurrentBag<InvestidorDistribuidorModel>();
-            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
-            await Parallel.ForEachAsync(investDistribuidor, parallelOptions, async (x, cancellationToken) =>
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var result = await AddAsync(x);
-                if (!result) { vs.Add(x); }
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection,
+                            copyOptions: SqlBulkCopyOptions.Default,
+                            externalTransaction: (SqlTransaction)transaction);
+
+                        var dataTable = ToDataTable(item);
+                        bulkCopy = SqlBulkCopyMapping(bulkCopy);
+                        bulkCopy.WriteToServer(dataTable);
+                        transaction.Commit();
+                        return item;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return new List<InvestidorDistribuidorModel>();
+                    }
+                }
             }
-            );
-            return vs;
         }
 
         public async Task<bool> DeleteAsync(int id)

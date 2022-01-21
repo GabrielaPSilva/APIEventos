@@ -16,7 +16,7 @@ namespace DUDS.Service.Interface
 
         Task<IEnumerable<ErrosPagamentoModel>> GetAllAsync();
         Task<bool> DeleteErrosPagamentoByDataAgendamento(DateTime dataAgendamento);
-        Task<bool> AddErrosPagamento(List<ErrosPagamentoModel> errosPagamento);
+        Task<IEnumerable<ErrosPagamentoModel>> AddErrosPagamento(List<ErrosPagamentoModel> item);
         Task<IEnumerable<ErrosPagamentoModel>> GetErrosPagamentoByCompetencia(string competencia);
         Task<ErrosPagamentoModel> GetByIdAsync(int id);
     }

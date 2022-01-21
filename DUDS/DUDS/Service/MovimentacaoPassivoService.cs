@@ -6,13 +6,14 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
     public class MovimentacaoPassivoService : GenericService<MovimentacaoPassivoModel>, IMovimentacaoPassivoService
     {
-        public MovimentacaoPassivoService() : base(new MovimentacaoPassivoModel(),"tbl_movimentacao_nota")
+        public MovimentacaoPassivoService() : base(new MovimentacaoPassivoModel(), "tbl_movimentacao_nota")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -50,28 +51,30 @@ namespace DUDS.Service
         public async Task<IEnumerable<MovimentacaoPassivoModel>> AddBulkAsync(List<MovimentacaoPassivoModel> item)
         {
 
-            ConcurrentBag<MovimentacaoPassivoModel> vs = new ConcurrentBag<MovimentacaoPassivoModel>();
-            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
-            await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
-            {
-                var result = await AddAsync(x);
-                if (!result) { vs.Add(x); }
-            }
-            );
-            return vs;
-            /*
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                _ = Parallel.ForEach(item, new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess }, x =>
+                using (var transaction = connection.BeginTransaction())
                 {
-                    var result = AddAsync(x);
-                    if (result.Result) { vs.Add(result.Result); }
-                });
+                    try
+                    {
+                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection,
+                            copyOptions: SqlBulkCopyOptions.Default,
+                            externalTransaction: (SqlTransaction)transaction);
 
-                // return GetInvestidorByDataCriacao(investidor.FirstOrDefault().DataCriacao).Result.ToArray().Length == investidor.Count;
-                return vs.Count == item.Count;
+                        var dataTable = ToDataTable(item);
+                        bulkCopy = SqlBulkCopyMapping(bulkCopy);
+                        bulkCopy.WriteToServer(dataTable);
+                        transaction.Commit();
+                        return item;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                        return new List<MovimentacaoPassivoModel>();
+                    }
+                }
             }
-            */
         }
 
         public Task<bool> DeleteAsync(int id)

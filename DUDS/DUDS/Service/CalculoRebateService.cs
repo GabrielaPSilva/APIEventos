@@ -8,6 +8,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -49,15 +50,30 @@ namespace DUDS.Service
 
         public async Task<IEnumerable<CalculoRebateModel>> AddBulkAsync(List<CalculoRebateModel> item)
         {
-            ConcurrentBag<CalculoRebateModel> vs = new ConcurrentBag<CalculoRebateModel>();
-            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
-            await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
+            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var result = await AddAsync(x);
-                if (!result) { vs.Add(x); }
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection,
+                            copyOptions: SqlBulkCopyOptions.Default,
+                            externalTransaction: (SqlTransaction)transaction);
+
+                        var dataTable = ToDataTable(item);
+                        bulkCopy = SqlBulkCopyMapping(bulkCopy);
+                        bulkCopy.WriteToServer(dataTable);
+                        transaction.Commit();
+                        return item;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        transaction.Rollback();
+                        return new List<CalculoRebateModel>();
+                    }
+                }
             }
-            );
-            return vs;
         }
 
         public Task<bool> UpdateAsync(CalculoRebateModel item)
