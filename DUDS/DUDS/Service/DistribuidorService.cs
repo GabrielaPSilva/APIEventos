@@ -70,9 +70,9 @@ namespace DUDS.Service
                 var query = IDistribuidorAdministradorService.QUERY_BASE +
                             @"
                               WHERE 
-	                             distribuidor.Ativo = 1
+	                             tbl_distribuidor.Ativo = 1
                               ORDER BY    
-                                 distribuidor.NomeDistribuidor";
+                                 tbl_distribuidor.NomeDistribuidor";
 
 
                 List<DistribuidorViewModel> distribuidores = await connection.QueryAsync<DistribuidorViewModel>(query) as List<DistribuidorViewModel>;
@@ -96,7 +96,7 @@ namespace DUDS.Service
                 var query = IDistribuidorAdministradorService.QUERY_BASE +
                             @"
                                WHERE 
-	                             distribuidor.Id = @id";
+	                             tbl_distribuidor.Id = @id";
 
                 DistribuidorViewModel distribuidor = await connection.QueryFirstOrDefaultAsync<DistribuidorViewModel>(query, new { id });
 
@@ -115,7 +115,7 @@ namespace DUDS.Service
                 var query = IDistribuidorAdministradorService.QUERY_BASE +
                         @"
                            WHERE 
-	                          gestor.Cnpj = @cnpj";
+	                          tbl_distribuidor.Cnpj = @cnpj";
 
                 DistribuidorViewModel distribuidor = await connection.QueryFirstOrDefaultAsync<DistribuidorViewModel>(query, new { cnpj });
                 

@@ -70,9 +70,9 @@ namespace DUDS.Service
                 var query = IDistribuidorAdministradorService.QUERY_BASE +
                             @"
                               WHERE 
-	                              distribuidor.Ativo = 1
+	                              tbl_distribuidor.Ativo = 1
                               ORDER BY    
-                                  distribuidor.NomeDistribuidor";
+                                  tbl_distribuidor.NomeDistribuidor";
 
                 return await connection.QueryAsync<DistribuidorAdministradorViewModel>(query);
             }
@@ -85,9 +85,9 @@ namespace DUDS.Service
                 var query = IDistribuidorAdministradorService.QUERY_BASE +
                             @"
                               WHERE 
-	                              distr_adm.CodDistribuidor = @id
+	                              tbl_distribuidor_administrador.CodDistribuidor = @id
                               ORDER BY    
-                                  distribuidor.NomeDistribuidor";
+                                  tbl_distribuidor.NomeDistribuidor";
 
                 return await connection.QueryAsync<DistribuidorAdministradorViewModel>(query, new { id });
             }
@@ -97,12 +97,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IDistribuidorAdministradorService.QUERY_BASE + 
+                var query = IDistribuidorAdministradorService.QUERY_BASE +
                           @"
                             WHERE 
-	                            distr_adm.Id = @id
+	                            tbl_distribuidor_administrador.Id = @id
                             ORDER BY    
-                                distribuidor.NomeDistribuidor";
+                                tbl_distribuidor.NomeDistribuidor";
 
                 return await connection.QueryFirstOrDefaultAsync<DistribuidorAdministradorViewModel>(query, new { id });
             }

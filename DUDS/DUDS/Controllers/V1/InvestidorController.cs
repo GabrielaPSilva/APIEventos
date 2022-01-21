@@ -138,7 +138,7 @@ namespace DUDS.Controllers.V1
             try
             {
                 var retorno = await _investidorService.AddInvestidores(investidores);
-                if (!retorno.Any())
+                if (retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetInvestidor), null, investidores);
                 }
@@ -324,7 +324,7 @@ namespace DUDS.Controllers.V1
             try
             {
                 var retorno = await _investidorDistribuidorService.AddInvestidorDistribuidores(investidorDistribuidor);
-                if (!retorno.Any())
+                if (retorno.Any())
                 {
                     // return CreatedAtAction(nameof(GetInvestidorDistribuidorByDataCriacao), new { data_criacao = retorno.FirstOrDefault().DataCriacao }, investidorDistribuidor);
                     return CreatedAtAction(nameof(GetInvestidorDistribuidor), null, investidorDistribuidor);

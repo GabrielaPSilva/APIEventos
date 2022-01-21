@@ -113,7 +113,7 @@ namespace DUDS.Controllers.V1
             try
             {
                 var retorno = await _posicaoClientePassivoService.AddBulkAsync(posicaoClientePassivo);
-                if (!retorno.Any())
+                if (retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetPosicaoCliente),
                         new { dataInicio = posicaoClientePassivo.FirstOrDefault().DataRef }, posicaoClientePassivo);
@@ -172,7 +172,7 @@ namespace DUDS.Controllers.V1
             try
             {
                 var retorno = await _ordemPassivoService.AddBulkAsync(ordemPassivo);
-                if (!retorno.Any())
+                if (retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetOrdemPassivo),
                         new { dataEntrada = DateTime.Today }, ordemPassivo);
@@ -231,7 +231,7 @@ namespace DUDS.Controllers.V1
             try
             {
                 var retorno = await _movimentacaoPassivoService.AddBulkAsync(movimentacaoPassico);
-                if (!retorno.Any())
+                if (retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetMovimentacaoPassivo),
                         new { dataMovimentacao = movimentacaoPassico.FirstOrDefault().DataMovimentacao }, movimentacaoPassico);
