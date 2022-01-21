@@ -12,6 +12,7 @@ namespace DUDS.Service
     public class GenericService<T>
     {
         protected string TableName { get; }
+        protected long SqlBulkCopyCount { get; set; }
 
         protected readonly List<string> _ignoreFieldsInsert = new List<string> { "'id'", "'data_criacao'", "'ativo'" };
         protected readonly List<string> _ignorePropertiesInsert = new List<string> { "Id", "DataCriacao", "Ativo" };
@@ -79,13 +80,21 @@ namespace DUDS.Service
             return dataTable;
         }
 
-        public SqlBulkCopy SqlBulkCopyMapping(SqlBulkCopy sqlBulkCopy)
+        public SqlBulkCopy SqlBulkCopyConfigure(SqlBulkCopy sqlBulkCopy, int notifyCount)
         {
             var properties = typeof(T).GetProperties();
             foreach (var info in properties)
                 if (_ignoreFieldsInsert.Contains(info.Name)) sqlBulkCopy.ColumnMappings.Add(info.Name, info.Name) ;
             sqlBulkCopy.DestinationTableName = TableName;
+            sqlBulkCopy.EnableStreaming = true;
+            sqlBulkCopy.SqlRowsCopied += new SqlRowsCopiedEventHandler(sqlBulk_SqlRowsCopied);
+            sqlBulkCopy.NotifyAfter = notifyCount;
             return sqlBulkCopy;
+        }
+
+        private void sqlBulk_SqlRowsCopied(object sender, SqlRowsCopiedEventArgs e)
+        {
+            SqlBulkCopyCount = e.RowsCopied;
         }
     }
 }
