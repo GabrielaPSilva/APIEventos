@@ -9,16 +9,16 @@ namespace DUDS.Service.Interface
 		const string QUERY_BASE = 
 			@"SELECT 
 	            tbl_fundo.*,
-	            tbl_administrador.nome_administrador,
-	            tbl_custodiante.nome_custodiante,
-	            tbl_gestor.nome_gestor,
-	            tbl_tipo_estrategia.estrategia
+	            tbl_administrador.NomeAdministrador,
+	            tbl_custodiante.NomeCustodiante,
+	            tbl_gestor.NomeGestor,
+	            tbl_tipo_estrategia.Estrategia
             FROM
 	            tbl_fundo
-		        INNER JOIN tbl_administrador ON tbl_fundo.cod_administrador = tbl_administrador.id
-		        INNER JOIN tbl_custodiante ON tbl_fundo.cod_custodiante = tbl_custodiante.id
-		        INNER JOIN tbl_gestor ON tbl_fundo.cod_gestor = tbl_gestor.id
-		        INNER JOIN tbl_tipo_estrategia ON tbl_fundo.cod_tipo_estrategia = tbl_tipo_estrategia.id";
+		        INNER JOIN tbl_administrador ON tbl_fundo.CodAdministrador = tbl_administrador.Id
+		        INNER JOIN tbl_custodiante ON tbl_fundo.CodCustodiante = tbl_custodiante.Id
+		        INNER JOIN tbl_gestor ON tbl_fundo.CodGestor = tbl_gestor.Id
+		        INNER JOIN tbl_tipo_estrategia ON tbl_fundo.CodTipoEstrategia = tbl_tipo_estrategia.Id";
 
         Task<FundoViewModel> GetFundoExistsBase(string cnpj);
 

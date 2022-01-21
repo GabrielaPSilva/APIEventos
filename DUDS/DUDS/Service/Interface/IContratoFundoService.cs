@@ -9,17 +9,17 @@ namespace DUDS.Service.Interface
 {
     public interface IContratoFundoService : IGenericOperationsService<ContratoFundoModel>
     {
-        const string QUERY_BASE = 
+        const string QUERY_BASE =
             @"SELECT 
-	            contrato_fundo.*,
-                fundo.nome_reduzido as nome_fundo,
-                tipo_condicao.tipo_condicao
+	            tbl_contrato_fundo.*,
+                fundo.NomeReduzido as NomeFundo,
+                tipo_condicao.TipoCondicao
             FROM
-	            tbl_contrato_fundo contrato_fundo
-                INNER JOIN tbl_fundo fundo ON fundo.id = contrato_fundo.cod_fundo
-                INNER JOIN tbl_tipo_condicao tipo_condicao ON tipo_condicao.id = contrato_fundo.cod_tipo_condicao
-                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrado.id = contrato_fundo.cod_sub_contrato
-                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato";
+	            tbl_contrato_fundo
+                INNER JOIN tbl_fundo ON fundo.Id = tbl_contrato_fundo.CodFundo
+                INNER JOIN tbl_tipo_condicao ON tbl_tipo_condicao.Id = tbl_contrato_fundo.CodTipoCondicao
+                INNER JOIN tbl_sub_contrato ON tbl_sub_contrato.Id = tbl_contrato_fundo.CodSubContrato
+                INNER JOIN tbl_contrato ON tbl_contrato.Id = tbl_sub_contrato.CodContrato";
 
         Task<IEnumerable<ContratoFundoViewModel>> GetContratoFundoBySubContratoAsync(int id);
 

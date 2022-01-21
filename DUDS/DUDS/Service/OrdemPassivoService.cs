@@ -79,8 +79,8 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        const string query = "DELETE FROM tbl_ordem_passivo WHERE data_entrada = @data_entrada";
-                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { data_entrada = dataEntrada }, transaction: transaction);
+                        const string query = "DELETE FROM tbl_ordem_passivo WHERE DataEntrada = @DataEntrada";
+                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { DataEntrada = dataEntrada }, transaction: transaction);
                         transaction.Commit();
                         return rowsAffected > 0 && rowsAffected == result.Count;
                     }
@@ -108,16 +108,16 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IOrdemPassivoService.QUERY_BASE + 
+                const string query = IOrdemPassivoService.QUERY_BASE +
                     @"
                     WHERE
-                        (@data_entrada IS NULL OR tbl_ordem_passivo.data_entrada = @data_entrada)
+                        (@DataEntrada IS NULL OR tbl_ordem_passivo.DataEntrada = @DataEntrada)
                     ORDER BY
-                        tbl_fundo.nome_reduzido,
-	                    tbl_investidor.nome_investidor,
-                        tbl_ordem_passivo.descricao_operacao";
+                        tbl_fundo.NomeReduzido,
+	                    tbl_investidor.NomeInvestidor,
+                        tbl_ordem_passivo.DescricaoOperacao";
 
-                return await connection.QueryAsync<OrdemPassivoViewModel>(query, new { data_entrada = dataEntrada });
+                return await connection.QueryAsync<OrdemPassivoViewModel>(query, new { DataEntrada = dataEntrada });
             }
         }
 

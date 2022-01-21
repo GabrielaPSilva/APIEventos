@@ -11,15 +11,15 @@ namespace DUDS.Service.Interface
             @"
             SELECT
 	            tbl_ordem_passivo.*,
-	            tbl_fundo.nome_reduzido AS nome_fundo,
-	            tbl_investidor.nome_investidor,
-	            tbl_administrador.nome_administrador
+	            tbl_fundo.NomeReduzido AS NomeFundo,
+	            tbl_investidor.NomeInvestidor,
+	            tbl_administrador.NomeAdministrador
             FROM
 	            tbl_ordem_passivo
-		        INNER JOIN tbl_fundo ON tbl_ordem_passivo.cod_fundo = tbl_fundo.id
-                INNER JOIN tbl_investidor_distribuidor ON tbl_ordem_passivo.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
-		        INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-		        INNER JOIN tbl_administrador ON tbl_ordem_passivo.cod_administrador = tbl_administrador.id";
+		        INNER JOIN tbl_fundo ON tbl_ordem_passivo.CodFundo = tbl_fundo.Id
+                INNER JOIN tbl_investidor_distribuidor ON tbl_ordem_passivo.CodInvestidorDistribuidor = tbl_investidor_distribuidor.Id
+		        INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.CodInvestidor = tbl_investidor.Id
+		        INNER JOIN tbl_administrador ON tbl_ordem_passivo.CodAdministrador = tbl_administrador.Id";
 
         Task<bool> DeleteByDataRefAsync(DateTime dataRef);
 

@@ -7,13 +7,13 @@ namespace DUDS.Service.Interface
     public interface IContratoAlocadorService : IGenericOperationsService<ContratoAlocadorModel>
     {
         const string QUERY_BASE = @"SELECT 
-	                            contrato_alocador.*,
-                                investidor.nome_investidor
+	                            tbl_contrato_alocador.*,
+                                investidor.NomeInvestidor
                              FROM
-	                            tbl_contrato_alocador contrato_alocador
-                                INNER JOIN tbl_investidor investidor ON contrato.id = contrato_alocador.cod_investidor
-                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_alocador.cod_sub_contrato
-                                INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato";
+	                            tbl_contrato_alocador 
+                                INNER JOIN tbl_investidor ON tbl_investidor.Id = tbl_contrato_alocador.CodInvestidor
+                                INNER JOIN tbl_sub_contrato ON tbl_sub_contrato.Id = tbl_contrato_alocador.CodSubContrato
+                                INNER JOIN tbl_contrato ON tbl_contrato.Id = tbl_sub_contrato.CodContrato";
 
         Task<IEnumerable<ContratoAlocadorViewModel>> GetContratoAlocadorByCodSubContratoAsync(int id);
 

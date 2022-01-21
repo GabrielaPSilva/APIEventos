@@ -11,14 +11,14 @@ namespace DUDS.Service.Interface
     {
         const string QUERY_BASE = @"SELECT
 										tbl_contas.*,
-										tbl_fundo.nome_reduzido,
-										tbl_investidor.nome_investidor,
-										tbl_tipo_conta.tipo_conta
+										tbl_fundo.NomeReduzido,
+										tbl_investidor.NomeInvestidor,
+										tbl_tipo_conta.TipoConta
 									FROM
 										tbl_contas
-											LEFT JOIN tbl_fundo ON tbl_contas.cod_fundo = tbl_fundo.id
-											LEFT JOIN tbl_investidor ON tbl_contas.cod_investidor = tbl_investidor.id
-											INNER JOIN tbl_tipo_conta ON tbl_contas.cod_tipo_conta = tbl_tipo_conta.id";
+											LEFT JOIN tbl_fundo ON tbl_contas.CodFundo = tbl_fundo.Id
+											LEFT JOIN tbl_investidor ON tbl_contas.CodInvestidor = tbl_investidor.Id
+											INNER JOIN tbl_tipo_conta ON tbl_contas.CodTipoConta = tbl_tipo_conta.Id";
 
 		Task<IEnumerable<ContaViewModel>> GetAllAsync();
 		Task<ContaViewModel> GetByIdAsync(int id);

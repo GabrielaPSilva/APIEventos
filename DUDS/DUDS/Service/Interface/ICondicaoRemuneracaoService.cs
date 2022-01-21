@@ -7,15 +7,15 @@ namespace DUDS.Service.Interface
     public interface ICondicaoRemuneracaoService : IGenericOperationsService<CondicaoRemuneracaoModel>
     {
         const string QUERY_BASE = @"SELECT 
-	                                    condicao_remuneracao.*,
-	                                    fundo.nome_reduzido as nome_fundo
+	                                    tbl_condicao_remuneracao.*,
+	                                    tbl_fundo.NomeReduzido as NomeFundo
                                     FROM
-	                                    tbl_condicao_remuneracao condicao_remuneracao
-	                                        INNER JOIN tbl_fundo fundo ON fundo.id = condicao_remuneracao.cod_fundo
-                                            INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.id = condicao_remuneracao.cod_contrato_remuneracao
-                                            INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.id = contrato_remuneracao.cod_contrato_fundo
-                                            INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_fundo.cod_sub_contrato
-                                            INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato";
+	                                    tbl_condicao_remuneracao
+	                                        INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_condicao_remuneracao.CodFundo
+                                            INNER JOIN tbl_contrato_remuneracao ON tbl_contrato_remuneracao.Id = tbl_condicao_remuneracao.CodContratoRemuneracao
+                                            INNER JOIN tbl_contrato_fundo ON tbl_contrato_fundo.Id = tbl_contrato_remuneracao.CodContratoFundo
+                                            INNER JOIN tbl_sub_contrato ON tbl_sub_contrato.Id = tbl_contrato_fundo.CodSubContrato
+                                            INNER JOIN tbl_contrato ON tbl_contrato.Id = tbl_sub_contrato.CodContrato";
 
         Task<IEnumerable<CondicaoRemuneracaoViewModel>> GetContratoRemuneracaoByIdAsync(int id);
         Task<CondicaoRemuneracaoViewModel> GetByIdAsync(int id);

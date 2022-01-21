@@ -7,12 +7,12 @@ namespace DUDS.Service.Interface
     public interface IContratoRemuneracaoService : IGenericOperationsService<ContratoRemuneracaoModel>
     {
         const string QUERIY_BASE = @"SELECT 
-	                                    contrato_remuneracao.*
+	                                    tbl_contrato_remuneração.*
                                      FROM
-	                                    tbl_contrato_remuneração contrato_remuneracao
-                                        INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.id = contrato_remuneracao.cod_contrato_fundo
-                                        INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.id = contrato_fundo.cod_sub_contrato
-                                        INNER JOIN tbl_contrato contrato ON contrato.id = sub_contrato.cod_contrato";
+	                                    tbl_contrato_remuneração
+                                        INNER JOIN tbl_contrato_fundo ON tbl_contrato_fundo.Id = tbl_contrato_remuneração.CodContratoFundo
+                                        INNER JOIN tbl_sub_contrato ON tbl_sub_contrato.id = tbl_contrato_fundo.CodSubContrato
+                                        INNER JOIN tbl_contrato ON tbl_contrato.Id = tbl_sub_contrato.CodContrato";
 
         Task<IEnumerable<ContratoRemuneracaoViewModel>> GetContratoRemuneracaoByContratoFundoAsync(int id);
 

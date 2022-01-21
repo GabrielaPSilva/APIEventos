@@ -56,10 +56,10 @@ namespace DUDS.Service
                 const string query = ITipoContaService.QUERY_BASE +
                     @"
                     WHERE 
-                        ativo = 1
+                        Ativo = 1
                     ORDER BY    
-                         tipo_conta,
-                         descricao_conta";
+                         TipoConta,
+                         DescricaoConta";
 
                 return await connection.QueryAsync<TipoContaModel>(query);
             }
@@ -72,9 +72,9 @@ namespace DUDS.Service
                 const string query = ITipoContaService.QUERY_BASE +
                     @"
                     WHERE 
-                         id = @id";
+                         Id = @Id";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoContaModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<TipoContaModel>(query, new { Id = id });
             }
         }
 
@@ -82,13 +82,13 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ITipoContaService.QUERY_BASE + 
+                const string query = ITipoContaService.QUERY_BASE +
                     @"
                     WHERE 
-                        tipo_conta = @tipo_conta AND
-                        descricao_conta = @descricao_conta";
+                        TipoConta = @TipoConta AND
+                        DescricaoConta = @DescricaoConta";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoContaModel>(query, new { tipo_conta = tipoConta, descricao_conta = descricaoConta });
+                return await connection.QueryFirstOrDefaultAsync<TipoContaModel>(query, new { TipoConta = tipoConta, DescricaoConta = descricaoConta });
             }
         }
 

@@ -32,7 +32,7 @@ namespace DUDS.Service
                 string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
                 return await connection.ExecuteAsync(query, tipoEstrategia) > 0;
             }
-            
+
         }
 
         public Task<bool> DeleteAsync(int id)
@@ -54,12 +54,12 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
 
-                const string query = ITipoEstrategiaService.QUERY_BASE + 
+                const string query = ITipoEstrategiaService.QUERY_BASE +
                     @"
                     WHERE 
-                        ativo = 1
+                        Ativo = 1
                     ORDER BY    
-                        estrategia";
+                        Estrategia";
 
                 return await connection.QueryAsync<TipoEstrategiaModel>(query);
             }
@@ -69,12 +69,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ITipoEstrategiaService.QUERY_BASE + 
+                const string query = ITipoEstrategiaService.QUERY_BASE +
                     @"
                     WHERE 
-                        id = @id";
+                        Id = @Id";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoEstrategiaModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<TipoEstrategiaModel>(query, new { Id = id });
             }
         }
 
@@ -82,12 +82,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ITipoEstrategiaService.QUERY_BASE + 
+                const string query = ITipoEstrategiaService.QUERY_BASE +
                     @"
                     WHERE 
-                        estrategia = @estrategia";
+                        Estrategia = @Estrategia";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoEstrategiaModel>(query, new { estrategia });
+                return await connection.QueryFirstOrDefaultAsync<TipoEstrategiaModel>(query, new { Estrategia = estrategia });
             }
         }
 

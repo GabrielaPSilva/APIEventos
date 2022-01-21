@@ -51,10 +51,10 @@ namespace DUDS.Service
                 const string query = ISubContratoService.QUERY_BASE +
                     @"
                     WHERE
-                        contrato.ativo = 1 AND
-                        sub_contrato.status = 'Ativo'
+                        tbl_contrato.Ativo = 1 AND
+                        tbl_sub_contrato.Status = 'Ativo'
                     ORDER BY
-                        contrato.id";
+                        tbl_contrato.Id";
 
                 return await connection.QueryAsync<SubContratoViewModel>(query);
             }
@@ -67,9 +67,9 @@ namespace DUDS.Service
                 const string query = ISubContratoService.QUERY_BASE +
                     @"
                     WHERE
-                        id = @id";
+                        Id = @Id";
 
-                return await connection.QueryFirstOrDefaultAsync<SubContratoViewModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<SubContratoViewModel>(query, new { Id = id });
             }
         }
 
@@ -80,12 +80,12 @@ namespace DUDS.Service
                 const string query = ISubContratoService.QUERY_BASE +
                     @"
                     WHERE
-                        contrato.id = @cod_contrato
+                        tbl_contrato.Id = @Id
                     ORDER BY
-                        contrato.id";
+                        tbl_contrato.Id";
 
                 // TODO - VOLTAR AQUI SEM FALTA
-                List<SubContratoViewModel> subContratoModels = await connection.QueryAsync<SubContratoViewModel>(query, new { cod_contrato = codContrato }) as List<SubContratoViewModel>;
+                List<SubContratoViewModel> subContratoModels = await connection.QueryAsync<SubContratoViewModel>(query, new { Id = codContrato }) as List<SubContratoViewModel>;
 
                 /*
                 ContratoAlocadorService contratoAlocadorService = new ContratoAlocadorService();

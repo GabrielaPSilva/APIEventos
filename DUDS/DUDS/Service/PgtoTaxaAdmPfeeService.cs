@@ -12,7 +12,7 @@ namespace DUDS.Service
 {
     public class PgtoTaxaAdmPfeeService : GenericService<PgtoTaxaAdmPfeeModel>, IPgtoTaxaAdmPfeeService
     {
-        public PgtoTaxaAdmPfeeService() : base(new PgtoTaxaAdmPfeeModel(),"tbl_pgto_adm_pfee")
+        public PgtoTaxaAdmPfeeService() : base(new PgtoTaxaAdmPfeeModel(), "tbl_pgto_adm_pfee")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -31,7 +31,7 @@ namespace DUDS.Service
                     try
                     {
                         string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction,commandTimeout:180);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction, commandTimeout: 180);
                         transaction.Commit();
                         return retorno > 0;
                     }
@@ -67,7 +67,7 @@ namespace DUDS.Service
                     try
                     {
                         string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", TableName);
-                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction,commandTimeout:180);
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction, commandTimeout: 180);
                         transaction.Commit();
                         return retorno > 0;
                     }
@@ -98,13 +98,13 @@ namespace DUDS.Service
                 const string query = IPgtoTaxaAdmPfeeService.QUERY_BASE +
                     @"
                     WHERE
-                        pgto_adm_pfee.id = @id
+                        tbl_pgto_adm_pfee.Id = @Id
                     ORDER BY
-                        pgto_adm_pfee.competencia,
-                        fundo.nome_reduzido,
-                        investidor.nome_investidor";
+                        tbl_pgto_adm_pfee.Competencia,
+                        tbl_fundo.NomeReduzido,
+                        tbl_investidor.NomeInvestidor";
 
-                return await connection.QueryFirstOrDefaultAsync<PgtoTaxaAdmPfeeViewModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<PgtoTaxaAdmPfeeViewModel>(query, new { Id = id });
             }
         }
 
@@ -112,25 +112,31 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IPgtoTaxaAdmPfeeService.QUERY_BASE + 
+                const string query = IPgtoTaxaAdmPfeeService.QUERY_BASE +
                     @"
                     WHERE
-                        (@competencia IS NULL OR pgto_adm_pfee.competencia = @competencia)
-                        AND (@cod_fundo IS NULL OR pgto_adm_pfee.cod_fundo = @cod_fundo)
-                        AND (@cod_administrador IS NULL OR pgto_adm_pfee.cod_administrador = @cod_administrador)
-                        AND (@cod_investidor_distribuidor IS NULL OR pgto_adm_pfee.cod_investidor_distribuidor = @cod_investidor_distribuidor)
+                        (@Competencia IS NULL OR tbl_pgto_adm_pfee.Competencia = @Competencia)
+                        AND (@CodFundo IS NULL OR tbl_pgto_adm_pfee.CodFundo = @CodFundo)
+                        AND (@CodAdministrador IS NULL OR tbl_pgto_adm_pfee.CodAdministrador = @CodAdministrador)
+                        AND (@CodInvestidorDistribuidor IS NULL OR tbl_pgto_adm_pfee.CodInvestidorDistribuidor = @CodInvestidorDistribuidor)
                     ORDER BY
-                        pgto_adm_pfee.competencia,
-                        fundo.nome_reduzido,
-                        investidor.nome_investidor";
+                        tbl_pgto_adm_pfee.Competencia,
+                        tbl_fundo.NomeReduzido,
+                        tbl_investidor.NomeInvestidor";
 
-                return await connection.QueryAsync<PgtoTaxaAdmPfeeViewModel>(query, new { competencia, cod_fundo = codFundo, cod_administrador = codAdministrador, cod_investidor_distribuidor = codInvestidorDistribuidor });
+                return await connection.QueryAsync<PgtoTaxaAdmPfeeViewModel>(query, new
+                {
+                    Competencia = competencia,
+                    CodFundo = codFundo,
+                    CodAdministrador = codAdministrador,
+                    CodInvestidorDistribuidor = codInvestidorDistribuidor
+                });
             }
         }
 
         public async Task<IEnumerable<PgtoTaxaAdmPfeeViewModel>> GetByCompetenciaAsync(string competencia)
         {
-            return await GetByParametersAsync(competencia:competencia,codFundo:null,codAdministrador:null,codInvestidorDistribuidor:null);
+            return await GetByParametersAsync(competencia: competencia, codFundo: null, codAdministrador: null, codInvestidorDistribuidor: null);
         }
 
         public Task<bool> UpdateAsync(PgtoTaxaAdmPfeeModel item)
@@ -146,8 +152,8 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        const string query = "DELETE FROM tbl_pgto_adm_pfee WHERE competencia = @competencia";
-                        var retorno = await connection.ExecuteAsync(sql: query, param: new { competencia }, transaction:transaction,commandTimeout:180);
+                        const string query = "DELETE FROM tbl_pgto_adm_pfee WHERE Competencia = @Competencia";
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { Competencia = competencia }, transaction: transaction, commandTimeout: 180);
                         transaction.Commit();
                         return retorno > 0;
                     }
@@ -167,34 +173,34 @@ namespace DUDS.Service
             {
                 const string query = @"
                                     SELECT
-                                        pgto_adm_pfee.id,
-	                                    pgto_adm_pfee.competencia,
-	                                    pgto_adm_pfee.cod_fundo,
-	                                    fundo.nome_reduzido AS nome_fundo,
-	                                    pgto_adm_pfee.cod_administrador AS source_administrador,
-	                                    source_administrador.nome_administrador AS nome_source_administrador,
-	                                    pgto_adm_pfee.taxa_administracao,
-	                                    pgto_adm_pfee.taxa_performance_apropriada,
-	                                    pgto_adm_pfee.taxa_performance_resgate,
-	                                    investidor_distribuidor.cod_invest_administrador AS cod_investidor_administrador,
-	                                    investidor_distribuidor.cod_investidor,
-                                        investidor_distribuidor.id AS cod_investidor_distribuidor,
-	                                    investidor_distribuidor.cod_distribuidor_administrador AS cod_distribuidor_administrador_investidor,
-                                        distribuidor_administrador_investidor.cod_distribuidor AS cod_distribuidor_investidor,
-	                                    distribuidor_investidor.nome_distribuidor AS nome_distribuidor_investidor,
-	                                    investidor_distribuidor.cod_administrador AS cod_administrador_codigo_investidor,
-	                                    administrador_codigo_investidor.nome_administrador AS nome_administrador_codigo_investidor,
-	                                    investidor.nome_investidor,
-	                                    investidor.cnpj,
-	                                    investidor.tipo_investidor AS tipo_cliente,
-	                                    investidor_distribuidor.cod_tipo_contrato,
-	                                    tipo_contrato.tipo_contrato,
-	                                    investidor_distribuidor.cod_grupo_rebate,
-	                                    grupo_rebate.nome_grupo_rebate,
-	                                    investidor.cod_administrador AS cod_administrador_investidor,
-	                                    administrador_investidor.nome_administrador AS nome_administrador_investidor,
-	                                    investidor.cod_gestor AS cod_gestor_investidor,
-	                                    gestor.nome_gestor AS nome_gestor_investidor
+                                        pgto_adm_pfee.Id,
+	                                    pgto_adm_pfee.Competencia,
+	                                    pgto_adm_pfee.CodFundo,
+	                                    fundo.NomeReduzido AS NomeFundo,
+	                                    pgto_adm_pfee.CodAdministrador AS SourceAdministrador,
+	                                    source_administrador.NomeAdministrador AS NomeSourceAdministrador,
+	                                    pgto_adm_pfee.TaxaAdministracao,
+	                                    pgto_adm_pfee.TaxaPerformanceApropriada,
+	                                    pgto_adm_pfee.TaxaPerformanceResgate,
+	                                    investidor_distribuidor.CodInvestAdministrador AS CodInvestidorAdministrador,
+	                                    investidor_distribuidor.CodInvestidor,
+                                        investidor_distribuidor.Id AS CodInvestidorDistribuidor,
+	                                    investidor_distribuidor.CodDistribuidorAdministrador AS CodDistribuidorAdministradorInvestidor,
+                                        distribuidor_administrador_investidor.CodDistribuidor AS CodDistribuidorInvestidor,
+	                                    distribuidor_investidor.NomeDistribuidor AS NomeDistribuidorInvestidor,
+	                                    investidor_distribuidor.CodAdministrador AS CodAdministradorCodigoInvestidor,
+	                                    administrador_codigo_investidor.NomeAdministrador AS NomeAdministradorCodigoInvestidor,
+	                                    investidor.NomeInvestidor,
+	                                    investidor.Cnpj,
+	                                    investidor.TipoInvestidor AS TipoCliente,
+	                                    investidor_distribuidor.CodTipoContrato,
+	                                    tipo_contrato.TipoContrato,
+	                                    investidor_distribuidor.CodGrupoRebate,
+	                                    grupo_rebate.NomeGrupoRebate,
+	                                    investidor.CodAdministrador AS CodAdministradorInvestidor,
+	                                    administrador_investidor.NomeAdministrador AS NomeAdministradorInvestidor,
+	                                    investidor.CodGestor AS CodGestorInvestidor,
+	                                    gestor.NomeGestor AS NomeGestorInvestidor
                                     FROM
 	                                    tbl_pgto_adm_pfee pgto_adm_pfee
 	                                    INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pgto_adm_pfee.cod_investidor_distribuidor
@@ -209,9 +215,9 @@ namespace DUDS.Service
 	                                    LEFT JOIN tbl_administrador administrador_investidor ON administrador_investidor.id = investidor.cod_administrador
 	                                    LEFT JOIN tbl_gestor gestor ON gestor.id = investidor.cod_gestor
                                     WHERE
-	                                    pgto_adm_pfee.competencia = @competencia";
+	                                    pgto_adm_pfee.Competencia = @Competencia";
 
-                return await connection.QueryAsync<PgtoAdmPfeeInvestidorViewModel>(query, new { competencia });
+                return await connection.QueryAsync<PgtoAdmPfeeInvestidorViewModel>(query, new { Competencia = competencia });
             }
         }
     }

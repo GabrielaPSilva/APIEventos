@@ -56,9 +56,9 @@ namespace DUDS.Service
                 const string query = ITipoClassificacaoService.QUERY_BASE +
                     @"
                     WHERE 
-                        ativo = 1
+                        Ativo = 1
                     ORDER BY    
-                        classificacao";
+                        Classificacao";
 
                 return await connection.QueryAsync<TipoClassificacaoModel>(query);
             }
@@ -68,12 +68,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ITipoClassificacaoService.QUERY_BASE + 
+                const string query = ITipoClassificacaoService.QUERY_BASE +
                     @"
                     WHERE 
-                        id = @id";
+                        Id = @Id";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoClassificacaoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<TipoClassificacaoModel>(query, new { Id = id });
             }
         }
 
@@ -81,12 +81,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ITipoClassificacaoService.QUERY_BASE + 
+                const string query = ITipoClassificacaoService.QUERY_BASE +
                     @"
                     WHERE 
-                        classificacao = @classificacao";
+                        Classificacao = @Classificacao";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoClassificacaoModel>(query, new { classificacao });
+                return await connection.QueryFirstOrDefaultAsync<TipoClassificacaoModel>(query, new { Classificacao = classificacao });
             }
         }
 

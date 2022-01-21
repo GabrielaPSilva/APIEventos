@@ -89,8 +89,8 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        const string query = "DELETE FROM tbl_movimentacao_passivo WHERE data_movimentacao = @data_movimentacao";
-                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { data_movimentacao = dataMovimentacao }, transaction: transaction);
+                        const string query = "DELETE FROM tbl_movimentacao_passivo WHERE DataMovimentacao = @DataMovimentacao";
+                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { DataMovimentacao = dataMovimentacao }, transaction: transaction);
                         transaction.Commit();
                         return rowsAffected > 0 && rowsAffected == result.Count;
                     }
@@ -118,16 +118,16 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IMovimentacaoPassivoService.QUERY_BASE + 
+                const string query = IMovimentacaoPassivoService.QUERY_BASE +
                     @"
                     WHERE
-                        (@data_movimentacao IS NULL OR tbl_ordem_passivo.data_movimentacao = @data_movimentacao)
+                        (@DataMovimentacao IS NULL OR tbl_movimentacao_passivo.DataMovimentacao = @DataMovimentacao)
                     ORDER BY
-                        tbl_fundo.nome_reduzido,
-	                    tbl_investidor.nome_investidor,
-                        tbl_ordem_passivo.tipo_movimentacao";
+                        tbl_fundo.NomeReduzido,
+	                    tbl_investidor.NomeInvestidor,
+                        tbl_ordem_passivo.TipoMovimentacao";
 
-                return await connection.QueryAsync<MovimentacaoPassivoViewModel>(query, new { data_movimentacao = dataMovimentacao });
+                return await connection.QueryAsync<MovimentacaoPassivoViewModel>(query, new { DataMovimentacao = dataMovimentacao });
             }
         }
 

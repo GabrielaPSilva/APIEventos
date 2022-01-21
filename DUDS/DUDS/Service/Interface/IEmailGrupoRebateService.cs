@@ -10,10 +10,10 @@ namespace DUDS.Service.Interface
     {
         const string QUERY_BASE = @"SELECT 
 	                                    tbl_email_grupo_rebate.*,
-	                                    tbl_grupo_rebate.nome_grupo_rebate
+	                                    tbl_grupo_rebate.NomeGrupoRebate
                                     FROM 
 	                                    tbl_email_grupo_rebate
-		                                    INNER JOIN tbl_grupo_rebate ON tbl_email_grupo_rebate.cod_grupo_rebate = tbl_grupo_rebate.id";
+		                                    INNER JOIN tbl_grupo_rebate ON tbl_email_grupo_rebate.CodGrupoRebate = tbl_grupo_rebate.Id";
 
         Task<EmailGrupoRebateViewModel> GetByIdAsync(int id);
         Task<IEnumerable<EmailGrupoRebateViewModel>> GetAllAsync();

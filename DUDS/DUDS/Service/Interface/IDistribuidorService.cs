@@ -7,12 +7,12 @@ namespace DUDS.Service.Interface
     public interface IDistribuidorService : IGenericOperationsService<DistribuidorModel>
     {
         const string QUERY_BASE = @"SELECT
-                                        distribuidor.*,
-                                        tipo_classificacao.classificacao
+                                        tbl_distribuidor.*,
+                                        tbl_tipo_classificacao.Classificacao
                                     FROM
-	                                    tbl_distribuidor distribuidor
-                                            INNER JOIN tbl_tipo_classificacao tipo_classificacao 
-                                                ON distribuidor.cod_tipo_classificacao = tipo_classificacao.id";
+	                                    tbl_distribuidor
+                                            INNER JOIN tbl_tipo_classificacao 
+                                                ON tbl_distribuidor.CodTipoClassificacao = tbl_tipo_classificacao.Id";
 
         Task<IEnumerable<DistribuidorViewModel>> GetAllAsync();
         Task<DistribuidorViewModel> GetByIdAsync(int id);

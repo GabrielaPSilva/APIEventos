@@ -107,12 +107,12 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IInvestidorService.QUERY_BASE + 
+                const string query = IInvestidorService.QUERY_BASE +
                     @"
                     WHERE
-	                    tbl_investidor.ativo = 1
+	                    tbl_investidor.Ativo = 1
                     ORDER BY
-	                    tbl_investidor.nome_investidor";
+	                    tbl_investidor.NomeInvestidor";
 
                 investidores = await connection.QueryAsync<InvestidorModel>(query) as List<InvestidorModel>;
                 return investidores;
@@ -123,12 +123,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IInvestidorService.QUERY_BASE + 
+                const string query = IInvestidorService.QUERY_BASE +
                     @"
                     WHERE 
-	                    tbl_investidor.id = @id";
+	                    tbl_investidor.Id = @Id";
 
-                InvestidorViewModel investidor = await connection.QueryFirstOrDefaultAsync<InvestidorViewModel>(query, new { id });
+                InvestidorViewModel investidor = await connection.QueryFirstOrDefaultAsync<InvestidorViewModel>(query, new { Id = id });
 
                 /*
                 if (investidor != null)
@@ -147,10 +147,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IInvestidorService.QUERY_BASE + 
+                const string query = IInvestidorService.QUERY_BASE +
                     @"
                     WHERE 
-	                    tbl_investidor.cnpj = @cnpj";
+	                    tbl_investidor.Cnpj = @Cnpj";
 
                 InvestidorViewModel investidor = await connection.QueryFirstOrDefaultAsync<InvestidorViewModel>(query, new { cnpj });
 

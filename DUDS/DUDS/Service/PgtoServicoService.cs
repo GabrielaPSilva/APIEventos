@@ -12,7 +12,7 @@ namespace DUDS.Service
 {
     public class PgtoServicoService : GenericService<PgtoServicoModel>, IPgtoServicoService
     {
-        public PgtoServicoService() : base(new PgtoServicoModel(),"tbl_pagamento_servico")
+        public PgtoServicoService() : base(new PgtoServicoModel(), "tbl_pagamento_servico")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -89,8 +89,8 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        const string query = "DELETE FROM tbl_pagamento_servico WHERE competencia = @competencia";
-                        var retorno = await connection.ExecuteAsync(sql: query, param: new { competencia }, transaction: transaction);
+                        const string query = "DELETE FROM tbl_pagamento_servico WHERE Competencia = @Competencia";
+                        var retorno = await connection.ExecuteAsync(sql: query, param: new { Competencia = competencia }, transaction: transaction);
                         transaction.Commit();
                         return retorno > 0;
                     }
@@ -113,11 +113,11 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IPgtoServicoService.QUERY_BASE + 
+                const string query = IPgtoServicoService.QUERY_BASE +
                     @"
                     ORDER BY
-                        pagamento_servico.competencia,
-                        fundo.nome_reduzido";
+                        tbl_pagamento_servico.Competencia,
+                        tbl_fundo.NomeReduzido";
 
                 return await connection.QueryAsync<PgtoServicoViewModel>(query);
             }
@@ -127,12 +127,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IPgtoServicoService.QUERY_BASE + 
+                const string query = IPgtoServicoService.QUERY_BASE +
                     @"
                     WHERE
-                        pagamento_servico.id = @id";
+                        tbl_pagamento_servico.Id = @Id";
 
-                return await connection.QueryFirstOrDefaultAsync<PgtoServicoViewModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<PgtoServicoViewModel>(query, new { Id = id });
             }
         }
 
@@ -140,13 +140,13 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IPgtoServicoService.QUERY_BASE + 
+                const string query = IPgtoServicoService.QUERY_BASE +
                     @"
                     WHERE
-                        pagamento_servico.cod_fundo = @cod_fundo
-                        AND pagamento_servico.competencia = @competencia";
+                        tbl_pagamento_servico.CodFundo = @CodFundo
+                        AND tbl_pagamento_servico.Competencia = @Competencia";
 
-                return await connection.QueryAsync<PgtoServicoViewModel>(query, new { cod_fundo = codFundo, competencia });
+                return await connection.QueryAsync<PgtoServicoViewModel>(query, new { CodFundo = codFundo, Competencia = competencia });
             }
         }
 
@@ -154,12 +154,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IPgtoServicoService.QUERY_BASE + 
+                const string query = IPgtoServicoService.QUERY_BASE +
                     @"
                     WHERE
-                        pagamento_servico.competencia = @competencia";
+                        tbl_pagamento_servico.Competencia = @Competencia";
 
-                return await connection.QueryAsync<PgtoServicoViewModel>(query, new { competencia });
+                return await connection.QueryAsync<PgtoServicoViewModel>(query, new { Competencia = competencia });
             }
         }
 

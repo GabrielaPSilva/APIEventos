@@ -56,9 +56,9 @@ namespace DUDS.Service
                 const string query = ITipoContratoService.QUERY_BASE +
                     @"
                     WHERE 
-	                    ativo = 1
+	                    Ativo = 1
                     ORDER BY    
-                        tipo_contrato";
+                        TipoContrato";
 
                 return await connection.QueryAsync<TipoContratoModel>(query);
             }
@@ -68,12 +68,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ITipoContratoService.QUERY_BASE + 
+                const string query = ITipoContratoService.QUERY_BASE +
                     @"
                     WHERE 
-	                    id = @id";
+	                    Id = @Id";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoContratoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<TipoContratoModel>(query, new { Id = id });
             }
         }
 
@@ -81,12 +81,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ITipoContratoService.QUERY_BASE + 
+                const string query = ITipoContratoService.QUERY_BASE +
                     @"
                     WHERE 
-                        tipo_contrato = @tipo_contrato";
+                        TipoContrato = @TipoContrato";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoContratoModel>(query, new { tipo_contrato = tipoContrato });
+                return await connection.QueryFirstOrDefaultAsync<TipoContratoModel>(query, new { TipoContrato = tipoContrato });
             }
         }
 

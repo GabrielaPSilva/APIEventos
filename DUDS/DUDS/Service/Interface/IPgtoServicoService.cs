@@ -6,13 +6,13 @@ namespace DUDS.Service.Interface
 {
     public interface IPgtoServicoService : IGenericOperationsService<PgtoServicoModel>
     {
-        const string QUERY_BASE = 
+        const string QUERY_BASE =
             @"SELECT 
-	            pagamento_servico.*,
-                fundo.nome_reduzido as nome_fundo
+	            tbl_pagamento_servico.*,
+                tbl_fundo.NomeReduzido as NomeFundo
             FROM
-	            tbl_pagamento_servico pagamento_servico
-                INNER JOIN tbl_fundo fundo ON fundo.id = pagamento_servico.cod_fundo";
+	            tbl_pagamento_servico
+                INNER JOIN tbl_fundo fundo ON tbl_fundo.Id = tbl_pagamento_servico.CodFundo";
 
         Task<bool> DeleteByCompetenciaAsync(string competencia);
 

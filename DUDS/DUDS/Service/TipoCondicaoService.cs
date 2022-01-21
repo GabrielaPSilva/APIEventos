@@ -53,12 +53,12 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
 
-                const string query = ITipoCondicaoService.QUERY_BASE + 
+                const string query = ITipoCondicaoService.QUERY_BASE +
                     @"
                     WHERE 
-	                    ativo = 1
+	                    Ativo = 1
                     ORDER BY    
-                        tipo_condicao";
+                        TipoCondicao";
 
                 return await connection.QueryAsync<TipoCondicaoModel>(query);
             }
@@ -68,12 +68,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ITipoCondicaoService.QUERY_BASE + 
+                const string query = ITipoCondicaoService.QUERY_BASE +
                     @"
                     WHERE 
-                        id = @id";
+                        Id = @Id";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoCondicaoModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<TipoCondicaoModel>(query, new { Id = id });
             }
         }
 
@@ -81,12 +81,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = ITipoCondicaoService.QUERY_BASE + 
+                const string query = ITipoCondicaoService.QUERY_BASE +
                     @"
                     WHERE 
-                        tipo_condicao = @tipo_condicao";
+                        TipoCondicao = @TipoCondicao";
 
-                return await connection.QueryFirstOrDefaultAsync<TipoCondicaoModel>(query, new { tipo_condicao = tipoCondicao });
+                return await connection.QueryFirstOrDefaultAsync<TipoCondicaoModel>(query, new { TipoCondicao = tipoCondicao });
             }
         }
 

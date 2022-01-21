@@ -14,7 +14,7 @@ namespace DUDS.Service
                 const string query = @"
                                 INSERT INTO
                                     tbl_log_erros 
-                                   (sistema, metodo, linha, mensagem, descricao, usuario_criacao)
+                                   (Sistema, Metodo, Linha, Mensagem, Descricao, UsuarioCriacao)
                                 VALUES
                                    (@Sistema, @Metodo, @Linha, @Mensagem, @Descricao, @UsuarioCriacao)";
 
@@ -27,13 +27,13 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT 
-	                            log_erros.*
+	                            *
                               FROM
-	                            tbl_log_erros log_erros
+	                            tbl_log_erros
                             WHERE 
-	                            log_erros.id = @id";
+	                            Id = @Id";
 
-                return await connection.QueryFirstOrDefaultAsync<LogErrosModel>(query, new { id });
+                return await connection.QueryFirstOrDefaultAsync<LogErrosModel>(query, new { Id = id });
             }
         }
     }

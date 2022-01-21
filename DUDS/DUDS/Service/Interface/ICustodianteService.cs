@@ -9,7 +9,7 @@ namespace DUDS.Service.Interface
 		const string QUERY_BASE = @"SELECT
                                         *
                                     FROM
-	                                    tbl_custodiante custodiante";
+	                                    tbl_custodiante";
 
         Task<IEnumerable<CustodianteModel>> GetAllAsync();
         Task<CustodianteModel> GetByIdAsync(int id);

@@ -133,27 +133,27 @@ namespace DUDS.Service
                 const string query = IPosicaoClienteService.QUERY_BASE +
                     @"
                     WHERE
-                        (@data_inicio IS NULL OR tbl_posicao_cliente.data_ref >= @data_inicio) 
-                        AND (@data_fim IS NULL OR tbl_posicao_cliente.data_ref <= @data_fim)
-                        AND (@cod_distribuidor IS NULL OR tbl_investidor_distribuidor.cod_distribuidor_administrador = @cod_distribuidor)
-                        AND (@cod_gestor IS NULL OR tbl_investidor.cod_gestor = @cod_gestor)
-                        AND (@cod_investidor_distribuidor IS NULL OR tbl_investidor_distribuidor.id = @cod_investidor_distribuidor)
+                        (@DataInicio IS NULL OR tbl_posicao_cliente.DataRef >= @DataInicio) 
+                        AND (@DataFim IS NULL OR tbl_posicao_cliente.DataFef <= @DataFim)
+                        AND (@CodDistribuidor IS NULL OR tbl_investidor_distribuidor.CodDistribuidorAdministrador = @CodDistribuidor)
+                        AND (@CodGestor IS NULL OR tbl_investidor.CodGestor = @CodGestor)
+                        AND (@CodInvestidorDistribuidor IS NULL OR tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
                     ORDER BY
-	                    tbl_fundo.tipo_cota,
-	                    tbl_tipo_estrategia.estrategia,
-	                    tbl_fundo.data_cota_inicial,
-	                    tbl_investidor.tipo_investidor,
-	                    adm_investidor.nome_administrador,
-	                    tbl_gestor.nome_gestor,
-	                    tbl_distribuidor.nome_distribuidor";
+	                    tbl_fundo.TipoCota,
+	                    tbl_tipo_estrategia.Estrategia,
+	                    tbl_fundo.DataCotaInicial,
+	                    tbl_investidor.TipoInvestidor,
+	                    adm_investidor.NomeAdministrador,
+	                    tbl_gestor.NomeGestor,
+	                    tbl_distribuidor.NomeDistribuidor";
 
                 return await connection.QueryAsync<PosicaoClienteViewModel>(query, new
                 {
-                    data_inicio = dataInicio,
-                    data_fim = dataFim,
-                    cod_distribuidor = codDistribuidor,
-                    cod_gestor = codGestor,
-                    cod_investidor_distribuidor = codInvestidorDistribuidor
+                    DataInicio = dataInicio,
+                    DataFim = dataFim,
+                    CodDistribuidor = codDistribuidor,
+                    CodGestor = codGestor,
+                    CodInvestidorDistribuidor = codInvestidorDistribuidor
                 });
             }
         }
@@ -170,9 +170,9 @@ namespace DUDS.Service
                     FROM
                         tbl_posicao_cliente
                     WHERE
-                        tbl_posicao_cliente.data_ref = @data_ref";
+                        tbl_posicao_cliente.DataRef = @DataRef";
 
-                return await connection.QueryFirstOrDefaultAsync<int>(query, new { data_ref = dataRef });
+                return await connection.QueryFirstOrDefaultAsync<int>(query, new { DataRef = dataRef });
             }
         }
 
@@ -213,18 +213,18 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = "SELECT MAX(valor_bruto) AS maior_valor_posicao FROM (" + IPosicaoClienteService.QUERY_BASE +
+                const string query = "SELECT MAX(ValorBruto) AS MaiorValorPosicao FROM (" + IPosicaoClienteService.QUERY_BASE +
                     @"
                     WHERE
-                        (@cod_distribuidor IS NULL or tbl_distribuidor.id = @cod_distribuidor)
-                        AND (@cod_gestor IS NULL or tbl_investidor.cod_gestor = @cod_gestor)
-                        AND (@cod_investidor_distribuidor IS NULL or tbl_investidor_distribuidor.id = @cod_investidor_distribuidor)) posicao ";
+                        (@CodDistribuidor IS NULL or tbl_distribuidor.Id = @CodDistribuidor)
+                        AND (@CodGestor IS NULL or tbl_investidor.CodGestor = @CodGestor)
+                        AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)) posicao ";
 
                 return await connection.QueryFirstOrDefaultAsync<double>(query, new
                 {
-                    cod_distribuidor = codDistribuidor,
-                    cod_gestor = codGestor,
-                    cod_investidor_distribuidor = codInvestidorDistribuidor
+                    CodDistribuidor = codDistribuidor,
+                    CodGestor = codGestor,
+                    CodInvestidorDistribuidor = codInvestidorDistribuidor
                 });
             }
         }
