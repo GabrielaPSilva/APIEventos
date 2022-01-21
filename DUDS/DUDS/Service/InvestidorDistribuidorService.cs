@@ -121,9 +121,9 @@ namespace DUDS.Service
                 const string query = IInvestidorDistribuidorService.QUERY_BASE +
                     @"
                     WHERE 
-	                    tbl_investidor_distribuidor.cod_investidor = @cod_investidor";
+	                    tbl_investidor_distribuidor.CodInvestidor = @CodInvestidor";
 
-                return await connection.QueryAsync<InvestidorDistribuidorViewModel>(query, new { cod_investidor = codInvestidor });
+                return await connection.QueryAsync<InvestidorDistribuidorViewModel>(query, new { CodInvestidor = codInvestidor });
             }
         }
 
@@ -134,9 +134,9 @@ namespace DUDS.Service
                 const string query = IInvestidorDistribuidorService.QUERY_BASE +
                     @"
                     WHERE 
-	                    tbl_investidor_distribuidor.cod_invest_administrador = @cod_invest_administrador";
+	                    tbl_investidor_distribuidor.CodInvestAdministrador = @CodInvestAdministrador";
 
-                return await connection.QueryAsync<InvestidorDistribuidorViewModel>(query, new { cod_invest_administrador = codInvestidorAdministrador });
+                return await connection.QueryAsync<InvestidorDistribuidorViewModel>(query, new { CodInvestAdministrador = codInvestidorAdministrador });
             }
         }
 
@@ -147,9 +147,9 @@ namespace DUDS.Service
                 const string query = IInvestidorDistribuidorService.QUERY_BASE +
                     @"
                     WHERE 
-	                    tbl_investidor_distribuidor.cod_investidor = @cod_investidor AND
-                        tbl_investidor_distribuidor.cod_distribuidor_administrador = @cod_distribuidor_administrador AND
-                        tbl_investidor_distribuidor.cod_administrador = @cod_administrador";
+	                    tbl_investidor_distribuidor.CodInvestidor = @CodInvestidor AND
+                        tbl_investidor_distribuidor.CodDistribuidorAdministrador = @CodDistribuidorAdministrador AND
+                        tbl_investidor_distribuidor.CodAdministrador = @CodAdministrador";
 
                 return await connection.QueryAsync<InvestidorDistribuidorViewModel>(query, new { cod_investidor = codInvestidor, cod_distribuidor_administrador = codDistribuidorAdministrador, cod_administrador = codAdministrador });
             }
@@ -162,7 +162,7 @@ namespace DUDS.Service
                 const string query = IInvestidorDistribuidorService.QUERY_BASE +
                     @"
                     WHERE 
-	                    tbl_investidor_distribuidor.id = @id";
+	                    tbl_investidor_distribuidor.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<InvestidorDistribuidorViewModel>(query, new { id });
             }

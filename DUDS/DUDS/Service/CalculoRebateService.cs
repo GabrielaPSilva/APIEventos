@@ -96,7 +96,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        const string query = "DELETE FROM tbl_calculo_pgto_adm_pfee WHERE competencia = @competencia";
+                        const string query = "DELETE FROM tbl_calculo_pgto_adm_pfee WHERE Competencia = @competencia";
                         var retorno = await connection.ExecuteAsync(sql: query, param: new { competencia }, transaction: transaction);
                         transaction.Commit();
                         return retorno > 0;
@@ -150,12 +150,12 @@ namespace DUDS.Service
                 var query = ICalculoRebateService.QUERY_BASE +
                                 @"
 								    WHERE
-										pagamento.competencia = @competencia AND
-                                        (@id IS NULL OR grupo_rebate.id = @id)
+										pagamento.Competencia = @competencia AND
+                                        (@id IS NULL OR grupo_rebate.Id = @id)
                                     ORDER BY
-	                                    fundo.nome_reduzido,
-	                                    grupo_rebate.nome_grupo_rebate,
-	                                    tipo_contrato.tipo_contrato";
+	                                    fundo.NomeReduzido,
+	                                    grupo_rebate.NomGrupoRebate,
+	                                    tipo_contrato.TipoContrato";
 
                 return await connection.QueryAsync<CalculoRebateViewModel>(query, new { competencia, id = codGrupoRebate });
             }
@@ -168,11 +168,11 @@ namespace DUDS.Service
                 var query = ICalculoRebateService.QUERY_BASE +
                                  @"
                                     WHERE
-	                                    calculo_pgto_adm_pfee.id = @id
+	                                    calculo_pgto_adm_pfee.Id = @id
                                     ORDER BY
-	                                    fundo.nome_reduzido,
-	                                    grupo_rebate.nome_grupo_rebate,
-	                                    tipo_contrato.tipo_contrato";
+	                                    fundo.NomeReduzido,
+	                                    grupo_rebate.NomeGrupoRebate,
+	                                    tipo_contrato.TipoContrato";
 
                 return await connection.QueryFirstOrDefaultAsync<CalculoRebateViewModel>(query, new { id });
             }
@@ -185,59 +185,59 @@ namespace DUDS.Service
                 const string Descricao = @"SELECT
 		                                    contrato.id AS CodContrato,
 										    tipo_contrato.id AS CodTipoContrato,
-										    tipo_contrato.tipo_contrato,
+										    tipo_contrato.TipoContrato,
                                             sub_contrato.id AS CodSubContrato,
                                             sub_contrato.versao AS VersaoContrato,
 										    sub_contrato.status AS StatusContrato,
-										    sub_contrato.id_docusign,
-										    sub_contrato.data_vigencia_inicio,
-										    sub_contrato.data_vigencia_fim,
-										    sub_contrato.data_retroatividade,
-		                                    sub_contrato.clausula_retroatividade,
+										    sub_contrato.IdDocusign,
+										    sub_contrato.DataVigenciaInicio,
+										    sub_contrato.DataVigenciaFim,
+										    sub_contrato.DataRetroatividade,
+		                                    sub_contrato.ClausulaRetroatividade,
                                             contrato_fundo.id AS CodContratoFundo,
                                             tipo_condicao.id AS CodTipoCondicao,
-										    tipo_condicao.tipo_condicao,
+										    tipo_condicao.TipoCondicao,
                                             fundo.id AS CodFundo,
 										    fundo.nome_reduzido AS NomeFundo,
 										    contrato_remuneracao.id AS CodContratoRemuneracao,
-                                            contrato_remuneracao.percentual_adm,
-										    contrato_remuneracao.percentual_pfee,
+                                            contrato_remuneracao.PercentualAdm,
+										    contrato_remuneracao.PercentualPfee,
 		                                    distribuidor.id AS CodDistribuidor,
 										    distribuidor.nome_distribuidor AS NomeDistribuidor,
 										    gestor.id AS CodGestor,
 										    gestor.nome_gestor AS NomeGestor
 									    FROM
 										    tbl_contrato contrato
-										        INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = contrato.cod_tipo_contrato
-										        INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.cod_contrato = contrato.id
-										        INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.cod_sub_contrato = sub_contrato.id
-										        INNER JOIN tbl_tipo_condicao tipo_condicao ON tipo_condicao.id = contrato_fundo.cod_tipo_condicao
-										        INNER JOIN tbl_fundo fundo ON fundo.id = contrato_fundo.cod_fundo
-										        INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.cod_contrato_fundo = contrato_fundo.id
-										        LEFT JOIN tbl_distribuidor distribuidor ON distribuidor.id = contrato.cod_distribuidor
-										        LEFT JOIN tbl_gestor gestor ON gestor.id = contrato.cod_gestor
+										        INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.Id = contrato.CodTipoContrato
+										        INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.CodContrato = contrato.Id
+										        INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.CodSubContrato = sub_contrato.Id
+										        INNER JOIN tbl_tipo_condicao tipo_condicao ON tipo_condicao.Id = contrato_fundo.CodTipoCondicao
+										        INNER JOIN tbl_fundo fundo ON fundo.Id = contrato_fundo.CodFundo
+										        INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.CodContratoFundo = contrato_fundo.Id
+										        LEFT JOIN tbl_distribuidor distribuidor ON distribuidor.Id = contrato.CodDistribuidor
+										        LEFT JOIN tbl_gestor gestor ON gestor.Id = contrato.CodGestor
 									    WHERE
-										    contrato.id = @cod_contrato
-										    AND sub_contrato.id = @cod_sub_contrato
-										    AND contrato_fundo.id = @cod_contrato_fundo
-										    AND contrato_remuneracao.id = @cod_contrato_remuneracao";
+										    contrato.Id = @CodContrato
+										    AND sub_contrato.Id = @CodSubContrato
+										    AND contrato_fundo.Id = @CodContratoFundo
+										    AND contrato_remuneracao.Id = @cod_contrato_remuneracao";
 
                 var Condicao = ICondicaoRemuneracaoService.QUERY_BASE +
                                         @"
                                           WHERE
-	                                          condicao_remuneracao.cod_contrato_remuneracao = @cod_contrato_remuneracao";
+	                                          condicao_remuneracao.CodContratoRemuneracao = @CodContratoRemuneracao";
 
                 List<DescricaoCalculoRebateViewModel> descricoes = await connection.QueryAsync<DescricaoCalculoRebateViewModel>(Descricao, new
                 {
-                    cod_contrato = codContrato,
-                    cod_sub_contrato = codSubContrato,
-                    cod_contrato_fundo = codContratoFundo,
-                    cod_contrato_remuneracao = codContratoRemuneracao
+                    CodContrato = codContrato,
+                    CodSubContrato = codSubContrato,
+                    CodContratoFundo = codContratoFundo,
+                    CodContratoRemuneracao = codContratoRemuneracao
                 }) as List<DescricaoCalculoRebateViewModel>;
 
                 foreach (var item in descricoes)
                 {
-                    List<CondicaoRemuneracaoViewModel> condicao = await connection.QueryAsync<CondicaoRemuneracaoViewModel>(Condicao, new { cod_contrato_remuneracao = item.CodContratoRemuneracao }) as List<CondicaoRemuneracaoViewModel>;
+                    List<CondicaoRemuneracaoViewModel> condicao = await connection.QueryAsync<CondicaoRemuneracaoViewModel>(Condicao, new { CodContratoRemuneracao = item.CodContratoRemuneracao }) as List<CondicaoRemuneracaoViewModel>;
 
                     item.ListaCondicaoRemuneracao = condicao;
                 }
@@ -253,9 +253,9 @@ namespace DUDS.Service
                                  COUNT(1)
                               FROM
                                  tbl_calculo_pgto_adm_pfee
-									INNER JOIN tbl_pgto_adm_pfee ON tbl_calculo_pgto_adm_pfee.cod_pgto_adm_pfee = tbl_pgto_adm_pfee.id
+									INNER JOIN tbl_pgto_adm_pfee ON tbl_calculo_pgto_adm_pfee.CodPgtoAdmPfee = tbl_pgto_adm_pfee.Id
                               WHERE
-                                 tbl_pgto_adm_pfee.competencia = @Competencia";
+                                 tbl_pgto_adm_pfee.Competencia = @Competencia";
 
                 return await connection.QueryFirstOrDefaultAsync<int>(query, new { filtro.Competencia });
             }
@@ -266,15 +266,15 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 var query = @"SELECT 
-	                            distinct tbl_investidor_distribuidor.cod_grupo_rebate, 
-                                tbl_pgto_adm_pfee.competencia,
-                                tbl_calculo_pgto_adm_pfee.usuario_criacao
+	                            distinct tbl_investidor_distribuidor.CodGrupoRebate, 
+                                tbl_pgto_adm_pfee.Competencia,
+                                tbl_calculo_pgto_adm_pfee.UsuarioCriacao
                             FROM 
 	                            tbl_calculo_pgto_adm_pfee
-	                            INNER JOIN tbl_pgto_adm_pfee ON tbl_pgto_adm_pfee.id = tbl_calculo_pgto_adm_pfee.cod_pgto_adm_pfee
-	                            INNER JOIN tbl_investidor_distribuidor ON tbl_investidor_distribuidor.id = tbl_pgto_adm_pfee.cod_investidor_distribuidor
+	                            INNER JOIN tbl_pgto_adm_pfee ON tbl_pgto_adm_pfee.Id = tbl_calculo_pgto_adm_pfee.CodPgtoAdmPfee
+	                            INNER JOIN tbl_investidor_distribuidor ON tbl_investidor_distribuidor.Id = tbl_pgto_adm_pfee.CodInvestidorDistribuidor
                             WHERE
-	                            tbl_pgto_adm_pfee.competencia = @competencia";
+	                            tbl_pgto_adm_pfee.Competencia = @competencia";
 
                 return await connection.QueryAsync<ControleRebateModel>(query, new { competencia });
             }

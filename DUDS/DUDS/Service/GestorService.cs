@@ -70,9 +70,9 @@ namespace DUDS.Service
                 const string query = IGestorService.QUERY_BASE + 
                            @"
                              WHERE 
-	                            gestor.ativo = 1
+	                            gestor.Ativo = 1
                              ORDER BY    
-                                gestor.nome_gestor";
+                                gestor.NomeGestor";
 
                 return await connection.QueryAsync<GestorViewModel>(query);
             }
@@ -85,7 +85,7 @@ namespace DUDS.Service
                 const string query = IGestorService.QUERY_BASE + 
                             @"
                               WHERE 
-	                             gestor.id = @id";
+	                             gestor.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<GestorViewModel>(query, new { id });
             }
@@ -98,7 +98,7 @@ namespace DUDS.Service
                 const string query = IGestorService.QUERY_BASE +
                             @"
                               WHERE 
-	                              gestor.cnpj = @cnpj";
+	                              gestor.Cnpj = @cnpj";
 
                 return await connection.QueryFirstOrDefaultAsync<GestorViewModel>(query, new { cnpj });
             }

@@ -50,9 +50,9 @@ namespace DUDS.Service
                 const string query = IContratoAlocadorService.QUERY_BASE +
                     @"
                     WHERE
-                        contrato.ativo = 1
+                        contrato.Ativo = 1
                     ORDER BY
-                        investidor.nome_investidor";
+                        investidor.NomeInvestidor";
 
                 return await connection.QueryAsync<ContratoAlocadorViewModel>(query);
             }
@@ -65,7 +65,7 @@ namespace DUDS.Service
                 const string query = IContratoAlocadorService.QUERY_BASE +
                     @"
                     WHERE
-                        contrato_alocador.id = @id";
+                        contrato_alocador.Id = @id";
                 return await connection.QueryFirstOrDefaultAsync<ContratoAlocadorViewModel>(query, new { id });
             }
         }
@@ -77,9 +77,9 @@ namespace DUDS.Service
                 var query = IContratoAlocadorService.QUERY_BASE + 
                     @"
                     WHERE
-                        sub_contrato.id = @id
+                        sub_contrato.Id = @id
                     ORDER BY
-                        investidor.nome_investidor";
+                        investidor.NomeInvestidor";
 
                 return await connection.QueryAsync<ContratoAlocadorViewModel>(query,new { id });
             }
