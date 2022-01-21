@@ -70,9 +70,9 @@ namespace DUDS.Service
                 var query = ICustodianteService.QUERY_BASE + 
                             @"
                               WHERE 
-	                              custodiante.ativo = 1
+	                              custodiante.Ativo = 1
                               ORDER BY    
-                                  custodiante.nome_custodiante";
+                                  custodiante.NomeCustodiante";
 
                 return await connection.QueryAsync<CustodianteModel>(query);
             }
@@ -85,7 +85,7 @@ namespace DUDS.Service
                 var query = ICustodianteService.QUERY_BASE + 
                         @"
                            WHERE 
-	                          custodiante.id = @id";
+	                          custodiante.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<CustodianteModel>(query, new { id });
             }
@@ -98,7 +98,7 @@ namespace DUDS.Service
                 var query = ICustodianteService.QUERY_BASE + 
                         @"
                            WHERE 
-	                           gestor.cnpj = @cnpj";
+	                           gestor.Cnpj = @cnpj";
 
                 return await connection.QueryFirstOrDefaultAsync<CustodianteModel>(query, new { cnpj });
             }

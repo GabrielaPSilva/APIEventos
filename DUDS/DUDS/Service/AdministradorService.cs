@@ -71,9 +71,9 @@ namespace DUDS.Service
                 var query = IAdministradorService.QUERY_BASE +
                             @" 
                               WHERE 
-	                             ativo = 1
+	                             Ativo = 1
                               ORDER BY    
-                                 nome_administrador";
+                                 NomeAdministrador";
                  
                 return await connection.QueryAsync<AdministradorModel>(query);
             }
@@ -86,7 +86,7 @@ namespace DUDS.Service
                 var query = IAdministradorService.QUERY_BASE + 
                             @"
                               WHERE 
-	                             id = @id";
+	                             Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<AdministradorModel>(query, new { id });
             }
@@ -96,13 +96,13 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IAdministradorService.QUERY_BASE + 
+                var query = IAdministradorService.QUERY_BASE +
                             @"
                               WHERE 
-	                             cnpj = @cnpj OR
-                                 nome_administrador = @nome_administrador";
+	                             Cnpj = @cnpj OR
+                                 NomeAdministrador = @NomeAdministrador";
 
-                return await connection.QueryFirstOrDefaultAsync<AdministradorModel>(query, new { cnpj, nome_administrador = nome });
+                return await connection.QueryFirstOrDefaultAsync<AdministradorModel>(query, new { cnpj, NomeAdministrador = nome });
             }
         }
     }

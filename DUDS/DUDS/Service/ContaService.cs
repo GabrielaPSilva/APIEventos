@@ -40,7 +40,7 @@ namespace DUDS.Service
                 return await connection.ExecuteAsync(query, conta) > 0;
             }
         }
-        
+
         public async Task<bool> ActivateAsync(int id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
@@ -58,7 +58,7 @@ namespace DUDS.Service
                 return await connection.ExecuteAsync(query, new { id }) > 0;
             }
         }
-        
+
         public Task<bool> DisableAsync(int id)
         {
             throw new NotImplementedException();
@@ -68,10 +68,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IContaService.QUERY_BASE + 
+                var query = IContaService.QUERY_BASE +
                             @"
                               WHERE
-	                              tbl_contas.ativo = 1";
+	                              tbl_contas.Ativo = 1";
 
                 return await connection.QueryAsync<ContaViewModel>(query);
             }
@@ -81,10 +81,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IContaService.QUERY_BASE + 
+                var query = IContaService.QUERY_BASE +
                             @"
                               WHERE 
-	                              tbl_contas.id = @id";
+	                              tbl_contas.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<ContaViewModel>(query, new { id });
             }
@@ -94,14 +94,20 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IContaService.QUERY_BASE + 
+                var query = IContaService.QUERY_BASE +
                             @"
                               WHERE 
-	                             (tbl_contas.cod_fundo = @cod_fundo OR
-                                 tbl_contas.cod_investidor = @cod_investidor) AND
-                                 tbl_contas.cod_tipo_conta = @cod_tipo_conta";
+	                             (tbl_contas.CodFundo = @CodFundo OR
+                                 tbl_contas.CodInvestidor = @CodInvestidor) AND
+                                 tbl_contas.CodTipoConta = @CodTipoConta";
 
-                return await connection.QueryFirstOrDefaultAsync<ContaViewModel>(query, new { cod_fundo = codFundo, cod_investidor = codInvestidor, cod_tipo_conta = codTipoConta });
+                return await connection.QueryFirstOrDefaultAsync<ContaViewModel>(query,
+                    new
+                    {
+                        CodFundo = codFundo,
+                        CodInvestidor = codInvestidor,
+                        CodTipoConta = codTipoConta
+                    });
             }
         }
 
@@ -109,12 +115,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = IContaService.QUERY_BASE + 
+                var query = IContaService.QUERY_BASE +
                             @"
                               WHERE 
-	                              tbl_contas.cod_fundo = @cod_fundo";
+	                              tbl_contas.CodFundo = @CodFundo";
 
-                return await connection.QueryAsync<ContaViewModel>(query, new { cod_fundo = id });
+                return await connection.QueryAsync<ContaViewModel>(query, new { CodFundo = id });
             }
         }
     }

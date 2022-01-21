@@ -57,7 +57,7 @@ namespace DUDS.Service
                                         DELETE FROM
                                             tbl_erros_pagamento
                                         WHERE
-                                            data_agendamento = @dataAgendamento";
+                                            DataAgendamento = @dataAgendamento";
 
                 return await connection.ExecuteAsync(query, new { dataAgendamento }) > 0;
             }
@@ -67,10 +67,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IErrosPagamentoService.QUERY_BASE + 
+                const string query = IErrosPagamentoService.QUERY_BASE +
                           @"
                             ORDER BY    
-                                erros_pagamento.data_agendamento";
+                                erros_pagamento.DataAgendamento";
 
                 return await connection.QueryAsync<ErrosPagamentoModel>(query);
             }
@@ -83,7 +83,7 @@ namespace DUDS.Service
                 const string query = IErrosPagamentoService.QUERY_BASE + 
                              @"
                                 WHERE
-                                    erros_pagamento.competencia = @competencia";
+                                    erros_pagamento.Competencia = @competencia";
 
                 return await connection.QueryAsync<ErrosPagamentoModel>(query, new { competencia });
             }
@@ -96,7 +96,7 @@ namespace DUDS.Service
                 const string query = IErrosPagamentoService.QUERY_BASE +
                             @"
                               WHERE
-                                 erros_pagamento.id = @id";
+                                 erros_pagamento.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<ErrosPagamentoModel>(query, new { id });
             }

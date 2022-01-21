@@ -52,9 +52,9 @@ namespace DUDS.Service
                 const string query = IContratoFundoService.QUERY_BASE + 
                     @"
                     WHERE
-                        contrato.ativo = 1
+                        contrato.Ativo = 1
                     ORDER BY
-                        fundo.nome_reduzido";
+                        fundo.NomeReduzido";
 
                 return await connection.QueryAsync<ContratoFundoViewModel>(query);
             }
@@ -67,9 +67,9 @@ namespace DUDS.Service
                 const string query = IContratoFundoService.QUERY_BASE + 
                     @"
                     WHERE
-                        contrato_fundo.id = @id
+                        contrato_fundo.Id = @id
                     ORDER BY
-                        fundo.nome_reduzido";
+                        fundo.NomeReduzido";
                 return await connection.QueryFirstOrDefaultAsync<ContratoFundoViewModel>(query, new { id });
             }
         }
@@ -81,9 +81,9 @@ namespace DUDS.Service
                 const string query = IContratoFundoService.QUERY_BASE + 
                     @"
                     WHERE
-                        sub_contrato.id = @id
+                        sub_contrato.Id = @id
                     ORDER BY
-                        fundo.nome_reduzido";
+                        fundo.NomeReduzido";
                 List<ContratoFundoViewModel> contratoFundoModels = await connection.QueryAsync<ContratoFundoViewModel>(query, new { id }) as List<ContratoFundoViewModel>;
                 
                 /*

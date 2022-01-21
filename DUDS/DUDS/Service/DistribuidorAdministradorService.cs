@@ -70,9 +70,9 @@ namespace DUDS.Service
                 var query = IDistribuidorAdministradorService.QUERY_BASE +
                             @"
                               WHERE 
-	                              distribuidor.ativo = 1
+	                              distribuidor.Ativo = 1
                               ORDER BY    
-                                  distribuidor.nome_distribuidor";
+                                  distribuidor.NomeDistribuidor";
 
                 return await connection.QueryAsync<DistribuidorAdministradorViewModel>(query);
             }
@@ -85,9 +85,9 @@ namespace DUDS.Service
                 var query = IDistribuidorAdministradorService.QUERY_BASE +
                             @"
                               WHERE 
-	                              distr_adm.cod_distribuidor = @id
+	                              distr_adm.CodDistribuidor = @id
                               ORDER BY    
-                                  distribuidor.nome_distribuidor";
+                                  distribuidor.NomeDistribuidor";
 
                 return await connection.QueryAsync<DistribuidorAdministradorViewModel>(query, new { id });
             }
@@ -100,9 +100,9 @@ namespace DUDS.Service
                 var query = IDistribuidorAdministradorService.QUERY_BASE + 
                           @"
                             WHERE 
-	                            distr_adm.id = @id
+	                            distr_adm.Id = @id
                             ORDER BY    
-                                distribuidor.nome_distribuidor";
+                                distribuidor.NomeDistribuidor";
 
                 return await connection.QueryFirstOrDefaultAsync<DistribuidorAdministradorViewModel>(query, new { id });
             }

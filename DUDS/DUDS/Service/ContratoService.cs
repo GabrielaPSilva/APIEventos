@@ -54,7 +54,7 @@ namespace DUDS.Service
                 const string query = IContratoService.QUERY_BASE +
                     @"
                     WHERE
-	                    tbl_contrato.ativo = 1";
+	                    tbl_contrato.Ativo = 1";
                 List<ContratoViewModel> listaContratoModel = await connection.QueryAsync<ContratoViewModel>(query) as List<ContratoViewModel>;
 
                 /*
@@ -82,7 +82,7 @@ namespace DUDS.Service
                 const string query = IContratoService.QUERY_BASE + 
                     @"
                     WHERE
-                        id = @id";
+                        Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<ContratoViewModel>(query, new { id });
             }
@@ -109,44 +109,44 @@ namespace DUDS.Service
             if (subContratoStatus == "Ativo")
             {
                 subContratoStatus = "Inativo";
-                whereClause = "sub_contrato.status <> @Status";
+                whereClause = "sub_contrato.Status <> @Status";
             }
             else
             {
-                whereClause = "sub_contrato.status = @Status";
+                whereClause = "sub_contrato.Status = @Status";
             }
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 string query = @"
                             SELECT 
-                                contrato_remuneracao.percentual_adm,
-                                contrato_remuneracao.percentual_pfee,
-                                contrato.cod_tipo_contrato,
-                                contrato.cod_gestor,
-                                contrato.cod_distribuidor,
-                                sub_contrato.versao,
-                                sub_contrato.status,
-                                sub_contrato.clausula_retroatividade,
-                                sub_contrato.data_retroatividade,
-                                sub_contrato.data_vigencia_inicio,
-                                sub_contrato.data_vigencia_fim,
-                                contrato_alocador.cod_investidor AS cod_investidor_contrato,
-                                contrato_fundo.cod_fundo,
-                                contrato_fundo.cod_tipo_condicao,
-                                investidor_distribuidor.cod_invest_administrador AS cod_invest_administrador,
-                                investidor_distribuidor.cod_administrador AS administrador_codigo_investidor,
-                                investidor_distribuidor.cod_distribuidor_administrador AS distribuidor_codigo_investidor,
-                                contrato.id AS cod_contrato,
-                                sub_contrato.id AS cod_sub_contrato,
-                                contrato_fundo.id AS cod_contrato_fundo,
-                                contrato_remuneracao.id AS cod_contrato_remuneracao
+                                contrato_remuneracao.PercentualAdm,
+                                contrato_remuneracao.PercentualPfee,
+                                contrato.CodTipoContrato,
+                                contrato.CodGestor,
+                                contrato.CodDistribuidor,
+                                sub_contrato.Versao,
+                                sub_contrato.Status,
+                                sub_contrato.ClausulaRetroatividade,
+                                sub_contrato.DataRetroatividade,
+                                sub_contrato.DataVigenciaInicio,
+                                sub_contrato.DataVigenciaFim,
+                                contrato_alocador.CodInvestidor AS CodInvestidorContrato,
+                                contrato_fundo.CodFundo,
+                                contrato_fundo.CodTipoCondicao,
+                                investidor_distribuidor.CodInvestAdministrador AS CodInvestAdministrador,
+                                investidor_distribuidor.CodAdministrador AS AdministradorCodigoInvestidor,
+                                investidor_distribuidor.CodDistribuidorAdministrador AS DistribuidorCodigoInvestidor,
+                                contrato.Id AS CodContrato,
+                                sub_contrato.Id AS CodSubContrato,
+                                contrato_fundo.Id AS CodContratoFundo,
+                                contrato_remuneracao.Id AS CodContratoRemuneracao
                             FROM
                                 tbl_contrato contrato
-                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.cod_contrato = contrato.id
-                                INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.cod_sub_contrato = sub_contrato.id
-                                INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.cod_contrato_fundo = contrato_fundo.id
-                                LEFT JOIN tbl_contrato_alocador contrato_alocador ON contrato_alocador.cod_sub_contrato = sub_contrato.id
-                                LEFT JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.cod_investidor = contrato_alocador.cod_investidor
+                                INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.CodContrato = contrato.Id
+                                INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.CodSubContrato = sub_contrato.Id
+                                INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.CodContratoFundo = contrato_fundo.Id
+                                LEFT JOIN tbl_contrato_alocador contrato_alocador ON contrato_alocador.CodSubContrato = sub_contrato.Id
+                                LEFT JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.CodInvestidor = contrato_alocador.CodInvestidor
                             WHERE
                                 WHERE_CLAUSE";
                 query = query.Replace("WHERE_CLAUSE", whereClause);

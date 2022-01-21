@@ -102,32 +102,32 @@ namespace DUDS.Service
                 var query = @"SELECT
                                 tbl_controle_rebate.*,
                                 tbl_calculo_pgto_adm_pfee.*,
-								tbl_pgto_adm_pfee.competencia,
-								tbl_pgto_adm_pfee.taxa_administracao AS ValorAdm,
-								tbl_pgto_adm_pfee.taxa_performance_apropriada AS ValorPfeeSemestre,
-								tbl_pgto_adm_pfee.taxa_performance_resgate AS ValorPfeeResgate,
-								tbl_contrato_remuneracao.percentual_adm AS PercAdm,
-								tbl_contrato_remuneracao.percentual_pfee AS PercPfee,
-                                tbl_grupo_rebate.nome_grupo_rebate AS NomeGrupoRebate,
-                                tbl_investidor.nome_investidor AS NomeInvestidor,
-                                tbl_fundo.nome_reduzido AS NomeFundo,
-	                            tbl_tipo_contrato.tipo_contrato AS NomeTipoContrato,
-                                tbl_investidor_distribuidor.cod_invest_administrador AS CodMellon
+								tbl_pgto_adm_pfee.Competencia,
+								tbl_pgto_adm_pfee.TaxaAdministracao AS ValorAdm,
+								tbl_pgto_adm_pfee.TaxaPerformanceApropriada AS ValorPfeeSemestre,
+								tbl_pgto_adm_pfee.TaxaPerformanceResgate AS ValorPfeeResgate,
+								tbl_contrato_remuneracao.PercentualAdm AS PercAdm,
+								tbl_contrato_remuneracao.PercentualPfee AS PercPfee,
+                                tbl_grupo_rebate.NomeGrupoRebate AS NomeGrupoRebate,
+                                tbl_investidor.NomeInvestidor AS NomeInvestidor,
+                                tbl_fundo.NomeReduzido AS NomeFundo,
+	                            tbl_tipo_contrato.TipoContrato AS NomeTipoContrato,
+                                tbl_investidor_distribuidor.CodInvestAdministrador AS CodMellon
                             FROM
                                 tbl_controle_rebate
-		                            INNER JOIN tbl_investidor_distribuidor ON tbl_controle_rebate.cod_grupo_rebate = tbl_investidor_distribuidor.cod_grupo_rebate
-									INNER JOIN tbl_pgto_adm_pfee ON tbl_pgto_adm_pfee.cod_investidor_distribuidor = tbl_investidor_distribuidor.id
-		                            INNER JOIN tbl_calculo_pgto_adm_pfee ON tbl_calculo_pgto_adm_pfee.cod_pgto_adm_pfee = tbl_pgto_adm_pfee.id
-									INNER JOIN tbl_contrato_remuneracao ON tbl_calculo_pgto_adm_pfee.cod_contrato_remuneracao = tbl_contrato_remuneracao.id
-		                            INNER JOIN tbl_fundo ON tbl_pgto_adm_pfee.cod_fundo = tbl_fundo.id
-		                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.cod_investidor = tbl_investidor.id
-		                            INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.cod_tipo_contrato = tbl_tipo_contrato.id
-		                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
+		                            INNER JOIN tbl_investidor_distribuidor ON tbl_controle_rebate.CodGrupoRebate = tbl_investidor_distribuidor.CodGrupoRebate
+									INNER JOIN tbl_pgto_adm_pfee ON tbl_pgto_adm_pfee.CodInvestidorDistribuidor = tbl_investidor_distribuidor.Id
+		                            INNER JOIN tbl_calculo_pgto_adm_pfee ON tbl_calculo_pgto_adm_pfee.CodPgtoAdmPfee = tbl_pgto_adm_pfee.Id
+									INNER JOIN tbl_contrato_remuneracao ON tbl_calculo_pgto_adm_pfee.CodContratoRemuneracao = tbl_contrato_remuneracao.Id
+		                            INNER JOIN tbl_fundo ON tbl_pgto_adm_pfee.CodFundo = tbl_fundo.Id
+		                            INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.CodInvestidor = tbl_investidor.Id
+		                            INNER JOIN tbl_tipo_contrato ON tbl_investidor_distribuidor.CodTipoContrato = tbl_tipo_contrato.Id
+		                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.CodGrupoRebate = tbl_grupo_rebate.Id
                             WHERE
-	                            tbl_controle_rebate.cod_grupo_rebate = @id
-	                            AND (@investidor IS NULL OR tbl_investidor.nome_investidor COLLATE Latin1_general_CI_AI LIKE '%' + @investidor + '%')
-                                AND (@codMellon IS NULL OR tbl_investidor_distribuidor.cod_invest_administrador = @codMellon)
-	                            AND tbl_pgto_adm_pfee.competencia = @competencia";
+	                            tbl_controle_rebate.CodGrupoRebate = @id
+	                            AND (@investidor IS NULL OR tbl_investidor.NomeInvestidor COLLATE Latin1_general_CI_AI LIKE '%' + @investidor + '%')
+                                AND (@codMellon IS NULL OR tbl_investidor_distribuidor.CodInvestAdministrador = @codMellon)
+	                            AND tbl_pgto_adm_pfee.Competencia = @competencia";
 
                 var a = await connection.QueryAsync<ControleRebateViewModel, CalculoRebateViewModel, ControleRebateViewModel>(query,
                    (controle, calculo) =>
@@ -151,16 +151,16 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IControleRebateService.QUERY_BASE + 
+                const string query = IControleRebateService.QUERY_BASE +
                           @"
                              WHERE
-                                (@Competencia IS NULL OR tbl_controle_rebate.competencia = @Competencia) AND
-								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.nome_grupo_rebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%') AND
-	                            tbl_controle_rebate.enviado = 0
+                                (@Competencia IS NULL OR tbl_controle_rebate.Competencia = @Competencia) AND
+								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%') AND
+	                            tbl_controle_rebate.Enviado = 0
                              ORDER BY
-                                tbl_controle_rebate.enviado,
-								tbl_controle_rebate.validado,
-								tbl_grupo_rebate.nome_grupo_rebate";
+                                tbl_controle_rebate.Enviado,
+								tbl_controle_rebate.Validado,
+								tbl_grupo_rebate.NomeGrupoRebate";
 
                 return await connection.QueryAsync<ControleRebateViewModel>(query, new
                 {
@@ -174,13 +174,13 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IControleRebateService.QUERY_BASE + 
+                const string query = IControleRebateService.QUERY_BASE +
                             @"
                                WHERE 
-	                               tbl_controle_rebate.cod_grupo_rebate = @cod_grupo_rebate AND
-                                   tbl_controle_rebate.competencia = @competencia";
+	                               tbl_controle_rebate.CodGrupoRebate = @CodGrupoRebate AND
+                                   tbl_controle_rebate.Competencia = @Competencia";
 
-                return await connection.QueryFirstOrDefaultAsync<ControleRebateViewModel>(query, new { cod_grupo_rebate = codGrupoRebate, competencia = Competencia });
+                return await connection.QueryFirstOrDefaultAsync<ControleRebateViewModel>(query, new { CodGrupoRebate = codGrupoRebate, Competencia });
             }
         }
 
@@ -191,7 +191,7 @@ namespace DUDS.Service
                 const string query = IControleRebateService.QUERY_BASE + 
                                     @"
                                       WHERE
-                                         tbl_controle_rebate.id = @id";
+                                         tbl_controle_rebate.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<ControleRebateViewModel>(query, new { id });
             }
@@ -205,9 +205,9 @@ namespace DUDS.Service
                                  COUNT(1)
                               FROM
                                  tbl_controle_rebate
-	                               INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.cod_grupo_rebate = tbl_grupo_rebate.id
+	                               INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.CodGrupoRebate = tbl_grupo_rebate.Id
                              WHERE
-                                 (@Competencia IS NULL OR tbl_controle_rebate.competencia = @Competencia)";
+                                 (@Competencia IS NULL OR tbl_controle_rebate.Competencia = @Competencia)";
                 
                 return await connection.QueryFirstOrDefaultAsync<int>(query, new { filtro.Competencia });
             }

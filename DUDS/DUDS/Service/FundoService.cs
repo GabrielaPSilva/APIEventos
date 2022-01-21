@@ -55,9 +55,9 @@ namespace DUDS.Service
                 const string query = IFundoService.QUERY_BASE +
                     @"
                     WHERE
-	                    tbl_fundo.ativo = 1
+	                    tbl_fundo.Ativo = 1
                     ORDER BY
-	                    tbl_fundo.nome_reduzido";
+	                    tbl_fundo.NomeReduzido";
 
                 List<FundoViewModel> fundos = await connection.QueryAsync<FundoViewModel>(query) as List<FundoViewModel>;
 
@@ -88,7 +88,7 @@ namespace DUDS.Service
                 const string query = IFundoService.QUERY_BASE + 
                     @"
                     WHERE 
-	                    tbl_fundo.id = @id";
+	                    tbl_fundo.Id = @id";
 
 
                 FundoViewModel fundo = await connection.QueryFirstOrDefaultAsync<FundoViewModel>(query, new { id });
@@ -109,7 +109,7 @@ namespace DUDS.Service
             {
                 const string query = $@"{IFundoService.QUERY_BASE}
                     WHERE 
-	                    tbl_fundo.cnpj = @cnpj";
+	                    tbl_fundo.Cnpj = @cnpj";
 
                 FundoViewModel fundo = await connection.QueryFirstOrDefaultAsync<FundoViewModel>(query, new { cnpj });
 

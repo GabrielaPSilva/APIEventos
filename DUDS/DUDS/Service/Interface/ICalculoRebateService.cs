@@ -11,38 +11,38 @@ namespace DUDS.Service.Interface
 	{
 		const string QUERY_BASE = @"SELECT
 										calculo_pgto_adm_pfee.*,
-	                                   	pagamento.competencia,
-										pagamento.cod_investidor_distribuidor,
-                                        investidor.nome_investidor,
-	                                    investidor.cnpj,
-	                                    investidor_distribuidor.cod_invest_administrador AS cod_mellon,
-										investidor_distribuidor.cod_tipo_contrato,
-                                        investidor_distribuidor.cod_grupo_rebate,
-                                        grupo_rebate.nome_grupo_rebate,
-                                        tipo_contrato.tipo_contrato AS nome_tipo_contrato,
-										pagamento.cod_fundo,
-                                        fundo.nome_reduzido AS nome_fundo,
-	                                    fundo.cnpj AS cnpj_fundo,
-	                                    distribuidor.nome_distribuidor,
-                                        pagamento.cod_administrador,
-	                                    administrador.nome_administrador,
-	                                    pagamento.taxa_administracao AS valor_adm,
-	                                    pagamento.taxa_performance_resgate AS valor_pfee_resgate,
-	                                    pagamento.taxa_performance_apropriada AS valor_pfee_semestre,
-                                        contrato_remuneracao.percentual_adm AS perc_adm,
-                                        contrato_remuneracao.percentual_pfee AS perc_pfee
+	                                   	pagamento.Competencia,
+										pagamento.CodInvestidorDistribuidor,
+                                        investidor.NomeInvestidor,
+	                                    investidor.Cnpj,
+	                                    investidor_distribuidor.CodInvestAdministrador AS CodMellon,
+										investidor_distribuidor.CodTipoContrato,
+                                        investidor_distribuidor.CodGrupoRebate,
+                                        grupo_rebate.NomeGrupoRebate,
+                                        tipo_contrato.TipoContrato AS NomeTipoContrato,
+										pagamento.CodFundo,
+                                        fundo.NomeReduzido AS NomeFundo,
+	                                    fundo.Cnpj AS CnpjFundo,
+	                                    distribuidor.NomeDistribuidor,
+                                        pagamento.CodAdministrador,
+	                                    administrador.NomeAdministrador,
+	                                    pagamento.TaxaAdministracao AS ValorAdm,
+	                                    pagamento.TaxaPerformanceResgate AS ValorPfeeResgate,
+	                                    pagamento.TaxaPerformanceApropriada AS ValorPfeeSemestre,
+                                        contrato_remuneracao.PercentualAdm AS PercAdm,
+                                        contrato_remuneracao.PercentualPfee AS PercPfee
                                     FROM
                                         tbl_calculo_pgto_adm_pfee calculo_pgto_adm_pfee
-											INNER JOIN tbl_pgto_adm_pfee pagamento ON pagamento.id = calculo_pgto_adm_pfee.cod_pgto_adm_pfee
-		                                    INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pagamento.cod_investidor_distribuidor
-		                                    INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
-		                                    INNER JOIN tbl_distribuidor_administrador distribuidor_administrador ON investidor_distribuidor.cod_distribuidor_administrador = distribuidor_administrador.id
-		                                    INNER JOIN tbl_distribuidor distribuidor ON distribuidor.id = distribuidor_administrador.cod_distribuidor
-											INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON calculo_pgto_adm_pfee.cod_contrato_remuneracao = contrato_remuneracao.id
-		                                    INNER JOIN tbl_administrador administrador ON pagamento.cod_administrador = administrador.id
-		                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
-		                                    INNER JOIN tbl_fundo fundo ON fundo.id = pagamento.cod_fundo
-		                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato";
+											INNER JOIN tbl_pgto_adm_pfee pagamento ON pagamento.Id = calculo_pgto_adm_pfee.CodPgtoAdmPfee
+		                                    INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.Id = pagamento.CodInvestidorDistribuidor
+		                                    INNER JOIN tbl_investidor investidor ON investidor.Id = investidor_distribuidor.CodInvestidor
+		                                    INNER JOIN tbl_distribuidor_administrador distribuidor_administrador ON investidor_distribuidor.CodDistribuidorAdministrador = distribuidor_administrador.Id
+		                                    INNER JOIN tbl_distribuidor distribuidor ON distribuidor.Id = distribuidor_administrador.CodDistribuidor
+											INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON calculo_pgto_adm_pfee.CodContratoRemuneracao = contrato_remuneracao.Id
+		                                    INNER JOIN tbl_administrador administrador ON pagamento.CodAdministrador = administrador.Id
+		                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.Id = investidor_distribuidor.CodGrupoRebate
+		                                    INNER JOIN tbl_fundo fundo ON fundo.Id = pagamento.CodFundo
+		                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.Id = investidor_distribuidor.CodTipoContrato";
 
 		Task<IEnumerable<CalculoRebateModel>> AddBulkAsync(List<CalculoRebateModel> item);
 		Task<bool> DeleteByCompetenciaAsync(string competencia);

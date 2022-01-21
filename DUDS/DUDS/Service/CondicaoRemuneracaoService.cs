@@ -79,7 +79,7 @@ namespace DUDS.Service
                 var query = ICondicaoRemuneracaoService.QUERY_BASE +
                                     @"
                                        WHERE
-                                           condicao_remuneracao.id = @id";
+                                           condicao_remuneracao.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<CondicaoRemuneracaoViewModel>(query, new { id });
             }
@@ -92,10 +92,10 @@ namespace DUDS.Service
                 var query = ICondicaoRemuneracaoService.QUERY_BASE +
                             @"
                               WHERE
-	                              contrato_remuneracao.id = @id
+	                              contrato_remuneracao.Id = @id
                               ORDER BY
-                                  condicao_remuneracao.id,
-                                  fundo.nome_reduzido";
+                                  condicao_remuneracao.Id,
+                                  fundo.NomeReduzido";
 
                 return await connection.QueryAsync<CondicaoRemuneracaoViewModel>(query, new { id });
             }

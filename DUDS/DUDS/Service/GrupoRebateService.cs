@@ -56,9 +56,9 @@ namespace DUDS.Service
                 const string query = IGrupoRebateService.QUERY_BASE + 
                     @"
                     WHERE 
-	                    ativo = 1
+	                    Ativo = 1
                     ORDER BY    
-                        nome_grupo_rebate";
+                        NomeGrupoRebate";
 
                 return await connection.QueryAsync<GrupoRebateModel>(query);
             }
@@ -71,7 +71,7 @@ namespace DUDS.Service
                 const string query = IGrupoRebateService.QUERY_BASE + 
                     @"
                     WHERE 
-	                    id = @id";
+	                    Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<GrupoRebateModel>(query, new { id });
             }

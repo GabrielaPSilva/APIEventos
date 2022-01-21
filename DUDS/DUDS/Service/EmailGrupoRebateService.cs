@@ -71,9 +71,9 @@ namespace DUDS.Service
                 const string query = IEmailGrupoRebateService.QUERY_BASE +
                             @"
                               WHERE 
-	                             tbl_email_grupo_rebate.ativo = 1
+	                             tbl_email_grupo_rebate.Ativo = 1
                               ORDER BY    
-                                 tbl_grupo_rebate.nome_grupo_rebate";
+                                 tbl_grupo_rebate.NomeGrupoRebate";
 
                 return await connection.QueryAsync<EmailGrupoRebateViewModel>(query);
             }
@@ -86,7 +86,7 @@ namespace DUDS.Service
                 const string query = IEmailGrupoRebateService.QUERY_BASE +
                              @"
                                WHERE 
-	                             tbl_email_grupo_rebate.id = @id";
+	                             tbl_email_grupo_rebate.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<EmailGrupoRebateViewModel>(query, new { id });
             }
@@ -99,11 +99,11 @@ namespace DUDS.Service
                 const string query = IEmailGrupoRebateService.QUERY_BASE +
                              @"
                                WHERE 
-	                             tbl_grupo_rebate.id = @cod_grupo_rebate
+	                             tbl_grupo_rebate.Id = @CodGrupoRebate
                                ORDER BY    
-                                 tbl_grupo_rebate.nome_grupo_rebate";
+                                 tbl_grupo_rebate.NomeGrupoRebate";
 
-                return await connection.QueryAsync<EmailGrupoRebateViewModel>(query, new { cod_grupo_rebate = codGrupoRebate });
+                return await connection.QueryAsync<EmailGrupoRebateViewModel>(query, new { CodGrupoRebate = codGrupoRebate });
             }
         }
     }

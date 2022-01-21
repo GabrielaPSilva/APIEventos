@@ -51,9 +51,9 @@ namespace DUDS.Service
                 const string query = IContratoRemuneracaoService.QUERIY_BASE + 
                     @"
                     WHERE
-                        contrato.ativo = 1
+                        contrato.Ativo = 1
                     ORDER BY
-                        contrato_remuneracao.id";
+                        contrato_remuneracao.Id";
 
                 return await connection.QueryAsync<ContratoRemuneracaoViewModel>(query);
             }
@@ -66,9 +66,9 @@ namespace DUDS.Service
                 const string query = IContratoRemuneracaoService.QUERIY_BASE + 
                     @"
                     WHERE
-                        contrato_remuneracao.id = @id
+                        contrato_remuneracao.Id = @id
                     ORDER BY
-                        contrato_remuneracao.id";
+                        contrato_remuneracao.Id";
                 return await connection.QueryFirstOrDefaultAsync<ContratoRemuneracaoViewModel>(query, new { id });
             }
         }
@@ -80,9 +80,9 @@ namespace DUDS.Service
                 const string query = IContratoRemuneracaoService.QUERIY_BASE + 
                     @"
                     WHERE
-                        contrato_fundo.id = @id
+                        contrato_fundo.Id = @id
                     ORDER BY
-                        contrato_remuneracao.id";
+                        contrato_remuneracao.Id";
 
                 List<ContratoRemuneracaoViewModel> contratoRemuneracaoModels = await connection.QueryAsync<ContratoRemuneracaoViewModel>(query, new { id }) as List<ContratoRemuneracaoViewModel>;
                 /*
