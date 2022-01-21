@@ -1,11 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DUDS
 {
@@ -23,8 +17,9 @@ namespace DUDS
                     //webBuilder.UseStartup<Startup>();
                     webBuilder.ConfigureKestrel((context, options) =>
                     {
-                        // Handle requests up to 50 MB
-                        options.Limits.MaxRequestBodySize = 52428800;
+                        // Handle requests up to 400 MB
+                        options.Limits.MaxRequestBodySize = 4194304000;
+                                                            //3000000000
                     })
                     .UseStartup<Startup>();
                 });

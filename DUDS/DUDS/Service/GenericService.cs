@@ -14,10 +14,10 @@ namespace DUDS.Service
         protected string TableName { get; }
         protected long SqlBulkCopyCount { get; set; }
 
-        protected readonly List<string> _ignoreFieldsInsert = new List<string> { "'id'", "'data_criacao'", "'ativo'" };
+        protected readonly List<string> _ignoreFieldsInsert = new List<string> { "'Id'", "'DataCriacao'", "'Ativo'" };
         protected readonly List<string> _ignorePropertiesInsert = new List<string> { "Id", "DataCriacao", "Ativo" };
 
-        protected readonly List<string> _ignoreFieldsUpdate = new List<string> { "'id'", "'data_criacao'", "'usuario_criacao'" };
+        protected readonly List<string> _ignoreFieldsUpdate = new List<string> { "'Id'", "'DataCriacao'", "'UsuarioCriacao'" };
         protected readonly List<string> _ignorePropertiesUpdate = new List<string> { "Id", "DataCriacao", "UsuarioCriacao" };
 
         protected readonly List<string> _propertiesInsert = new List<string>();
@@ -84,11 +84,19 @@ namespace DUDS.Service
         {
             var properties = typeof(T).GetProperties();
             foreach (var info in properties)
-                if (_ignoreFieldsInsert.Contains(info.Name)) sqlBulkCopy.ColumnMappings.Add(info.Name, info.Name) ;
+            {
+                bool b = _ignorePropertiesInsert.Any(s => s.Equals(info.Name, StringComparison.OrdinalIgnoreCase));
+                if (!b)
+                {
+                    sqlBulkCopy.ColumnMappings.Add(info.Name, info.Name);
+                }
+            }
             sqlBulkCopy.DestinationTableName = TableName;
             sqlBulkCopy.EnableStreaming = true;
             sqlBulkCopy.SqlRowsCopied += new SqlRowsCopiedEventHandler(sqlBulk_SqlRowsCopied);
             sqlBulkCopy.NotifyAfter = notifyCount;
+            sqlBulkCopy.BulkCopyTimeout = 0; // 250;
+            sqlBulkCopy.BatchSize = 10000;
             return sqlBulkCopy;
         }
 

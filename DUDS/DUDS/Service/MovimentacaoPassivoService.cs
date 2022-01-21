@@ -53,7 +53,8 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                using (var transaction = connection.BeginTransaction())
+                //connection.ConnectionTimeout = 0;
+                using (var transaction = connection.BeginTransaction(IsolationLevel.Serializable))
                 {
                     try
                     {
@@ -70,7 +71,7 @@ namespace DUDS.Service
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        transaction.Rollback();
+                        if (transaction != null) transaction.Rollback();
                         return new List<MovimentacaoPassivoModel>();
                     }
                 }

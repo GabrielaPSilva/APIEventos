@@ -22,5 +22,9 @@ namespace DUDS.Models.PgtoTaxaAdmPfee
         
         public decimal TaxaGestao { get; set; }
 
+        public string UsuarioCriacao { get; set; }
+
+        public DateTime DataCriacao { get; set; }
+
     }
 }
