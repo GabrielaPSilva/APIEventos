@@ -311,8 +311,8 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                bool retorno = await _errosPagamento.AddErrosPagamento(errosPagamento);
-                if (retorno)
+                var retorno = await _errosPagamento.AddErrosPagamento(errosPagamento);
+                if (retorno != null)
                 {
                     return CreatedAtAction(nameof(GetErrosPagamentoByCompetencia),
                         new { competencia = errosPagamento.FirstOrDefault().Competencia, data_agendamento = errosPagamento.FirstOrDefault().DataAgendamento }, errosPagamento);

@@ -170,7 +170,7 @@ namespace DUDS.Service
                                         (@id IS NULL OR grupo_rebate.Id = @id)
                                     ORDER BY
 	                                    fundo.NomeReduzido,
-	                                    grupo_rebate.NomGrupoRebate,
+	                                    grupo_rebate.NomeGrupoRebate,
 	                                    tipo_contrato.TipoContrato";
 
                 return await connection.QueryAsync<CalculoRebateViewModel>(query, new { competencia, id = codGrupoRebate });
