@@ -14,25 +14,27 @@ namespace DUDS.Models.Passivo
 
         public int CodAdministrador { get; set; }
 
-        public double QtdeCota { get; set; }
+        public decimal QtdeCota { get; set; }
 
-        public double ValorCota { get; set; }
+        public decimal ValorCota { get; set; }
 
-        public double ValorBruto { get; set; }
+        public decimal ValorBruto { get; set; }
 
-        public double Irrf { get; set; }
+        public decimal Irrf { get; set; }
 
-        public double Iof { get; set; }
+        public decimal Iof { get; set; }
 
-        public double ValorLiquido  { get; set; }
+        public decimal ValorLiquido  { get; set; }
 
-        public double PercRendimento { get; set; }
+        public decimal PercRendimento { get; set; }
 
-        public double QtdeCotasBloqueado { get; set; }
+        public decimal QtdeCotasBloqueado { get; set; }
 
-        public double ValorLiqBloqueado { get; set; }
+        public decimal ValorLiqBloqueado { get; set; }
 
-        public double ValorBrutoBloqueado { get; set; }
+        public decimal ValorBrutoBloqueado { get; set; }
+
+        public decimal TaxaPerformance { get; set; }
 
         public string UsuarioCriacao { get; set; }
 

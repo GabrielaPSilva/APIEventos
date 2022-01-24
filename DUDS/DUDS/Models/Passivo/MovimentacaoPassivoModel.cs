@@ -18,23 +18,23 @@ namespace DUDS.Models.Passivo
 
         public string TipoMovimentacao { get; set; }
 
-        public double QtdeCotas { get; set; }
+        public decimal QtdeCotas { get; set; }
 
-        public double ValorCota { get; set; }
+        public decimal ValorCota { get; set; }
 
-        public double ValorBruto { get; set; }
+        public decimal ValorBruto { get; set; }
 
-        public double Irrf { get; set; }
+        public decimal Irrf { get; set; }
 
-        public double Iof { get; set; }
+        public decimal Iof { get; set; }
 
-        public double ValorLiquido { get; set; }
+        public decimal ValorLiquido { get; set; }
 
         public int NotaAplicacao { get; set; }
 
-        public double RendimentoBruto { get; set; }
+        public decimal RendimentoBruto { get; set; }
 
-        public double ValorPerformance { get; set; }
+        public decimal ValorPerformance { get; set; }
 
         public string NumOrdem { get; set; }
 

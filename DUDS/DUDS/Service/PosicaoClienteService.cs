@@ -45,7 +45,7 @@ namespace DUDS.Service
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex);
                         transaction.Rollback();
                         return new List<PosicaoClienteModel>();
                     }

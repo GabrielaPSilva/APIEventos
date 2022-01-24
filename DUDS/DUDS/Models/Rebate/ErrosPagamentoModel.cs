@@ -12,7 +12,7 @@ namespace DUDS.Models.Rebate
 
         public string TipoDespesa { get; set; }
         
-        public double ValorBruto { get; set; }
+        public decimal ValorBruto { get; set; }
 
         public string CpfCnpjFavorecido { get; set; }
 
