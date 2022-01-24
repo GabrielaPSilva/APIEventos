@@ -79,7 +79,7 @@ namespace DUDS.Service
                             externalTransaction: (SqlTransaction)transaction);
 
                         var dataTable = ToDataTable(item);
-                        bulkCopy = SqlBulkCopyMapping(bulkCopy);
+                        bulkCopy = SqlBulkCopyConfigure(bulkCopy, dataTable.Rows.Count);
                         bulkCopy.WriteToServer(dataTable);
                         transaction.Commit();
                         return item;

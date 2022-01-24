@@ -67,12 +67,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IGestorService.QUERY_BASE + 
+                const string query = IGestorService.QUERY_BASE +
                            @"
                              WHERE 
-	                            gestor.Ativo = 1
+	                            tbl_gestor.Ativo = 1
                              ORDER BY    
-                                gestor.NomeGestor";
+                                tbl_gestor.NomeGestor";
 
                 return await connection.QueryAsync<GestorViewModel>(query);
             }
@@ -82,10 +82,10 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IGestorService.QUERY_BASE + 
+                const string query = IGestorService.QUERY_BASE +
                             @"
                               WHERE 
-	                             gestor.Id = @id";
+	                             tbl_gestor.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<GestorViewModel>(query, new { id });
             }
@@ -98,7 +98,7 @@ namespace DUDS.Service
                 const string query = IGestorService.QUERY_BASE +
                             @"
                               WHERE 
-	                              gestor.Cnpj = @cnpj";
+	                              tbl_gestor.Cnpj = @cnpj";
 
                 return await connection.QueryFirstOrDefaultAsync<GestorViewModel>(query, new { cnpj });
             }

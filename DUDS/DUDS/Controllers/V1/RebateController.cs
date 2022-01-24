@@ -312,7 +312,8 @@ namespace DUDS.Controllers.V1
             try
             {
                 var retorno = await _errosPagamento.AddErrosPagamento(errosPagamento);
-                if (retorno != null)
+
+                if (retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetErrosPagamentoByCompetencia),
                         new { competencia = errosPagamento.FirstOrDefault().Competencia, data_agendamento = errosPagamento.FirstOrDefault().DataAgendamento }, errosPagamento);

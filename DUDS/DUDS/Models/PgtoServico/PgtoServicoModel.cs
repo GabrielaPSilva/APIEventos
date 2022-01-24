@@ -1,4 +1,6 @@
-﻿namespace DUDS.Models.PgtoServico
+﻿using System;
+
+namespace DUDS.Models.PgtoServico
 {
     public class PgtoServicoModel
     {
@@ -19,6 +21,10 @@
         public decimal SaldoGestor { get; set; }
         
         public int CodAdministrador { get; set; }
+
+        public string UsuarioCriacao { get; set; }
+
+        public DateTime DataCriacao { get; set; }
         
     }
 }

@@ -34,5 +34,9 @@ namespace DUDS.Models.Passivo
 
         public double ValorBrutoBloqueado { get; set; }
 
+        public string UsuarioCriacao { get; set; }
+
+        public DateTime DataCriacao { get; set; }
+
     }
 }
