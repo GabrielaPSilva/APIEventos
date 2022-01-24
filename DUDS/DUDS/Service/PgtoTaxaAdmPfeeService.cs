@@ -23,27 +23,9 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<bool> AddAsync(PgtoTaxaAdmPfeeModel item)
+        public Task<bool> AddAsync(PgtoTaxaAdmPfeeModel item)
         {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                using (IDbTransaction transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction, commandTimeout: 180);
-                        transaction.Commit();
-                        return retorno > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        transaction.Rollback();
-                        return false;
-                    }
-                }
-            }
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<PgtoTaxaAdmPfeeModel>> AddBulkAsync(List<PgtoTaxaAdmPfeeModel> item)

@@ -20,32 +20,12 @@ namespace DUDS.Service
 
         public Task<bool> ActivateAsync(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> AddAsync(MovimentacaoPassivoModel item)
+        public Task<bool> AddAsync(MovimentacaoPassivoModel item)
         {
-            if (item == null) return false;
-
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                using (IDbTransaction transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction, commandTimeout: 180);
-                        transaction.Commit();
-                        return retorno > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        transaction.Rollback();
-                        return false;
-                    }
-                }
-            }
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<MovimentacaoPassivoModel>> AddBulkAsync(List<MovimentacaoPassivoModel> item)
@@ -80,7 +60,7 @@ namespace DUDS.Service
 
         public Task<bool> DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task<bool> DeleteByDataRefAsync(DateTime dataMovimentacao)
@@ -110,7 +90,7 @@ namespace DUDS.Service
 
         public Task<bool> DisableAsync(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<IEnumerable<MovimentacaoPassivoViewModel>> GetAllAsync()

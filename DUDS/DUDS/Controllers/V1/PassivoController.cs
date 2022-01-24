@@ -88,18 +88,13 @@ namespace DUDS.Controllers.V1
         }
 
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
-        [HttpGet]
-        public async Task<ActionResult<double>> GetMaiorValorBrutoPosicaoCliente([FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
+        [HttpGet("{dataRef}")]
+        public async Task<ActionResult<double>> GetMaiorValorBrutoPosicaoCliente(DateTime dataRef, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor)
         {
             try
             {
-                var maxValorBruto = await _posicaoClientePassivoService.GetMaxValorBrutoAsync(codDistribuidor, codGestor, codInvestidorDistribuidor);
-
-                if (maxValorBruto != null)
-                {
-                    return Ok(maxValorBruto);
-                }
-                return NotFound();
+                var maxValorBruto = await _posicaoClientePassivoService.GetMaxValorBrutoAsync(dataRef, codDistribuidor, codGestor, codInvestidorDistribuidor);
+                return Ok(maxValorBruto);
             }
             catch (Exception e)
             {
