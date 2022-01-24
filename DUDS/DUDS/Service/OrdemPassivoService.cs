@@ -20,7 +20,7 @@ namespace DUDS.Service
 
         public Task<bool> ActivateAsync(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<bool> AddAsync(OrdemPassivoModel item)
@@ -58,7 +58,7 @@ namespace DUDS.Service
 
         public Task<bool> DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task<bool> DeleteByDataRefAsync(DateTime dataEntrada)
@@ -92,7 +92,7 @@ namespace DUDS.Service
 
         public Task<bool> DisableAsync(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<IEnumerable<OrdemPassivoViewModel>> GetAllAsync()
