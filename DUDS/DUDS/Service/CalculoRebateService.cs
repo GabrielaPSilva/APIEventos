@@ -199,29 +199,29 @@ namespace DUDS.Service
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string Descricao = @"SELECT
-		                                    contrato.id AS CodContrato,
-										    tipo_contrato.id AS CodTipoContrato,
+		                                    contrato.Id AS CodContrato,
+										    tipo_contrato.Id AS CodTipoContrato,
 										    tipo_contrato.TipoContrato,
-                                            sub_contrato.id AS CodSubContrato,
-                                            sub_contrato.versao AS VersaoContrato,
-										    sub_contrato.status AS StatusContrato,
+                                            sub_contrato.Id AS CodSubContrato,
+                                            sub_contrato.Versao AS VersaoContrato,
+										    sub_contrato.Status AS StatusContrato,
 										    sub_contrato.IdDocusign,
 										    sub_contrato.DataVigenciaInicio,
 										    sub_contrato.DataVigenciaFim,
 										    sub_contrato.DataRetroatividade,
 		                                    sub_contrato.ClausulaRetroatividade,
-                                            contrato_fundo.id AS CodContratoFundo,
-                                            tipo_condicao.id AS CodTipoCondicao,
+                                            contrato_fundo.Id AS CodContratoFundo,
+                                            tipo_condicao.Id AS CodTipoCondicao,
 										    tipo_condicao.TipoCondicao,
-                                            fundo.id AS CodFundo,
-										    fundo.nome_reduzido AS NomeFundo,
-										    contrato_remuneracao.id AS CodContratoRemuneracao,
+                                            fundo.Id AS CodFundo,
+										    fundo.NomeReduzido AS NomeFundo,
+										    contrato_remuneracao.Id AS CodContratoRemuneracao,
                                             contrato_remuneracao.PercentualAdm,
 										    contrato_remuneracao.PercentualPfee,
-		                                    distribuidor.id AS CodDistribuidor,
-										    distribuidor.nome_distribuidor AS NomeDistribuidor,
-										    gestor.id AS CodGestor,
-										    gestor.nome_gestor AS NomeGestor
+		                                    distribuidor.Id AS CodDistribuidor,
+										    distribuidor.NomeDistribuidor AS NomeDistribuidor,
+										    gestor.Id AS CodGestor,
+										    gestor.NomeGestor AS NomeGestor
 									    FROM
 										    tbl_contrato contrato
 										        INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.Id = contrato.CodTipoContrato
@@ -236,10 +236,10 @@ namespace DUDS.Service
 										    contrato.Id = @CodContrato
 										    AND sub_contrato.Id = @CodSubContrato
 										    AND contrato_fundo.Id = @CodContratoFundo
-										    AND contrato_remuneracao.Id = @cod_contrato_remuneracao";
+										    AND contrato_remuneracao.Id = @CodContratoRemuneracao";
 
-                var Condicao = ICondicaoRemuneracaoService.QUERY_BASE +
-                                        @"
+                var Condicao = /*ICondicaoRemuneracaoService.QUERY_BASE +*/
+                                        @"SELECT * FROM tbl_condicao_remuneracao condicao_remuneracao
                                           WHERE
 	                                          condicao_remuneracao.CodContratoRemuneracao = @CodContratoRemuneracao";
 
