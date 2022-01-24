@@ -13,16 +13,11 @@ namespace DUDS.Service
 {
     public class PosicaoClienteService : GenericService<PosicaoClienteModel>, IPosicaoClienteService
     {
-        public PosicaoClienteService() : base(new PosicaoClienteModel(), "tbl_posicao_cliente")
-        {
-
-            DefaultTypeMap.MatchNamesWithUnderscores = true;
-
-        }
+        public PosicaoClienteService() : base(new PosicaoClienteModel(), "tbl_posicao_cliente") { }
 
         public Task<bool> ActivateAsync(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task<bool> AddAsync(PosicaoClienteModel item)
@@ -54,12 +49,12 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                using(var transaction = connection.BeginTransaction())
+                using (var transaction = connection.BeginTransaction())
                 {
                     try
                     {
-                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection, 
-                            copyOptions: SqlBulkCopyOptions.Default, 
+                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection,
+                            copyOptions: SqlBulkCopyOptions.Default,
                             externalTransaction: (SqlTransaction)transaction);
 
                         var dataTable = ToDataTable(item);
@@ -80,7 +75,7 @@ namespace DUDS.Service
 
         public Task<bool> DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task<bool> DeleteByDataRefAsync(DateTime dataRef)
@@ -112,7 +107,7 @@ namespace DUDS.Service
 
         public Task<bool> DisableAsync(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<PosicaoClienteViewModel>> GetByParametersAsync(DateTime? dataInicio, DateTime? dataFim, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
@@ -200,21 +195,23 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<double?> GetMaxValorBrutoAsync(int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
+        public async Task<double> GetMaxValorBrutoAsync(DateTime dataPosicao, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
         {
-            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue) return null;
+            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue) return 0;
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = "SELECT MAX(ValorBruto) AS MaiorValorPosicao FROM (" + IPosicaoClienteService.QUERY_BASE +
+                const string query = "SELECT ISNULL(MAX(ValorBruto),0) AS MaiorValorPosicao FROM (" + IPosicaoClienteService.QUERY_BASE +
                     @"
                     WHERE
                         (@CodDistribuidor IS NULL or tbl_distribuidor.Id = @CodDistribuidor)
                         AND (@CodGestor IS NULL or tbl_investidor.CodGestor = @CodGestor)
-                        AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)) posicao ";
+                        AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
+                        AND tbl_posicao_cliente.DataRef <= @DataRef) posicao";
 
                 return await connection.QueryFirstOrDefaultAsync<double>(query, new
                 {
+                    DataRef = dataPosicao,
                     CodDistribuidor = codDistribuidor,
                     CodGestor = codGestor,
                     CodInvestidorDistribuidor = codInvestidorDistribuidor

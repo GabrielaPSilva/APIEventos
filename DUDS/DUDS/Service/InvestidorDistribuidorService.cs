@@ -126,7 +126,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                return await connection.QueryAsync<InvestidorDistribuidorViewModel>(IInvestidorDistribuidorService.QUERY_BASE);
+                return await connection.QueryAsync<InvestidorDistribuidorViewModel>(IInvestidorDistribuidorService.QUERY_BASE, commandTimeout:180);
             }
         }
 
