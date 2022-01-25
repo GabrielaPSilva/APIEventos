@@ -12,12 +12,12 @@ namespace DUDS.Service.Interface
 			@"
 			SELECT
 				tbl_posicao_cliente.*,
-				tbl_fundo.NomeReduzido AS nome_fundo,
+				tbl_fundo.NomeReduzido AS NomeFundo,
                 tbl_investidor.NomeInvestidor,
-	            adm_investidor.NomeAdministrador AS nome_administrador_investidor,
+	            adm_investidor.NomeAdministrador AS NomeAdministradorInvestidor,
 				tbl_gestor.NomeGestor,
 	            tbl_distribuidor.NomeDistribuidor,
-	            tbl_administrador.NomeAdministrador AS nome_administrador_dados
+	            tbl_administrador.NomeAdministrador AS NomeAdministradorDados
             FROM
 				tbl_posicao_cliente
 	            INNER JOIN tbl_fundo ON tbl_posicao_cliente.CodFundo = tbl_fundo.Id

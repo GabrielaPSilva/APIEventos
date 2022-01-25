@@ -60,7 +60,7 @@ namespace DUDS.Service
 
         public async Task<bool> DeleteByDataRefAsync(DateTime dataRef)
         {
-            List<PosicaoClienteModel> result = await GetByParametersAsync(dataInicio: dataRef, dataFim: null, codDistribuidor: null, codGestor: null, codInvestidorDistribuidor: null) as List<PosicaoClienteModel>;
+            List<PosicaoClienteViewModel> result = await GetByParametersAsync(dataInicio: dataRef, dataFim: null, codDistribuidor: null, codGestor: null, codInvestidorDistribuidor: null) as List<PosicaoClienteViewModel>;
             if (result == null) return false;
             if (result.Count == 0) return false;
 
@@ -70,8 +70,8 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        const string query = "DELETE FROM tbl_posicao_cliente WHERE data_ref = @data_ref";
-                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { data_ref = dataRef }, transaction: transaction, commandTimeout: 180);
+                        const string query = "DELETE FROM tbl_posicao_cliente WHERE DataRef = @DataRef";
+                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { DataRef = dataRef }, transaction: transaction, commandTimeout: 180);
                         transaction.Commit();
                         return rowsAffected > 0 && rowsAffected == result.Count;
                     }
@@ -102,7 +102,7 @@ namespace DUDS.Service
                     @"
                     WHERE
                         (@DataInicio IS NULL OR tbl_posicao_cliente.DataRef >= @DataInicio) 
-                        AND (@DataFim IS NULL OR tbl_posicao_cliente.DataFef <= @DataFim)
+                        AND (@DataFim IS NULL OR tbl_posicao_cliente.DataRef <= @DataFim)
                         AND (@CodDistribuidor IS NULL OR tbl_investidor_distribuidor.CodDistribuidorAdministrador = @CodDistribuidor)
                         AND (@CodGestor IS NULL OR tbl_investidor.CodGestor = @CodGestor)
                         AND (@CodInvestidorDistribuidor IS NULL OR tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
