@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -32,8 +33,6 @@ namespace DUDS.Service
                     try
                     {
                         string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        Console.WriteLine(query);
-                        Console.WriteLine(item.ToString());
                         var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
                         transaction.Commit();
                         return retorno > 0;
@@ -52,7 +51,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                using (var transaction = connection.BeginTransaction())
+                using (var transaction = connection.BeginTransaction(IsolationLevel.Serializable))
                 {
                     try
                     {
@@ -62,7 +61,9 @@ namespace DUDS.Service
 
                         var dataTable = ToDataTable(item);
                         bulkCopy = SqlBulkCopyConfigure(bulkCopy, dataTable.Rows.Count);
-                        bulkCopy.WriteToServer(dataTable);
+                        CancellationTokenSource cancelationTokenSource = new CancellationTokenSource();
+                        CancellationToken cancellationToken = cancelationTokenSource.Token;
+                        await bulkCopy.WriteToServerAsync(dataTable, cancellationToken);
                         transaction.Commit();
                         return item;
                     }

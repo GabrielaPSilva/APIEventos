@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -70,7 +71,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                using (var transaction = connection.BeginTransaction())
+                using (var transaction = connection.BeginTransaction(IsolationLevel.Serializable))
                 {
                     try
                     {
@@ -80,7 +81,9 @@ namespace DUDS.Service
 
                         var dataTable = ToDataTable(item);
                         bulkCopy = SqlBulkCopyConfigure(bulkCopy, dataTable.Rows.Count);
-                        bulkCopy.WriteToServer(dataTable);
+                        CancellationTokenSource cancelationTokenSource = new CancellationTokenSource();
+                        CancellationToken cancellationToken = cancelationTokenSource.Token;
+                        await bulkCopy.WriteToServerAsync(dataTable, cancellationToken);
                         transaction.Commit();
                         return item;
                     }
