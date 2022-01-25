@@ -1,0 +1,11 @@
+﻿
+namespace DUDS.Models.Contrato
+{
+    public class ExcecaoContratoViewModel : ExcecaoContratoModel
+    {
+        public string NomeInvestidor { get; set; }
+
+        public string NomeFundo { get; set; }
+
+    }
+}

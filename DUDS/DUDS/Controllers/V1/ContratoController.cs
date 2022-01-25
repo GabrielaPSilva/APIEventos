@@ -22,6 +22,7 @@ namespace DUDS.Controllers.V1
         private readonly IContratoFundoService _contratoFundoService;
         private readonly IContratoRemuneracaoService _contratoRemuneracao;
         private readonly ICondicaoRemuneracaoService _condicaoRemuneracao;
+        private readonly IExcecaoContratoService _excecaoContratoService;
 
         public ContratoController(IConfiguracaoService configService,
             IContratoService contratoService,
@@ -29,7 +30,8 @@ namespace DUDS.Controllers.V1
             IContratoAlocadorService contratoAlocadorService,
             IContratoFundoService contratoFundoService,
             IContratoRemuneracaoService contratoRemuneracao,
-            ICondicaoRemuneracaoService condicaoRemuneracao)
+            ICondicaoRemuneracaoService condicaoRemuneracao,
+            IExcecaoContratoService excecaoContratoService)
         {
             _configService = configService;
             _contratoService = contratoService;
@@ -38,6 +40,7 @@ namespace DUDS.Controllers.V1
             _contratoFundoService = contratoFundoService;
             _contratoRemuneracao = contratoRemuneracao;
             _condicaoRemuneracao = condicaoRemuneracao;
+            _excecaoContratoService = excecaoContratoService;
         }
 
         #region Contrato
@@ -786,6 +789,106 @@ namespace DUDS.Controllers.V1
             }
         }
 
+        #endregion
+
+        #region Excecao Contrato
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ContratoModel>> GetExcecaoContratoById(int id)
+        {
+            try
+            {
+                var excecaoContrato = await _excecaoContratoService.GetByIdAsync(id);
+                if (excecaoContrato == null)
+                {
+                    return NotFound();
+                }
+                return Ok(excecaoContrato);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ExcecaoContratoModel>> AddExcecaiContrato(ExcecaoContratoModel excecaoContrato)
+        {
+            try
+            {
+                bool retorno = await _excecaoContratoService.AddAsync(excecaoContrato);
+                return CreatedAtAction(nameof(GetExcecaoContratoById), new { id = excecaoContrato.Id }, excecaoContrato);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        //PUT: api/Contrato/UpdateContrato/id
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ExcecaoContratoModel>> UpdateExcecaoContrato(int id, ExcecaoContratoModel excecaoContrato)
+        {
+            try
+            {
+                ExcecaoContratoModel retornoExcecaoContrato = await _excecaoContratoService.GetByIdAsync(excecaoContrato.Id);
+                if (retornoExcecaoContrato == null)
+                {
+                    return NotFound();
+                }
+                excecaoContrato.Id = id;
+                bool retorno = await _excecaoContratoService.UpdateAsync(excecaoContrato);
+                if (retorno)
+                {
+                    return Ok(excecaoContrato);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DELETE: api/Contrato/DeleteContrato/id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteExcecaoContrato(int id)
+        {
+            try
+            {
+                bool retorno = await _excecaoContratoService.DeleteAsync(id);
+                if (retorno)
+                {
+                    return Ok();
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+
+        }
+
+        // ATIVAR: api/Contrato/ActivateContrato/id
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ExcecaoContratoViewModel>> ActivateExcecaoContrato(int id)
+        {
+            try
+            {
+                bool retorno = await _excecaoContratoService.ActivateAsync(id);
+                if (retorno)
+                {
+                    ExcecaoContratoViewModel excecaoContrato = await _excecaoContratoService.GetByIdAsync(id);
+                    return Ok(excecaoContrato);
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
         #endregion
     }
 }
