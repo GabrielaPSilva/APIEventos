@@ -27,7 +27,7 @@ namespace DUDS
         {
             // services.AddDbContext<Data.DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DahliaDatabaseContext")));
             // services.AddControllers();
-            
+
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -154,6 +154,7 @@ namespace DUDS
             services.AddScoped<IInvestidorDistribuidorService, InvestidorDistribuidorService>();
             services.AddScoped<IDistribuidorAdministradorService, DistribuidorAdministradorService>();
             services.AddScoped<IPgtoTaxaAdmPfeeService, PgtoTaxaAdmPfeeService>();
+            services.AddScoped<IExcecaoContratoService, ExcecaoContratoService>();
             #endregion
             // Teste - Body Length
             //services.Configure<FormOptions>(options =>
@@ -186,7 +187,7 @@ namespace DUDS
                         options.SwaggerEndpoint($"../swagger/{desc.GroupName}/swagger.json", "DUDS v" + desc.ApiVersion.ToString().Split(".")[0]);//desc.ApiVersion.ToString());
                         options.DefaultModelsExpandDepth(-1);
                         options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-                        
+
                     }
                 });
             }

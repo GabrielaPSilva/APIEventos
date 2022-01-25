@@ -794,7 +794,7 @@ namespace DUDS.Controllers.V1
         #region Excecao Contrato
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ContratoModel>> GetExcecaoContratoById(int id)
+        public async Task<ActionResult<ExcecaoContratoViewModel>> GetExcecaoContratoById(int id)
         {
             try
             {
@@ -811,8 +811,26 @@ namespace DUDS.Controllers.V1
             }
         }
 
+        [HttpGet("{codContrato}/{codFundo}/{codInvestidor}")]
+        public async Task<ActionResult<ExcecaoContratoViewModel>> GetExcecaoContratoByIds(int codContrato, int codFundo, int codInvestidor)
+        {
+            try
+            {
+                var excecaoContrato = await _excecaoContratoService.GetExcecaoContratoAsync(codContrato, codFundo, codInvestidor);
+                if (excecaoContrato == null)
+                {
+                    return NotFound();
+                }
+                return Ok(excecaoContrato);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
         [HttpPost]
-        public async Task<ActionResult<ExcecaoContratoModel>> AddExcecaiContrato(ExcecaoContratoModel excecaoContrato)
+        public async Task<ActionResult<ExcecaoContratoModel>> AddExcecaoContrato(ExcecaoContratoModel excecaoContrato)
         {
             try
             {

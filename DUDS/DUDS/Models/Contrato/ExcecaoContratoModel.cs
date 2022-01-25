@@ -6,7 +6,7 @@ namespace DUDS.Models.Contrato
     {
         public int Id { get; set; }
 
-        public int CodContrato { get; set; }
+        public int CodSubContrato { get; set; }
 
         public int CodInvestidor { get; set; }
 
