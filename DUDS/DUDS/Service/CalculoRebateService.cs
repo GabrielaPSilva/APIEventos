@@ -182,10 +182,12 @@ namespace DUDS.Service
 										    AND contrato_fundo.Id = @CodContratoFundo
 										    AND contrato_remuneracao.Id = @CodContratoRemuneracao";
 
-                var Condicao = /*ICondicaoRemuneracaoService.QUERY_BASE +*/
-                                        @"SELECT * FROM tbl_condicao_remuneracao condicao_remuneracao
-                                          WHERE
-	                                          condicao_remuneracao.CodContratoRemuneracao = @CodContratoRemuneracao";
+                var Condicao = @"SELECT 
+                                     * 
+                                 FROM 
+                                     tbl_condicao_remuneracao condicao_remuneracao
+                                 WHERE
+	                                 condicao_remuneracao.CodContratoRemuneracao = @CodContratoRemuneracao";
 
                 List<DescricaoCalculoRebateViewModel> descricoes = await connection.QueryAsync<DescricaoCalculoRebateViewModel>(Descricao, new
                 {
