@@ -23,28 +23,9 @@ namespace DUDS.Service
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
-        public async Task<bool> AddAsync(CalculoRebateModel item)
+        public Task<bool> AddAsync(CalculoRebateModel item)
         {
-
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                using (IDbTransaction transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
-                        transaction.Commit();
-                        return retorno > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        transaction.Rollback();
-                        return false;
-                    }
-                }
-            }
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<CalculoRebateModel>> AddBulkAsync(List<CalculoRebateModel> item)
@@ -82,29 +63,12 @@ namespace DUDS.Service
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public Task<bool> DeleteAsync(int id)
         {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                using (IDbTransaction transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        string query = GenericSQLCommands.DELETE_COMMAND.Replace("TABELA", TableName);
-                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
-                        transaction.Commit();
-                        return retorno > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        transaction.Rollback();
-                        return false;
-                    }
-                }
-            }
+            throw new NotImplementedException();
         }
 
+        /*
         public async Task<bool> DeleteByCompetenciaAsync(string competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
@@ -127,37 +91,16 @@ namespace DUDS.Service
                 }
             }
         }
+        */
 
-        public async Task<bool> ActivateAsync(int id)
+        public Task<bool> ActivateAsync(int id)
         {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                string query = GenericSQLCommands.ACTIVATE_COMMAND.Replace("TABELA", TableName);
-                return await connection.ExecuteAsync(query, new { id }) > 0;
-            }
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> DisableAsync(int id)
+        public Task<bool> DisableAsync(int id)
         {
-            using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
-            {
-                using (IDbTransaction transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        string query = GenericSQLCommands.DISABLE_COMMAND.Replace("TABELA", TableName);
-                        var retorno = await connection.ExecuteAsync(sql: query, param: new { id }, transaction: transaction);
-                        transaction.Commit();
-                        return retorno > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        transaction.Rollback();
-                        return false;
-                    }
-                }
-            }
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<CalculoRebateViewModel>> GetCalculoRebate(string competencia, int? codGrupoRebate)
@@ -185,7 +128,7 @@ namespace DUDS.Service
                 var query = ICalculoRebateService.QUERY_BASE +
                                  @"
                                     WHERE
-	                                    calculo_pgto_adm_pfee.Id = @id
+	                                    calculo_pgto_adm_pfee.CodPgtoAdmPfee = @id
                                     ORDER BY
 	                                    fundo.NomeReduzido,
 	                                    grupo_rebate.NomeGrupoRebate,

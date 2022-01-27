@@ -4,8 +4,6 @@ namespace DUDS.Models.Rebate
 {
     public class CalculoRebateModel
     {
-        public Guid Id { get; set; }
-        
         public Guid CodPgtoAdmPfee { get; set; }
         
         public int CodContrato { get; set; }
@@ -25,7 +23,5 @@ namespace DUDS.Models.Rebate
         public DateTime DataCriacao { get; set; }
         
         public string UsuarioCriacao { get; set; }
-        
-        public bool Ativo { get; set; }
     }
 }

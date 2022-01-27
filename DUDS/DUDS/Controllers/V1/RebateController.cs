@@ -698,7 +698,7 @@ namespace DUDS.Controllers.V1
         }
 
         // GET: api/Rebate/GetCalculoRebateById/id
-        [HttpGet("{guid}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<CalculoRebateViewModel>> GetCalculoRebateById(Guid id)
         {
             try
@@ -733,27 +733,6 @@ namespace DUDS.Controllers.V1
                 }
 
                 return BadRequest(retorno);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
-            }
-        }
-
-        // DELETE: api/Rebate/DeleteCalculoRebate/competencia
-        [HttpDelete("{competencia}")]
-        public async Task<IActionResult> DeleteCalculoRebate(string competencia)
-        {
-            try
-            {
-                bool retorno = await _calculoRebateService.DeleteByCompetenciaAsync(competencia);
-
-                if (retorno)
-                {
-                    return Ok();
-                }
-
-                return NotFound();
             }
             catch (Exception e)
             {

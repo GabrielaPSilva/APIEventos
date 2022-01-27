@@ -45,7 +45,6 @@ namespace DUDS.Service.Interface
 		                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.Id = investidor_distribuidor.CodTipoContrato";
 
 		Task<IEnumerable<CalculoRebateModel>> AddBulkAsync(List<CalculoRebateModel> item);
-		Task<bool> DeleteByCompetenciaAsync(string competencia);
 		Task<CalculoRebateViewModel> GetByIdAsync(Guid id);
 		Task<IEnumerable<CalculoRebateViewModel>> GetCalculoRebate(string competencia, int? codGrupoRebate);
         Task<IEnumerable<DescricaoCalculoRebateViewModel>> GetDescricaoRebateAsync(int codContrato, int codSubContrato, int codContratoFundo, int codContratoRemuneracao);
