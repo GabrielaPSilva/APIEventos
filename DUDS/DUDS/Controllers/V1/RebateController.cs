@@ -25,6 +25,7 @@ namespace DUDS.Controllers.V1
         private readonly IGrupoRebateService _grupoRebateService;
         private readonly IEmailGrupoRebateService _emailGrupoRebateService;
         private readonly IControleRebateService _controleRebateService;
+        private readonly IPgtoRebateService _pgtoRebateService;
 
         public RebateController(IConfiguracaoService configService,
             IErrosPagamentoService errosPagamento,
@@ -33,7 +34,8 @@ namespace DUDS.Controllers.V1
             ICalculoRebateService calculoRebateService,
             IGrupoRebateService grupoRebateService,
             IControleRebateService controleRebateService,
-            IEmailGrupoRebateService emailGrupoRebateService)
+            IEmailGrupoRebateService emailGrupoRebateService,
+            IPgtoRebateService pgtoRebateService)
         {
             _errosPagamento = errosPagamento;
             _configService = configService;
@@ -43,6 +45,7 @@ namespace DUDS.Controllers.V1
             _grupoRebateService = grupoRebateService;
             _controleRebateService = controleRebateService;
             _emailGrupoRebateService = emailGrupoRebateService;
+            _pgtoRebateService = pgtoRebateService;
         }
 
         #region Controle Rebate
@@ -1093,6 +1096,69 @@ namespace DUDS.Controllers.V1
             }
         }
 
+        #endregion
+
+        #region Pagamento Rebate
+        //POST: api/v1/Rebate/AddPgtoRebate/PgtoRebateModel
+        [HttpPost]
+        public async Task<ActionResult<EmailGrupoRebateViewModel>> AddPgtoRebate(PgtoRebateModel pgtoRebate)
+        {
+            try
+            {
+                bool retorno = await _pgtoRebateService.AddAsync(pgtoRebate);
+
+                if (retorno)
+                {
+                    return CreatedAtAction(nameof(GetPgtoRebateByCompetencia),
+                        new { competencia = pgtoRebate.Competencia }, GetPgtoRebateByCompetencia(pgtoRebate.Competencia));
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/v1/Rebate/GetPgtoRebateByCompetencia/competencia
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<PgtoRebateViewModel>>> GetPgtoRebateByCompetencia(string competencia)
+        {
+            try
+            {
+                var pgtoRebate = await _pgtoRebateService.GetPgtoRebateByCompetencia(competencia);
+
+                if (!pgtoRebate.Any())
+                {
+                    NotFound();
+                }
+                return Ok(pgtoRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DELETE: api/v1/Rebate/DeletePgtoRebate/competencia
+        [HttpDelete("{competencia}")]
+        public async Task<IActionResult> DeletePgtoRebate(string competencia)
+        {
+            try
+            {
+                bool retorno = await _pgtoRebateService.DeleteByCompetenciaAsync(competencia);
+                if (retorno)
+                {
+                    return Ok();
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
         #endregion
     }
 
