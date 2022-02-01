@@ -183,9 +183,11 @@ namespace DUDS.Service
 										    AND contrato_remuneracao.Id = @CodContratoRemuneracao";
 
                 var Condicao = @"SELECT 
-                                     * 
+                                     condicao_remuneracao.*,
+                                     tbl_fundo.NomeReduzido AS NomeFundo
                                  FROM 
                                      tbl_condicao_remuneracao condicao_remuneracao
+                                        INNER JOIN tbl_fundo ON condicao_remuneracao.CodFundo = tbl_fundo.Id
                                  WHERE
 	                                 condicao_remuneracao.CodContratoRemuneracao = @CodContratoRemuneracao";
 
