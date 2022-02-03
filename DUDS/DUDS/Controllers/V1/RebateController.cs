@@ -1101,7 +1101,7 @@ namespace DUDS.Controllers.V1
         #region Pagamento Rebate
         //POST: api/v1/Rebate/AddPgtoRebate/PgtoRebateModel
         [HttpPost]
-        public async Task<ActionResult<EmailGrupoRebateViewModel>> AddPgtoRebate(PgtoRebateModel pgtoRebate)
+        public async Task<ActionResult<PgtoRebateModel>> AddPgtoRebate(PgtoRebateModel pgtoRebate)
         {
             try
             {
