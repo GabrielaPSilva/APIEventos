@@ -2,7 +2,7 @@
 
 namespace DUDS.Models.Rebate
 {
-    public class PgtoRebateViewModel : PgtoRebateModel
+    public class PgtoRebateViewModel
     {
         public string CodFundo { get; set; }
 
