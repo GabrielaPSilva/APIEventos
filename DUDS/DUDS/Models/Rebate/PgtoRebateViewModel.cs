@@ -21,6 +21,6 @@ namespace DUDS.Models.Rebate
 
         public string Observacao { get; set; }
 
-        public string CnpjFundoFavorecido { get; set; }
+        public string CnpjFundoInvestidor { get; set; }
     }
 }
