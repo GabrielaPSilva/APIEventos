@@ -4,6 +4,7 @@ namespace DUDS.Models.Rebate
 {
     public class PgtoRebateViewModel
     {
+        public DateTime DataAgendamento { get; set; }
         public string CodFundo { get; set; }
 
         public int TipoDespesa { get; set; }
