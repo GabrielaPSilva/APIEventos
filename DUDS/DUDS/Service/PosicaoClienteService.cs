@@ -63,9 +63,8 @@ namespace DUDS.Service
 
         public async Task<bool> DeleteByDataRefAsync(DateTime dataRef)
         {
-            List<PosicaoClienteViewModel> result = await GetByParametersAsync(dataInicio: dataRef, dataFim: null, codDistribuidor: null, codGestor: null, codInvestidorDistribuidor: null) as List<PosicaoClienteViewModel>;
-            if (result == null) return false;
-            if (result.Count == 0) return false;
+            int countPosicaoCliente = await GetCountByDataRefAsync(dataRef: dataRef);
+            if (countPosicaoCliente == 0) return false;
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -76,7 +75,7 @@ namespace DUDS.Service
                         const string query = "DELETE FROM tbl_posicao_cliente WHERE DataRef = @DataRef";
                         int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { DataRef = dataRef }, transaction: transaction, commandTimeout: 300);
                         transaction.Commit();
-                        return rowsAffected > 0 && rowsAffected == result.Count;
+                        return rowsAffected > 0 && rowsAffected == countPosicaoCliente;
                     }
                     catch (Exception ex)
                     {
