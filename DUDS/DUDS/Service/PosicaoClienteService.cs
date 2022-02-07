@@ -125,7 +125,7 @@ namespace DUDS.Service
                     CodDistribuidor = codDistribuidor,
                     CodGestor = codGestor,
                     CodInvestidorDistribuidor = codInvestidorDistribuidor
-                });
+                },commandTimeout: 180);
             }
         }
 

@@ -29,7 +29,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        var retorno = await connection.ExecuteAsync(sql: IPgtoRebateService.QUERY_INSERT_INVESTIDOR, param: item);
+                        var retorno = await connection.ExecuteAsync(sql: IPgtoRebateService.QUERY_INSERT_ADM_INVESTIDOR, param: item);
                         transaction.Commit();
                         return retorno > 0;
                     }
