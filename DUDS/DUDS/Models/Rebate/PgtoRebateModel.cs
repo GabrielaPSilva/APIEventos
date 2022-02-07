@@ -6,6 +6,10 @@ namespace DUDS.Models.Rebate
     {
         public DateTime DataAgendamento { get; set; }
 
+        public bool Efetivado { get; set; }
+
+        public bool Importado { get; set; }
+
         public int? CodTipoContrato { get; set; }
 
         public string Competencia { get; set; } 
