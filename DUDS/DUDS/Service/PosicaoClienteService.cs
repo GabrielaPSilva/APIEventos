@@ -74,7 +74,7 @@ namespace DUDS.Service
                     try
                     {
                         const string query = "DELETE FROM tbl_posicao_cliente WHERE DataRef = @DataRef";
-                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { DataRef = dataRef }, transaction: transaction, commandTimeout: 180);
+                        int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { DataRef = dataRef }, transaction: transaction, commandTimeout: 300);
                         transaction.Commit();
                         return rowsAffected > 0 && rowsAffected == result.Count;
                     }

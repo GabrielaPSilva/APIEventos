@@ -6,7 +6,7 @@ namespace DUDS.Service.Interface
 {
     public interface IPgtoRebateService : IGenericOperationsService<PgtoRebateModel>
     {
-        const string QUERY_INSERT = @"
+        const string QUERY_INSERT_INVESTIDOR = @"
             WITH calculo_pgto(CodPgtoAdmPfee, Competencia, CodInvestidorDistribuidor, CodGrupoRebate, CodTipoContrato, CodInvestidor, NomeInvestidor, 
 					            CnpjInvestidor, CodGestorInvestidor, GestorInvestidor, CnpjGestorInvestidor, CodFundo, NomeFundo, CnpjFundo, CodGestorFundo, 
 					            GestorFundo, CnpjGestorFundo, CodDistribuidor, NomeDistribuidor, CnpjDistribuidor, RebateAdm, RowNum, SumRebateAdm) AS 
@@ -129,7 +129,7 @@ namespace DUDS.Service.Interface
 	            END,
 	            pre_pgto.Competencia";
 
-        const string QUERY_BASE = @"
+        const string QUERY_ARQUIVO_PGTO = @"
             SELECT
 	            tbl_pgto_rebate.DataAgendamento,
 	            tbl_fundo.Mnemonico AS CodFundo,
