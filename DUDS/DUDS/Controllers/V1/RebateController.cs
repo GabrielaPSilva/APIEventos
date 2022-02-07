@@ -460,7 +460,7 @@ namespace DUDS.Controllers.V1
             {
                 var retorno = await _pagamentoServicoService.AddPgtoServico(pagamentoServico);
 
-                if (!retorno.Any())
+                if (retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetPagamentoServicoByCompetencia),
                         new { competencia = pagamentoServico.FirstOrDefault().Competencia }, pagamentoServico);
