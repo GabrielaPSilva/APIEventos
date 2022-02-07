@@ -29,7 +29,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        var retorno = await connection.ExecuteAsync(sql: IPgtoRebateService.QUERY_INSERT, param: item);
+                        var retorno = await connection.ExecuteAsync(sql: IPgtoRebateService.QUERY_INSERT_INVESTIDOR, param: item);
                         transaction.Commit();
                         return retorno > 0;
                     }
@@ -84,7 +84,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                return await connection.QueryAsync<PgtoRebateViewModel>(IPgtoRebateService.QUERY_BASE, new { Competencia = competencia });
+                return await connection.QueryAsync<PgtoRebateViewModel>(IPgtoRebateService.QUERY_ARQUIVO_PGTO, new { Competencia = competencia });
             }
         }
 
