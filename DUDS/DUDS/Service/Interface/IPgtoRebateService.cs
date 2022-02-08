@@ -1,4 +1,5 @@
 ﻿using DUDS.Models.Rebate;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -164,13 +165,22 @@ namespace DUDS.Service.Interface
 	            END AS CnpjFundoInvestidor
             FROM 
 	            tbl_pgto_rebate
-	            INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_pgto_rebate.CodFundo
-            WHERE
-	            tbl_pgto_rebate.Competencia = @Competencia";
+	            INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_pgto_rebate.CodFundo";
+
+		const string QUERY_BASE = @"
+            SELECT 
+	            tbl_pgto_rebate.*,
+	            tbl_fundo.NomeReduzido,
+	            tbl_tipo_contrato.TipoContrato
+            FROM
+	            tbl_pgto_rebate 
+		            INNER JOIN tbl_fundo ON tbl_pgto_rebate.CodFundo = tbl_fundo.Id
+		            INNER JOIN tbl_tipo_contrato ON tbl_pgto_rebate.CodTipoContrato = tbl_tipo_contrato.Id";
 
 
-        Task<IEnumerable<PgtoRebateViewModel>> GetPgtoRebateByCompetencia(string competencia);
-
+		Task<IEnumerable<PgtoRebateViewModel>> GetPgtoRebateByCompetencia(string competencia);
+        Task<IEnumerable<PgtoRebateModel>> GetPgtoRebateById(Guid Id);
+        Task<IEnumerable<PgtoRebateViewModel>> GetValidaErrosPagamento(string competencia);
         Task<bool> DeleteByCompetenciaAsync(string competencia);
     }
 }
