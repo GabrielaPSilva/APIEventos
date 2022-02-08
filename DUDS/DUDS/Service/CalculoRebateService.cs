@@ -42,9 +42,10 @@ namespace DUDS.Service
 
                         var dataTable = ToDataTable(item);
                         bulkCopy = SqlBulkCopyConfigure(bulkCopy, dataTable.Rows.Count);
-                        CancellationTokenSource cancelationTokenSource = new CancellationTokenSource();
-                        CancellationToken cancellationToken = cancelationTokenSource.Token;
-                        await bulkCopy.WriteToServerAsync(dataTable, cancellationToken);
+                        //CancellationTokenSource cancelationTokenSource = new CancellationTokenSource();
+                        //CancellationToken cancellationToken = cancelationTokenSource.Token;
+                        //await bulkCopy.WriteToServerAsync(dataTable, cancellationToken);
+                        bulkCopy.WriteToServer(dataTable);
                         transaction.Commit();
                         return item;
                     }

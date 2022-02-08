@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -34,15 +33,18 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection,
-                            copyOptions: SqlBulkCopyOptions.Default,
-                            externalTransaction: (SqlTransaction)transaction);
-
+                        SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection, copyOptions: SqlBulkCopyOptions.Default, externalTransaction: (SqlTransaction)transaction);
                         var dataTable = ToDataTable(item);
                         bulkCopy = SqlBulkCopyConfigure(bulkCopy, dataTable.Rows.Count);
-                        CancellationTokenSource cancelationTokenSource = new CancellationTokenSource();
-                        CancellationToken cancellationToken = cancelationTokenSource.Token;
-                        await bulkCopy.WriteToServerAsync(dataTable, cancellationToken);
+                        //CancellationTokenSource cancelationTokenSource = new CancellationTokenSource();
+                        //CancellationToken cancellationToken = cancelationTokenSource.Token;
+                        // await bulkCopy.WriteToServerAsync(dataTable);
+                        bulkCopy.WriteToServer(dataTable);
+                        
+                        //var task = bulkCopy.WriteToServerAsync(dataTable, cancellationToken);
+                        //Task.Run(async () => { await bulkCopy.WriteToServerAsync(dataTable); }).Wait();
+                        //bulkCopy.Close();
+                        //task.Wait();
                         transaction.Commit();
                         return item;
                     }
