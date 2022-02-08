@@ -40,7 +40,7 @@ namespace DUDS.Service
 													       tbl_pgto_rebate.ValorBruto = tbl_erros_pagamento.ValorBruto AND
 													       CpfCnpjFavorecido = tbl_erros_pagamento.CpfCnpjFavorecido
 				                WHERE 
-					                tbl_pgto_rebate.Competencia = @competencia";
+					                tbl_pgto_rebate.Competencia = @Competencia";
 
                 return await connection.QueryAsync<PgtoRebateViewModel>(query, new { Competencia = competencia });
             }
