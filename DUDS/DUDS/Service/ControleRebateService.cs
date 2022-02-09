@@ -155,8 +155,7 @@ namespace DUDS.Service
                           @"
                              WHERE
                                 (@Competencia IS NULL OR tbl_controle_rebate.Competencia = @Competencia) AND
-								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%') AND
-	                            tbl_controle_rebate.Enviado = 0
+								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%')
                              ORDER BY
                                 tbl_controle_rebate.Enviado,
 								tbl_controle_rebate.Validado,
