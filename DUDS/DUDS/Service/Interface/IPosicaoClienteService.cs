@@ -30,7 +30,7 @@ namespace DUDS.Service.Interface
                 LEFT JOIN tbl_gestor ON tbl_investidor.CodGestor = tbl_gestor.Id
 	            LEFT JOIN tbl_administrador adm_investidor ON tbl_investidor.CodAdministrador = adm_investidor.Id";
 
-        Task<IEnumerable<PosicaoClienteModel>> AddBulkAsync(List<PosicaoClienteModel> item);
+		Task<IEnumerable<PosicaoClienteModel>> AddBulkAsync(List<PosicaoClienteModel> item);
 
         Task<bool> DeleteByDataRefAsync(DateTime dataRef);
 
