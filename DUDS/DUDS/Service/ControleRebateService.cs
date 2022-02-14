@@ -141,7 +141,7 @@ namespace DUDS.Service
                        competencia,
                        investidor,
                        codMellon
-                   }, splitOn: "Id, CodPgtoAdmPfee");
+                   }, splitOn: "Id");
 
                 return a;
             }
