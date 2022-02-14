@@ -56,13 +56,21 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var listaControleRebate = await _controleRebateService.GetByCompetenciaAsync(filtro);
-
-                if (listaControleRebate.Any())
+                if(filtro.Competencia != null || filtro.NomeGrupoRebate != null)
                 {
-                    return Ok(listaControleRebate);
+                    var listaControleRebate = await _controleRebateService.GetByCompetenciaAsync(filtro);
+
+                    if (listaControleRebate.Any())
+                    {
+                        return Ok(listaControleRebate);
+                    }
+                    return NotFound();
                 }
-                return NotFound();
+                else
+                {
+                    return NotFound();    
+                }
+               
             }
             catch (Exception e)
             {

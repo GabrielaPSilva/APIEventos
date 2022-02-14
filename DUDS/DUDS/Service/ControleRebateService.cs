@@ -154,8 +154,8 @@ namespace DUDS.Service
                 const string query = IControleRebateService.QUERY_BASE +
                           @"
                              WHERE
-                                tbl_controle_rebate.Competencia = @Competencia OR
-								tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%'
+                                (@Competencia IS NULL OR tbl_controle_rebate.Competencia = @Competencia) AND
+								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%')
                              ORDER BY
                                 tbl_controle_rebate.Enviado,
 								tbl_controle_rebate.Validado,
