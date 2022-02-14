@@ -4,7 +4,7 @@ namespace DUDS.Models.Rebate
 {
     public class CalculoRebateModel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Guid CodPgtoAdmPfee { get; set; }
         
