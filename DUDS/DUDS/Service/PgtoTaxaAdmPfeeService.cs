@@ -132,7 +132,7 @@ namespace DUDS.Service
                     CodFundo = codFundo,
                     CodAdministrador = codAdministrador,
                     CodInvestidorDistribuidor = codInvestidorDistribuidor
-                });
+                },commandTimeout:180);
             }
         }
 
@@ -205,21 +205,21 @@ namespace DUDS.Service
 	                                    gestor.NomeGestor AS NomeGestorInvestidor
                                     FROM
 	                                    tbl_pgto_adm_pfee pgto_adm_pfee
-	                                    INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.id = pgto_adm_pfee.cod_investidor_distribuidor
-	                                    INNER JOIN tbl_investidor investidor ON investidor.id = investidor_distribuidor.cod_investidor
-	                                    INNER JOIN tbl_fundo fundo ON fundo.id = pgto_adm_pfee.cod_fundo
-	                                    INNER JOIN tbl_administrador source_administrador ON source_administrador.id = pgto_adm_pfee.cod_administrador
-	                                    INNER JOIN tbl_distribuidor_administrador distribuidor_administrador_investidor ON distribuidor_administrador_investidor.id = investidor_distribuidor.cod_distribuidor_administrador
-                                        INNER JOIN tbl_distribuidor distribuidor_investidor ON distribuidor_investidor.id = distribuidor_administrador_investidor.cod_distribuidor
-	                                    INNER JOIN tbl_administrador administrador_codigo_investidor ON administrador_codigo_investidor.id = investidor_distribuidor.cod_administrador
-	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.id = investidor_distribuidor.cod_tipo_contrato
-	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.id = investidor_distribuidor.cod_grupo_rebate
-	                                    LEFT JOIN tbl_administrador administrador_investidor ON administrador_investidor.id = investidor.cod_administrador
-	                                    LEFT JOIN tbl_gestor gestor ON gestor.id = investidor.cod_gestor
+	                                    INNER JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.Id = pgto_adm_pfee.CodInvestidorDistribuidor
+	                                    INNER JOIN tbl_investidor investidor ON investidor.Id = investidor_distribuidor.CodInvestidor
+	                                    INNER JOIN tbl_fundo fundo ON fundo.Id = pgto_adm_pfee.CodFundo
+	                                    INNER JOIN tbl_administrador source_administrador ON source_administrador.Id = pgto_adm_pfee.CodAdministrador
+	                                    INNER JOIN tbl_distribuidor_administrador distribuidor_administrador_investidor ON distribuidor_administrador_investidor.Id = investidor_distribuidor.CodDistribuidorAdministrador
+                                        INNER JOIN tbl_distribuidor distribuidor_investidor ON distribuidor_investidor.Id = distribuidor_administrador_investidor.CodDistribuidor
+	                                    INNER JOIN tbl_administrador administrador_codigo_investidor ON administrador_codigo_investidor.Id = investidor_distribuidor.CodAdministrador
+	                                    INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.Id = investidor_distribuidor.CodTipoContrato
+	                                    INNER JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.Id = investidor_distribuidor.CodGrupoRebate
+	                                    LEFT JOIN tbl_administrador administrador_investidor ON administrador_investidor.Id = investidor.CodAdministrador
+	                                    LEFT JOIN tbl_gestor gestor ON gestor.Id = investidor.CodGestor
                                     WHERE
 	                                    pgto_adm_pfee.Competencia = @Competencia";
 
-                return await connection.QueryAsync<PgtoAdmPfeeInvestidorViewModel>(query, new { Competencia = competencia });
+                return await connection.QueryAsync<PgtoAdmPfeeInvestidorViewModel>(query, new { Competencia = competencia },commandTimeout:180);
             }
         }
     }
