@@ -180,7 +180,7 @@ namespace DUDS.Service.Interface
 
 		Task<IEnumerable<PgtoRebateViewModel>> GetPgtoRebateByCompetencia(string competencia);
         Task<IEnumerable<PgtoRebateModel>> GetPgtoRebateById(Guid Id);
-        Task<IEnumerable<PgtoRebateViewModel>> GetValidaErrosPagamento(string competencia);
+        Task<IEnumerable<PgtoRebateModel>> GetValidaErrosPagamento(string competencia);
         Task<bool> DeleteByCompetenciaAsync(string competencia);
     }
 }
