@@ -151,7 +151,7 @@ namespace DUDS.Service
                                 WHERE_CLAUSE";
                 query = query.Replace("WHERE_CLAUSE", whereClause);
 
-                List<EstruturaContratoViewModel> listaContratoModel = await connection.QueryAsync<EstruturaContratoViewModel>(query, new { Status = subContratoStatus }) as List<EstruturaContratoViewModel>;
+                List<EstruturaContratoViewModel> listaContratoModel = await connection.QueryAsync<EstruturaContratoViewModel>(query, new { Status = subContratoStatus },commandTimeout:180) as List<EstruturaContratoViewModel>;
                 return listaContratoModel;
             }
         }
