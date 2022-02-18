@@ -185,14 +185,20 @@ namespace DUDS.Service
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = "SELECT ISNULL(MAX(posicao.ValorBruto),0) AS MaiorValorPosicao FROM (" + IPosicaoClienteService.QUERY_BASE +
-                    @"
-                    WHERE
-                        (@CodDistribuidor IS NULL or tbl_distribuidor.Id = @CodDistribuidor)
-                        AND (@CodGestor IS NULL or tbl_investidor.CodGestor = @CodGestor)
-                        AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
-                        AND (@CodFundo IS NULL or tbl_posicao_cliente.CodFundo = @CodFundo)
-                        AND tbl_posicao_cliente.DataRef <= @DataRef) as posicao";
+                const string query = @"
+                                        SELECT
+                                            ISNULL(MAX(posicao.ValorBruto),0) AS MaiorValorPosicao 
+                                        FROM
+                                            ("
+                                                + IPosicaoClienteService.QUERY_BASE +
+                                                @"
+                                                WHERE
+                                                    (@CodDistribuidor IS NULL or tbl_distribuidor.Id = @CodDistribuidor)
+                                                    AND (@CodGestor IS NULL or tbl_investidor.CodGestor = @CodGestor)
+                                                    AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
+                                                    AND (@CodFundo IS NULL or tbl_posicao_cliente.CodFundo = @CodFundo)
+                                                    AND tbl_posicao_cliente.DataRef <= @DataRef
+                                            ) as posicao";
 
                 return await connection.QueryFirstOrDefaultAsync<double>(query, new
                 {
