@@ -63,10 +63,11 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                var query = ICondicaoRemuneracaoService.QUERY_BASE + 
+                var query = ICondicaoRemuneracaoService.QUERY_BASE +
                             @"
                               WHERE
-	                             contrato.ativo = 1";
+	                             tbl_contrato.Ativo = 1
+                                 tbl_sub_contrato.Status <> 'Inativo'";
 
                 return await connection.QueryAsync<CondicaoRemuneracaoViewModel>(query);
             }
@@ -79,7 +80,7 @@ namespace DUDS.Service
                 var query = ICondicaoRemuneracaoService.QUERY_BASE +
                                     @"
                                        WHERE
-                                           condicao_remuneracao.Id = @id";
+                                           tbl_condicao_remuneracao.Id = @id";
 
                 return await connection.QueryFirstOrDefaultAsync<CondicaoRemuneracaoViewModel>(query, new { id });
             }
@@ -92,10 +93,10 @@ namespace DUDS.Service
                 var query = ICondicaoRemuneracaoService.QUERY_BASE +
                             @"
                               WHERE
-	                              contrato_remuneracao.Id = @id
+	                              tbl_contrato_remuneracao.Id = @id
                               ORDER BY
-                                  condicao_remuneracao.Id,
-                                  fundo.NomeReduzido";
+                                  tbl_condicao_remuneracao.Id,
+                                  tbl_fundo.NomeReduzido";
 
                 return await connection.QueryAsync<CondicaoRemuneracaoViewModel>(query, new { id });
             }
