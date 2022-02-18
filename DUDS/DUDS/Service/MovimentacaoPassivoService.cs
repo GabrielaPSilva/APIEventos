@@ -3,11 +3,9 @@ using DUDS.Models.Passivo;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
@@ -109,11 +107,11 @@ namespace DUDS.Service
                 const string query = IMovimentacaoPassivoService.QUERY_BASE +
                     @"
                     WHERE
-                        (@DataMovimentacao IS NULL OR tbl_movimentacao_passivo.DataMovimentacao = @DataMovimentacao)
+                        (@DataMovimentacao IS NULL OR tbl_movimentacao_nota.DataMovimentacao = @DataMovimentacao)
                     ORDER BY
                         tbl_fundo.NomeReduzido,
 	                    tbl_investidor.NomeInvestidor,
-                        tbl_ordem_passivo.TipoMovimentacao";
+                        tbl_movimentacao_nota.TipoMovimentacao";
 
                 return await connection.QueryAsync<MovimentacaoPassivoViewModel>(query, new { DataMovimentacao = dataMovimentacao });
             }

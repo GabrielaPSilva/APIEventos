@@ -7,19 +7,19 @@ namespace DUDS.Service.Interface
 {
     public interface IMovimentacaoPassivoService : IGenericOperationsService<MovimentacaoPassivoModel>
     {
-        const string QUERY_BASE = 
+        const string QUERY_BASE =
             @"
             SELECT
-	            tbl_movimentacao_passivo.*,
+	            tbl_movimentacao_nota.*,
 	            tbl_fundo.NomeReduzido AS NomeFundo,
 	            tbl_investidor.NomeInvestidor,
 	            tbl_administrador.NomeAdministrador
             FROM
-	            tbl_movimentacao_passivo
-		        INNER JOIN tbl_fundo ON tbl_movimentacao_passivo.CodFundo = tbl_fundo.Id
-                INNER JOIN tbl_investidor_distribuidor ON tbl_movimentacao_passivo.CodInvestidorDistribuidor = tbl_investidor_distribuidor.Id
+	            tbl_movimentacao_nota
+		        INNER JOIN tbl_fundo ON tbl_movimentacao_nota.CodFundo = tbl_fundo.Id
+                INNER JOIN tbl_investidor_distribuidor ON tbl_movimentacao_nota.CodInvestidorDistribuidor = tbl_investidor_distribuidor.Id
 		        INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.CodInvestidor = tbl_investidor.Id
-		        INNER JOIN tbl_administrador ON tbl_ordem_passivo.CodAdministrador = tbl_administrador.Id";
+		        INNER JOIN tbl_administrador ON tbl_movimentacao_nota.CodAdministrador = tbl_administrador.Id";
 
         Task<IEnumerable<MovimentacaoPassivoModel>> AddBulkAsync(List<MovimentacaoPassivoModel> item);
 
