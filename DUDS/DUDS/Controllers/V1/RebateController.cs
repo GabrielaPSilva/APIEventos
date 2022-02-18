@@ -1149,6 +1149,26 @@ namespace DUDS.Controllers.V1
             }
         }
 
+        // GET: api/v1/Rebate/GetValidaErrosPagamento/competencia
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<PgtoRebateModel>>> GetValidaErrosPagamento(string competencia)
+        {
+            try
+            {
+                var pgtoRebate = await _pgtoRebateService.GetValidaErrosPagamento(competencia);
+
+                if (!pgtoRebate.Any())
+                {
+                    NotFound();
+                }
+                return Ok(pgtoRebate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
         // DELETE: api/v1/Rebate/DeletePgtoRebate/competencia
         [HttpDelete("{competencia}")]
         public async Task<IActionResult> DeletePgtoRebate(string competencia)
@@ -1169,5 +1189,4 @@ namespace DUDS.Controllers.V1
         }
         #endregion
     }
-
 }

@@ -29,7 +29,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<PgtoRebateViewModel>> GetValidaErrosPagamento(string competencia)
+        public async Task<IEnumerable<PgtoRebateModel>> GetValidaErrosPagamento(string competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -42,7 +42,7 @@ namespace DUDS.Service
 				                WHERE 
 					                tbl_pgto_rebate.Competencia = @Competencia";
 
-                return await connection.QueryAsync<PgtoRebateViewModel>(query, new { Competencia = competencia });
+                return await connection.QueryAsync<PgtoRebateModel>(query, new { Competencia = competencia });
             }
         }
 
