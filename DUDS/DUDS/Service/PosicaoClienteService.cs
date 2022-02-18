@@ -179,7 +179,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<double> GetMaxValorBrutoAsync(DateTime dataPosicao, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor)
+        public async Task<double> GetMaxValorBrutoAsync(DateTime dataPosicao, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor, int? codFundo)
         {
             if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue) return 0;
 
@@ -191,6 +191,7 @@ namespace DUDS.Service
                         (@CodDistribuidor IS NULL or tbl_distribuidor.Id = @CodDistribuidor)
                         AND (@CodGestor IS NULL or tbl_investidor.CodGestor = @CodGestor)
                         AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
+                        AND (@CodFundo IS NULL or tbl_posicao_cliente.CodFundo = @CodFundo)
                         AND tbl_posicao_cliente.DataRef <= @DataRef) posicao";
 
                 return await connection.QueryFirstOrDefaultAsync<double>(query, new
@@ -198,7 +199,8 @@ namespace DUDS.Service
                     DataRef = dataPosicao,
                     CodDistribuidor = codDistribuidor,
                     CodGestor = codGestor,
-                    CodInvestidorDistribuidor = codInvestidorDistribuidor
+                    CodInvestidorDistribuidor = codInvestidorDistribuidor,
+                    CodFundo = codFundo
                 });
             }
         }
