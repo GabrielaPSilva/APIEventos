@@ -26,6 +26,8 @@ namespace DUDS.Models.Rebate
 
         public bool Importado { get; set; }
 
+        public char TipoPgto { get; set; }
+
         public string UsuarioCriacao { get; set; }
 
         public DateTime DataCriacao { get; set; }
