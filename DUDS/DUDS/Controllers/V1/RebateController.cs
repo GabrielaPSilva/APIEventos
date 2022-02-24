@@ -990,7 +990,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var listEmailGrupoRebate = await _emailGrupoRebateService.GetByGrupoRebateAsync(codGrupoRebate);
+                var listEmailGrupoRebate = await _emailGrupoRebateService.GetEmailByGrupoRebateAsync(codGrupoRebate);
 
                 if (listEmailGrupoRebate.Any())
                 {

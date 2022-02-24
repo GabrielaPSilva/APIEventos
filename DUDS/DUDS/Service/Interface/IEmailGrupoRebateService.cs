@@ -17,6 +17,6 @@ namespace DUDS.Service.Interface
 
         Task<EmailGrupoRebateViewModel> GetByIdAsync(int id);
         Task<IEnumerable<EmailGrupoRebateViewModel>> GetAllAsync();
-        Task<IEnumerable<EmailGrupoRebateViewModel>> GetByGrupoRebateAsync(int codGrupoRebate);
+        Task<IEnumerable<EmailGrupoRebateViewModel>> GetEmailByGrupoRebateAsync(int codGrupoRebate);
     }
 }
