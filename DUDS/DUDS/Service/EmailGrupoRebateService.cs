@@ -92,14 +92,15 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<EmailGrupoRebateViewModel>> GetByGrupoRebateAsync(int codGrupoRebate)
+        public async Task<IEnumerable<EmailGrupoRebateViewModel>> GetEmailByGrupoRebateAsync(int codGrupoRebate)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = IEmailGrupoRebateService.QUERY_BASE +
                              @"
                                WHERE 
-	                             tbl_grupo_rebate.Id = @CodGrupoRebate
+	                             tbl_grupo_rebate.Id = @CodGrupoRebate AND
+                                 tbl_email_grupo_rebate.Ativo = 1
                                ORDER BY    
                                  tbl_grupo_rebate.NomeGrupoRebate";
 

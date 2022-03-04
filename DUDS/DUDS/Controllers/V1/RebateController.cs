@@ -101,11 +101,11 @@ namespace DUDS.Controllers.V1
 
         // GET: api/Rebate/GetControleRebate
         [HttpGet("{grupoRebate}/{competencia}")]
-        public async Task<ActionResult<IEnumerable<ControleRebateViewModel>>> GetFiltroControleRebate(int grupoRebate, string competencia, string codMellon = null, string investidor = null)
+        public async Task<ActionResult<IEnumerable<ControleRebateViewModel>>> GetFiltroControleRebate(int grupoRebate, string competencia, string investidor = null)
         {
             try
             {
-                var listaControleRebate = await _controleRebateService.GetFiltroControleRebateAsync(grupoRebate, investidor, competencia, codMellon);
+                var listaControleRebate = await _controleRebateService.GetFiltroControleRebateAsync(grupoRebate, investidor, competencia);
 
                 if (listaControleRebate.Any())
                 {
@@ -990,7 +990,7 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var listEmailGrupoRebate = await _emailGrupoRebateService.GetByGrupoRebateAsync(codGrupoRebate);
+                var listEmailGrupoRebate = await _emailGrupoRebateService.GetEmailByGrupoRebateAsync(codGrupoRebate);
 
                 if (listEmailGrupoRebate.Any())
                 {

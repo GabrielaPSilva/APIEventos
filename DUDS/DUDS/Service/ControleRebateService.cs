@@ -95,7 +95,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ControleRebateViewModel>> GetFiltroControleRebateAsync(int grupoRebate, string investidor, string competencia, string codMellon)
+        public async Task<IEnumerable<ControleRebateViewModel>> GetFiltroControleRebateAsync(int grupoRebate, string investidor, string competencia)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -125,8 +125,7 @@ namespace DUDS.Service
 		                            INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.CodGrupoRebate = tbl_grupo_rebate.Id
                             WHERE
 	                            tbl_controle_rebate.CodGrupoRebate = @id
-	                            AND (@investidor IS NULL OR tbl_investidor.NomeInvestidor COLLATE Latin1_general_CI_AI LIKE '%' + @investidor + '%')
-                                AND (@codMellon IS NULL OR tbl_investidor_distribuidor.CodInvestAdministrador = @codMellon)
+	                            AND (@investidor IS NULL OR tbl_investidor.NomeInvestidor COLLATE Latin1_general_CI_AI = @investidor)
 	                            AND tbl_pgto_adm_pfee.Competencia = @competencia";
 
                 var a = await connection.QueryAsync<ControleRebateViewModel, CalculoRebateViewModel, ControleRebateViewModel>(query,
@@ -139,8 +138,7 @@ namespace DUDS.Service
                    {
                        id = grupoRebate,
                        competencia,
-                       investidor,
-                       codMellon
+                       investidor
                    }, splitOn: "Id");
 
                 return a;
