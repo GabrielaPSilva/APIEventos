@@ -96,7 +96,7 @@ namespace DUDS.Service
             sqlBulkCopy.SqlRowsCopied += new SqlRowsCopiedEventHandler(sqlBulk_SqlRowsCopied);
             sqlBulkCopy.NotifyAfter = notifyCount;
             sqlBulkCopy.BulkCopyTimeout = 0; // 250;
-            // sqlBulkCopy.BatchSize = 10000;
+            sqlBulkCopy.BatchSize = 10000;
             return sqlBulkCopy;
         }
 
