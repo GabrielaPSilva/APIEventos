@@ -9,5 +9,7 @@ namespace DUDS.Models.Filtros
     {
         public string Competencia { get; set; }
         public string NomeGrupoRebate { get; set; }
+        public bool Validado { get; set; }
+        public bool Enviado { get; set; }
     }
 }
