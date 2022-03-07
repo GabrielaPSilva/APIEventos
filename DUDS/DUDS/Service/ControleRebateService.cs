@@ -145,7 +145,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ControleRebateViewModel>> GetByCompetenciaAsync(FiltroModel filtro)
+        public async Task<IEnumerable<ControleRebateViewModel>> GetByCompetenciaAsync(FiltroModel filtro, int enviado, int  validado)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -153,7 +153,9 @@ namespace DUDS.Service
                           @"
                              WHERE
                                 (@Competencia IS NULL OR tbl_controle_rebate.Competencia = @Competencia) AND
-								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%')
+								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%') --AND
+                                --tbl_controle_rebate.Validado = @Validado AND
+                                --tbl_controle_rebate.Enviado = @Enviado
                              ORDER BY
                                 tbl_controle_rebate.Enviado,
 								tbl_controle_rebate.Validado,
@@ -162,7 +164,9 @@ namespace DUDS.Service
                 return await connection.QueryAsync<ControleRebateViewModel>(query, new
                 {
                     filtro.Competencia,
-                    filtro.NomeGrupoRebate
+                    filtro.NomeGrupoRebate,
+                    Enviado = enviado,
+                    Validado = validado
                 });
             }
         }
