@@ -28,6 +28,8 @@ namespace DUDS.Models.Rebate
 
         public string MensagemErro { get; set; }
 
-        public string NomeFundo { get; set; }
+        public string UsuarioCriacao { get; set; }
+
+        public DateTime DataCriacao { get; set; }
     }
 }
