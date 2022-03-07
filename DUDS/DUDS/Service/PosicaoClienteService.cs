@@ -36,15 +36,7 @@ namespace DUDS.Service
                         SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection, copyOptions: SqlBulkCopyOptions.TableLock, externalTransaction: (SqlTransaction)transaction);
                         var dataTable = ToDataTable(item);
                         bulkCopy = SqlBulkCopyConfigure(bulkCopy, dataTable.Rows.Count);
-                        //CancellationTokenSource cancelationTokenSource = new CancellationTokenSource();
-                        //CancellationToken cancellationToken = cancelationTokenSource.Token;
-                        // await bulkCopy.WriteToServerAsync(dataTable);
                         await bulkCopy.WriteToServerAsync(dataTable).ConfigureAwait(continueOnCapturedContext:false);
-
-                        //var task = bulkCopy.WriteToServerAsync(dataTable, cancellationToken);
-                        //Task.Run(async () => { await bulkCopy.WriteToServerAsync(dataTable); }).Wait();
-                        //bulkCopy.Close();
-                        //task.Wait();
                         transaction.Commit();
                         return item;
                     }
@@ -181,24 +173,27 @@ namespace DUDS.Service
 
         public async Task<double> GetMaxValorBrutoAsync(DateTime dataPosicao, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor, int? codFundo)
         {
-            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue) return 0;
+            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue && !codFundo.HasValue) return 0;
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = @"
                                         SELECT
-                                            ISNULL(MAX(posicao.ValorBruto),0) AS MaiorValorPosicao 
+	                                        MAX(tbl_posicao_cliente.ValorBruto) as MaiorValorPosicao
                                         FROM
-                                            ("
-                                                + IPosicaoClienteService.QUERY_BASE +
-                                                @"
-                                                WHERE
-                                                    (@CodDistribuidor IS NULL or tbl_distribuidor.Id = @CodDistribuidor)
-                                                    AND (@CodGestor IS NULL or tbl_investidor.CodGestor = @CodGestor)
-                                                    AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
-                                                    AND (@CodFundo IS NULL or tbl_posicao_cliente.CodFundo = @CodFundo)
-                                                    AND tbl_posicao_cliente.DataRef <= @DataRef
-                                            ) as posicao";
+	                                        tbl_posicao_cliente
+	                                        INNER JOIN tbl_fundo ON tbl_posicao_cliente.CodFundo = tbl_fundo.Id
+                                            INNER JOIN tbl_investidor_distribuidor ON tbl_posicao_cliente.CodInvestidorDistribuidor = tbl_investidor_distribuidor.Id
+                                            INNER JOIN tbl_distribuidor_administrador ON tbl_investidor_distribuidor.CodDistribuidorAdministrador = tbl_distribuidor_administrador.Id
+	                                        INNER JOIN tbl_distribuidor ON tbl_distribuidor.Id = tbl_distribuidor_administrador.CodDistribuidor
+	                                        INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.CodInvestidor = tbl_investidor.Id
+                                            LEFT JOIN tbl_gestor ON tbl_investidor.CodGestor = tbl_gestor.Id
+                                        WHERE
+	                                        (@CodDistribuidor IS NULL or tbl_distribuidor.Id = @CodDistribuidor)
+	                                        AND (@CodGestor IS NULL or tbl_investidor.CodGestor = @CodGestor)
+	                                        AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
+	                                        AND (@CodFundo IS NULL or tbl_posicao_cliente.CodFundo = @CodFundo)
+	                                        AND tbl_posicao_cliente.DataRef <= @DataRef";
 
                 return await connection.QueryFirstOrDefaultAsync<double>(query, new
                 {
@@ -207,7 +202,7 @@ namespace DUDS.Service
                     CodGestor = codGestor,
                     CodInvestidorDistribuidor = codInvestidorDistribuidor,
                     CodFundo = codFundo
-                },commandTimeout:180);
+                },commandTimeout:240);
             }
         }
     }

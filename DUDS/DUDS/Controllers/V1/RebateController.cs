@@ -618,7 +618,7 @@ namespace DUDS.Controllers.V1
                 if (!retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetPgtoTaxaAdmPfeeByCompetencia),
-                        new { competencia = pagamentoAdministracaoPerformance.FirstOrDefault().Competencia }, pagamentoAdministracaoPerformance);
+                        new { competencia = pagamentoAdministracaoPerformance.FirstOrDefault().Competencia }, null);
                 }
                 return BadRequest(retorno);
             }

@@ -111,7 +111,7 @@ namespace DUDS.Controllers.V1
                 if (retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetPosicaoCliente),
-                        new { dataInicio = posicaoClientePassivo.FirstOrDefault().DataRef }, posicaoClientePassivo);
+                        new { dataInicio = posicaoClientePassivo.FirstOrDefault().DataRef }, null);
                 }
                 return BadRequest(retorno);
             }
@@ -170,7 +170,7 @@ namespace DUDS.Controllers.V1
                 if (retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetOrdemPassivo),
-                        new { dataEntrada = DateTime.Today }, ordemPassivo);
+                        new { dataEntrada = DateTime.Today }, null);
                 }
                 return BadRequest(retorno);
             }
@@ -229,7 +229,7 @@ namespace DUDS.Controllers.V1
                 if (retorno.Any())
                 {
                     return CreatedAtAction(nameof(GetMovimentacaoPassivo),
-                        new { dataMovimentacao = movimentacaoPassico.FirstOrDefault().DataMovimentacao }, movimentacaoPassico);
+                        new { dataMovimentacao = movimentacaoPassico.FirstOrDefault().DataMovimentacao }, null);
                 }
                 return BadRequest(retorno);
             }
