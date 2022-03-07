@@ -1,4 +1,4 @@
-﻿namespace DUDS.Models.Posicao
+﻿namespace DUDS.Models.PosicaoCarteira
 {
     public class PosicaoAtivoComumModel : PosicaoGeralModel
     {

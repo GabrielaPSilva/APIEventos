@@ -36,15 +36,7 @@ namespace DUDS.Service
                         SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection, copyOptions: SqlBulkCopyOptions.TableLock, externalTransaction: (SqlTransaction)transaction);
                         var dataTable = ToDataTable(item);
                         bulkCopy = SqlBulkCopyConfigure(bulkCopy, dataTable.Rows.Count);
-                        //CancellationTokenSource cancelationTokenSource = new CancellationTokenSource();
-                        //CancellationToken cancellationToken = cancelationTokenSource.Token;
-                        // await bulkCopy.WriteToServerAsync(dataTable);
                         await bulkCopy.WriteToServerAsync(dataTable).ConfigureAwait(continueOnCapturedContext:false);
-
-                        //var task = bulkCopy.WriteToServerAsync(dataTable, cancellationToken);
-                        //Task.Run(async () => { await bulkCopy.WriteToServerAsync(dataTable); }).Wait();
-                        //bulkCopy.Close();
-                        //task.Wait();
                         transaction.Commit();
                         return item;
                     }

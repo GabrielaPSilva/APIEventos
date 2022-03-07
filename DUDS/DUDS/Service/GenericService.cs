@@ -93,14 +93,14 @@ namespace DUDS.Service
             }
             sqlBulkCopy.DestinationTableName = TableName;
             sqlBulkCopy.EnableStreaming = true;
-            sqlBulkCopy.SqlRowsCopied += new SqlRowsCopiedEventHandler(sqlBulk_SqlRowsCopied);
+            sqlBulkCopy.SqlRowsCopied += new SqlRowsCopiedEventHandler(SqlBulkSqlRowsCopied);
             sqlBulkCopy.NotifyAfter = notifyCount;
             sqlBulkCopy.BulkCopyTimeout = 0; // 250;
             sqlBulkCopy.BatchSize = 10000;
             return sqlBulkCopy;
         }
 
-        private void sqlBulk_SqlRowsCopied(object sender, SqlRowsCopiedEventArgs e)
+        private void SqlBulkSqlRowsCopied(object sender, SqlRowsCopiedEventArgs e)
         {
             SqlBulkCopyCount = e.RowsCopied;
         }
