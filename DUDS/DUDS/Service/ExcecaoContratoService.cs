@@ -72,7 +72,7 @@ namespace DUDS.Service
 	                    tbl_excecao_contrato.Ativo = 1
                         AND (@CodInvestidor IS NULL OR tbl_excecao_contrato.CodInvestidor = @CodInvestidor)
                         AND (@CodFundo IS NULL OR tbl_excecao_contrato.CodFundo = @CodFundo)
-                        AND (@CodContrato IS NULL tbl_excecao_contrato.CodContrato = @CodContrato)";
+                        AND (@CodContrato IS NULL OR tbl_excecao_contrato.CodContrato = @CodContrato)";
                 var listaExcecaoContratoModel = await connection.QueryAsync<ExcecaoContratoViewModel>(
                     query,
                     new
