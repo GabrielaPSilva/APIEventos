@@ -145,7 +145,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ControleRebateViewModel>> GetByCompetenciaAsync(FiltroModel filtro, int enviado, int  validado)
+        public async Task<IEnumerable<ControleRebateViewModel>> GetByCompetenciaAsync(FiltroModel filtro)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -153,20 +153,45 @@ namespace DUDS.Service
                           @"
                              WHERE
                                 (@Competencia IS NULL OR tbl_controle_rebate.Competencia = @Competencia) AND
-								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%') --AND
-                                --tbl_controle_rebate.Validado = @Validado AND
-                                --tbl_controle_rebate.Enviado = @Enviado
+								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%')";
+
+                const string queryValidado =
+                          @" 
+                             AND tbl_controle_rebate.Validado = @Validado";
+
+                const string queryEnviado =
+                          @" 
+                             AND tbl_controle_rebate.Enviado = @Enviado";
+                           
+                const string queryOrderBy = 
+                          @"  
                              ORDER BY
                                 tbl_controle_rebate.Enviado,
 								tbl_controle_rebate.Validado,
 								tbl_grupo_rebate.NomeGrupoRebate";
 
-                return await connection.QueryAsync<ControleRebateViewModel>(query, new
+                var queryParaExecutar = "";
+
+                if (filtro.Validado != null)
+                {
+                    queryParaExecutar = query + queryValidado + queryOrderBy;
+                }
+
+                else if (filtro.Enviado != null)
+                {
+                    queryParaExecutar = query + queryEnviado + queryOrderBy;
+                }
+                else
+                {
+                    queryParaExecutar = query + queryOrderBy;
+                }
+
+                return await connection.QueryAsync<ControleRebateViewModel>(queryParaExecutar, new
                 {
                     filtro.Competencia,
                     filtro.NomeGrupoRebate,
-                    Enviado = enviado,
-                    Validado = validado
+                    filtro.Enviado,
+                    filtro.Validado
                 });
             }
         }

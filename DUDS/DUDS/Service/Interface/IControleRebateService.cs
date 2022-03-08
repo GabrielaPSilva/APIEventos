@@ -20,7 +20,7 @@ namespace DUDS.Service.Interface
         Task<ControleRebateViewModel> GetGrupoRebateExistsBase(int codGrupoRebate, string Competencia);
         Task<IEnumerable<ControleRebateViewModel>> GetFiltroControleRebateAsync(int grupoRebate, string investidor, string competencia);
         Task<int> GetCountControleRebateAsync(FiltroModel filtro);
-        Task<IEnumerable<ControleRebateViewModel>> GetByCompetenciaAsync(FiltroModel filtro, int enviado, int validado);
+        Task<IEnumerable<ControleRebateViewModel>> GetByCompetenciaAsync(FiltroModel filtro);
 
         Task<IEnumerable<ControleRebateModel>> AddBulkAsync(List<ControleRebateModel> item);
     }

@@ -58,10 +58,7 @@ namespace DUDS.Controllers.V1
             {
                 if(filtro.Competencia != null || filtro.NomeGrupoRebate != null)
                 {
-                    int intEnviado = Convert.ToInt32(filtro.Enviado);
-                    int intValidado = Convert.ToInt32(filtro.Validado);
-
-                    var listaControleRebate = await _controleRebateService.GetByCompetenciaAsync(filtro, intEnviado, intValidado);
+                    var listaControleRebate = await _controleRebateService.GetByCompetenciaAsync(filtro);
 
                     if (listaControleRebate.Any())
                     {
