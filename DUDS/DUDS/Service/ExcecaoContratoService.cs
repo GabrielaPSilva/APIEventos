@@ -62,7 +62,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<ExcecaoContratoViewModel>> GetExcecaoContratoAsync(int codContrato, int codFundo, int codInvestidor)
+        public async Task<IEnumerable<ExcecaoContratoViewModel>> GetExcecaoContratoAsync(int? codContrato, int? codFundo, int? codInvestidor)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
@@ -70,9 +70,9 @@ namespace DUDS.Service
                     @"
                     WHERE
 	                    tbl_excecao_contrato.Ativo = 1
-                        AND tbl_excecao_contrato.CodInvestidor = @CodInvestidor
-                        AND tbl_excecao_contrato.CodFundo = @CodFundo
-                        AND tbl_excecao_contrato.CodContrato = @CodContrato";
+                        AND (@CodInvestidor IS NULL OR tbl_excecao_contrato.CodInvestidor = @CodInvestidor)
+                        AND (@CodFundo IS NULL OR tbl_excecao_contrato.CodFundo = @CodFundo)
+                        AND (@CodContrato IS NULL tbl_excecao_contrato.CodContrato = @CodContrato)";
                 var listaExcecaoContratoModel = await connection.QueryAsync<ExcecaoContratoViewModel>(
                     query,
                     new

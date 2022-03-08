@@ -27,7 +27,7 @@ namespace DUDS.Service.Interface
 				INNER JOIN tbl_investidor_distribuidor on tbl_investidor_distribuidor.CodInvestidor = tbl_investidor.Id
 				INNER JOIN tbl_fundo on tbl_fundo.Id = tbl_excecao_contrato.CodFundo";
 
-		Task<IEnumerable<ExcecaoContratoViewModel>> GetExcecaoContratoAsync(int codContrato, int codFundo, int codInvestidor);
+		Task<IEnumerable<ExcecaoContratoViewModel>> GetExcecaoContratoAsync(int? codContrato, int? codFundo, int? codInvestidor);
 
 		Task<ExcecaoContratoViewModel> GetByIdAsync(int id);
 	}
