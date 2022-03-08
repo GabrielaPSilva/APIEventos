@@ -8,7 +8,7 @@ namespace DUDS.Models.Contrato
 
         public int CodSubContrato { get; set; }
 
-        public int CodInvestidor { get; set; }
+        public int CodInvestidorDistribuidor { get; set; }
 
         public int CodFundo { get; set; }
 

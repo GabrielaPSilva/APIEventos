@@ -812,11 +812,11 @@ namespace DUDS.Controllers.V1
 
         // [HttpGet("{codContrato}/{codFundo}/{codInvestidor}")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ExcecaoContratoViewModel>>> GetExcecaoContratoByIds([FromQuery] int? codContrato, [FromQuery] int? codFundo, [FromQuery]  int? codInvestidor)
+        public async Task<ActionResult<IEnumerable<ExcecaoContratoViewModel>>> GetExcecaoContratoByIds([FromQuery] int? codSubContrato, [FromQuery] int? codFundo, [FromQuery]  int? codInvestidorDistribuidor)
         {
             try
             {
-                var excecaoContrato = await _excecaoContratoService.GetExcecaoContratoAsync(codContrato, codFundo, codInvestidor);
+                var excecaoContrato = await _excecaoContratoService.GetExcecaoContratoAsync(codSubContrato, codFundo, codInvestidorDistribuidor);
                 if (!excecaoContrato.Any())
                 {
                     return NotFound();
