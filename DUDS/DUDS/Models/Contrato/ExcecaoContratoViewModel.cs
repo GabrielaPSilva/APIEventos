@@ -7,14 +7,10 @@ namespace DUDS.Models.Contrato
 
         public string NomeFundo { get; set; }
 
-        public int CodInvestidorDistribuidor { get; set; }
+        public int CodInvestidor { get; set; }
 
         public int CodContrato { get; set; }
 
-        public int CodContratoAlocador { get; set; }
-
-        public int CodContratoFundo { get; set; }
-        
         public string CodInvestAdministrador { get; set; }
 
     }
