@@ -202,7 +202,7 @@ namespace DUDS.Service
                     CodGestor = codGestor,
                     CodInvestidorDistribuidor = codInvestidorDistribuidor,
                     CodFundo = codFundo
-                },commandTimeout:240);
+                },commandTimeout:300);
             }
         }
     }
