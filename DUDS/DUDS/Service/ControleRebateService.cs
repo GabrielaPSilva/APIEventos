@@ -162,11 +162,14 @@ namespace DUDS.Service
 
                 var queryParaExecutar = "";
 
-                if (filtro.Validado != null)
+                if (filtro.Validado != null && filtro.Enviado != null)
+                {
+                    queryParaExecutar = query + queryValidado + queryEnviado + queryOrderBy;
+                }
+                else if (filtro.Validado != null)
                 {
                     queryParaExecutar = query + queryValidado + queryOrderBy;
                 }
-
                 else if (filtro.Enviado != null)
                 {
                     queryParaExecutar = query + queryEnviado + queryOrderBy;
