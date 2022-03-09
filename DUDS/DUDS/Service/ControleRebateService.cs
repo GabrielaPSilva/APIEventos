@@ -163,12 +163,12 @@ namespace DUDS.Service
                           @" 
                              AND tbl_controle_rebate.Enviado = @Enviado";
                            
-                const string queryOrderBy = 
+                const string queryOrderBy =
                           @"  
                              ORDER BY
-                                tbl_controle_rebate.Enviado,
+								tbl_grupo_rebate.NomeGrupoRebate,
 								tbl_controle_rebate.Validado,
-								tbl_grupo_rebate.NomeGrupoRebate";
+                                tbl_controle_rebate.Enviado";
 
                 var queryParaExecutar = "";
 
