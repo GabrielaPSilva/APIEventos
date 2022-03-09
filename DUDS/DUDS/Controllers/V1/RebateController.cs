@@ -169,8 +169,13 @@ namespace DUDS.Controllers.V1
             try
             {
                 bool retorno = await _controleRebateService.AddAsync(controleRebate);
-
-                return CreatedAtAction(nameof(GetControleRebateById), new { id = controleRebate.Id }, controleRebate);
+                if (!retorno)
+                {
+                    BadRequest();
+                }
+                FiltroModel filtroModel = new FiltroModel();
+                filtroModel.Competencia = controleRebate.Competencia;
+                return CreatedAtAction(nameof(GetControleRebateByCompetencia), new { id = controleRebate.Competencia }, GetControleRebateByCompetencia(filtroModel));
             }
             catch (Exception e)
             {
@@ -740,7 +745,7 @@ namespace DUDS.Controllers.V1
                 if (!retorno.Any())
                 {
                     // TODO - Arrumar esta coisa estranha
-                    return CreatedAtAction(nameof(GetCalculoRebate), new { competencia = "2021-07" }, GetCalculoRebate("2021-07", null));
+                    return CreatedAtAction(nameof(GetCalculoRebate), new { competencia = "2021-07" }, null);
                 }
 
                 return BadRequest(retorno);

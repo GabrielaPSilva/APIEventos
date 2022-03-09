@@ -28,9 +28,12 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        string query = GenericSQLCommands.INSERT_COMMAND.Replace("TABELA", TableName).Replace("CAMPOS", String.Join(",", _fieldsInsert)).Replace("VALORES", String.Join(",", _propertiesInsert));
-                        
-                        var retorno = await connection.ExecuteAsync(sql: query, param: item, transaction: transaction);
+                        var retorno = await connection.ExecuteAsync(sql: IControleRebateService.INSERT_STMT,
+                            param: new
+                            {
+                                Competencia = item.Competencia,
+                            }
+                            );
                         transaction.Commit();
                         return retorno > 0;
                     }
@@ -42,19 +45,6 @@ namespace DUDS.Service
                     }
                 }
             }
-        }
-
-        public async Task<IEnumerable<ControleRebateModel>> AddBulkAsync(List<ControleRebateModel> item)
-        {
-            ConcurrentBag<ControleRebateModel> vs = new ConcurrentBag<ControleRebateModel>();
-            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxParallProcess };
-            await Parallel.ForEachAsync(item, parallelOptions, async (x, cancellationToken) =>
-            {
-                var result = await AddAsync(x);
-                if (!result) { vs.Add(x); }
-            }
-            );
-            return vs;
         }
 
         public async Task<bool> UpdateAsync(ControleRebateModel item)
