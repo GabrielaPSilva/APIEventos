@@ -153,20 +153,23 @@ namespace DUDS.Service
                           @" 
                              AND tbl_controle_rebate.Enviado = @Enviado";
                            
-                const string queryOrderBy = 
+                const string queryOrderBy =
                           @"  
                              ORDER BY
-                                tbl_controle_rebate.Enviado,
+								tbl_grupo_rebate.NomeGrupoRebate,
 								tbl_controle_rebate.Validado,
-								tbl_grupo_rebate.NomeGrupoRebate";
+                                tbl_controle_rebate.Enviado";
 
                 var queryParaExecutar = "";
 
-                if (filtro.Validado != null)
+                if (filtro.Validado != null && filtro.Enviado != null)
+                {
+                    queryParaExecutar = query + queryValidado + queryEnviado + queryOrderBy;
+                }
+                else if (filtro.Validado != null)
                 {
                     queryParaExecutar = query + queryValidado + queryOrderBy;
                 }
-
                 else if (filtro.Enviado != null)
                 {
                     queryParaExecutar = query + queryEnviado + queryOrderBy;
