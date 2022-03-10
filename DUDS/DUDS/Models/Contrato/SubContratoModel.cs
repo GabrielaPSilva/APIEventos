@@ -26,6 +26,8 @@ namespace DUDS.Models.Contrato
         
         public DateTime? DataVigenciaFim { get; set; }
 
+        public string Observacao { get; set; }
+
         public string UsuarioCriacao { get; set; }
         
         public DateTime DataCriacao { get; set; }

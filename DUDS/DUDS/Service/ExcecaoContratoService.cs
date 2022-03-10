@@ -70,6 +70,7 @@ namespace DUDS.Service
                     @"
                     WHERE
 	                    tbl_excecao_contrato.Ativo = 1
+                        AND tbl_sub_contrato.Status <> 'Inativo'
                         AND (@CodInvestidorDistribuidor IS NULL OR tbl_excecao_contrato.CodInvestidorDistribuidor = @CodInvestidorDistribuidor)
                         AND (@CodFundo IS NULL OR tbl_excecao_contrato.CodFundo = @CodFundo)
                         AND (@CodSubContrato IS NULL OR tbl_excecao_contrato.CodSubContrato = @CodSubContrato)";

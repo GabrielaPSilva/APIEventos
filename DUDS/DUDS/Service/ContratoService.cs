@@ -109,7 +109,9 @@ namespace DUDS.Service
             if (subContratoStatus == "Ativo")
             {
                 subContratoStatus = "Inativo";
-                whereClause = "sub_contrato.Status <> @Status";
+                whereClause = @"
+                                sub_contrato.Status <> @Status
+                                AND sub_contrato.Status <> 'Em Encerramento'";
             }
             else
             {

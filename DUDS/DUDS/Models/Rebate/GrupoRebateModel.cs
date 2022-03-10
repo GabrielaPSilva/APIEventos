@@ -10,6 +10,8 @@ namespace DUDS.Models.Rebate
 
         public string UsuarioCriacao { get; set; }
 
+        public bool EnviarMemoriaCalculo { get; set; }
+        
         public DateTime DataCriacao { get; set; }
 
         public bool Ativo { get; set; }
