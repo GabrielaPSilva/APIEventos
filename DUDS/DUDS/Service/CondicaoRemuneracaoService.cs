@@ -67,7 +67,8 @@ namespace DUDS.Service
                             @"
                               WHERE
 	                             tbl_contrato.Ativo = 1
-                                 AND tbl_sub_contrato.Status <> 'Inativo'";
+                                 AND tbl_sub_contrato.Status <> 'Inativo'
+                                 AND sub_contrato.Status <> 'Em Encerramento'";
 
                 return await connection.QueryAsync<CondicaoRemuneracaoViewModel>(query,commandTimeout:180);
             }
