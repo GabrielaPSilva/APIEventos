@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace DUDS
 {
@@ -19,7 +20,8 @@ namespace DUDS
                     {
                         // Handle requests up to 400 MB
                         options.Limits.MaxRequestBodySize = 4194304000;
-                                                            //3000000000
+                        //3000000000
+                        options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(20);
                     })
                     .UseStartup<Startup>();
                 });

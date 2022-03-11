@@ -46,11 +46,11 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<IEnumerable<PgtoRebateModel>> GetPgtoRebateById(Guid Id)
+        public async Task<IEnumerable<PgtoRebateModel>> GetPgtoRebateById(Guid id)
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                return await connection.QueryAsync<PgtoRebateModel>(IPgtoRebateService.QUERY_BASE, new { Id = Id });
+                return await connection.QueryAsync<PgtoRebateModel>(IPgtoRebateService.QUERY_BASE, new { Id = id });
             }
         }
 
