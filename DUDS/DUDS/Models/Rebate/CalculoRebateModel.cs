@@ -21,7 +21,7 @@ namespace DUDS.Models.Rebate
         public decimal RebatePfeeResgate { get; set; }
         
         public decimal RebatePfeeSemestre { get; set; }
-        
+
         public DateTime DataCriacao { get; set; }
         
         public string UsuarioCriacao { get; set; }

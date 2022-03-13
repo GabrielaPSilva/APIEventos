@@ -171,7 +171,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<double> GetMaxValorBrutoAsync(DateTime dataPosicao, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor, int? codFundo)
+        public async Task<Dictionary<DateTime, decimal>> GetMaxValorBrutoAsync(DateTime dataPosicao, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor, int? codFundo)
         {
             if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue && !codFundo.HasValue) return 0;
 
@@ -179,6 +179,7 @@ namespace DUDS.Service
             {
                 const string query = @"
                                         SELECT
+                                            tbl_posicao_cliente.DataRef,
 	                                        MAX(tbl_posicao_cliente.ValorBruto) as MaiorValorPosicao
                                         FROM
 	                                        tbl_posicao_cliente
@@ -193,9 +194,11 @@ namespace DUDS.Service
 	                                        AND (@CodGestor IS NULL or tbl_investidor.CodGestor = @CodGestor)
 	                                        AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
 	                                        AND (@CodFundo IS NULL or tbl_posicao_cliente.CodFundo = @CodFundo)
-	                                        AND tbl_posicao_cliente.DataRef <= @DataRef";
+	                                        AND tbl_posicao_cliente.DataRef <= @DataRef
+                                        GROUP BY
+                                            tbl_posicao_cliente.DataRef";
 
-                return await connection.QueryFirstOrDefaultAsync<double>(query, new
+                return await connection.QueryFirstOrDefaultAsync<Dictionary<DateTime,decimal>>(query, new
                 {
                     DataRef = dataPosicao,
                     CodDistribuidor = codDistribuidor,

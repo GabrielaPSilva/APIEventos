@@ -18,6 +18,8 @@ namespace DUDS.Models.Investidor
         
         public int CodGrupoRebate { get; set; }
 
+        public bool GerarPagamento { get; set; } = true;
+
         public DateTime DataCriacao { get; set; }
 
         public string UsuarioCriacao { get; set; }

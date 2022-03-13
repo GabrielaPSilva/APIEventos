@@ -26,6 +26,7 @@ namespace DUDS.Controllers.V1
         private readonly IEmailGrupoRebateService _emailGrupoRebateService;
         private readonly IControleRebateService _controleRebateService;
         private readonly IPgtoRebateService _pgtoRebateService;
+        private readonly ICalculoServicoService _calculoServicoService;
 
         public RebateController(IConfiguracaoService configService,
             IErrosPagamentoService errosPagamento,
@@ -35,7 +36,8 @@ namespace DUDS.Controllers.V1
             IGrupoRebateService grupoRebateService,
             IControleRebateService controleRebateService,
             IEmailGrupoRebateService emailGrupoRebateService,
-            IPgtoRebateService pgtoRebateService)
+            IPgtoRebateService pgtoRebateService,
+            ICalculoServicoService calculoServicoService)
         {
             _errosPagamento = errosPagamento;
             _configService = configService;
@@ -46,6 +48,7 @@ namespace DUDS.Controllers.V1
             _controleRebateService = controleRebateService;
             _emailGrupoRebateService = emailGrupoRebateService;
             _pgtoRebateService = pgtoRebateService;
+            _calculoServicoService = calculoServicoService;
         }
 
         #region Controle Rebate
@@ -1185,6 +1188,54 @@ namespace DUDS.Controllers.V1
                 {
                     return Ok();
                 }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+        #endregion
+
+        #region Calculo Servico
+        
+
+        //POST: api/Rebate/AddCalculoRebate/List<CalculoPgtoTaxaAdmPfeeModel>
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<CalculoServicoViewModel>>> AddCalculoServico(List<CalculoServicoModel> calculoServico)
+        {
+            try
+            {
+                var retorno = await _calculoServicoService.AddBulkAsync(calculoServico);
+
+                if (!retorno.Any())
+                {
+                    // TODO - Arrumar esta coisa estranha
+                    return CreatedAtAction(nameof(GetCalculoServico), new { competencia = calculoServico[0].Competencia }, null);
+                }
+
+                return BadRequest(retorno);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET: api/Rebate/GetCalculoRebate/competencia/codGrupoRebate
+        //[HttpGet("{competencia}/{codGrupoRebate}")]
+        [HttpGet("{competencia}")]
+        public async Task<ActionResult<IEnumerable<CalculoServicoViewModel>>> GetCalculoServico(string competencia)
+        {
+            try
+            {
+                var calculoServico = await _calculoServicoService.GetCalculoServico(competencia);
+
+                if (calculoServico.Any())
+                {
+                    return Ok(calculoServico);
+                }
+
                 return NotFound();
             }
             catch (Exception e)
