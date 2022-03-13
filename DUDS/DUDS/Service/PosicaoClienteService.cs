@@ -173,7 +173,7 @@ namespace DUDS.Service
 
         public async Task<Dictionary<DateTime, decimal>> GetMaxValorBrutoAsync(DateTime dataPosicao, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor, int? codFundo)
         {
-            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue && !codFundo.HasValue) return 0;
+            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue && !codFundo.HasValue) return new Dictionary<DateTime, decimal>();
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
