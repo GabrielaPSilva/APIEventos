@@ -89,7 +89,7 @@ namespace DUDS.Controllers.V1
 
         // GET: api/PosicaoCliente/GetPosicaoClientePassivo
         [HttpGet("{dataRef}")]
-        public async Task<ActionResult<double>> GetMaiorValorBrutoPosicaoCliente(DateTime dataRef, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor, [FromQuery] int? codFundo)
+        public async Task<ActionResult<Dictionary<DateTime, decimal>>> GetMaiorValorBrutoPosicaoCliente(DateTime dataRef, [FromQuery] int? codDistribuidor, [FromQuery] int? codGestor, [FromQuery] int? codInvestidorDistribuidor, [FromQuery] int? codFundo)
         {
             try
             {
