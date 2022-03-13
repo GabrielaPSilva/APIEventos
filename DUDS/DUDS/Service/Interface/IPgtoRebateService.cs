@@ -8,7 +8,7 @@ namespace DUDS.Service.Interface
     public interface IPgtoRebateService : IGenericOperationsService<PgtoRebateModel>
     {
         const string QUERY_INSERT_PFEE_GESTOR = @"
-			INSERT INTO tbl_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDadosFavorecido,SourceFavorecido,Competencia,TipoPgto,UsuarioCriacao)
+			INSERT INTO tbl_controle_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDadosFavorecido,SourceFavorecido,Competencia,TipoPgto,UsuarioCriacao)
 			SELECT
 				@DataAgendamento AS DataAgendamento,
 				tbl_pgto_adm_pfee.CodFundo,
@@ -38,7 +38,7 @@ namespace DUDS.Service.Interface
 				tbl_fundo.CodGestor";
 
         const string QUERY_INSERT_PFEE_IVESTIDOR = @"
-			INSERT INTO tbl_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDadosFavorecido,SourceFavorecido,Competencia,TipoPgto,UsuarioCriacao)
+			INSERT INTO tbl_controle_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDadosFavorecido,SourceFavorecido,Competencia,TipoPgto,UsuarioCriacao)
 			SELECT
 				@DataAgendamento AS DataAgendamento,
 				tbl_pgto_adm_pfee.CodFundo,
@@ -92,12 +92,12 @@ namespace DUDS.Service.Interface
 				tbl_pgto_adm_pfee.Competencia";
 
         const string QUERY_INSERT_ADM_GESTOR = @"
-            INSERT INTO tbl_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDadosFavorecido,SourceFavorecido,Competencia,TipoPgto,UsuarioCriacao)
+            INSERT INTO tbl_controle_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDadosFavorecido,SourceFavorecido,Competencia,TipoPgto,UsuarioCriacao)
 			SELECT
 				@DataAgendamento AS DataAgendamento,
 				tbl_fundo.Id AS CodFundo,
 				2 AS CodTipoContrato,
-				tbl_pagamento_servico.SaldoGestor - ISNULL(SUM(tbl_pgto_rebate.ValorBruto),0) AS ValorBruto,
+				tbl_pagamento_servico.SaldoGestor - ISNULL(SUM(tbl_controle_pgto_rebate.ValorBruto),0) AS ValorBruto,
 				tbl_fundo.CodGestor AS CodDadosFavorecido,
 				'tbl_gestor' AS SourceFavorecido,
 				@Competencia AS Competencia,
@@ -106,7 +106,7 @@ namespace DUDS.Service.Interface
 			FROM
 				tbl_pagamento_servico
 				INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_pagamento_servico.CodFundo
-				LEFT JOIN tbl_pgto_rebate ON tbl_pagamento_servico.CodFundo = tbl_pgto_rebate.CodFundo AND tbl_pagamento_servico.Competencia = tbl_pgto_rebate.Competencia
+				LEFT JOIN tbl_controle_pgto_rebate ON tbl_pagamento_servico.CodFundo = tbl_controle_pgto_rebate.CodFundo AND tbl_pagamento_servico.Competencia = tbl_controle_pgto_rebate.Competencia
 			WHERE
 				tbl_pagamento_servico.Competencia = @Competencia
 				AND tbl_fundo.TipoFundo = 'FEEDER'
@@ -202,7 +202,7 @@ namespace DUDS.Service.Interface
             WHERE
                calculo_pgto.SumRebateAdm <= tbl_pagamento_servico.SaldoGestor
             )
-            INSERT INTO tbl_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDadosFavorecido,SourceFavorecido,Competencia,TipoPgto,UsuarioCriacao)
+            INSERT INTO tbl_controle_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDadosFavorecido,SourceFavorecido,Competencia,TipoPgto,UsuarioCriacao)
             SELECT
 	            @DataAgendamento AS DataAgendamento,
 	            pre_pgto.CodFundo,
@@ -240,52 +240,52 @@ namespace DUDS.Service.Interface
 
         const string QUERY_ARQUIVO_PGTO = @"
             SELECT
-	            tbl_pgto_rebate.DataAgendamento,
+	            tbl_controle_pgto_rebate.DataAgendamento,
 	            tbl_fundo.Mnemonico AS CodFundo,
-	            CASE WHEN tbl_pgto_rebate.TipoPgto = 'A' THEN
+	            CASE WHEN tbl_controle_pgto_rebate.TipoPgto = 'A' THEN
 					CASE 
-						WHEN tbl_pgto_rebate.CodTipoContrato = 1 THEN 1
-						WHEN tbl_pgto_rebate.CodTipoContrato = 2 THEN 2
-						WHEN tbl_pgto_rebate.CodTipoContrato = 3 THEN 1243
+						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 1 THEN 1
+						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 2 THEN 2
+						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 3 THEN 1243
 					END
 				ELSE
 					CASE 
-						WHEN tbl_pgto_rebate.CodTipoContrato = 1 THEN 6
-						WHEN tbl_pgto_rebate.CodTipoContrato = 2 THEN 7
-						WHEN tbl_pgto_rebate.CodTipoContrato = 3 THEN 1244
+						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 1 THEN 6
+						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 2 THEN 7
+						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 3 THEN 1244
 					END
 				AS TipoDespesa,
-	            tbl_pgto_rebate.ValorBruto,
+	            tbl_controle_pgto_rebate.ValorBruto,
 	            CASE
-		            WHEN tbl_pgto_rebate.SourceFavorecido = 'tbl_gestor' THEN (SELECT tbl_gestor.Cnpj FROM tbl_gestor WHERE tbl_gestor.Id = tbl_pgto_rebate.CodDadosFavorecido)
-		            WHEN tbl_pgto_rebate.SourceFavorecido = 'tbl_distribuidor' THEN (SELECT tbl_distribuidor.Cnpj FROM tbl_distribuidor WHERE tbl_distribuidor.Id = tbl_pgto_rebate.CodDadosFavorecido)
-		            WHEN tbl_pgto_rebate.SourceFavorecido = 'tbl_investidor' THEN (SELECT tbl_investidor.Cnpj FROM tbl_investidor WHERE tbl_investidor.Id = tbl_pgto_rebate.CodDadosFavorecido)
+		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_gestor' THEN (SELECT tbl_gestor.Cnpj FROM tbl_gestor WHERE tbl_gestor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
+		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_distribuidor' THEN (SELECT tbl_distribuidor.Cnpj FROM tbl_distribuidor WHERE tbl_distribuidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
+		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_investidor' THEN (SELECT tbl_investidor.Cnpj FROM tbl_investidor WHERE tbl_investidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
 	            END AS CnpjCpfFavorecido,
 	            CASE
-		            WHEN tbl_pgto_rebate.SourceFavorecido = 'tbl_gestor' THEN (SELECT tbl_gestor.NomeGestor FROM tbl_gestor WHERE tbl_gestor.Id = tbl_pgto_rebate.CodDadosFavorecido)
-		            WHEN tbl_pgto_rebate.SourceFavorecido = 'tbl_distribuidor' THEN (SELECT tbl_distribuidor.NomeDistribuidor FROM tbl_distribuidor WHERE tbl_distribuidor.Id = tbl_pgto_rebate.CodDadosFavorecido)
-		            WHEN tbl_pgto_rebate.SourceFavorecido = 'tbl_investidor' THEN (SELECT tbl_investidor.NomeInvestidor FROM tbl_investidor WHERE tbl_investidor.Id = tbl_pgto_rebate.CodDadosFavorecido)
+		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_gestor' THEN (SELECT tbl_gestor.NomeGestor FROM tbl_gestor WHERE tbl_gestor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
+		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_distribuidor' THEN (SELECT tbl_distribuidor.NomeDistribuidor FROM tbl_distribuidor WHERE tbl_distribuidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
+		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_investidor' THEN (SELECT tbl_investidor.NomeInvestidor FROM tbl_investidor WHERE tbl_investidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
 	            END AS NomeFavorecido,
-	            RIGHT(tbl_pgto_rebate.Competencia,2) AS MesCompetencia,
-	            LEFT(tbl_pgto_rebate.Competencia,4) AS AnoCompetencia,
-	            tbl_pgto_rebate.Observacao,
+	            RIGHT(tbl_controle_pgto_rebate.Competencia,2) AS MesCompetencia,
+	            LEFT(tbl_controle_pgto_rebate.Competencia,4) AS AnoCompetencia,
+	            tbl_controle_pgto_rebate.Observacao,
 	            CASE
-		            WHEN tbl_pgto_rebate.CodTipoContrato = 3 THEN (SELECT tbl_investidor.Cnpj FROM tbl_investidor WHERE tbl_investidor.Id = tbl_pgto_rebate.CodDadosFavorecido)
+		            WHEN tbl_controle_pgto_rebate.CodTipoContrato = 3 THEN (SELECT tbl_investidor.Cnpj FROM tbl_investidor WHERE tbl_investidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
 		            ELSE NULL
 	            END AS CnpjFundoInvestidor
             FROM 
-	            tbl_pgto_rebate
-	            INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_pgto_rebate.CodFundo";
+	            tbl_controle_pgto_rebate
+	            INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_controle_pgto_rebate.CodFundo";
 
 		const string QUERY_BASE = @"
             SELECT 
-	            tbl_pgto_rebate.*,
+	            tbl_controle_pgto_rebate.*,
 	            tbl_fundo.NomeReduzido,
 	            tbl_tipo_contrato.TipoContrato
             FROM
-	            tbl_pgto_rebate 
-		            INNER JOIN tbl_fundo ON tbl_pgto_rebate.CodFundo = tbl_fundo.Id
-		            INNER JOIN tbl_tipo_contrato ON tbl_pgto_rebate.CodTipoContrato = tbl_tipo_contrato.Id";
+	            tbl_controle_pgto_rebate 
+		            INNER JOIN tbl_fundo ON tbl_controle_pgto_rebate.CodFundo = tbl_fundo.Id
+		            INNER JOIN tbl_tipo_contrato ON tbl_controle_pgto_rebate.CodTipoContrato = tbl_tipo_contrato.Id";
 
 
 		Task<IEnumerable<PgtoRebateViewModel>> GetPgtoRebateByCompetencia(string competencia);

@@ -14,9 +14,11 @@ namespace DUDS.Models.Rebate
 
         public decimal ValorBruto { get; set; }
 
-        public int CodDadosFavorecido { get; set; }
+        public int? CodInvestidor { get; set; }
 
-        public string SourceFavorecido { get; set; }
+        public int? CodDistribuidorF { get; set; }
+
+        public int? CodGestor { get; set; }
 
         public string Competencia { get; set; }
 

@@ -11,7 +11,7 @@ namespace DUDS.Service
     public class PgtoRebateService : GenericService<PgtoRebateModel>, IPgtoRebateService
     {
         public PgtoRebateService(): base(new PgtoRebateModel(),
-                                        "tbl_pgto_rebate")
+                                        "tbl_controle_pgto_rebate")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -23,7 +23,7 @@ namespace DUDS.Service
                 const string query = IPgtoRebateService.QUERY_ARQUIVO_PGTO +
                              @"
                                  WHERE
-	                                tbl_pgto_rebate.Competencia = @Competencia";
+	                                tbl_controle_pgto_rebate.Competencia = @Competencia";
 
                 return await connection.QueryAsync<PgtoRebateViewModel>(query, new { Competencia = competencia });
             }
@@ -36,11 +36,11 @@ namespace DUDS.Service
                 const string query = IPgtoRebateService.QUERY_ARQUIVO_PGTO +
                              @"
                                 INNER JOIN 
-                                    tbl_erros_pagamento ON tbl_pgto_rebate.CodFundo = tbl_erros_pagamento.CodFundo AND
-													       tbl_pgto_rebate.ValorBruto = tbl_erros_pagamento.ValorBruto AND
+                                    tbl_erros_pagamento ON tbl_controle_pgto_rebate.CodFundo = tbl_erros_pagamento.CodFundo AND
+													       tbl_controle_pgto_rebate.ValorBruto = tbl_erros_pagamento.ValorBruto AND
 													       CpfCnpjFavorecido = tbl_erros_pagamento.CpfCnpjFavorecido
 				                WHERE 
-					                tbl_pgto_rebate.Competencia = @Competencia";
+					                tbl_controle_pgto_rebate.Competencia = @Competencia";
 
                 return await connection.QueryAsync<PgtoRebateModel>(query, new { Competencia = competencia });
             }
@@ -100,7 +100,7 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        const string query = "DELETE FROM tbl_pgto_rebate WHERE Competencia = @Competencia";
+                        const string query = "DELETE FROM tbl_controle_pgto_rebate WHERE Competencia = @Competencia";
                         int rowsAffected = await connection.ExecuteAsync(sql: query, param: new { Competencia = competencia }, transaction: transaction, commandTimeout: 180);
                         transaction.Commit();
                         return rowsAffected > 0 && rowsAffected == result.Count;
