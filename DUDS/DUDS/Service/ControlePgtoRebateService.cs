@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class PgtoRebateService : GenericService<PgtoRebateModel>, IPgtoRebateService
+    public class ControlePgtoRebateService : GenericService<PgtoRebateModel>, IPgtoRebateService
     {
-        public PgtoRebateService(): base(new PgtoRebateModel(),
+        public ControlePgtoRebateService(): base(new PgtoRebateModel(),
                                         "tbl_controle_pgto_rebate")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
