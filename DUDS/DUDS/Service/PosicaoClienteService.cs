@@ -36,7 +36,7 @@ namespace DUDS.Service
                         SqlBulkCopy bulkCopy = new SqlBulkCopy(connection: (SqlConnection)connection, copyOptions: SqlBulkCopyOptions.TableLock, externalTransaction: (SqlTransaction)transaction);
                         var dataTable = ToDataTable(item);
                         bulkCopy = SqlBulkCopyConfigure(bulkCopy, dataTable.Rows.Count);
-                        await bulkCopy.WriteToServerAsync(dataTable).ConfigureAwait(continueOnCapturedContext:false);
+                        await bulkCopy.WriteToServerAsync(dataTable).ConfigureAwait(continueOnCapturedContext: false);
                         transaction.Commit();
                         return item;
                     }
@@ -171,16 +171,16 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<Dictionary<DateTime, decimal>> GetMaxValorBrutoAsync(DateTime dataPosicao, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor, int? codFundo)
+        public async Task<PosicaoClienteMaiorValorAlocadoModel> GetMaxValorBrutoAsync(DateTime dataPosicao, int? codDistribuidor, int? codGestor, int? codInvestidorDistribuidor, int? codFundo)
         {
-            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue && !codFundo.HasValue) return new Dictionary<DateTime, decimal>();
+            if (!codDistribuidor.HasValue && !codGestor.HasValue && !codInvestidorDistribuidor.HasValue && !codFundo.HasValue) return new PosicaoClienteMaiorValorAlocadoModel();
 
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
                 const string query = @"
                                         SELECT
-                                            tbl_posicao_cliente.DataRef,
-	                                        MAX(tbl_posicao_cliente.ValorBruto) as MaiorValorPosicao
+                                            tbl_posicao_cliente.DataRef AS DataMaiorPosicao,
+	                                        MAX(tbl_posicao_cliente.ValorBruto) AS MaiorValorPosicao
                                         FROM
 	                                        tbl_posicao_cliente
 	                                        INNER JOIN tbl_fundo ON tbl_posicao_cliente.CodFundo = tbl_fundo.Id
@@ -190,22 +190,28 @@ namespace DUDS.Service
 	                                        INNER JOIN tbl_investidor ON tbl_investidor_distribuidor.CodInvestidor = tbl_investidor.Id
                                             LEFT JOIN tbl_gestor ON tbl_investidor.CodGestor = tbl_gestor.Id
                                         WHERE
-	                                        (@CodDistribuidor IS NULL or tbl_distribuidor.Id = @CodDistribuidor)
-	                                        AND (@CodGestor IS NULL or tbl_investidor.CodGestor = @CodGestor)
-	                                        AND (@CodInvestidorDistribuidor IS NULL or tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
-	                                        AND (@CodFundo IS NULL or tbl_posicao_cliente.CodFundo = @CodFundo)
+	                                        (@CodDistribuidor IS NULL OR tbl_distribuidor.Id = @CodDistribuidor)
+	                                        AND (@CodGestor IS NULL OR tbl_investidor.CodGestor = @CodGestor)
+	                                        AND (@CodInvestidorDistribuidor IS NULL OR tbl_investidor_distribuidor.Id = @CodInvestidorDistribuidor)
+	                                        AND (@CodFundo IS NULL OR tbl_posicao_cliente.CodFundo = @CodFundo)
 	                                        AND tbl_posicao_cliente.DataRef <= @DataRef
                                         GROUP BY
                                             tbl_posicao_cliente.DataRef";
 
-                return await connection.QueryFirstOrDefaultAsync<Dictionary<DateTime,decimal>>(query, new
+                PosicaoClienteMaiorValorAlocadoModel retorno = await connection.QueryFirstOrDefaultAsync<PosicaoClienteMaiorValorAlocadoModel>(query, new
                 {
                     DataRef = dataPosicao,
                     CodDistribuidor = codDistribuidor,
                     CodGestor = codGestor,
                     CodInvestidorDistribuidor = codInvestidorDistribuidor,
                     CodFundo = codFundo
-                },commandTimeout:300);
+                }, commandTimeout: 300);
+                retorno.DataPosicao = dataPosicao;
+                retorno.CodGestor = codGestor;
+                retorno.CodDistribuidor = codDistribuidor;
+                retorno.CodInvestidorDistribuidor = codInvestidorDistribuidor;
+                retorno.CodFundo = codFundo;
+                return retorno;
             }
         }
     }
