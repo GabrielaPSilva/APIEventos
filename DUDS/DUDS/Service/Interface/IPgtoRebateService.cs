@@ -240,9 +240,9 @@ namespace DUDS.Service.Interface
 
         const string QUERY_ARQUIVO_PGTO = @"
             SELECT
-	            tbl_controle_pgto_rebate.DataAgendamento,
-	            tbl_fundo.Mnemonico AS CodFundo,
-	            CASE WHEN tbl_controle_pgto_rebate.TipoPgto = 'A' THEN
+				tbl_controle_pgto_rebate.DataAgendamento,
+				tbl_fundo.Mnemonico AS CodFundo,
+				CASE WHEN tbl_controle_pgto_rebate.TipoPgto = 'A' THEN
 					CASE 
 						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 1 THEN 1
 						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 2 THEN 2
@@ -254,28 +254,28 @@ namespace DUDS.Service.Interface
 						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 2 THEN 7
 						WHEN tbl_controle_pgto_rebate.CodTipoContrato = 3 THEN 1244
 					END
-				AS TipoDespesa,
-	            tbl_controle_pgto_rebate.ValorBruto,
-	            CASE
-		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_gestor' THEN (SELECT tbl_gestor.Cnpj FROM tbl_gestor WHERE tbl_gestor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
-		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_distribuidor' THEN (SELECT tbl_distribuidor.Cnpj FROM tbl_distribuidor WHERE tbl_distribuidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
-		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_investidor' THEN (SELECT tbl_investidor.Cnpj FROM tbl_investidor WHERE tbl_investidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
-	            END AS CnpjCpfFavorecido,
-	            CASE
-		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_gestor' THEN (SELECT tbl_gestor.NomeGestor FROM tbl_gestor WHERE tbl_gestor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
-		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_distribuidor' THEN (SELECT tbl_distribuidor.NomeDistribuidor FROM tbl_distribuidor WHERE tbl_distribuidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
-		            WHEN tbl_controle_pgto_rebate.SourceFavorecido = 'tbl_investidor' THEN (SELECT tbl_investidor.NomeInvestidor FROM tbl_investidor WHERE tbl_investidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
-	            END AS NomeFavorecido,
-	            RIGHT(tbl_controle_pgto_rebate.Competencia,2) AS MesCompetencia,
-	            LEFT(tbl_controle_pgto_rebate.Competencia,4) AS AnoCompetencia,
-	            tbl_controle_pgto_rebate.Observacao,
-	            CASE
-		            WHEN tbl_controle_pgto_rebate.CodTipoContrato = 3 THEN (SELECT tbl_investidor.Cnpj FROM tbl_investidor WHERE tbl_investidor.Id = tbl_controle_pgto_rebate.CodDadosFavorecido)
-		            ELSE NULL
-	            END AS CnpjFundoInvestidor
-            FROM 
-	            tbl_controle_pgto_rebate
-	            INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_controle_pgto_rebate.CodFundo";
+				END AS TipoDespesa,
+				tbl_controle_pgto_rebate.ValorBruto,
+				CASE
+					WHEN tbl_controle_pgto_rebate.CodGestor IS NOT NULL THEN (SELECT tbl_gestor.Cnpj FROM tbl_gestor WHERE tbl_gestor.Id = tbl_controle_pgto_rebate.CodGestor)
+					WHEN tbl_controle_pgto_rebate.CodDistribuidor IS NOT NULL THEN (SELECT tbl_distribuidor.Cnpj FROM tbl_distribuidor WHERE tbl_distribuidor.Id = tbl_controle_pgto_rebate.CodDistribuidor)
+					WHEN tbl_controle_pgto_rebate.CodInvestidor IS NOT NULL THEN (SELECT tbl_investidor.Cnpj FROM tbl_investidor WHERE tbl_investidor.Id = tbl_controle_pgto_rebate.CodInvestidor)
+				END AS CnpjCpfFavorecido,
+				CASE
+					WHEN tbl_controle_pgto_rebate.CodGestor IS NOT NULL THEN (SELECT tbl_gestor.NomeGestor FROM tbl_gestor WHERE tbl_gestor.Id = tbl_controle_pgto_rebate.CodGestor)
+					WHEN tbl_controle_pgto_rebate.CodDistribuidor IS NOT NULL THEN (SELECT tbl_distribuidor.NomeDistribuidor FROM tbl_distribuidor WHERE tbl_distribuidor.Id = tbl_controle_pgto_rebate.CodDistribuidor)
+					WHEN tbl_controle_pgto_rebate.CodInvestidor IS NOT NULL THEN (SELECT tbl_investidor.NomeInvestidor FROM tbl_investidor WHERE tbl_investidor.Id = tbl_controle_pgto_rebate.CodInvestidor)
+				END AS NomeFavorecido,
+				RIGHT(tbl_controle_pgto_rebate.Competencia,2) AS MesCompetencia,
+				LEFT(tbl_controle_pgto_rebate.Competencia,4) AS AnoCompetencia,
+				tbl_controle_pgto_rebate.Observacao,
+				CASE
+					WHEN tbl_controle_pgto_rebate.CodTipoContrato = 3 THEN (SELECT tbl_investidor.Cnpj FROM tbl_investidor WHERE tbl_investidor.Id = tbl_controle_pgto_rebate.CodInvestidor)
+					ELSE NULL
+				END AS CnpjFundoInvestidor
+			FROM 
+				tbl_controle_pgto_rebate
+				INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_controle_pgto_rebate.CodFundo";
 
 		const string QUERY_BASE = @"
             SELECT 

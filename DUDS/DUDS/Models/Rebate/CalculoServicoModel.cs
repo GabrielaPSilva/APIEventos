@@ -8,6 +8,8 @@ namespace DUDS.Models.Rebate
 
         public string Competencia { get; set; }
 
+        public int CodFundo { get; set; }
+
         public int? CodDistribuidor { get; set; }
 
         public int? CodCustodiante { get; set; }
