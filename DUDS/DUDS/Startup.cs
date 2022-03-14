@@ -158,6 +158,7 @@ namespace DUDS
             services.AddScoped<IPgtoTaxaAdmPfeeService, PgtoTaxaAdmPfeeService>();
             services.AddScoped<IExcecaoContratoService, ExcecaoContratoService>();
             services.AddScoped<IPgtoRebateService, PgtoRebateService>();
+            services.AddScoped<ICalculoServicoService, CalculoServicoService>();
             #endregion
             // Teste - Body Length
             //services.Configure<FormOptions>(options =>
