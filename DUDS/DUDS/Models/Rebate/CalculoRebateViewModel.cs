@@ -13,6 +13,8 @@
         public int CodGrupoRebate { get; set; }
         
         public string NomeGrupoRebate { get; set; }
+
+        public bool EnviarMemoriaCalculo { get; set; }
         
         public int CodTipoContrato { get; set; }
         

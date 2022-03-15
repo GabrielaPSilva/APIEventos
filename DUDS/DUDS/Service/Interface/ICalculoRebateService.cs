@@ -19,6 +19,7 @@ namespace DUDS.Service.Interface
 										investidor_distribuidor.CodTipoContrato,
                                         investidor_distribuidor.CodGrupoRebate,
                                         grupo_rebate.NomeGrupoRebate,
+										grupo_rebate.EnviarMemoriaCalculo,
                                         tipo_contrato.TipoContrato AS NomeTipoContrato,
 										pagamento.CodFundo,
                                         fundo.NomeReduzido AS NomeFundo,
