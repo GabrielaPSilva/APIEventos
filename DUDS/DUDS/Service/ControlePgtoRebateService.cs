@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DUDS.Service
 {
-    public class ControlePgtoRebateService : GenericService<PgtoRebateModel>, IPgtoRebateService
+    public class ControlePgtoRebateService : GenericService<PgtoRebateModel>, IControlePgtoRebateService
     {
-        public ControlePgtoRebateService(): base(new PgtoRebateModel(),
+        public ControlePgtoRebateService() : base(new PgtoRebateModel(),
                                         "tbl_controle_pgto_rebate")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
@@ -20,7 +20,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IPgtoRebateService.QUERY_ARQUIVO_PGTO +
+                const string query = IControlePgtoRebateService.QUERY_ARQUIVO_PGTO +
                              @"
                                  WHERE
 	                                tbl_controle_pgto_rebate.Competencia = @Competencia";
@@ -33,7 +33,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IPgtoRebateService.QUERY_ARQUIVO_PGTO +
+                const string query = IControlePgtoRebateService.QUERY_ARQUIVO_PGTO +
                              @"
                                 INNER JOIN 
                                     tbl_erros_pagamento ON tbl_controle_pgto_rebate.CodFundo = tbl_erros_pagamento.CodFundo AND
@@ -50,7 +50,7 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                return await connection.QueryAsync<PgtoRebateModel>(IPgtoRebateService.QUERY_BASE, new { Id = id });
+                return await connection.QueryAsync<PgtoRebateModel>(IControlePgtoRebateService.QUERY_BASE, new { Id = id });
             }
         }
 
@@ -62,16 +62,28 @@ namespace DUDS.Service
                 {
                     try
                     {
-                        var retorno = await connection.ExecuteAsync(sql: IPgtoRebateService.QUERY_INSERT_ADM_INVESTIDOR, 
-                            param: new 
-                            { 
+                        int retornoUnderBucket = await connection.ExecuteAsync(sql: IControlePgtoRebateService.QUERY_INSERT_ADM_INVESTIDOR.Replace("[Condicao]", "<="),
+                            param: new
+                            {
+                                Competencia = item.Competencia,
+                                UsuarioCriacao = item.UsuarioCriacao,
+                                DataAgendamento = item.DataAgendamento
+                            }
+                            );
+                        if (retornoUnderBucket != 0)
+                        {
+                            return false;
+                        }
+                        int retornoOverBucket = await connection.ExecuteAsync(sql: IControlePgtoRebateService.QUERY_INSERT_ADM_INVESTIDOR.Replace("[Condicao]", ">"),
+                            param: new
+                            {
                                 Competencia = item.Competencia,
                                 UsuarioCriacao = item.UsuarioCriacao,
                                 DataAgendamento = item.DataAgendamento
                             }
                             );
                         transaction.Commit();
-                        return retorno > 0;
+                        return (retornoUnderBucket + retornoOverBucket) > 0;
                     }
                     catch (Exception ex)
                     {

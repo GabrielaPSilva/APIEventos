@@ -25,7 +25,7 @@ namespace DUDS.Controllers.V1
         private readonly IGrupoRebateService _grupoRebateService;
         private readonly IEmailGrupoRebateService _emailGrupoRebateService;
         private readonly IControleRebateService _controleRebateService;
-        private readonly IPgtoRebateService _pgtoRebateService;
+        private readonly IControlePgtoRebateService _pgtoRebateService;
         private readonly ICalculoServicoService _calculoServicoService;
 
         public RebateController(IConfiguracaoService configService,
@@ -36,7 +36,7 @@ namespace DUDS.Controllers.V1
             IGrupoRebateService grupoRebateService,
             IControleRebateService controleRebateService,
             IEmailGrupoRebateService emailGrupoRebateService,
-            IPgtoRebateService pgtoRebateService,
+            IControlePgtoRebateService pgtoRebateService,
             ICalculoServicoService calculoServicoService)
         {
             _errosPagamento = errosPagamento;
