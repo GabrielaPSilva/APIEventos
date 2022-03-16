@@ -145,13 +145,13 @@ namespace DUDS.Service
                                 (@Competencia IS NULL OR tbl_controle_rebate.Competencia = @Competencia) AND
 								(@NomeGrupoRebate IS NULL OR tbl_grupo_rebate.NomeGrupoRebate COLLATE Latin1_general_CI_AI LIKE '%' + @NomeGrupoRebate + '%')";
 
-                const string queryValidado =
+                const string queryNaoValidado =
                           @" 
-                             AND tbl_controle_rebate.Validado = @Validado";
+                             AND tbl_controle_rebate.Validado != @Validado";
 
-                const string queryEnviado =
+                const string queryNaoEnviado =
                           @" 
-                             AND tbl_controle_rebate.Enviado = @Enviado";
+                             AND tbl_controle_rebate.Enviado != @Enviado";
                            
                 const string queryOrderBy =
                           @"  
@@ -164,15 +164,15 @@ namespace DUDS.Service
 
                 if (filtro.Validado != null && filtro.Enviado != null)
                 {
-                    queryParaExecutar = query + queryValidado + queryEnviado + queryOrderBy;
+                    queryParaExecutar = query + queryNaoValidado + queryNaoEnviado + queryOrderBy;
                 }
                 else if (filtro.Validado != null)
                 {
-                    queryParaExecutar = query + queryValidado + queryOrderBy;
+                    queryParaExecutar = query + queryNaoValidado + queryOrderBy;
                 }
                 else if (filtro.Enviado != null)
                 {
-                    queryParaExecutar = query + queryEnviado + queryOrderBy;
+                    queryParaExecutar = query + queryNaoEnviado + queryOrderBy;
                 }
                 else
                 {
