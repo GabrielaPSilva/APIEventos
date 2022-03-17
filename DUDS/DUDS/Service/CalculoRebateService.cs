@@ -112,7 +112,7 @@ namespace DUDS.Service
 	                                    grupo_rebate.NomeGrupoRebate,
 	                                    tipo_contrato.TipoContrato";
 
-                return await connection.QueryAsync<CalculoRebateViewModel>(query, new { competencia, id = codGrupoRebate });
+                return await connection.QueryAsync<CalculoRebateViewModel>(query, new { competencia, id = codGrupoRebate }, commandTimeout: 180);
             }
         }
 
