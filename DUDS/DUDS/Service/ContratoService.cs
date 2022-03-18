@@ -139,9 +139,11 @@ namespace DUDS.Service
                                 investidor_distribuidor.CodAdministrador AS AdministradorCodigoInvestidor,
                                 investidor_distribuidor.CodDistribuidorAdministrador AS DistribuidorCodigoInvestidor,
                                 contrato.Id AS CodContrato,
+                                contrato.CodGrupoRebate AS CodGrupoRebateContrato,
                                 sub_contrato.Id AS CodSubContrato,
                                 contrato_fundo.Id AS CodContratoFundo,
-                                contrato_remuneracao.Id AS CodContratoRemuneracao
+                                contrato_remuneracao.Id AS CodContratoRemuneracao,
+                                grupo_rebate.NomeGrupoRebate AS NomeGrupoRebateContrato
                             FROM
                                 tbl_contrato contrato
                                 INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.CodContrato = contrato.Id
@@ -149,6 +151,7 @@ namespace DUDS.Service
                                 INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.CodContratoFundo = contrato_fundo.Id
                                 LEFT JOIN tbl_contrato_alocador contrato_alocador ON contrato_alocador.CodSubContrato = sub_contrato.Id
                                 LEFT JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.CodInvestidor = contrato_alocador.CodInvestidor
+                                LEFT JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.Id = contrato.CodGrupoRebate
                             WHERE
                                 WHERE_CLAUSE";
                 query = query.Replace("WHERE_CLAUSE", whereClause);
