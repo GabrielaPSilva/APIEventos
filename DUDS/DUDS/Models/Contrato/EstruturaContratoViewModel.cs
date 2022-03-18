@@ -46,9 +46,9 @@ namespace DUDS.Models.Contrato
 
         public int CodContratoRemuneracao { get; set; }
 
-        public int? CodGrupoRebate { get; set; }
+        public int? CodGrupoRebateContrato { get; set; }
 
-        public string NomeGrupoRebate { get; set; }
+        public string NomeGrupoRebateContrato { get; set; }
 
     }
 }
