@@ -10,6 +10,8 @@ namespace DUDS.Models.Contrato
 
         public string TipoContrato { get; set; }
 
+        public string NomeGrupoRebate { get; set; }
+
         public List<SubContratoModel> ListaSubContrato { get; set; }
 
         public ContratoViewModel()
