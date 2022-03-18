@@ -1,15 +1,11 @@
 ﻿using Dapper;
-using DUDS.Models;
 using DUDS.Models.Investidor;
 using DUDS.Service.Interface;
 using DUDS.Service.SQL;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DUDS.Service
