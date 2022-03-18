@@ -123,7 +123,8 @@ namespace DUDS.Service
                             SELECT 
                                 contrato_remuneracao.PercentualAdm,
                                 contrato_remuneracao.PercentualPfee,
-                                contrato.CodTipoContrato,
+                                contrato.CodTipoContrato AS CodTipoContratoContrato,
+                                tipo_contrato.TipoContrato AS TipoContratoContrato,
                                 contrato.CodGestor,
                                 contrato.CodDistribuidor,
                                 sub_contrato.Versao,
@@ -149,6 +150,7 @@ namespace DUDS.Service
                                 INNER JOIN tbl_sub_contrato sub_contrato ON sub_contrato.CodContrato = contrato.Id
                                 INNER JOIN tbl_contrato_fundo contrato_fundo ON contrato_fundo.CodSubContrato = sub_contrato.Id
                                 INNER JOIN tbl_contrato_remuneracao contrato_remuneracao ON contrato_remuneracao.CodContratoFundo = contrato_fundo.Id
+                                INNER JOIN tbl_tipo_contrato tipo_contrato ON tipo_contrato.Id = contrato.CodTipoContrato
                                 LEFT JOIN tbl_contrato_alocador contrato_alocador ON contrato_alocador.CodSubContrato = sub_contrato.Id
                                 LEFT JOIN tbl_investidor_distribuidor investidor_distribuidor ON investidor_distribuidor.CodInvestidor = contrato_alocador.CodInvestidor
                                 LEFT JOIN tbl_grupo_rebate grupo_rebate ON grupo_rebate.Id = contrato.CodGrupoRebate

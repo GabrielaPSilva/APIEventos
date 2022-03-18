@@ -8,8 +8,10 @@ namespace DUDS.Models.Contrato
         
         public double PercentualPfee { get; set; }
 
-        public int CodTipoContrato { get; set; }
-        
+        public int CodTipoContratoContrato { get; set; }
+
+        public string TipoContratoContrato { get; set; }
+
         public int? CodGestor { get; set; }
 
         public int? CodDistribuidor { get; set; }
