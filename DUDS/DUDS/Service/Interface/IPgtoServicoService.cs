@@ -8,11 +8,11 @@ namespace DUDS.Service.Interface
     {
         const string QUERY_BASE =
             @"SELECT 
-	            tbl_pagamento_servico.*,
+	            tbl_pgto_servico.*,
                 fundo.NomeReduzido as NomeFundo
             FROM
-	            tbl_pagamento_servico
-                INNER JOIN tbl_fundo fundo ON fundo.Id = tbl_pagamento_servico.CodFundo";
+	            tbl_pgto_servico
+                INNER JOIN tbl_fundo fundo ON fundo.Id = tbl_pgto_servico.CodFundo";
 
         Task<bool> DeleteByCompetenciaAsync(string competencia);
 

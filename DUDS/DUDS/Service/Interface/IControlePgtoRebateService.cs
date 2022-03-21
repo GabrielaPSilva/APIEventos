@@ -182,12 +182,12 @@ namespace DUDS.Service.Interface
 			pre_pgto AS (
 			SELECT
 				calculo_pgto.*,
-				tbl_pagamento_servico.SaldoGestor 
+				tbl_pgto_servico.SaldoGestor 
 			FROM
 				calculo_pgto 
-				INNER JOIN tbl_pagamento_servico ON tbl_pagamento_servico.CodFundo = calculo_pgto.CodFundo AND tbl_pagamento_servico.Competencia = calculo_pgto.Competencia 
+				INNER JOIN tbl_pgto_servico ON tbl_pgto_servico.CodFundo = calculo_pgto.CodFundo AND tbl_pgto_servico.Competencia = calculo_pgto.Competencia 
 			WHERE
-				calculo_pgto.SumRebateAdm [Condicao] tbl_pagamento_servico.SaldoGestor
+				calculo_pgto.SumRebateAdm [Condicao] tbl_pgto_servico.SaldoGestor
 			)
 			INSERT INTO tbl_controle_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDistribuidor,CodGestor,CodInvestidor,Competencia,TipoPgto,UsuarioCriacao)
 			SELECT

@@ -14,7 +14,7 @@ namespace DUDS.Service
     {
 
         public ErrosPagamentoService() : base(new ErrosPagamentoModel(),
-                                         "tbl_erros_pagamento")
+                                         "tbl_erros_pgto")
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
@@ -72,7 +72,7 @@ namespace DUDS.Service
             {
                 const string query = @"
                                         DELETE FROM
-                                            tbl_erros_pagamento
+                                            tbl_erros_pgto
                                         WHERE
                                             DataAgendamento = @dataAgendamento";
 
