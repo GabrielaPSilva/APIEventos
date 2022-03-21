@@ -10,6 +10,8 @@ namespace DUDS.Models.Rebate
 
         public int CodFundo { get; set; }
 
+        public int CodTipoContrato { get; set; }
+
         public int? CodDistribuidor { get; set; }
 
         public int? CodCustodiante { get; set; }
