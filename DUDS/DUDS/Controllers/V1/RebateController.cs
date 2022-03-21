@@ -748,7 +748,7 @@ namespace DUDS.Controllers.V1
                 if (retorno.Any())
                 {
                     // TODO - Arrumar esta coisa estranha
-                    return CreatedAtAction(nameof(GetCalculoRebate), new { competencia = "2021-07" }, null);
+                    return CreatedAtAction(nameof(GetCalculoRebate), new { competencia = "2021-07" }, retorno);
                 }
 
                 return BadRequest();
@@ -1211,7 +1211,7 @@ namespace DUDS.Controllers.V1
                 if (retorno.Any())
                 {
                     // TODO - Arrumar esta coisa estranha
-                    return CreatedAtAction(nameof(GetCalculoServico), new { competencia = calculoServico[0].Competencia }, null);
+                    return CreatedAtAction(nameof(GetCalculoServico), new { competencia = calculoServico[0].Competencia }, GetCalculoServico(calculoServico[0].Competencia));
                 }
 
                 return BadRequest();
