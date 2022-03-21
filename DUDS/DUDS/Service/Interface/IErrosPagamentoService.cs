@@ -8,11 +8,11 @@ namespace DUDS.Service.Interface
     public interface IErrosPagamentoService : IGenericOperationsService<ErrosPagamentoModel>
     {
         const string QUERY_BASE = @"SELECT
-                                        tbl_erros_pagamento.*,
+                                        tbl_erros_pgto.*,
                                         tbl_fundo.NomeReduzido as NomeFundo
                                     FROM
-	                                    tbl_erros_pagamento
-                                            INNER JOIN tbl_fundo ON tbl_erros_pagamento.CodFundo = tbl_fundo.Id";
+	                                    tbl_erros_pgto
+                                            INNER JOIN tbl_fundo ON tbl_erros_pgto.CodFundo = tbl_fundo.Id";
 
         Task<IEnumerable<ErrosPagamentoModel>> GetAllAsync();
         Task<bool> DeleteErrosPagamentoByDataAgendamento(DateTime dataAgendamento);

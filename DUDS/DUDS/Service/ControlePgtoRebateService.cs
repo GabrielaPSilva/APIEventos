@@ -36,9 +36,9 @@ namespace DUDS.Service
                 const string query = IControlePgtoRebateService.QUERY_ARQUIVO_PGTO +
                              @"
                                 INNER JOIN 
-                                    tbl_erros_pagamento ON tbl_controle_pgto_rebate.CodFundo = tbl_erros_pagamento.CodFundo AND
-													       tbl_controle_pgto_rebate.ValorBruto = tbl_erros_pagamento.ValorBruto AND
-													       CpfCnpjFavorecido = tbl_erros_pagamento.CpfCnpjFavorecido
+                                    tbl_erros_pgto ON tbl_controle_pgto_rebate.CodFundo = tbl_erros_pgto.CodFundo AND
+													       tbl_controle_pgto_rebate.ValorBruto = tbl_erros_pgto.ValorBruto AND
+													       CpfCnpjFavorecido = tbl_erros_pgto.CpfCnpjFavorecido
 				                WHERE 
 					                tbl_controle_pgto_rebate.Competencia = @Competencia";
 

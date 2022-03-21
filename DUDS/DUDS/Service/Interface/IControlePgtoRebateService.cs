@@ -97,22 +97,22 @@ namespace DUDS.Service.Interface
 				'2022-02-05' AS DataAgendamento,
 				tbl_fundo.Id AS CodFundo,
 				2 AS CodTipoContrato,
-				tbl_pagamento_servico.SaldoGestor - ISNULL(SUM(tbl_controle_pgto_rebate.ValorBruto),0) AS ValorBruto,
+				tbl_pgto_servico.SaldoGestor - ISNULL(SUM(tbl_controle_pgto_rebate.ValorBruto),0) AS ValorBruto,
 				tbl_fundo.CodGestor,
 				'2022-01' AS Competencia,
 				'A' AS TipoPgto,
 				'ecalzeta' AS UsuarioCriacao
 			FROM
-				tbl_pagamento_servico
-				INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_pagamento_servico.CodFundo
-				LEFT JOIN tbl_controle_pgto_rebate ON tbl_pagamento_servico.CodFundo = tbl_controle_pgto_rebate.CodFundo AND tbl_pagamento_servico.Competencia = tbl_controle_pgto_rebate.Competencia
+				tbl_pgto_servico
+				INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_pgto_servico.CodFundo
+				LEFT JOIN tbl_controle_pgto_rebate ON tbl_pgto_servico.CodFundo = tbl_controle_pgto_rebate.CodFundo AND tbl_pgto_servico.Competencia = tbl_controle_pgto_rebate.Competencia
 			WHERE
-				tbl_pagamento_servico.Competencia = '2022-01'
+				tbl_pgto_servico.Competencia = '2022-01'
 				AND tbl_fundo.TipoFundo = 'FEEDER'
 			GROUP BY
 				tbl_fundo.Id,
 				tbl_fundo.CodGestor,
-				tbl_pagamento_servico.SaldoGestor";
+				tbl_pgto_servico.SaldoGestor";
 
 		// Condição será passado via código primeiramente " <= " e depois ">" a fim de complementar todo o universo calculado.
         const string QUERY_INSERT_ADM_INVESTIDOR = @"
@@ -183,12 +183,12 @@ namespace DUDS.Service.Interface
 			pre_pgto AS (
 			SELECT
 				calculo_pgto.*,
-				tbl_pagamento_servico.SaldoGestor 
+				tbl_pgto_servico.SaldoGestor 
 			FROM
 				calculo_pgto 
-				INNER JOIN tbl_pagamento_servico ON tbl_pagamento_servico.CodFundo = calculo_pgto.CodFundo AND tbl_pagamento_servico.Competencia = calculo_pgto.Competencia 
+				INNER JOIN tbl_pgto_servico ON tbl_pgto_servico.CodFundo = calculo_pgto.CodFundo AND tbl_pgto_servico.Competencia = calculo_pgto.Competencia 
 			WHERE
-				calculo_pgto.SumRebateAdm [Condicao] tbl_pagamento_servico.SaldoGestor
+				calculo_pgto.SumRebateAdm [Condicao] tbl_pgto_servico.SaldoGestor
 			)
 
 			INSERT INTO tbl_controle_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDistribuidor,CodGestor,CodInvestidor,Competencia,TipoPgto,UsuarioCriacao)
