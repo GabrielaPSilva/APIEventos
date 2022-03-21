@@ -11,7 +11,8 @@ namespace DUDS.Service.Interface
     {
         const string QUERY_BASE = @"SELECT 
 	                                     tbl_controle_rebate.*,
-	                                     tbl_grupo_rebate.NomeGrupoRebate
+	                                     tbl_grupo_rebate.NomeGrupoRebate,
+										 tbl_grupo_rebate.EnviarMemoriaCalculo
                                       FROM
 	                                     tbl_controle_rebate
                                             INNER JOIN tbl_grupo_rebate ON tbl_controle_rebate.CodGrupoRebate = tbl_grupo_rebate.Id";
