@@ -743,15 +743,15 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var retorno = await _calculoRebateService.AddBulkAsync(calculoRebate);
+                IEnumerable<CalculoRebateModel> retorno = await _calculoRebateService.AddBulkAsync(calculoRebate);
 
-                if (!retorno.Any())
+                if (retorno.Any())
                 {
                     // TODO - Arrumar esta coisa estranha
                     return CreatedAtAction(nameof(GetCalculoRebate), new { competencia = "2021-07" }, null);
                 }
 
-                return BadRequest(retorno);
+                return BadRequest();
             }
             catch (Exception e)
             {
@@ -1206,15 +1206,15 @@ namespace DUDS.Controllers.V1
         {
             try
             {
-                var retorno = await _calculoServicoService.AddBulkAsync(calculoServico);
+                IEnumerable<CalculoServicoModel> retorno = await _calculoServicoService.AddBulkAsync(calculoServico);
 
-                if (!retorno.Any())
+                if (retorno.Any())
                 {
                     // TODO - Arrumar esta coisa estranha
                     return CreatedAtAction(nameof(GetCalculoServico), new { competencia = calculoServico[0].Competencia }, null);
                 }
 
-                return BadRequest(retorno);
+                return BadRequest();
             }
             catch (Exception e)
             {

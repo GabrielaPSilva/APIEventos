@@ -47,7 +47,7 @@ namespace DUDS.Service
                     {
                         Console.WriteLine(ex);
                         transaction.Rollback();
-                        return new List<CalculoRebateModel>();
+                        throw;
                     }
                 }
             }
