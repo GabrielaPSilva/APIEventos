@@ -94,25 +94,30 @@ namespace DUDS.Service.Interface
 		const string QUERY_INSERT_ADM_GESTOR = @"
             INSERT INTO tbl_controle_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodGestor,Competencia,TipoPgto,UsuarioCriacao)
 			SELECT
-				'2022-02-05' AS DataAgendamento,
-				tbl_fundo.Id AS CodFundo,
-				2 AS CodTipoContrato,
-				tbl_pgto_servico.SaldoGestor - ISNULL(SUM(tbl_controle_pgto_rebate.ValorBruto),0) AS ValorBruto,
+				tbl_controle_pgto_rebate.DataAgendamento,
+				tbl_controle_pgto_rebate.CodFundo,
+				5 AS CodTipoContrato,
+				tbl_pgto_servico.SaldoGestor - SUM(tbl_controle_pgto_rebate.ValorBruto) AS ValorBruto,
 				tbl_fundo.CodGestor,
-				'2022-01' AS Competencia,
-				'A' AS TipoPgto,
-				'ecalzeta' AS UsuarioCriacao
+				tbl_controle_pgto_rebate.Competencia,
+				tbl_controle_pgto_rebate.TipoPgto,
+				tbl_controle_pgto_rebate.UsuarioCriacao
+	
 			FROM
-				tbl_pgto_servico
-				INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_pgto_servico.CodFundo
-				LEFT JOIN tbl_controle_pgto_rebate ON tbl_pgto_servico.CodFundo = tbl_controle_pgto_rebate.CodFundo AND tbl_pgto_servico.Competencia = tbl_controle_pgto_rebate.Competencia
+				tbl_controle_pgto_rebate
+				INNER JOIN tbl_pgto_servico ON tbl_pgto_servico.CodFundo = tbl_controle_pgto_rebate.CodFundo AND tbl_pgto_servico.Competencia = tbl_controle_pgto_rebate.Competencia
+				INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_controle_pgto_rebate.CodFundo
 			WHERE
-				tbl_pgto_servico.Competencia = '2022-01'
-				AND tbl_fundo.TipoFundo = 'FEEDER'
+				tbl_controle_pgto_rebate.Competencia = @Competencia
+				AND tbl_controle_pgto_rebate.TipoPgto = 'A'
 			GROUP BY
-				tbl_fundo.Id,
+				tbl_controle_pgto_rebate.DataAgendamento,
+				tbl_controle_pgto_rebate.CodFundo,
+				tbl_pgto_servico.SaldoGestor,
 				tbl_fundo.CodGestor,
-				tbl_pgto_servico.SaldoGestor";
+				tbl_controle_pgto_rebate.Competencia,
+				tbl_controle_pgto_rebate.TipoPgto,
+				tbl_controle_pgto_rebate.UsuarioCriacao";
 
 		// Condição será passado via código primeiramente " <= " e depois ">" a fim de complementar todo o universo calculado.
         const string QUERY_INSERT_ADM_INVESTIDOR = @"
@@ -141,25 +146,19 @@ namespace DUDS.Service.Interface
 				FROM (
 					SELECT
 						tbl_pgto_adm_pfee.Competencia,
-						tbl_investidor_distribuidor.CodTipoContrato,
+						tbl_contrato.CodTipoContrato,
 						tbl_investidor.Id as CodInvestidor,
-						gestor_investidor.Id As CodGestorInvestidor,
-						tbl_distribuidor.Id AS CodDistribuidor,
-						tbl_fundo.Id AS CodFundo,
+						tbl_contrato.CodGestor As CodGestorInvestidor,
+						tbl_contrato.CodDistribuidor,
+						tbl_pgto_adm_pfee.CodFundo,
 						'PGTO_INVESTIDOR' AS Origem,
 						tbl_calculo_pgto_adm_pfee.RebateAdm
 					FROM
 						tbl_calculo_pgto_adm_pfee 
-						INNER JOIN tbl_pgto_adm_pfee ON tbl_pgto_adm_pfee.Id = tbl_calculo_pgto_adm_pfee.CodPgtoAdmPfee 
+						INNER JOIN tbl_pgto_adm_pfee ON tbl_pgto_adm_pfee.Id = tbl_calculo_pgto_adm_pfee.CodPgtoAdmPfee
+						INNER JOIN tbl_contrato ON tbl_contrato.Id = tbl_calculo_pgto_adm_pfee.CodContrato
 						INNER JOIN tbl_investidor_distribuidor  ON tbl_investidor_distribuidor.Id = tbl_pgto_adm_pfee.CodInvestidorDistribuidor 
-						INNER JOIN tbl_grupo_rebate ON tbl_grupo_rebate.Id = tbl_investidor_distribuidor.CodGrupoRebate 
-						INNER JOIN tbl_tipo_contrato ON tbl_tipo_contrato.Id = tbl_investidor_distribuidor.CodTipoContrato 
-						INNER JOIN tbl_distribuidor_administrador ON tbl_distribuidor_administrador.Id = tbl_investidor_distribuidor.CodDistribuidorAdministrador
-						INNER JOIN tbl_distribuidor ON tbl_distribuidor.Id = tbl_distribuidor_administrador.CodDistribuidor
-						INNER JOIN tbl_fundo ON tbl_fundo.Id = tbl_pgto_adm_pfee.CodFundo 
-						INNER JOIN tbl_gestor gestor_fundo ON gestor_fundo.Id = tbl_fundo.CodGestor 
-						INNER JOIN tbl_investidor ON tbl_investidor.Id = tbl_investidor_distribuidor.CodInvestidor 
-						LEFT JOIN tbl_gestor gestor_investidor ON gestor_investidor.Id = tbl_investidor.CodGestor 
+						INNER JOIN tbl_investidor ON tbl_investidor.Id = tbl_investidor_distribuidor.CodInvestidor
 					UNION
 					SELECT
 						tbl_calculo_pgto_servico.Competencia,
@@ -190,15 +189,14 @@ namespace DUDS.Service.Interface
 			WHERE
 				calculo_pgto.SumRebateAdm [Condicao] tbl_pgto_servico.SaldoGestor
 			)
-
 			INSERT INTO tbl_controle_pgto_rebate(DataAgendamento,CodFundo,CodTipoContrato,ValorBruto,CodDistribuidor,CodGestor,CodInvestidor,Competencia,TipoPgto,UsuarioCriacao)
 			SELECT
 				@DataAgendamento AS DataAgendamento,
 				pre_pgto.CodFundo,
 				pre_pgto.CodTipoContrato,
 				SUM(pre_pgto.RebateAdm) AS ValorBruto,
-				CASE WHEN pre_pgto.CodTipoContrato = 1 THEN pre_pgto.CodDistribuidor ELSE NULL END AS CodDistribuidor,
-				CASE WHEN pre_pgto.CodTipoContrato = 2 THEN pre_pgto.CodGestorInvestidor ELSE NULL END AS CodGestorInvestidor,
+				CASE WHEN pre_pgto.CodTipoContrato = 1 OR pre_pgto.CodTipoContrato = 4 OR pre_pgto.CodTipoContrato = 7 THEN pre_pgto.CodDistribuidor ELSE NULL END AS CodDistribuidor,
+				CASE WHEN pre_pgto.CodTipoContrato = 2 OR pre_pgto.CodTipoContrato = 5 THEN pre_pgto.CodGestorInvestidor ELSE NULL END AS CodGestorInvestidor,
 				CASE WHEN pre_pgto.CodTipoContrato = 3 THEN pre_pgto.CodInvestidor ELSE NULL END AS CodInvestidor,
 				pre_pgto.Competencia,
 				'A' AS TipoPgto,
@@ -208,10 +206,11 @@ namespace DUDS.Service.Interface
 			GROUP BY
 				pre_pgto.CodFundo,
 				pre_pgto.CodTipoContrato,
-				CASE WHEN pre_pgto.CodTipoContrato = 1 THEN pre_pgto.CodDistribuidor ELSE NULL END,
-				CASE WHEN pre_pgto.CodTipoContrato = 2 THEN pre_pgto.CodGestorInvestidor ELSE NULL END,
+				CASE WHEN pre_pgto.CodTipoContrato = 1 OR pre_pgto.CodTipoContrato = 4 OR pre_pgto.CodTipoContrato = 7 THEN pre_pgto.CodDistribuidor ELSE NULL END,
+				CASE WHEN pre_pgto.CodTipoContrato = 2 OR pre_pgto.CodTipoContrato = 5 THEN pre_pgto.CodGestorInvestidor ELSE NULL END,
 				CASE WHEN pre_pgto.CodTipoContrato = 3 THEN pre_pgto.CodInvestidor ELSE NULL END,
-				pre_pgto.Competencia";
+				pre_pgto.Competencia
+			HAVING SUM(pre_pgto.RebateAdm) <> 0";
 
         const string QUERY_ARQUIVO_PGTO = @"
             SELECT
