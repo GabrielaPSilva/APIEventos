@@ -33,14 +33,20 @@ namespace DUDS.Service
         {
             using (var connection = await SqlHelpers.ConnectionFactory.ConexaoAsync())
             {
-                const string query = IControlePgtoRebateService.QUERY_ARQUIVO_PGTO +
-                             @"
-                                INNER JOIN 
-                                    tbl_erros_pgto ON tbl_controle_pgto_rebate.CodFundo = tbl_erros_pgto.CodFundo AND
-													       tbl_controle_pgto_rebate.ValorBruto = tbl_erros_pgto.ValorBruto AND
-													       CpfCnpjFavorecido = tbl_erros_pgto.CpfCnpjFavorecido
-				                WHERE 
-					                tbl_controle_pgto_rebate.Competencia = @Competencia";
+                const string query = @"
+                                        SELECT
+                                        	*
+                                        FROM 
+                                        	tbl_controle_pgto_rebate
+                                        		INNER JOIN tbl_erros_pgto ON ISNULL(tbl_controle_pgto_rebate.CodDistribuidor, 0) = ISNULL(tbl_erros_pgto.CodDistribuidor, 0) AND
+                                        									 ISNULL(tbl_controle_pgto_rebate.CodGestor, 0) = ISNULL(tbl_erros_pgto.CodGestor, 0) AND
+                                        									 ISNULL(tbl_controle_pgto_rebate.CodInvestidor, 0) = ISNULL(tbl_erros_pgto.CodInvestidor, 0) AND
+                                        									 tbl_controle_pgto_rebate.CodFundo = tbl_erros_pgto.CodFundo AND
+                                        									 tbl_controle_pgto_rebate.ValorBruto = tbl_erros_pgto.Valor AND 
+                                        									 tbl_controle_pgto_rebate.Competencia = tbl_erros_pgto.Competencia AND 
+                                        									 tbl_controle_pgto_rebate.CodTipoContrato = tbl_erros_pgto.CodDespesaAdministrador
+                                       WHERE 
+                                           tbl_controle_pgto_rebate.Competencia = @Competencia";
 
                 return await connection.QueryAsync<PgtoRebateModel>(query, new { Competencia = competencia });
             }
