@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hWYw0q6QCb8j5pRKLcCq6OaTPImgziocQRYE8/nVzOI0LBsgrMHOtZHOnQ7U6JU6vGRexCO1MYNht8EPqQAcQw==",
+  "dgSpecHash": "DEdv7Byrs8v6s9PIa69Hqt3dHQ0W/YLNXtah3BCye/kJZhFf9ynNEAFGeQ5OhEtRu4fA4DdEQGCEmHvLgG3Ehw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj",
+  "projectFilePath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gpinheiro\\.nuget\\packages\\coverlet.collector\\3.1.0\\coverlet.collector.3.1.0.nupkg.sha512",
     "C:\\Users\\gpinheiro\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",

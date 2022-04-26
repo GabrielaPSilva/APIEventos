@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FqqxYDg4yA3vSe5IRx7IgeUHr8e3/8OODV8uwAMNC64mtPDEgm+PywjIH1cbLdUchWBJNGtoZlzD1RSSpCVmBQ==",
+  "dgSpecHash": "+21lIE3OzfgsNQTIC18aanmfyuX3lRRRv9R5mndpUWW/BFVgBNqFeN5BHayDlVdGMQV078IyyTCydPP3PGn7iA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\DUDS\\ApiEventos.csproj",
+  "projectFilePath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\DUDS\\ApiEventos.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gpinheiro\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\gpinheiro\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.1\\microsoft.aspnetcore.authentication.jwtbearer.6.0.1.nupkg.sha512",

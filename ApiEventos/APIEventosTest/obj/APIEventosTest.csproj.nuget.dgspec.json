@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj": {}
+    "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj": {
+    "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj",
+        "projectUniqueName": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj",
         "projectName": "APIEventosTest",
-        "projectPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj",
+        "projectPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\APIEventosTest\\APIEventosTest.csproj",
         "packagesPath": "C:\\Users\\gpinheiro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\APIEventosTest\\obj\\",
+        "outputPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\APIEventosTest\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\NuGet.Config",
+          "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\NuGet.Config",
           "C:\\Users\\gpinheiro\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -34,8 +34,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\DUDS\\ApiEventos.csproj": {
-                "projectPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\DUDS\\ApiEventos.csproj"
+              "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\DUDS\\ApiEventos.csproj": {
+                "projectPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\DUDS\\ApiEventos.csproj"
               }
             }
           }
@@ -90,20 +90,20 @@
         }
       }
     },
-    "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\DUDS\\ApiEventos.csproj": {
+    "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\DUDS\\ApiEventos.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\DUDS\\ApiEventos.csproj",
+        "projectUniqueName": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\DUDS\\ApiEventos.csproj",
         "projectName": "ApiEventos",
-        "projectPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\DUDS\\ApiEventos.csproj",
+        "projectPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\DUDS\\ApiEventos.csproj",
         "packagesPath": "C:\\Users\\gpinheiro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\DUDS\\obj\\",
+        "outputPath": "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\DUDS\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\APIEventos\\ApiEventos\\NuGet.Config",
+          "C:\\Users\\gpinheiro\\Documents\\Gabriela\\MBA\\apieventos\\ApiEventos\\NuGet.Config",
           "C:\\Users\\gpinheiro\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
