@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "f4df174b-3811-4a0d-9fa9-2cf0073f1fa1": {
+      "ProjectGuid": "f4df174b-3811-4a0d-9fa9-2cf0073f1fa1",
+      "DisplayName": "ApiEventos",
+      "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "c69b5398-ce6f-407d-86a2-9f0275747014": {
+      "ProjectGuid": "c69b5398-ce6f-407d-86a2-9f0275747014",
+      "DisplayName": "APIEventosTest",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}
