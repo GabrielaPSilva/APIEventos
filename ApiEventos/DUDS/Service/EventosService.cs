@@ -65,7 +65,7 @@ namespace DUDS.Service
             }
         }
 
-        public async Task<bool> AddAsync(EventosModel eventos)
+        public async Task<bool> AddAsync(int idPais, string nomeEvento, string observacao, string dataEvento)
         {
             using var connection = await AbrirConexaoAsync();
             {
@@ -74,9 +74,9 @@ namespace DUDS.Service
                                     tbl_eventos 
                                    (IdPais, NomeEvento, Observacao, DataEvento)
                                 VALUES
-                                   (@IdPais, @NomeEvento, @Observacao, @DataEvento)";
+                                   (@idPais, @nomeEvento, @observacao, @dataEvento)";
 
-                return await connection.ExecuteAsync(query, eventos) > 0;
+                return await connection.ExecuteAsync(query, new { idPais , nomeEvento, observacao, dataEvento}) > 0;
             }
         }
 

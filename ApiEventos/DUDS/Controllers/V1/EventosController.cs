@@ -88,16 +88,13 @@ namespace DUDS.Controllers.V1
 
         // POST: api/Eventos/AddEventos/EventosModel
         [HttpPost]
-        public async Task<ActionResult<EventosModel>> AddEventos(EventosModel eventosModel)
+        public async Task<ActionResult<EventosModel>> AddEventos(int idPais, string nomeEvento, string observacao, string dataEvento)
         {
             try
             {
-                var retorno = await _eventosService.AddAsync(eventosModel);
+                var retorno = await _eventosService.AddAsync(idPais, nomeEvento, observacao, dataEvento);
 
-                return CreatedAtAction(
-                    nameof(GetEventoById),
-                    new { id = eventosModel.Id }, eventosModel);
-
+                return Ok(retorno);
             }
             catch (Exception e)
             {
